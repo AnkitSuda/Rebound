@@ -8,31 +8,25 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
+import com.ankitsuda.rebound.ui.screens.main_screen.MainScreen
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.google.accompanist.insets.ProvideWindowInsets
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Makes content draw under status bar and navigation bar
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             ReboundTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+                ProvideWindowInsets {
+                    // A surface container using the 'background' color from the theme
+                    Surface(color = MaterialTheme.colors.background) {
+                        MainScreen()
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ReboundTheme {
-        Greeting("Android")
     }
 }
