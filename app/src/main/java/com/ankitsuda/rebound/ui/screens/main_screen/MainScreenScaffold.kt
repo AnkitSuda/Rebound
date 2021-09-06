@@ -50,8 +50,10 @@ import kotlin.random.Random
 fun MainScreenScaffold(
     modifier: Modifier,
     mainContentModifier: Modifier = Modifier,
+    onPanelTopHeightChange: (Int) -> Unit = {},
     bottomBar: @Composable () -> Unit,
     panel: @Composable () -> Unit,
+    panelTopCommon: @Composable () -> Unit,
     panelTopCollapsed: @Composable () -> Unit,
     panelTopExpanded: @Composable () -> Unit,
     mainBody: @Composable () -> Unit,
@@ -73,6 +75,8 @@ fun MainScreenScaffold(
     var statusBarHeight by remember {
         mutableStateOf(0)
     }
+
+    onPanelTopHeightChange(panelTopHeight)
 
     var panelHiddenContentHeight = panelFullHeight - panelTopHeight
     val swipeableState = rememberSwipeableState(0)
@@ -139,7 +143,7 @@ fun MainScreenScaffold(
                         state = swipeableState,
                         anchors = anchors,
                         thresholds = { _, _ ->
-                            FractionalThreshold(0.3f)
+                            FractionalThreshold(0.1f)
                         },
                         resistance = null,
                         orientation = Orientation.Vertical
@@ -177,6 +181,8 @@ fun MainScreenScaffold(
                         Box(modifier = Modifier.alpha(1f - outOf1)) {
                             panelTopCollapsed()
                         }
+
+                        panelTopCommon()
 
                     }
 

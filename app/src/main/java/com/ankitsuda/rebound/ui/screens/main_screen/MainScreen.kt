@@ -5,13 +5,27 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.ankitsuda.rebound.ui.MainScreenScaffold
+import com.ankitsuda.rebound.ui.components.PanelTopCollapsed
+import com.ankitsuda.rebound.ui.components.PanelTopDragHandle
+import com.ankitsuda.rebound.ui.components.PanelTopExpanded
+import com.ankitsuda.rebound.ui.screens.exercises.ExercisesScreen
+import com.ankitsuda.rebound.ui.screens.history.HistoryScreen
+import com.ankitsuda.rebound.ui.screens.home.HomeScreen
+import com.ankitsuda.rebound.ui.screens.more.MoreScreen
+import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import kotlin.random.Random
@@ -22,6 +36,11 @@ import kotlin.random.Random
  */
 @Composable
 fun MainScreen() {
+    val navController = rememberNavController()
+
+    var panelTopHeight by remember {
+        mutableStateOf(0)
+    }
 
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Home,
@@ -32,84 +51,111 @@ fun MainScreen() {
     )
     MainScreenScaffold(
         modifier = Modifier,
+        onPanelTopHeightChange = {
+            panelTopHeight = it
+        },
         bottomBar = {
             BottomNavigation(
-                contentColor = Color.Black,
-                backgroundColor = Color.White,
+                contentColor = MaterialTheme.colors.primary,
+                backgroundColor = MaterialTheme.colors.surface,
                 elevation = 0.dp,
                 modifier = Modifier
                     .navigationBarsHeight(additional = 56.dp)
             ) {
+                val currentRoute = currentRoute(navController)
+
                 bottomNavigationItems.forEach { screen ->
+
                     BottomNavigationItem(
                         icon = { Icon(screen.icon, screen.title) },
                         label = { Text(screen.title) },
-                        selectedContentColor = Color.Black,
+                        selectedContentColor = MaterialTheme.colors.primary,
                         unselectedContentColor = Color.Black.copy(0.4f),
                         alwaysShowLabel = false, // This hides the title for the unselected items
                         modifier = Modifier.navigationBarsPadding(),
-                        selected = screen == BottomNavigationScreens.Home,
-                        onClick = { },
+                        selected = currentRoute == screen.route,
+                        onClick = {
+                            // This if check gives us a "singleTop" behavior where we do not create a
+                            // second instance of the composable if we are already on that destination
+                            if (currentRoute != screen.route) {
+                                navController.navigate(screen.route)
+                            }
+                        },
                     )
                 }
             }
         },
         panel = {
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+            ) {
                 Text(
                     text = Random.nextLong().toString(),
                     modifier = Modifier.align(Alignment.TopStart)
                 )
             }
         },
+        panelTopCommon = {
+            PanelTopDragHandle()
+        },
         panelTopCollapsed = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .padding(end = 8.dp, top = 4.dp, bottom = 4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Text(text = Random.nextLong().toString())
-            }
+            PanelTopCollapsed()
         },
         panelTopExpanded = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .padding(end = 8.dp, top = 4.dp, bottom = 4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Text(text = Random.nextLong().toString())
-            }
+            PanelTopExpanded(
+                onCollapseBtnClicked = {},
+                onTimerBtnClicked = { },
+                onFinishBtnClicked = {})
         }) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)) {
+        MainScreenNavigationConfigurations(navController = navController, panelTopHeight)
+    }
+}
 
+@Composable
+fun MainScreenNavigationConfigurations(navController: NavHostController, panelTopHeight: Int) {
+    val panelTopHeightDp = with(LocalDensity.current) { panelTopHeight.toDp() }
+
+    NavHost(navController, startDestination = BottomNavigationScreens.Home.route) {
+        // Bottom Nav
+        composable(BottomNavigationScreens.Home.route) {
+            HomeScreen(navController)
+        }
+        composable(BottomNavigationScreens.History.route) {
+            HistoryScreen(navController)
+        }
+        composable(BottomNavigationScreens.Workout.route) {
+            WorkoutScreen(navController, panelTopHeightDp)
+        }
+        composable(BottomNavigationScreens.Exercises.route) {
+            ExercisesScreen(navController)
+        }
+        composable(BottomNavigationScreens.More.route) {
+            MoreScreen(navController)
         }
     }
 }
 
+@Composable
+private fun currentRoute(navController: NavHostController): String? {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    return navBackStackEntry?.destination?.route
+}
 
-sealed class BottomNavigationScreens(val title: String, val icon: ImageVector) {
+sealed class BottomNavigationScreens(val route: String, val title: String, val icon: ImageVector) {
     object Home :
-        BottomNavigationScreens("Home", Icons.Outlined.Home)
+        BottomNavigationScreens("home", "Home", Icons.Outlined.Home)
 
     object History :
-        BottomNavigationScreens("History", Icons.Outlined.AccessTime)
+        BottomNavigationScreens("history", "History", Icons.Outlined.AccessTime)
 
     object Workout :
-        BottomNavigationScreens("Workout", Icons.Outlined.Add)
+        BottomNavigationScreens("workout", "Workout", Icons.Outlined.Add)
 
     object Exercises :
-        BottomNavigationScreens("Exercises", Icons.Outlined.FitnessCenter)
+        BottomNavigationScreens("exercises", "Exercises", Icons.Outlined.FitnessCenter)
 
     object More :
-        BottomNavigationScreens("More", Icons.Outlined.Menu)
+        BottomNavigationScreens("more", "More", Icons.Outlined.Menu)
 }
