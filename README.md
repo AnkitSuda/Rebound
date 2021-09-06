@@ -1,7 +1,7 @@
 # Rebound App
 Feature Rich & Highly Customizable Workout Log App
 
-> Rebound app is currently under heavy development, many things may
+> Rebound app is currently under heavy development, many things may be 
 > changed or completely removed in future.
 
 ## Features
@@ -17,7 +17,7 @@ As of now I am trying to implement most of the core features, but more features 
  - Body Part & Weight Measurements
  - Timers
  - Customizable Bars & Plates
- - Supersets, Dropsets etc.
+ - Supersets.
  - Plate Calculator
  - Warm-up Sets Calculator
  - 1RM, Max Volume, Max Weight, Personal Records etc.
