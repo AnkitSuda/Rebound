@@ -79,7 +79,7 @@ fun PanelTopExpanded(
                 onClick = onFinishBtnClicked,
                 elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp)
             ) {
-                Text(text = "Finish", style = MaterialTheme.typography.button)
+                    Text(text = "Finish", style = MaterialTheme.typography.button)
             }
         }
     }

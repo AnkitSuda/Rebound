@@ -17,8 +17,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.ui.components.RoutineItemCard
-import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.google.accompanist.flowlayout.FlowRow
@@ -30,9 +28,11 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.*
 import android.widget.ArrayAdapter
+import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.*
-import com.ankitsuda.rebound.ui.components.PanelTopDragHandle
-import com.ankitsuda.rebound.ui.components.WeekDay
+import com.ankitsuda.rebound.ui.components.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -74,7 +74,28 @@ fun HistoryScreen(navController: NavHostController, panelTopHeightDp: Dp) {
         CollapsingToolbarScaffold(
             state = collapsingState,
             toolbar = {
-                TopBar(title = "History", statusBarEnabled = false)
+                TopBar(
+                    title = "History",
+                    statusBarEnabled = false,
+                    leftIconBtn = {
+                        TopBarIconButton(
+                            icon = Icons.Outlined.DateRange,
+                            title = "Show calendar",
+                            onClick = {
+
+                            }
+                        )
+                    },
+                    rightIconBtn = {
+                        TopBarIconButton(
+                            icon = Icons.Outlined.MoreVert,
+                            title = "Open menu",
+                            onClick = {
+
+                            }
+                        )
+                    }
+                )
             },
             modifier = Modifier.fillMaxSize()
         ) {
@@ -91,28 +112,26 @@ fun HistoryScreen(navController: NavHostController, panelTopHeightDp: Dp) {
                     // For testing only
 
                     Card(shape = RoundedCornerShape(0), modifier = Modifier.fillMaxWidth()) {
-                        Column() {
-                            FlowRow(
-                                mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
-                                mainAxisSize = SizeMode.Expand,
-                                modifier = Modifier
-                                    .background(MaterialTheme.colors.surface)
-                                    .padding(start = 8.dp, end = 8.dp)
-                            ) {
-                                for (day in week) {
-                                    WeekDay(
-                                        day = day,
-                                        isSelected = day == today,
-                                        isToday = false
-                                    )
-                                }
-                            }
 
-                            PanelTopDragHandle(modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(bottom = 4.dp))
+                        FlowRow(
+                            mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
+                            mainAxisSize = SizeMode.Expand,
+                            modifier = Modifier
+                                .background(MaterialTheme.colors.surface)
+                                .padding(start = 8.dp, end = 8.dp)
+                        ) {
+                            for (day in week) {
+                                WeekDay(
+                                    day = day,
+                                    isSelected = day == today,
+                                    isToday = false
+                                )
+                            }
                         }
+
+
                     }
+
                 }
 
                 items(50) {

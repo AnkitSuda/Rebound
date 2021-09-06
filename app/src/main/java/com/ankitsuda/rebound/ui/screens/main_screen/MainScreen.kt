@@ -21,6 +21,7 @@ import com.ankitsuda.rebound.ui.MainScreenScaffold
 import com.ankitsuda.rebound.ui.components.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.PanelTopExpanded
+import com.ankitsuda.rebound.ui.components.WorkoutPanel
 import com.ankitsuda.rebound.ui.screens.exercises.ExercisesScreen
 import com.ankitsuda.rebound.ui.screens.history.HistoryScreen
 import com.ankitsuda.rebound.ui.screens.home.HomeScreen
@@ -93,16 +94,7 @@ fun MainScreen() {
             }
         },
         panel = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-            ) {
-                Text(
-                    text = Random.nextLong().toString(),
-                    modifier = Modifier.align(Alignment.TopStart)
-                )
-            }
+            WorkoutPanel()
         },
         panelTopCommon = {
             PanelTopDragHandle()

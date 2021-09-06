@@ -45,6 +45,18 @@ import kotlin.math.roundToInt
 import kotlin.random.Random
 
 
+/**
+ * Skeleton of sliding panel and main content
+ * Issue: Sliding doesn't work when panel has component with a scroll property, will fix it later.
+ *
+ * @param swipeableState State of sliding panel
+ * @param onPanelTopHeightChange Returns panel top height
+ * @param bottomBar Bottom Nav Bar component
+ * @param panelTopCommon Common component of top panel views when fading between states
+ * @param panelTopCollapsed Collapsed component of panel top
+ * @param panelTopExpanded Expanded component of panel top
+ * @param mainBody Main content component
+ */
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun MainScreenScaffold(
@@ -158,6 +170,7 @@ fun MainScreenScaffold(
 
 
                     Box(
+
                         modifier = Modifier
                             .onGloballyPositioned { constraints ->
                                 panelTopHeight = constraints.size.height
