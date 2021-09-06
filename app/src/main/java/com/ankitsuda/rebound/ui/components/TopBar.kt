@@ -17,10 +17,12 @@ import com.google.accompanist.insets.statusBarsHeight
  * @param title Title of the screen
  */
 @Composable
-fun TopBar(modifier: Modifier = Modifier, title: String) {
+fun TopBar(modifier: Modifier = Modifier, title: String, statusBarEnabled: Boolean = true) {
     Column(modifier = modifier.fillMaxWidth()) {
         // Status bar
-        Box(modifier = Modifier.statusBarsHeight())
+        if (statusBarEnabled) {
+            Box(modifier = Modifier.statusBarsHeight())
+        }
 
         // Main TopBar content
         Box(

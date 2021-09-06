@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PanelTopDragHandle() {
-    Box(modifier = Modifier
+fun PanelTopDragHandle(modifier: Modifier = Modifier) {
+    Box(modifier = modifier
         .fillMaxWidth()
         .padding(top = 6.dp)) {
         Box(

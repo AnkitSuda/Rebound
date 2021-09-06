@@ -28,12 +28,14 @@ import com.ankitsuda.rebound.ui.screens.more.MoreScreen
 import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 /**
  * Root screen of the app
  * Currently testing sliding panel, so using colors instead of other content.
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
@@ -49,8 +51,13 @@ fun MainScreen() {
         BottomNavigationScreens.Exercises,
         BottomNavigationScreens.More
     )
+
+    val swipeableState = rememberSwipeableState(0)
+    val coroutine = rememberCoroutineScope()
+
     MainScreenScaffold(
         modifier = Modifier,
+        swipeableState = swipeableState,
         onPanelTopHeightChange = {
             panelTopHeight = it
         },
@@ -105,7 +112,11 @@ fun MainScreen() {
         },
         panelTopExpanded = {
             PanelTopExpanded(
-                onCollapseBtnClicked = {},
+                onCollapseBtnClicked = {
+                    coroutine.launch {
+                        swipeableState.animateTo(0)
+                    }
+                },
                 onTimerBtnClicked = { },
                 onFinishBtnClicked = {})
         }) {
@@ -123,7 +134,7 @@ fun MainScreenNavigationConfigurations(navController: NavHostController, panelTo
             HomeScreen(navController)
         }
         composable(BottomNavigationScreens.History.route) {
-            HistoryScreen(navController)
+            HistoryScreen(navController, panelTopHeightDp)
         }
         composable(BottomNavigationScreens.Workout.route) {
             WorkoutScreen(navController, panelTopHeightDp)

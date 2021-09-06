@@ -49,7 +49,7 @@ import kotlin.random.Random
 @Composable
 fun MainScreenScaffold(
     modifier: Modifier,
-    mainContentModifier: Modifier = Modifier,
+    swipeableState: SwipeableState<Int>,
     onPanelTopHeightChange: (Int) -> Unit = {},
     bottomBar: @Composable () -> Unit,
     panel: @Composable () -> Unit,
@@ -79,7 +79,6 @@ fun MainScreenScaffold(
     onPanelTopHeightChange(panelTopHeight)
 
     var panelHiddenContentHeight = panelFullHeight - panelTopHeight
-    val swipeableState = rememberSwipeableState(0)
     val anchors = mapOf(
         (panelHiddenContentHeight - bottomBarHeight).toFloat() to 0,
         0f to 1
@@ -217,7 +216,7 @@ fun MainScreenScaffold(
         val backDropPlaceables = subcompose(MainScreenScaffoldContent.BackDrop) {
             if (outOf1 > 0f) {
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
                         .alpha(outOf1)
