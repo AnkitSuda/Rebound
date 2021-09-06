@@ -42,3 +42,6 @@ Rebound uses latest Android technologies and most best practices. Here is the te
 
 ## Want to Contribute ?
 Want to contribute? Great! All contributions are welcome, from code to documentation to graphics to design suggestions to bug reports. Please use GitHub to its fullest-- contribute Pull Requests, contribute tutorials or other wiki content-- whatever you have to offer, we can use it!
+
+## License
+Rebound is released under the GNU General Public License v3.0 (GPLv3), which can be found [here](LICENSE.md)
