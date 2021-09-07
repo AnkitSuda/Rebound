@@ -24,7 +24,7 @@ import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WorkoutScreen(navController: NavHostController, panelTopHeightDp: Dp) {
+fun WorkoutScreen(navController: NavHostController) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(
@@ -35,8 +35,7 @@ fun WorkoutScreen(navController: NavHostController, panelTopHeightDp: Dp) {
         floatingActionButton = {
 
             ExtendedFloatingActionButton(
-                modifier = Modifier
-                    .padding(bottom = panelTopHeightDp),
+                modifier = Modifier,
                 elevation = FloatingActionButtonDefaults.elevation(
                     defaultElevation = 2.dp,
                     pressedElevation = 4.dp
@@ -48,7 +47,8 @@ fun WorkoutScreen(navController: NavHostController, panelTopHeightDp: Dp) {
                         contentDescription = null
                     )
                 },
-                onClick = { Timber.d("New") })
+                onClick = {
+                })
 
 
         },
@@ -62,7 +62,6 @@ fun WorkoutScreen(navController: NavHostController, panelTopHeightDp: Dp) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            contentPadding = PaddingValues(bottom = panelTopHeightDp)
         ) {
             item {
 

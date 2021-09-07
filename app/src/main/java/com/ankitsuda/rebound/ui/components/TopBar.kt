@@ -5,6 +5,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,4 +71,9 @@ fun TopBarIconButton(
     IconButton(onClick = onClick, modifier = modifier) {
         Icon(imageVector = icon, contentDescription = title, modifier = Modifier.size(24.dp))
     }
+}
+
+@Composable
+fun TopBarBackIconButton(onClick: () -> Unit) {
+    TopBarIconButton(icon = Icons.Outlined.ArrowBack, title = "Back", onClick = onClick)
 }

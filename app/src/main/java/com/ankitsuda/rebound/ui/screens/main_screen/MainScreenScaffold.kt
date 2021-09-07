@@ -212,7 +212,7 @@ fun MainScreenScaffold(
         val bodyConstraints = constraints.copy(
             minWidth = 0,
             minHeight = 0,
-            maxHeight = constraints.maxHeight - bottomBarHeight
+            maxHeight = constraints.maxHeight - bottomBarHeight - panelTopHeight
         )
 
         val bodyPlaceables = subcompose(MainScreenScaffoldContent.Body) {

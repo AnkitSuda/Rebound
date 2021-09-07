@@ -12,16 +12,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.ankitsuda.rebound.ui.MainScreenScaffold
 import com.ankitsuda.rebound.ui.components.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.PanelTopExpanded
 import com.ankitsuda.rebound.ui.components.WorkoutPanel
+import com.ankitsuda.rebound.ui.screens.exercise.ExerciseDetailScreen
 import com.ankitsuda.rebound.ui.screens.exercises.ExercisesScreen
 import com.ankitsuda.rebound.ui.screens.history.HistoryScreen
 import com.ankitsuda.rebound.ui.screens.home.HomeScreen
@@ -41,9 +45,6 @@ import kotlin.random.Random
 fun MainScreen() {
     val navController = rememberNavController()
 
-    var panelTopHeight by remember {
-        mutableStateOf(0)
-    }
 
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Home,
@@ -59,9 +60,6 @@ fun MainScreen() {
     MainScreenScaffold(
         modifier = Modifier,
         swipeableState = swipeableState,
-        onPanelTopHeightChange = {
-            panelTopHeight = it
-        },
         bottomBar = {
             BottomNavigation(
                 contentColor = MaterialTheme.colors.primary,
@@ -70,7 +68,8 @@ fun MainScreen() {
                 modifier = Modifier
                     .navigationBarsHeight(additional = 56.dp)
             ) {
-                val currentRoute = currentRoute(navController)
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
 
                 bottomNavigationItems.forEach { screen ->
 
@@ -81,13 +80,29 @@ fun MainScreen() {
                         unselectedContentColor = Color.Black.copy(0.4f),
                         alwaysShowLabel = false, // This hides the title for the unselected items
                         modifier = Modifier.navigationBarsPadding(),
-                        selected = currentRoute == screen.route,
+                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+//                        selected = currentRoute == screen.route,
                         onClick = {
                             // This if check gives us a "singleTop" behavior where we do not create a
                             // second instance of the composable if we are already on that destination
-                            if (currentRoute != screen.route) {
-                                navController.navigate(screen.route)
+//                               if (currentRoute != screen.route) {
+//                                   navController.navigate(screen.route)
+//                               }
+                            navController.navigate(screen.route) {
+                                // Pop up to the start destination of the graph to
+                                // avoid building up a large stack of destinations
+                                // on the back stack as users select items
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+
+                                // Avoid multiple copies of the same destination when
+                                // reselecting the same item
+                                launchSingleTop = true
+                                // Restore state when reselecting a previously selected item
+                                restoreState = true
                             }
+
                         },
                     )
                 }
@@ -112,13 +127,12 @@ fun MainScreen() {
                 onTimerBtnClicked = { },
                 onFinishBtnClicked = {})
         }) {
-        MainScreenNavigationConfigurations(navController = navController, panelTopHeight)
+        MainScreenNavigationConfigurations(navController = navController)
     }
 }
 
 @Composable
-fun MainScreenNavigationConfigurations(navController: NavHostController, panelTopHeight: Int) {
-    val panelTopHeightDp = with(LocalDensity.current) { panelTopHeight.toDp() }
+fun MainScreenNavigationConfigurations(navController: NavHostController) {
 
     NavHost(navController, startDestination = BottomNavigationScreens.Home.route) {
         // Bottom Nav
@@ -126,24 +140,36 @@ fun MainScreenNavigationConfigurations(navController: NavHostController, panelTo
             HomeScreen(navController)
         }
         composable(BottomNavigationScreens.History.route) {
-            HistoryScreen(navController, panelTopHeightDp)
+            HistoryScreen(navController)
         }
-        composable(BottomNavigationScreens.Workout.route) {
-            WorkoutScreen(navController, panelTopHeightDp)
+
+//        composable(BottomNavigationScreens.Exercises.route) {
+//            ExercisesScreen(navController)
+//        }
+        navigation(
+            startDestination = "workout",
+            route = BottomNavigationScreens.Workout.route
+        ) {
+            composable("workout") {
+                WorkoutScreen(navController)
+            }
         }
-        composable(BottomNavigationScreens.Exercises.route) {
-            ExercisesScreen(navController)
+        navigation(
+            startDestination = "exercises",
+            route = BottomNavigationScreens.Exercises.route
+        ) {
+            composable("exercises") {
+                ExercisesScreen(navController)
+            }
+
+            composable("exercise_detail") {
+                ExerciseDetailScreen()
+            }
         }
         composable(BottomNavigationScreens.More.route) {
             MoreScreen(navController)
         }
     }
-}
-
-@Composable
-private fun currentRoute(navController: NavHostController): String? {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    return navBackStackEntry?.destination?.route
 }
 
 sealed class BottomNavigationScreens(val route: String, val title: String, val icon: ImageVector) {
@@ -154,10 +180,10 @@ sealed class BottomNavigationScreens(val route: String, val title: String, val i
         BottomNavigationScreens("history", "History", Icons.Outlined.AccessTime)
 
     object Workout :
-        BottomNavigationScreens("workout", "Workout", Icons.Outlined.Add)
+        BottomNavigationScreens("workout_tab", "Workout", Icons.Outlined.Add)
 
     object Exercises :
-        BottomNavigationScreens("exercises", "Exercises", Icons.Outlined.FitnessCenter)
+        BottomNavigationScreens("exercises_tab", "Exercises", Icons.Outlined.FitnessCenter)
 
     object More :
         BottomNavigationScreens("more", "More", Icons.Outlined.Menu)

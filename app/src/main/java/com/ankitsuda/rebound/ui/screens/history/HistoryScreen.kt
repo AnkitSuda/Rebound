@@ -39,7 +39,7 @@ import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HistoryScreen(navController: NavHostController, panelTopHeightDp: Dp) {
+fun HistoryScreen(navController: NavHostController) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val week = remember {
@@ -105,7 +105,6 @@ fun HistoryScreen(navController: NavHostController, panelTopHeightDp: Dp) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
-                contentPadding = PaddingValues(bottom = panelTopHeightDp)
             ) {
                 // Sticky Calendar
                 stickyHeader {
