@@ -12,7 +12,11 @@ import androidx.core.view.WindowCompat
 import com.ankitsuda.rebound.ui.screens.main_screen.MainScreen
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.insets.ProvideWindowInsets
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

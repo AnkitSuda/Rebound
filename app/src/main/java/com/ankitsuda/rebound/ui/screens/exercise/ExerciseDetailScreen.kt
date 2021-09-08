@@ -11,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ExerciseDetailScreen() {
+fun ExerciseDetailScreen(navController: NavHostController) {
     val tabData = listOf(
         "Charts",
         "History",
@@ -41,7 +42,7 @@ fun ExerciseDetailScreen() {
     Column() {
         TopBar(title = "Exercise", leftIconBtn = {
             TopBarBackIconButton(onClick = {
-
+                navController.popBackStack()
             })
         }, rightIconBtn = {
             TopBarIconButton(icon = Icons.Outlined.StarBorder, title = "Favorite", onClick = {

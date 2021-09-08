@@ -1,16 +1,13 @@
 package com.ankitsuda.rebound.ui.screens.main_screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.activity.compose.BackHandler
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -34,7 +31,6 @@ import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 /**
  * Root screen of the app
@@ -57,6 +53,11 @@ fun MainScreen() {
     val swipeableState = rememberSwipeableState(0)
     val coroutine = rememberCoroutineScope()
 
+    BackHandler(swipeableState.currentValue != 0) {
+            coroutine.launch {
+                swipeableState.animateTo(0)
+            }
+    }
     MainScreenScaffold(
         modifier = Modifier,
         swipeableState = swipeableState,
@@ -163,7 +164,7 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
             }
 
             composable("exercise_detail") {
-                ExerciseDetailScreen()
+                ExerciseDetailScreen(navController)
             }
         }
         composable(BottomNavigationScreens.More.route) {

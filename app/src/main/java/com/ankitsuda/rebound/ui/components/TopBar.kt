@@ -1,18 +1,28 @@
 package com.ankitsuda.rebound.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.R
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsHeight
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material.*
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.IntOffset
 
 /**
  * TopBar, usage as a toolbar
@@ -58,6 +68,85 @@ fun TopBar(
             }
         }
 
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun TopSearchBar(
+    modifier: Modifier = Modifier,
+    placeholder: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    onBackClick: () -> Unit = {},
+    leftBackBtnEnabled: Boolean = true,
+    rightClearBtnEnabled: Boolean = true,
+) {
+
+    var clearBtnWidth by remember {
+        mutableStateOf(0)
+    }
+
+    Column(modifier = modifier.background(Color(248, 248, 248))) {
+        Box(Modifier.statusBarsHeight())
+        Row(
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+        ) {
+            IconButton(onClick = {
+                onBackClick()
+            }, modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .onGloballyPositioned {
+                    clearBtnWidth = it.parentCoordinates!!.size.width
+                }) {
+                Icon(
+                    imageVector = Icons.Outlined.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
+            // TextField
+            TextField(
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = Color.Black,
+                    disabledTextColor = Color.Transparent,
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+                modifier = Modifier.weight(1f),
+                value = value,
+                singleLine = true,
+                maxLines = 1,
+                onValueChange = {
+                    onValueChange(it)
+                },
+                placeholder = {
+                    Text(
+                        text = placeholder,
+                    )
+                },
+            )
+            AnimatedVisibility(
+                visible = value.isNotEmpty(),
+                enter = slideIn({ IntOffset(clearBtnWidth, 0) }),
+                exit = slideOut({ IntOffset(clearBtnWidth, 0) }),
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            ) {
+                IconButton(onClick = {
+                    onValueChange("")
+                }, modifier = Modifier
+                    .onGloballyPositioned {
+                        clearBtnWidth = it.parentCoordinates!!.size.width
+                    }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = "Clear"
+                    )
+                }
+            }
+        }
     }
 }
 

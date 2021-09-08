@@ -36,7 +36,7 @@ Rebound uses latest Android technologies and most best practices. Here is the te
  - Coroutines
  - Room
  - Jetpack Navigation
- - Flow
+ - Flow, LiveData
  - DataStore
  - Hilt
 
