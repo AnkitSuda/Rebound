@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ankitsuda.rebound.ui.screens.exercise.ExerciseDetailScreen
 import com.ankitsuda.rebound.ui.screens.exercises.ExercisesScreen
-import com.ankitsuda.rebound.ui.screens.history.CalendarScreen
+import com.ankitsuda.rebound.ui.screens.calendar.CalendarScreen
 import com.ankitsuda.rebound.ui.screens.history.HistoryScreen
 import com.ankitsuda.rebound.ui.screens.home.HomeScreen
 import com.ankitsuda.rebound.ui.screens.main_screen.BottomNavigationScreens
