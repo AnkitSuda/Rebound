@@ -17,7 +17,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.ankitsuda.rebound.ui.MainScreenNavigationConfigurations
 import com.ankitsuda.rebound.ui.MainScreenScaffold
+import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.PanelTopExpanded
@@ -54,9 +56,9 @@ fun MainScreen() {
     val coroutine = rememberCoroutineScope()
 
     BackHandler(swipeableState.currentValue != 0) {
-            coroutine.launch {
-                swipeableState.animateTo(0)
-            }
+        coroutine.launch {
+            swipeableState.animateTo(0)
+        }
     }
     MainScreenScaffold(
         modifier = Modifier,
@@ -132,60 +134,20 @@ fun MainScreen() {
     }
 }
 
-@Composable
-fun MainScreenNavigationConfigurations(navController: NavHostController) {
-
-    NavHost(navController, startDestination = BottomNavigationScreens.Home.route) {
-        // Bottom Nav
-        composable(BottomNavigationScreens.Home.route) {
-            HomeScreen(navController)
-        }
-        composable(BottomNavigationScreens.History.route) {
-            HistoryScreen(navController)
-        }
-
-//        composable(BottomNavigationScreens.Exercises.route) {
-//            ExercisesScreen(navController)
-//        }
-        navigation(
-            startDestination = "workout",
-            route = BottomNavigationScreens.Workout.route
-        ) {
-            composable("workout") {
-                WorkoutScreen(navController)
-            }
-        }
-        navigation(
-            startDestination = "exercises",
-            route = BottomNavigationScreens.Exercises.route
-        ) {
-            composable("exercises") {
-                ExercisesScreen(navController)
-            }
-
-            composable("exercise_detail") {
-                ExerciseDetailScreen(navController)
-            }
-        }
-        composable(BottomNavigationScreens.More.route) {
-            MoreScreen(navController)
-        }
-    }
-}
 
 sealed class BottomNavigationScreens(val route: String, val title: String, val icon: ImageVector) {
     object Home :
-        BottomNavigationScreens("home", "Home", Icons.Outlined.Home)
+        BottomNavigationScreens(Route.HomeTab.route, "Home", Icons.Outlined.Home)
 
     object History :
-        BottomNavigationScreens("history", "History", Icons.Outlined.AccessTime)
+        BottomNavigationScreens(Route.HistoryTab.route, "History", Icons.Outlined.AccessTime)
 
     object Workout :
-        BottomNavigationScreens("workout_tab", "Workout", Icons.Outlined.Add)
+        BottomNavigationScreens(Route.WorkoutTab.route, "Workout", Icons.Outlined.Add)
 
     object Exercises :
-        BottomNavigationScreens("exercises_tab", "Exercises", Icons.Outlined.FitnessCenter)
+        BottomNavigationScreens(Route.ExercisesTab.route, "Exercises", Icons.Outlined.FitnessCenter)
 
     object More :
-        BottomNavigationScreens("more", "More", Icons.Outlined.Menu)
+        BottomNavigationScreens(Route.MoreTab.route, "More", Icons.Outlined.Menu)
 }

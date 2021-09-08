@@ -32,6 +32,7 @@ import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.*
+import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -82,7 +83,7 @@ fun HistoryScreen(navController: NavHostController) {
                             icon = Icons.Outlined.DateRange,
                             title = "Show calendar",
                             onClick = {
-
+                                navController.navigate(Route.Calendar.route)
                             }
                         )
                     },
