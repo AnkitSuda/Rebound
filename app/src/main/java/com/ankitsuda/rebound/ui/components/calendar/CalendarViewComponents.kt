@@ -1,8 +1,10 @@
 package com.ankitsuda.rebound.ui.components.calendar
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +24,11 @@ import kotlin.random.Random
 const val WEIGHT_7DAY_WEEK = 1f / 7f
 
 @Composable
-fun CalendarMonthItem(month: MonthItem, days: List<CalendarItem>) {
+fun CalendarMonthItem(
+    month: MonthItem,
+    days: List<CalendarItem>,
+    onClickOnDay: (DateItem) -> Unit
+) {
     val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
     val weeks = days.chunked(7)
     val monthFormatter = SimpleDateFormat(CalendarUtils.MONTH_FORMAT, Locale.getDefault())
@@ -59,7 +65,10 @@ fun CalendarMonthItem(month: MonthItem, days: List<CalendarItem>) {
                                 WEIGHT_7DAY_WEEK
                             ),
                             isToday = isToday,
-                            dotVisible = Random.nextBoolean()
+                            dotVisible = Random.nextBoolean(),
+                            onClick = {
+                                onClickOnDay(day)
+                            }
                         )
 
                     } else {
@@ -105,10 +114,11 @@ fun CalendarDayItem(
     text: String,
     isToday: Boolean = false,
     dotVisible: Boolean = false,
+    onClick: () -> Unit
 ) {
 
     Box(
-        modifier = modifier,
+        modifier = modifier.clip(RoundedCornerShape(25)).clickable(onClick = onClick),
     ) {
         if (isToday) {
             Box(

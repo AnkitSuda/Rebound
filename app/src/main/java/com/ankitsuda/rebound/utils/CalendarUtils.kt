@@ -6,7 +6,7 @@ import java.util.*
 
 interface CalendarItem
 object EmptyItem : CalendarItem
-class MonthItem(val date: CalendarDate) : CalendarItem
+class MonthItem(val date: CalendarDate, val days: List<CalendarItem>) : CalendarItem
 class DateItem(val date: CalendarDate) : CalendarItem
 
 class CalendarUtils(private val firstDayOfWeek: Int) {
@@ -52,8 +52,8 @@ class CalendarUtils(private val firstDayOfWeek: Int) {
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
 
-            val monthItem = MonthItem(CalendarDate(calendar.time))
-//            val itemsForMonth = generateCalendarItemsForMonth(year, month)
+            val itemsForMonth = generateCalendarItemsForMonth(year, month)
+            val monthItem = MonthItem(CalendarDate(calendar.time), itemsForMonth)
 
             calendarItems += monthItem
 //            calendarItems += itemsForMonth

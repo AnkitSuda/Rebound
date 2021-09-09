@@ -13,6 +13,7 @@ import com.ankitsuda.rebound.ui.screens.home.HomeScreen
 import com.ankitsuda.rebound.ui.screens.main_screen.BottomNavigationScreens
 import com.ankitsuda.rebound.ui.screens.more.MoreScreen
 import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
+import com.ankitsuda.rebound.utils.CalendarDate
 
 
 @Composable
@@ -36,9 +37,6 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
         ) {
             composable(Route.History.route) {
                 HistoryScreen(navController)
-            }
-            composable(Route.Calendar.route) {
-                CalendarScreen(navController)
             }
         }
 
