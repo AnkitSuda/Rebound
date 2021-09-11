@@ -27,6 +27,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.components.calendar.WEIGHT_7DAY_WEEK
 import com.ankitsuda.rebound.utils.CalendarDate
 import java.text.SimpleDateFormat
 
@@ -133,15 +134,14 @@ fun HistoryScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
 
-                                FlowRow(
-                                    mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
-                                    mainAxisSize = SizeMode.Expand,
+                                Row(
                                     modifier = Modifier
                                         .background(MaterialTheme.colors.surface)
-                                        .padding(start = 8.dp, end = 8.dp)
+//                                        .padding(start = 8.dp, end = 8.dp)
                                 ) {
                                     for (day in week) {
                                         WeekDay(
+                                            modifier = Modifier.weight(WEIGHT_7DAY_WEEK),
                                             day = day,
                                             isSelected = day == date,
                                             onClick = {

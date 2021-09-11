@@ -15,11 +15,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun WeekDay(day: Date, isSelected: Boolean, onClick: () -> Unit) {
-    Box(modifier = Modifier.clickable(onClick = onClick)) {
+fun WeekDay(modifier: Modifier, day: Date, isSelected: Boolean, onClick: () -> Unit) {
+    Box(modifier = modifier.clickable(onClick = onClick)) {
         Column(
             modifier = Modifier
-                .padding(8.dp),
+                .padding(8.dp)
+                .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val dayDate = SimpleDateFormat("d").format(day)
