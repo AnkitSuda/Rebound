@@ -2,6 +2,7 @@ package com.ankitsuda.rebound.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.foundation.background
@@ -19,6 +20,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.*
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.colorResource
@@ -155,10 +157,23 @@ fun TopBarIconButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     title: String,
+    enabled: Boolean = true,
+    tint: Color = MaterialTheme.colors.onBackground,
     onClick: () -> Unit
 ) {
-    IconButton(onClick = onClick, modifier = modifier) {
-        Icon(imageVector = icon, contentDescription = title, modifier = Modifier.size(24.dp))
+    val alpha by animateFloatAsState(targetValue = if (enabled) 1f else 0.5f)
+
+    IconButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier.alpha(alpha)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = title,
+            tint = tint,
+            modifier = Modifier.size(24.dp)
+        )
     }
 }
 

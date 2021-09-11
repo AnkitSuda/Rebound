@@ -24,6 +24,8 @@ sealed class Route(val route: String) {
     object Exercises : Route("exercises")
     object More : Route("more")
 
+    object CreateExercise : Route("create_exercise")
+
     object Calendar : Route("calendar/{selectedDate}") {
         fun createRoute(selectedDate: Date) = "calendar/${selectedDate.time}"
         fun createRoute(selectedDate: Long) = "calendar/${selectedDate}"

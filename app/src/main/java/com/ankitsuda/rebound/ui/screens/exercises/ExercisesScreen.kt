@@ -73,7 +73,7 @@ fun ExercisesScreen(
                         icon = Icons.Outlined.Add,
                         title = "Create Exercise",
                         onClick = {
-
+                            navController.navigate(Route.CreateExercise.route)
                         })
                 })
 
