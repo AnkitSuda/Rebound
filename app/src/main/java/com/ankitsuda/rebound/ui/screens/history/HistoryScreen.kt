@@ -1,6 +1,5 @@
 package com.ankitsuda.rebound.ui.screens.history
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -26,8 +25,8 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.*
-import com.ankitsuda.rebound.ui.screens.calendar.CalendarScreen
 import com.ankitsuda.rebound.utils.CalendarDate
 import java.text.SimpleDateFormat
 
@@ -37,20 +36,16 @@ fun HistoryScreen(
     navController: NavHostController,
     viewModel: HistoryScreenViewModel = hiltViewModel()
 ) {
-    var date: Date by remember {
-        mutableStateOf(
-            try {
-                Date(
-                    navController.currentBackStackEntry!!.arguments!!.getString(
-                        "date"
-                    )!!.toLong()
-                )
-            } catch (e: Exception) {
-                Timber.e(e)
-                CalendarDate.today.date
-            }
-        )
+    val argumentsDate = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getLiveData<Long>("date")?.observeAsState()
+
+    var date = CalendarDate.today.date
+
+    argumentsDate?.value?.let {
+        date = Date(it)
     }
+
     val calendar = Calendar.getInstance().apply {
         this.time = date
         this.set(Calendar.HOUR_OF_DAY, 0)
@@ -66,141 +61,115 @@ fun HistoryScreen(
     val dayFormatter =
         SimpleDateFormat(if (isSameYear) "EEE, MMM d" else "MMM d, yyyy", Locale.getDefault())
 
-    val isCalendarMode by viewModel.isCalendarMode.observeAsState(false)
-
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
-    val week = remember {
-        mutableStateListOf(Date())
-    }
-    var today by remember {
-        mutableStateOf(Date())
-    }
-
-    BackHandler(enabled = isCalendarMode) {
-        viewModel.toggleCalendarMode()
-    }
+    val week = viewModel.week
+    var today = viewModel.today
 
     LaunchedEffect(key1 = Unit) {
-        val c = Calendar.getInstance()
-        today = c.time
-        c[Calendar.DAY_OF_WEEK] = Calendar.SUNDAY
-        for (i in 0..6) {
-            week.add(c.time)
-            c.add(Calendar.DATE, 1)
+        if (week.isEmpty()) {
+            viewModel.getCurrentWeek()
         }
-        week.removeAt(0)
     }
 
-    val isWeekHeaderVisible = isToday
+
+    val isWeekHeaderVisible = week.any { it == date }
 
     Surface() {
         // History
-        Crossfade(targetState = isCalendarMode) {
-            if (!it) {
-                Column() {
-                    Box(
-                        modifier = Modifier
-                            .statusBarsHeight()
-                            .fillMaxWidth()
-                            .zIndex(2f)
-                            .background(MaterialTheme.colors.surface)
-                    )
 
-                    CollapsingToolbarScaffold(
-                        state = collapsingState,
-                        toolbar = {
-                            TopBar(
-                                title = if (isToday) "Today" else dayFormatter.format(date),
-                                statusBarEnabled = false,
-                                leftIconBtn = {
-                                    TopBarIconButton(
-                                        icon = Icons.Outlined.DateRange,
-                                        title = "Show calendar",
-                                        onClick = {
-                                            viewModel.toggleCalendarMode()
-                                        }
-                                    )
-                                },
-                                rightIconBtn = {
-                                    TopBarIconButton(
-                                        icon = Icons.Outlined.MoreVert,
-                                        title = "Open menu",
-                                        onClick = {
+        Column() {
+            Box(
+                modifier = Modifier
+                    .statusBarsHeight()
+                    .fillMaxWidth()
+                    .zIndex(2f)
+                    .background(MaterialTheme.colors.surface)
+            )
 
-                                        }
-                                    )
+            CollapsingToolbarScaffold(
+                state = collapsingState,
+                toolbar = {
+                    TopBar(
+                        title = if (isToday) "Today" else dayFormatter.format(date),
+                        statusBarEnabled = false,
+                        leftIconBtn = {
+                            TopBarIconButton(
+                                icon = Icons.Outlined.DateRange,
+                                title = "Show calendar",
+                                onClick = {
+                                    navController.navigate(Route.Calendar.createRoute(selectedDate = date))
                                 }
                             )
                         },
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-
-
-                        // User routines
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                        ) {
-                            // Sticky Calendar
-
-                            if (isWeekHeaderVisible) {
-                                stickyHeader {
-                                    // For testing only
-
-                                    Card(
-                                        shape = RoundedCornerShape(0),
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-
-                                        FlowRow(
-                                            mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
-                                            mainAxisSize = SizeMode.Expand,
-                                            modifier = Modifier
-                                                .background(MaterialTheme.colors.surface)
-                                                .padding(start = 8.dp, end = 8.dp)
-                                        ) {
-                                            for (day in week) {
-                                                WeekDay(
-                                                    day = day,
-                                                    isSelected = day == date,
-                                                    isToday = false
-                                                )
-                                            }
-                                        }
-
-
-                                    }
+                        rightIconBtn = {
+                            TopBarIconButton(
+                                icon = Icons.Outlined.MoreVert,
+                                title = "Open menu",
+                                onClick = {
 
                                 }
-                            }
+                            )
+                        }
+                    )
+                },
+                modifier = Modifier.fillMaxSize()
+            ) {
 
 
-                            items(50) {
-                                Text(text = it.toString(), style = MaterialTheme.typography.caption)
+                // User routines
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                ) {
+                    // Sticky Calendar
+
+                    if (isWeekHeaderVisible) {
+                        stickyHeader {
+                            // For testing only
+
+                            Card(
+                                shape = RoundedCornerShape(0),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+
+                                FlowRow(
+                                    mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
+                                    mainAxisSize = SizeMode.Expand,
+                                    modifier = Modifier
+                                        .background(MaterialTheme.colors.surface)
+                                        .padding(start = 8.dp, end = 8.dp)
+                                ) {
+                                    for (day in week) {
+                                        WeekDay(
+                                            day = day,
+                                            isSelected = day == date,
+                                            onClick = {
+                                                navController.currentBackStackEntry?.savedStateHandle?.set(
+                                                    "date",
+                                                    day.time
+                                                )
+                                            }
+                                        )
+                                    }
+                                }
+
+
                             }
 
                         }
-
                     }
+
+
+                    items(50) {
+                        Text(text = it.toString(), style = MaterialTheme.typography.caption)
+                    }
+
                 }
-            } else {
-                // Calendar
 
-                CalendarScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colors.background),
-                    onBackClick = {
-                        viewModel.toggleCalendarMode()
-                    },
-                    onDateSelected = { selectedDate ->
-                        date = selectedDate.date
-                        viewModel.toggleCalendarMode()
-                    }
-                )
             }
         }
+
     }
 
 }

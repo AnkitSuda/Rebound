@@ -1,5 +1,7 @@
 package com.ankitsuda.rebound.ui.components
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -13,24 +15,27 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun WeekDay(day: Date, isToday: Boolean, isSelected: Boolean) {
-    Column(
-        modifier = Modifier.padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val dayDate = SimpleDateFormat("d").format(day)
-        val dayD = SimpleDateFormat("EEE").format(day).uppercase()
+fun WeekDay(day: Date, isSelected: Boolean, onClick: () -> Unit) {
+    Box(modifier = Modifier.clickable(onClick = onClick)) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            val dayDate = SimpleDateFormat("d").format(day)
+            val dayD = SimpleDateFormat("EEE").format(day).uppercase()
 
-        Text(
-            text = dayD,
-            style = MaterialTheme.typography.body2,
-            color = if (isSelected) MaterialTheme.colors.primary else Color(117, 117, 117)
-        )
-        Text(
-            text = dayDate,
-            style = MaterialTheme.typography.body1,
-            color = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-            modifier = Modifier.padding(top = 4.dp)
-        )
+            Text(
+                text = dayD,
+                style = MaterialTheme.typography.body2,
+                color = if (isSelected) MaterialTheme.colors.primary else Color(117, 117, 117)
+            )
+            Text(
+                text = dayDate,
+                style = MaterialTheme.typography.body1,
+                color = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
     }
 }

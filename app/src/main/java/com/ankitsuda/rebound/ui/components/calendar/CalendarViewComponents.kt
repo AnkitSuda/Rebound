@@ -1,6 +1,7 @@
 package com.ankitsuda.rebound.ui.components.calendar
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -27,6 +28,7 @@ const val WEIGHT_7DAY_WEEK = 1f / 7f
 fun CalendarMonthItem(
     month: MonthItem,
     days: List<CalendarItem>,
+    selectedDate: CalendarDate,
     onClickOnDay: (DateItem) -> Unit
 ) {
     val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
@@ -64,6 +66,7 @@ fun CalendarMonthItem(
                             modifier = Modifier.weight(
                                 WEIGHT_7DAY_WEEK
                             ),
+                            isSelected = day.date == selectedDate,
                             isToday = isToday,
                             dotVisible = Random.nextBoolean(),
                             onClick = {
@@ -112,22 +115,41 @@ fun RowScope.CalendarDayNameItem(text: String) {
 fun CalendarDayItem(
     modifier: Modifier = Modifier,
     text: String,
+    isSelected: Boolean = false,
     isToday: Boolean = false,
     dotVisible: Boolean = false,
     onClick: () -> Unit
 ) {
+    val textColor =
+        if (isSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface
+
+
+
 
     Box(
-        modifier = modifier.clip(RoundedCornerShape(25)).clickable(onClick = onClick),
+        modifier = modifier
+            .clip(RoundedCornerShape(25))
+            .clickable(onClick = onClick),
     ) {
-        if (isToday) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(28.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colors.primary)
-            )
+        if (isToday || isSelected) {
+
+            var bgModifier = Modifier
+                .align(Alignment.Center)
+                .size(28.dp)
+                .clip(CircleShape)
+
+            if (isToday) {
+                bgModifier = bgModifier.border(
+                    width = 1.dp,
+                    color = MaterialTheme.colors.primary,
+                    shape = CircleShape
+                )
+            }
+            if (isSelected) {
+                bgModifier = bgModifier.background(MaterialTheme.colors.primary)
+            }
+
+            Box(modifier = bgModifier)
         }
         Text(
             text = text,
@@ -135,7 +157,7 @@ fun CalendarDayItem(
                 .padding(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 16.dp)
                 .align(Alignment.Center),
             textAlign = TextAlign.Center,
-            color = if (isToday) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface,
+            color = textColor,
             style = MaterialTheme.typography.body1
         )
 

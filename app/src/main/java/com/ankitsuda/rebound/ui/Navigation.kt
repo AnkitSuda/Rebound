@@ -38,6 +38,9 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
             composable(Route.History.route) {
                 HistoryScreen(navController)
             }
+            composable(Route.Calendar.route) {
+                CalendarScreen(navController)
+            }
         }
 
         navigation(

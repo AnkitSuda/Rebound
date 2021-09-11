@@ -23,6 +23,7 @@
 package com.ankitsuda.rebound.ui.components.collapsing_toolbar
 
 import android.os.Bundle
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.FabPosition
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -84,7 +85,7 @@ internal class FabPlacement(
 
 @Composable
 fun CollapsingToolbarScaffold(
-    modifier: Modifier,
+    modifier: Modifier = Modifier.fillMaxSize(),
     state: CollapsingToolbarScaffoldState,
     scrollStrategy: ScrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
     toolbarModifier: Modifier = Modifier,
