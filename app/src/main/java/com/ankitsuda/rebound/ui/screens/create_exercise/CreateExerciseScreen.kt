@@ -1,5 +1,7 @@
 package com.ankitsuda.rebound.ui.screens.create_exercise
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -35,15 +38,14 @@ fun CreateExerciseScreen(
     val scrollState = rememberScrollState()
 
     // Dummy lists
-    val categoriesList = arrayListOf("Weights & Reps", "Reps", "Distance & Time", "Time")
-    val musclesList = arrayListOf<String>().apply {
-        repeat(10) {
-            add("Muscle")
-        }
-    }
+    val categoriesList = viewModel.allCategories
+    val musclesList = viewModel.allPrimaryMuscles
 
     val nameValue by viewModel.name.observeAsState("")
     val noteValue by viewModel.note.observeAsState("")
+
+    val selectedCategory by viewModel.selectedCategory.observeAsState("Weights & Reps")
+    val selectedMuscle by viewModel.selectedMuscle.observeAsState("Abductors")
 
     val isCreateBtnEnabled = nameValue.trim().isNotEmpty()
 
@@ -125,10 +127,16 @@ fun CreateExerciseScreen(
                 FlowRow(crossAxisSpacing = 8.dp) {
                     for (category in categoriesList) {
                         Row(modifier = Modifier.width((LocalConfiguration.current.screenWidthDp / 2.5).dp)) {
-                            RadioButton(selected = false, onClick = {
+                            RadioButton(selected = selectedCategory == category, onClick = {
+                                viewModel.setCategory(category)
                             })
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = category)
+
+                            Text(
+                                text = category, modifier = Modifier.clickable(onClick = {
+                                    viewModel.setCategory(category)
+                                }, indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }))
                         }
                     }
                 }
@@ -149,10 +157,16 @@ fun CreateExerciseScreen(
                 FlowRow(crossAxisSpacing = 8.dp) {
                     for (muscle in musclesList) {
                         Row(modifier = Modifier.width((LocalConfiguration.current.screenWidthDp / 2.5).dp)) {
-                            RadioButton(selected = false, onClick = {
+                            RadioButton(selected = selectedMuscle == muscle, onClick = {
+                                viewModel.setPrimaryMuscle(muscle)
                             })
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = muscle)
+                            Text(
+                                text = muscle, modifier = Modifier.clickable(onClick = {
+                                    viewModel.setPrimaryMuscle(muscle)
+                                }, indication = null,
+                                    interactionSource = remember { MutableInteractionSource() })
+                            )
                         }
                     }
                 }

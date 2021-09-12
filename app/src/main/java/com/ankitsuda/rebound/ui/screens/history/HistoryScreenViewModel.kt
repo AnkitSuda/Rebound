@@ -30,7 +30,7 @@ class HistoryScreenViewModel @Inject constructor() : ViewModel() {
             tempList.add(c.time)
             c.add(Calendar.DATE, 1)
         }
-        tempList.removeAt(0)
+//        tempList.removeAt(0)
         week.clear()
         week.addAll(tempList)
     }

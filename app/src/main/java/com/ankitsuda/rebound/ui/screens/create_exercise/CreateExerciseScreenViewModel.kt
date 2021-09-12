@@ -18,11 +18,32 @@ class CreateExerciseScreenViewModel @Inject constructor() : ViewModel() {
     private var _isCreateBtnEnabled = MutableLiveData(false)
     val isCreateBtnEnabled = _isCreateBtnEnabled
 
-    private var _selectedCategory = MutableLiveData("")
+    private var _selectedCategory = MutableLiveData("Weights & Reps")
     val selectedCategory = _selectedCategory
 
-    private var _selectedMuscle = MutableLiveData("")
+    private var _selectedMuscle = MutableLiveData("Abductors")
     val selectedMuscle = _selectedMuscle
+
+    // Dummy
+    val allCategories = arrayListOf("Weights & Reps", "Reps", "Distance & Time", "Time")
+    val allPrimaryMuscles = arrayListOf(
+        "Abductors",
+        "Abs",
+        "Back",
+        "Biceps",
+        "Calves",
+        "Cardio",
+        "Chest",
+        "Core",
+        "Forearms",
+        "Glutes",
+        "Hamstrings",
+        "Lats",
+        "Quadriceps",
+        "shoulders",
+        "Traps",
+        "Triceps",
+    )
 
     fun setName(value: String) {
         _name.value = value
@@ -32,4 +53,11 @@ class CreateExerciseScreenViewModel @Inject constructor() : ViewModel() {
         _note.value = value
     }
 
+    fun setCategory(value: String) {
+        _selectedCategory.value = value
+    }
+
+    fun setPrimaryMuscle(value: String) {
+        _selectedMuscle.value = value
+    }
 }
