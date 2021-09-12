@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.BuildConfig
+import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.MoreItemCard
 import com.ankitsuda.rebound.ui.components.RoutineItemCard
 import com.ankitsuda.rebound.ui.components.TopBar
@@ -49,7 +50,7 @@ fun MoreScreen(navController: NavHostController) {
                     text = "Personalization",
                     description = "Make rebound yours",
                     onClick = {
-
+                        navController.navigate(Route.Personalization.route)
                     })
             }
             item {
@@ -188,7 +189,7 @@ fun MoreScreen(navController: NavHostController) {
 }
 
 @Composable
-private fun SectionHeader(text: String) {
+fun SectionHeader(text: String) {
     Text(text = text, style = MaterialTheme.typography.caption, modifier = Modifier.padding(8.dp))
 }
 

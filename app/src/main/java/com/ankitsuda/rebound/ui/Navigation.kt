@@ -13,6 +13,8 @@ import com.ankitsuda.rebound.ui.screens.history.HistoryScreen
 import com.ankitsuda.rebound.ui.screens.home.HomeScreen
 import com.ankitsuda.rebound.ui.screens.main_screen.BottomNavigationScreens
 import com.ankitsuda.rebound.ui.screens.more.MoreScreen
+import com.ankitsuda.rebound.ui.screens.personalization.PersonalizationScreen
+import com.ankitsuda.rebound.ui.screens.personalization.main_colors.MainColorsPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
 
 
@@ -75,6 +77,12 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
         ) {
             composable(Route.More.route) {
                 MoreScreen(navController)
+            }
+            composable(Route.Personalization.route) {
+                PersonalizationScreen(navController)
+            }
+            composable(Route.MainColorsPersonalization.route) {
+                MainColorsPersonalizationScreen(navController)
             }
         }
     }
