@@ -51,10 +51,29 @@ fun PersonalizationScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                    icon = Icons.Outlined.ColorLens,
                     text = "Main Colors",
                     onClick = {
                         navController.navigate(Route.MainColorsPersonalization.route)
+                    })
+            }
+            item {
+                MoreItemCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    text = "Cards",
+                    onClick = {
+                        navController.navigate(Route.CardsPersonalization.route)
+                    })
+            }
+            item {
+                MoreItemCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    text = "Color Picker Demo",
+                    onClick = {
+                        navController.navigate(Route.ColorPickerDemo.route)
                     })
             }
         }

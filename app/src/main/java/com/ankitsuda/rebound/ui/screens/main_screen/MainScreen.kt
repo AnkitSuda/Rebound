@@ -11,12 +11,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.ankitsuda.rebound.ui.MainScreenNavigationConfigurations
 import com.ankitsuda.rebound.ui.MainScreenScaffold
 import com.ankitsuda.rebound.ui.Route
@@ -24,19 +20,21 @@ import com.ankitsuda.rebound.ui.components.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.PanelTopExpanded
 import com.ankitsuda.rebound.ui.components.WorkoutPanel
-import com.ankitsuda.rebound.ui.screens.exercise.ExerciseDetailScreen
-import com.ankitsuda.rebound.ui.screens.exercises.ExercisesScreen
-import com.ankitsuda.rebound.ui.screens.history.HistoryScreen
-import com.ankitsuda.rebound.ui.screens.home.HomeScreen
-import com.ankitsuda.rebound.ui.screens.more.MoreScreen
-import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import kotlinx.coroutines.launch
+import timber.log.Timber
+
+data class MainDialog(
+    var dialogContent: @Composable () -> Unit = {},
+    var showDialog: () -> Unit = {},
+    var hideDialog: () -> Unit = {}
+)
+
+val LocalDialog = compositionLocalOf { MainDialog() }
 
 /**
  * Root screen of the app
- * Currently testing sliding panel, so using colors instead of other content.
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -52,6 +50,7 @@ fun MainScreen() {
         BottomNavigationScreens.More
     )
 
+
     val swipeableState = rememberSwipeableState(0)
     val coroutine = rememberCoroutineScope()
 
@@ -60,77 +59,111 @@ fun MainScreen() {
             swipeableState.animateTo(0)
         }
     }
-    MainScreenScaffold(
-        modifier = Modifier,
-        swipeableState = swipeableState,
-        bottomBar = {
-            BottomNavigation(
-                contentColor = MaterialTheme.colors.primary,
-                backgroundColor = MaterialTheme.colors.surface,
-                elevation = 0.dp,
-                modifier = Modifier
-                    .navigationBarsHeight(additional = 56.dp)
-            ) {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
 
-                bottomNavigationItems.forEach { screen ->
+    var dialogContent: @Composable () -> Unit by remember {
+        mutableStateOf({})
+    }
 
-                    BottomNavigationItem(
-                        icon = { Icon(screen.icon, screen.title) },
-                        label = { Text(screen.title) },
-                        selectedContentColor = MaterialTheme.colors.primary,
-                        unselectedContentColor = Color.Black.copy(0.4f),
-                        alwaysShowLabel = false, // This hides the title for the unselected items
-                        modifier = Modifier.navigationBarsPadding(),
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+    var dialogVisible by remember {
+        mutableStateOf(false)
+    }
+
+    val dialog = MainDialog()
+    dialog.showDialog = {
+        dialogContent = dialog.dialogContent
+        dialogVisible = true
+        Timber.d("show dialog")
+    }
+    dialog.hideDialog = {
+        dialogVisible = false
+    }
+
+    CompositionLocalProvider(LocalDialog provides dialog) {
+        Surface() {
+            MainScreenScaffold(
+                modifier = Modifier,
+                swipeableState = swipeableState,
+                bottomBar = {
+                    BottomNavigation(
+                        contentColor = MaterialTheme.colors.primary,
+                        backgroundColor = MaterialTheme.colors.surface,
+                        elevation = 0.dp,
+                        modifier = Modifier
+                            .navigationBarsHeight(additional = 56.dp)
+                    ) {
+                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val currentDestination = navBackStackEntry?.destination
+
+                        bottomNavigationItems.forEach { screen ->
+
+                            BottomNavigationItem(
+                                icon = { Icon(screen.icon, screen.title) },
+                                label = { Text(screen.title) },
+                                selectedContentColor = MaterialTheme.colors.primary,
+                                unselectedContentColor = Color.Black.copy(0.4f),
+                                alwaysShowLabel = false, // This hides the title for the unselected items
+                                modifier = Modifier.navigationBarsPadding(),
+                                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
 //                        selected = currentRoute == screen.route,
-                        onClick = {
-                            // This if check gives us a "singleTop" behavior where we do not create a
-                            // second instance of the composable if we are already on that destination
+                                onClick = {
+                                    // This if check gives us a "singleTop" behavior where we do not create a
+                                    // second instance of the composable if we are already on that destination
 //                               if (currentRoute != screen.route) {
 //                                   navController.navigate(screen.route)
 //                               }
-                            navController.navigate(screen.route) {
-                                // Pop up to the start destination of the graph to
-                                // avoid building up a large stack of destinations
-                                // on the back stack as users select items
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
+                                    navController.navigate(screen.route) {
+                                        // Pop up to the start destination of the graph to
+                                        // avoid building up a large stack of destinations
+                                        // on the back stack as users select items
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
 
-                                // Avoid multiple copies of the same destination when
-                                // reselecting the same item
-                                launchSingleTop = true
-                                // Restore state when reselecting a previously selected item
-                                restoreState = true
-                            }
+                                        // Avoid multiple copies of the same destination when
+                                        // reselecting the same item
+                                        launchSingleTop = true
+                                        // Restore state when reselecting a previously selected item
+                                        restoreState = true
+                                    }
 
-                        },
-                    )
-                }
-            }
-        },
-        panel = {
-            WorkoutPanel()
-        },
-        panelTopCommon = {
-            PanelTopDragHandle()
-        },
-        panelTopCollapsed = {
-            PanelTopCollapsed()
-        },
-        panelTopExpanded = {
-            PanelTopExpanded(
-                onCollapseBtnClicked = {
-                    coroutine.launch {
-                        swipeableState.animateTo(0)
+                                },
+                            )
+                        }
                     }
                 },
-                onTimerBtnClicked = { },
-                onFinishBtnClicked = {})
-        }) {
-        MainScreenNavigationConfigurations(navController = navController)
+                panel = {
+                    WorkoutPanel()
+                },
+                panelTopCommon = {
+                    PanelTopDragHandle()
+                },
+                panelTopCollapsed = {
+
+                    PanelTopCollapsed()
+
+                },
+                panelTopExpanded = {
+                    PanelTopExpanded(
+                        onCollapseBtnClicked = {
+                            coroutine.launch {
+                                swipeableState.animateTo(0)
+                            }
+                        },
+                        onTimerBtnClicked = { },
+                        onFinishBtnClicked = {})
+                }) {
+                MainScreenNavigationConfigurations(navController = navController)
+            }
+
+            if (dialogVisible) {
+                AlertDialog(onDismissRequest = {
+                    dialogVisible = false
+                },
+                    buttons = {
+                        dialogContent()
+                    })
+            }
+        }
     }
 }
 

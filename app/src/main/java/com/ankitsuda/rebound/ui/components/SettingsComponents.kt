@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,13 +26,17 @@ fun ColorPickerCardItem(
     description: String = "",
     enableAutoColorPicker: Boolean = true,
     selectedColor: Color = Color.Black,
-    onNewColorSelected: (Color) -> Unit,
+    onNewColorSelected: (Color) -> Unit = {},
     onClick: () -> Unit = {}
 ) {
     AppCard(modifier = modifier, onClick = onClick) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             if (icon != null) {
-                Icon(imageVector = icon, contentDescription = text, modifier = Modifier.padding(end = 16.dp))
+                Icon(
+                    imageVector = icon,
+                    contentDescription = text,
+                    modifier = Modifier.padding(end = 16.dp)
+                )
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = text)
@@ -48,7 +53,43 @@ fun ColorPickerCardItem(
                     .size(28.dp)
                     .clip(CircleShape)
                     .background(selectedColor)
+                    .border(width = 1.dp, color = Color.Black, shape = CircleShape)
             )
+        }
+    }
+}
+
+@Composable
+fun SwitchCardItem(
+    modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
+    text: String,
+    description: String = "",
+    checked: Boolean = false,
+    onChange: (Boolean) -> Unit = {}
+) {
+    AppCard(modifier = modifier, onClick = {
+        onChange(!checked)
+    }) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = text,
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = text)
+                if (description.isNotEmpty()) {
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.caption,
+                        color = Color(117, 117, 117)
+                    )
+                }
+            }
+            Switch(checked = checked, onCheckedChange = onChange)
         }
     }
 }

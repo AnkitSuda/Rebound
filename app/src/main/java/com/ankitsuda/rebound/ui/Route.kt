@@ -26,6 +26,8 @@ sealed class Route(val route: String) {
 
     object Personalization : Route("personalization")
     object MainColorsPersonalization : Route("personalization/main_colors")
+    object CardsPersonalization : Route("personalization/cards")
+    object ColorPickerDemo : Route("personalization/color_picker_demo")
 
     object CreateExercise : Route("create_exercise")
 
