@@ -2,6 +2,7 @@ package com.ankitsuda.rebound.ui.screens.exercises
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -61,7 +62,7 @@ fun ExercisesScreen(
     val searchTerm by viewModel.searchTerm.observeAsState("")
 
     Column {
-        Box() {
+        Box(Modifier.background(MaterialTheme.colors.background)) {
 
             if (!isSearchMode) {
                 TopBar(title = "Exercises", leftIconBtn = {
@@ -127,7 +128,7 @@ fun ExercisesScreen(
         ) { index ->
 
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

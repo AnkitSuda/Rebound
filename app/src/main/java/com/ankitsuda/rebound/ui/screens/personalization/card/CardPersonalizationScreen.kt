@@ -1,5 +1,6 @@
 package com.ankitsuda.rebound.ui.screens.personalization.card
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ fun CardPersonalizationScreen(
 
     val cardColor by viewModel.cardColor.collectAsState(Color(248, 248, 248))
     val borderEnabled by viewModel.borderEnabled.collectAsState(false)
+    val elevation by viewModel.elevation.collectAsState(0)
 
     Timber.d("cardColor $cardColor")
 
@@ -47,6 +49,7 @@ fun CardPersonalizationScreen(
                 }
             })
         },
+        modifier = Modifier.background(MaterialTheme.colors.background)
     ) {
 
         val itemModifier = Modifier
@@ -56,7 +59,7 @@ fun CardPersonalizationScreen(
         with(LocalDialog.current) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize().background(MaterialTheme.colors.background),
                 contentPadding = PaddingValues(16.dp)
             ) {
 
@@ -66,13 +69,8 @@ fun CardPersonalizationScreen(
                         modifier = itemModifier,
                         text = "Background color",
                         selectedColor = cardColor,
-                        onClick = {
-                            dialogContent = {
-                                ColorPicker(onColorSelected = {
-                                    viewModel.setCardColor(it)
-                                })
-                            }
-                            showDialog()
+                        onNewColorSelected = {
+                            viewModel.setCardColor(it)
                         })
 
                 }
@@ -82,10 +80,24 @@ fun CardPersonalizationScreen(
                     SwitchCardItem(
                         modifier = itemModifier,
                         text = "Border enabled",
-                    checked = borderEnabled,
-                    onChange = {
-                        viewModel.setBorderEnabled(it)
-                    })
+                        checked = borderEnabled,
+                        onChange = {
+                            viewModel.setBorderEnabled(it)
+                        })
+
+                }
+
+                item {
+
+                    SliderCardItem(
+                        modifier = itemModifier,
+                        text = "Elevation",
+                        value = elevation.toFloat(),
+                        steps = 25,
+                        valueRange = 0f..25f,
+                        onChange = {
+                            viewModel.setElevation(it.toInt())
+                        })
 
                 }
 

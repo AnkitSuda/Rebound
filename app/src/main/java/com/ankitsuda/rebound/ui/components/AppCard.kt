@@ -22,13 +22,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun AppCard(
     modifier: Modifier = Modifier,
+    viewModel: AppCardViewModel = hiltViewModel(),
     content: @Composable () -> Unit
 ) {
+    val bgColor by viewModel.cardColor.collectAsState(initial = Color(248, 248, 248))
+    val elevation by viewModel.elevation.collectAsState(initial = 0)
+
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        elevation = 0.dp,
-        backgroundColor = Color(248, 248, 248),
+        elevation = elevation.toInt().dp,
+        backgroundColor = bgColor,
         content = content
     )
 }
@@ -48,9 +52,11 @@ fun AppCard(
     content: @Composable () -> Unit
 ) {
     val bgColor by viewModel.cardColor.collectAsState(initial = Color(248, 248, 248))
+    val elevation by viewModel.elevation.collectAsState(initial = 0)
+
     Card(
         modifier = modifier,
-        elevation = 0.dp,
+        elevation = elevation.toInt().dp,
         shape = MaterialTheme.shapes.medium,
         backgroundColor = bgColor,
         onClick = onClick,

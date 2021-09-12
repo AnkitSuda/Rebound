@@ -15,6 +15,7 @@ class CardPersonalizationScreenViewModel @Inject constructor(val prefStorage: Pr
 
     val cardColor = prefStorage.cardColor
     val borderEnabled = prefStorage.cardBorderEnabled
+    val elevation = prefStorage.cardElevation
 
     fun setCardColor(color: Color) {
         viewModelScope.launch {
@@ -25,6 +26,12 @@ class CardPersonalizationScreenViewModel @Inject constructor(val prefStorage: Pr
     fun setBorderEnabled(enabled: Boolean) {
         viewModelScope.launch {
             prefStorage.setCardBorderEnabled(enabled)
+        }
+    }
+
+    fun setElevation(value: Int) {
+        viewModelScope.launch {
+            prefStorage.setCardElevation(value)
         }
     }
 

@@ -1,5 +1,6 @@
 package com.ankitsuda.rebound.ui.screens.more
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -34,11 +35,12 @@ fun MoreScreen(navController: NavHostController) {
         toolbar = {
             TopBar(title = "More")
         },
+        modifier = Modifier.background(MaterialTheme.colors.background)
     ) {
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize().background(MaterialTheme.colors.background),
             contentPadding = PaddingValues(16.dp)
         ) {
             item {
@@ -51,18 +53,6 @@ fun MoreScreen(navController: NavHostController) {
                     description = "Make rebound yours",
                     onClick = {
                         navController.navigate(Route.Personalization.route)
-                    })
-            }
-            item {
-                MoreItemCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    icon = Icons.Outlined.Palette,
-                    text = "App Theme",
-                    description = "Light",
-                    onClick = {
-
                     })
             }
             item {

@@ -60,7 +60,8 @@ fun TopBar(
             Text(
                 text = title,
                 style = MaterialTheme.typography.h5,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center),
+                color = MaterialTheme.colors.onBackground,
             )
 
             rightIconBtn?.let {

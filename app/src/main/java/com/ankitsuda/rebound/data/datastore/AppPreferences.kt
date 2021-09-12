@@ -7,6 +7,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.ankitsuda.rebound.ui.theme.DefaultAccentColor
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -24,14 +25,73 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
     companion object {
         val PRIMARY_COLOR_KEY = intPreferencesKey(name = "primary_color")
+        val BACKGROUND_COLOR_KEY = intPreferencesKey(name = "background_color")
+        val ON_PRIMARY_COLOR_KEY = intPreferencesKey(name = "on_primary_color")
+        val ON_BACKGROUND_COLOR_KEY = intPreferencesKey(name = "on_background_color")
         val CARD_COLOR_KEY = intPreferencesKey(name = "card_color")
         val CARD_BORDER_ENABLED_KEY = booleanPreferencesKey(name = "card_border_enabled")
+        val CARD_ELEVATION_KEY = intPreferencesKey(name = "card_elevation")
     }
 
     suspend fun setColor(key: Preferences.Key<Int>, color: Color) {
         context.dataStore.edit { preferences ->
             preferences[key] = color.toArgb()
         }
+    }
+
+    override val primaryColor: Flow<Color>
+        get() = context.dataStore.data
+            .map { preferences ->
+                if (preferences[PRIMARY_COLOR_KEY] != null) {
+                    Color(preferences[PRIMARY_COLOR_KEY]!!)
+                } else {
+                    DefaultAccentColor
+                }
+            }
+
+    override suspend fun setPrimaryColor(color: Color) {
+        setColor(PRIMARY_COLOR_KEY, color)
+    }
+
+    override val backgroundColor: Flow<Color>
+        get() = context.dataStore.data
+            .map { preferences ->
+                if (preferences[BACKGROUND_COLOR_KEY] != null) {
+                    Color(preferences[BACKGROUND_COLOR_KEY]!!)
+                } else {
+                    Color.White
+                }
+            }
+
+    override suspend fun setBackgroundColor(color: Color) {
+        setColor(BACKGROUND_COLOR_KEY, color)
+    }
+
+    override val onPrimaryColor: Flow<Color>
+        get() = context.dataStore.data
+            .map { preferences ->
+                if (preferences[ON_PRIMARY_COLOR_KEY] != null) {
+                    Color(preferences[ON_PRIMARY_COLOR_KEY]!!)
+                } else {
+                    Color.White
+                }
+            }
+
+    override suspend fun setOnPrimaryColor(color: Color) {
+        setColor(ON_PRIMARY_COLOR_KEY, color)
+    }
+  override val onBackgroundColor: Flow<Color>
+        get() = context.dataStore.data
+            .map { preferences ->
+                if (preferences[ON_BACKGROUND_COLOR_KEY] != null) {
+                    Color(preferences[ON_BACKGROUND_COLOR_KEY]!!)
+                } else {
+                    Color.White
+                }
+            }
+
+    override suspend fun setOnBackgroundColor(color: Color) {
+        setColor(ON_BACKGROUND_COLOR_KEY, color)
     }
 
     override val cardColor: Flow<Color>
@@ -53,6 +113,13 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
     override suspend fun setCardBorderEnabled(enabled: Boolean) {
         context.dataStore.setValue(CARD_BORDER_ENABLED_KEY, enabled)
+    }
+
+    override val cardElevation: Flow<Int>
+        get() = context.dataStore.getValueAsFlow(CARD_ELEVATION_KEY, 0)
+
+    override suspend fun setCardElevation(value: Int) {
+        context.dataStore.setValue(CARD_ELEVATION_KEY, value)
     }
 
 

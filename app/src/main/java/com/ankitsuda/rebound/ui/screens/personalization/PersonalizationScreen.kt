@@ -1,10 +1,12 @@
 package com.ankitsuda.rebound.ui.screens.personalization
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BubbleChart
 import androidx.compose.material.icons.outlined.ColorLens
@@ -39,6 +41,7 @@ fun PersonalizationScreen(navController: NavController) {
                 }
             })
         },
+        modifier = Modifier.background(MaterialTheme.colors.background)
     ) {
 
         LazyColumn(
@@ -49,7 +52,7 @@ fun PersonalizationScreen(navController: NavController) {
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth().background(MaterialTheme.colors.background)
                         .padding(bottom = 8.dp),
                     text = "Main Colors",
                     onClick = {

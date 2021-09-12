@@ -1,6 +1,7 @@
 package com.ankitsuda.rebound.ui.screens.workout
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -53,7 +54,7 @@ fun WorkoutScreen(navController: NavHostController) {
 
         },
         floatingActionButtonPosition = FabPosition.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)
     ) {
 
 
@@ -61,6 +62,7 @@ fun WorkoutScreen(navController: NavHostController) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colors.background)
                 .padding(16.dp),
         ) {
             item {

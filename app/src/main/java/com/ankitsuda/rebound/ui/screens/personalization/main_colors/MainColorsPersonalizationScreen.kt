@@ -1,5 +1,6 @@
 package com.ankitsuda.rebound.ui.screens.personalization.main_colors
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.rebound.data.datastore.AppPreferences
 import com.ankitsuda.rebound.ui.components.*
@@ -17,14 +19,20 @@ import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarS
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
+import com.ankitsuda.rebound.ui.theme.DefaultAccentColor
 
 @Composable
-fun MainColorsPersonalizationScreen(navController: NavController) {
+fun MainColorsPersonalizationScreen(
+    navController: NavController,
+    viewModel: MainColorsPersonalizationScreenViewModel = hiltViewModel()
+) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
-    var newPrimaryColor by remember {
-        mutableStateOf(Color.Blue)
-    }
+    val primaryColor by viewModel.primaryColor.collectAsState(initial = DefaultAccentColor)
+    val backgroundColor by viewModel.backgroundColor.collectAsState(initial = Color.White)
+
+    val onPrimaryColor by viewModel.onPrimaryColor.collectAsState(initial = Color.White)
+    val onBackgroundColor by viewModel.onBackgroundColor.collectAsState(initial = Color.Black)
 
     CollapsingToolbarScaffold(
         state = collapsingState,
@@ -39,6 +47,7 @@ fun MainColorsPersonalizationScreen(navController: NavController) {
                 }
             })
         },
+        modifier = Modifier.background(MaterialTheme.colors.background)
     ) {
 
         val itemModifier = Modifier
@@ -48,7 +57,8 @@ fun MainColorsPersonalizationScreen(navController: NavController) {
         with(LocalDialog.current) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
                 contentPadding = PaddingValues(16.dp)
             ) {
 
@@ -57,18 +67,11 @@ fun MainColorsPersonalizationScreen(navController: NavController) {
                     ColorPickerCardItem(
                         modifier = itemModifier,
                         text = "Primary Color",
-                        selectedColor = newPrimaryColor,
+                        selectedColor = primaryColor,
                         onNewColorSelected = {
-
+                            viewModel.setPrimaryColor(it)
                         },
-                        onClick = {
-                            dialogContent = {
-                                ColorPicker(onColorSelected = {
-                                    newPrimaryColor = it
-                                })
-                            }
-                            showDialog()
-                        })
+                    )
 
                 }
                 item {
@@ -76,43 +79,30 @@ fun MainColorsPersonalizationScreen(navController: NavController) {
                     ColorPickerCardItem(
                         modifier = itemModifier,
                         text = "Background Color",
-                        selectedColor = MaterialTheme.colors.background,
-                    )
-
-                }
-                item {
-
-                    ColorPickerCardItem(
-                        modifier = itemModifier,
-                        text = "Card Color",
-                        selectedColor = MaterialTheme.colors.background,
-                        onClick = {
-                            dialogContent = {
-                                ColorPicker(onColorSelected = {
-
-                                })
-                            }
-                            showDialog()
+                        selectedColor = backgroundColor,
+                        onNewColorSelected = {
+                            viewModel.setBackgroundColor(it)
                         }
                     )
 
                 }
+
                 item {
                     ColorPickerCardItem(
                         modifier = itemModifier,
                         text = "On Primary Color",
-                        selectedColor = MaterialTheme.colors.onPrimary,
+                        selectedColor = onPrimaryColor,
                         onNewColorSelected = {
-
+                            viewModel.setOnPrimaryColor(it)
                         })
                 }
                 item {
                     ColorPickerCardItem(
                         modifier = itemModifier,
                         text = "On Background Color",
-                        selectedColor = MaterialTheme.colors.onBackground,
+                        selectedColor = onBackgroundColor,
                         onNewColorSelected = {
-
+                            viewModel.setOnBackgroundColor(it)
                         })
                 }
             }

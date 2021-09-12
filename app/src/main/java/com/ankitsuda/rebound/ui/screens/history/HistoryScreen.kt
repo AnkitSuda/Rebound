@@ -85,7 +85,7 @@ fun HistoryScreen(
                     .statusBarsHeight()
                     .fillMaxWidth()
                     .zIndex(2f)
-                    .background(MaterialTheme.colors.surface)
+                    .background(MaterialTheme.colors.background)
             )
 
             CollapsingToolbarScaffold(
@@ -114,14 +114,14 @@ fun HistoryScreen(
                         }
                     )
                 },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)
             ) {
 
 
                 // User routines
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxSize().background(MaterialTheme.colors.background),
                 ) {
                     // Sticky Calendar
 
@@ -136,7 +136,7 @@ fun HistoryScreen(
 
                                 Row(
                                     modifier = Modifier
-                                        .background(MaterialTheme.colors.surface)
+                                        .background(MaterialTheme.colors.background)
 //                                        .padding(start = 8.dp, end = 8.dp)
                                 ) {
                                     for (day in week) {
