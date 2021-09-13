@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker
+import com.ankitsuda.rebound.ui.components.color_picker.ColorPickerAlt
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
 
@@ -25,6 +26,7 @@ fun ColorPickerCardItem(
     text: String,
     description: String = "",
     enableAutoColorPicker: Boolean = true,
+    useAltColorPicker: Boolean = true,
     selectedColor: Color = Color.Black,
     onNewColorSelected: (Color) -> Unit = {},
     onClick: () -> Unit = {}
@@ -34,7 +36,11 @@ fun ColorPickerCardItem(
             onClick()
             if (enableAutoColorPicker) {
                 dialogContent = {
-                    ColorPickerDialog(onColorSelected = onNewColorSelected)
+                    if (useAltColorPicker) {
+                        ColorPickerAlt(colorSelected = onNewColorSelected)
+                    } else {
+                        ColorPickerDialog(onColorSelected = onNewColorSelected)
+                    }
                 }
                 showDialog()
             }

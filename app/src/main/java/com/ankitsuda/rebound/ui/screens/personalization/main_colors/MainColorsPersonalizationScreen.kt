@@ -92,6 +92,7 @@ fun MainColorsPersonalizationScreen(
                         modifier = itemModifier,
                         text = "On Primary Color",
                         selectedColor = onPrimaryColor,
+                        useAltColorPicker = true,
                         onNewColorSelected = {
                             viewModel.setOnPrimaryColor(it)
                         })
