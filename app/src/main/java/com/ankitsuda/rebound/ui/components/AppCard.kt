@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 /**
  * This card matches look and feel the app and user choices
@@ -30,9 +31,9 @@ fun AppCard(
 
     Card(
         modifier = modifier,
+        elevation = ReboundTheme.dimens.cardElevation,
         shape = MaterialTheme.shapes.medium,
-        elevation = elevation.toInt().dp,
-        backgroundColor = bgColor,
+        backgroundColor = ReboundTheme.colors.card,
         content = content
     )
 }
@@ -56,9 +57,9 @@ fun AppCard(
 
     Card(
         modifier = modifier,
-        elevation = elevation.toInt().dp,
+        elevation = ReboundTheme.dimens.cardElevation,
         shape = MaterialTheme.shapes.medium,
-        backgroundColor = bgColor,
+        backgroundColor = ReboundTheme.colors.card,
         onClick = onClick,
         content = content
     )
