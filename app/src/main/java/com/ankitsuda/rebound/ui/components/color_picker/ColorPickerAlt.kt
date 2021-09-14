@@ -3,12 +3,9 @@ package com.ankitsuda.rebound.ui.components.color_picker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -21,20 +18,25 @@ import androidx.compose.foundation.gestures.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.*
+import android.annotation.SuppressLint
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.unit.toSize
+import com.ankitsuda.rebound.ui.components.AppTextField
+
 
 /**
  * Currently experimenting with solutions so the code is not clean
  */
+@SuppressLint("NewApi")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ColorPickerAlt(
-    pickerHeight: Dp = 24.dp,
     colorSelected: (Color) -> Unit
 ) {
-    val maxWidth = with(LocalDensity.current) {
-        100.dp.toPx()
-    }
 
     // Since we start from hue 0 setting the default selected color
     // to red, but need to find a better way of getting initial color.
@@ -46,25 +48,169 @@ fun ColorPickerAlt(
 
         mutableStateOf(0f)
     }
+
+
+    // Color Picker View
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+
+            SatValPicker(selectedColorHue, onColorSelected = {
+                selectedColor = it
+            })
+
+            Spacer(Modifier.height(16.dp))
+
+            HueSlider(defaultColor = Color.Red, onHueSelected = { newColor, newHue ->
+                selectedColor = newColor
+                selectedColorHue = newHue
+            })
+
+            Spacer(Modifier.height(16.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier
+                        .height(24.dp)
+                        .width(48.dp)
+                        .background(selectedColor)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                ColorInfo(selectedColor, onHexEdited = {
+                    selectedColor = it
+                })
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(onClick = { /*TODO*/ }) {
+                    Text(text = "Presets")
+                }
+                TextButton(onClick = { colorSelected(selectedColor) }) {
+                    Text(text = "Select")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ColorInfo(selectedColor: Color, onHexEdited: (Color) -> Unit) {
+    var mSelectedColor by remember {
+        mutableStateOf(selectedColor)
+    }
+    var text by remember {
+        mutableStateOf("#" + mSelectedColor.toHexString().uppercase().drop(2))
+    }
+    if (selectedColor != mSelectedColor) {
+        mSelectedColor = selectedColor
+        text = "#" + mSelectedColor.toHexString().uppercase().drop(2)
+    }
+    AppTextField(value = text, placeholderValue = "Hex", onValueChange = {
+        text = it
+        try {
+            onHexEdited(Color(AndroidColor.parseColor(it)))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    })
+}
+
+private fun Color.toHexString(): String {
+    val alphaString = (alpha * 255).toInt().toString(16).let { if (it.length == 1) "0$it" else it }
+    val redString = (red * 255).toInt().toString(16).let { if (it.length == 1) "0$it" else it }
+    val greenString = (green * 255).toInt().toString(16).let { if (it.length == 1) "0$it" else it }
+    val blueString = (blue * 255).toInt().toString(16).let { if (it.length == 1) "0$it" else it }
+
+    return "$alphaString$redString$greenString$blueString"
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun SatValPicker(hue: Float, onColorSelected: (Color) -> Unit) {
+    var size by remember { mutableStateOf(Size(100f, 100f)) }
+    var selectedColor by remember {
+        mutableStateOf(Color.Red)
+    }
+
+    // Hsv picker
+    Box(
+        modifier = Modifier
+            .aspectRatio(1f)
+            .onGloballyPositioned {
+                size = it.size.toSize()
+            }
+    ) {
+        with(
+            LocalDensity.current
+        ) {
+            Image(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.Center)
+                    .pointerInteropFilter {
+                        Timber.d(it.toString())
+                        val mSat = (it.x) / (size.width)
+                        val mVal = ((size.width - it.y)) / (size.width)
+
+                        selectedColor = Color(
+                            AndroidColor.HSVToColor(
+                                floatArrayOf(
+                                    hue,
+                                    mSat,
+                                    mVal
+                                )
+                            )
+                        )
+
+                        onColorSelected(selectedColor)
+
+                        true
+                    },
+                bitmap =
+                getSatValBitmap(
+                    hue = hue,
+                    width = size.width.toInt(),
+                    height = size.height.toInt(),
+                    skipCount = 10,
+                )!!.asImageBitmap(),
+                contentDescription = ""
+            )
+        }
+    }
+}
+
+@Composable
+fun HueSlider(defaultColor: Color, onHueSelected: (color: Color, hue: Float) -> Unit) {
     var position by remember {
         mutableStateOf(0f)
     }
+    val pickerHeight: Dp = 24.dp
 
-    val squareSizePx = with(LocalDensity.current) {
-        pickerHeight.toPx()
+    var selectedColor by remember {
+        mutableStateOf(defaultColor)
     }
-    val pickerWidthPx = with(LocalDensity.current) {
-        300.dp.toPx()
+
+    var squareSizePx =
+        with(LocalDensity.current) {
+            pickerHeight.toPx()
+
+        }
+
+    var pickerWidthPx by with(LocalDensity.current) {
+        remember {
+            mutableStateOf(300.dp.toPx())
+        }
     }
 
     val pickerMaxWidth = pickerWidthPx - squareSizePx
-
-    val horizontalGradient = LinearGradientShader(
-        colors = hueColors(),
-        from = Offset.Zero,
-        to = Offset(pickerWidthPx, 0f)
-    )
-    val roundedCornerShape = RoundedCornerShape(pickerHeight / 2)
 
     val dragState = rememberDraggableState(onDelta = { delta ->
         val old = position
@@ -73,15 +219,12 @@ fun ColorPickerAlt(
         position = (delta + position).coerceIn(0f, pickerMaxWidth)
 
         val hsvColor = getHsvColor(position, pickerMaxWidth)
-        selectedColor = Color(hsvColor)
-
+        val newSelectedColor = Color(hsvColor)
         val hsvArray = FloatArray(3)
-        AndroidColor.colorToHSV(selectedColor.toArgb(), hsvArray)
-        selectedColorHue = hsvArray[0]
-        Timber.d(hsvArray.toString())
+        AndroidColor.colorToHSV(newSelectedColor.toArgb(), hsvArray)
 
-        colorSelected(selectedColor)
-
+        onHueSelected(newSelectedColor, hsvArray[0])
+        selectedColor = newSelectedColor
         position - old
     })
 
@@ -92,97 +235,56 @@ fun ColorPickerAlt(
             position = it.x
         },
     )
+    // Hue picker
+    Box(
+        modifier = drag
+            .pointerInput(Unit) {
 
-    // Color Picker View
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            // Hsv picker
-            Box(modifier = Modifier.fillMaxWidth()) {
-                with(
-                    LocalDensity.current
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .width(300.dp)
-                            .height(300.dp)
-                            .align(Alignment.Center)
-                            .pointerInteropFilter {
-                                Timber.d(it.toString())
-                                val mSat = (it.x) / (300.dp.toPx())
-                                val mVal = ((300.dp.toPx() - it.y)) / (300.dp.toPx())
+                detectTapGestures {
+                    position = it.x
 
-                                selectedColor =
-                                    Color(
-                                        AndroidColor.HSVToColor(
-                                            floatArrayOf(
-                                                selectedColorHue,
-                                                mSat,
-                                                mVal
-                                            )
-                                        )
-                                    )
+                    val hsvColor = getHsvColor(position, pickerMaxWidth)
+                    val newSelectedColor = Color(hsvColor)
+                    val hsvArray = FloatArray(3)
+                    AndroidColor.colorToHSV(newSelectedColor.toArgb(), hsvArray)
 
-                                colorSelected(selectedColor)
-                                true
-                            },
-                        bitmap =
-                        getSatValBitmap(
-                            hue = selectedColorHue,
-                            width = 300.dp.toPx().toInt(),
-                            height = 300.dp.toPx().toInt(),
-                            skipCount = 10,
-                        )!!.asImageBitmap(),
-                        contentDescription = ""
-                    )
+                    onHueSelected(newSelectedColor, hsvArray[0])
+                    selectedColor = newSelectedColor
+
                 }
             }
 
-            // Hue picker
-            Box(
-                modifier = drag
-                    .pointerInput(Unit) {
-
-                        detectTapGestures {
-                            position = it.x
-
-                            val hsvColor = getHsvColor(position, pickerMaxWidth)
-                            selectedColor = Color(hsvColor)
-
-                            colorSelected(selectedColor)
-                        }
-                    }
-
-                    .height(pickerHeight)
-                    .width(300.dp)
-                    .clip(shape = roundedCornerShape)
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = hueColors(),
-                            startX = 0f,
-                            endX = pickerWidthPx
-                        ), shape = roundedCornerShape
-                    )
-            ) {
-
-                val xOffset = with(LocalDensity.current) { position.toDp() }
-                val squareSize = with(LocalDensity.current) { squareSizePx.toDp() }
-
-                // Square box to show the preview of selected color
-                Box(
-                    Modifier
-                        .offset(x = xOffset, y = 0.dp)
-                        .width(squareSize)
-                        .height(squareSize)
-                        .clip(roundedCornerShape)
-                        .background(selectedColor)
-                        .border(width = 2.dp, color = Color.White, shape = roundedCornerShape)
-                        .shadow(elevation = 2.dp, shape = roundedCornerShape),
-                )
-
-
+            .height(pickerHeight)
+            .fillMaxWidth()
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = hueColors(),
+                    startX = 0f,
+                    endX = pickerWidthPx
+                ),
+            )
+            .onGloballyPositioned {
+                pickerWidthPx = it.size.width.toFloat()
             }
-        }
+    ) {
+
+        val xOffset = with(LocalDensity.current) { position.toDp() }
+        val squareSize = with(LocalDensity.current) { squareSizePx.toDp() }
+
+        // Square box to show the preview of selected color
+        Box(
+            Modifier
+                .offset(x = xOffset, y = 0.dp)
+                .width(squareSize)
+                .height(squareSize)
+                .background(selectedColor)
+                .border(width = 2.dp, color = Color.White)
+                .shadow(elevation = 2.dp),
+        )
+
+
     }
+
 }
 
 
@@ -211,7 +313,7 @@ fun hueColors(): List<Color> {
  * @param skipCount Number of pixels to skip when generating Bitmap (increasing this results in faster bitmap generation but reduces bitmap quality)
  * @return A Rectangular Bitmap representing the Gradient of Sat and Val for the given Hue
  */
-fun getSatValBitmap(hue: Float, width: Int, height: Int, skipCount: Int): Bitmap? {
+private fun getSatValBitmap(hue: Float, width: Int, height: Int, skipCount: Int): Bitmap? {
 //        //System.out.println("Width2: " + width);
 //        //System.out.println("Height2: " + height);
     Timber.d("hue $hue width $width height $height")
