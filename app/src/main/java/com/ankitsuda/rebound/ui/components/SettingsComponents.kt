@@ -10,12 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.ColorUtils
-import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker
-import com.ankitsuda.rebound.ui.components.color_picker.ColorPickerAlt
+import com.ankitsuda.rebound.ui.dialogs.ColorPickerAltDialog
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
 
@@ -37,7 +34,7 @@ fun ColorPickerCardItem(
             if (enableAutoColorPicker) {
                 dialogContent = {
                     if (useAltColorPicker) {
-                        ColorPickerAlt(colorSelected = onNewColorSelected)
+                        ColorPickerAltDialog(defaultColor = selectedColor, colorSelected = onNewColorSelected)
                     } else {
                         ColorPickerDialog(onColorSelected = onNewColorSelected)
                     }
