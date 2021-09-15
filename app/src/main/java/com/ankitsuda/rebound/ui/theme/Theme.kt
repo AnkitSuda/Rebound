@@ -1,20 +1,15 @@
 package com.ankitsuda.rebound.ui.theme
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.shapes
 import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.data.datastore.PrefStorage
-import javax.inject.Inject
 
 private val DarkColorPalette = darkColors(
     primary = DefaultAccentColor,
@@ -35,24 +30,65 @@ fun ReboundThemeWrapper(
     prefStorage: PrefStorage,
     content: @Composable () -> Unit
 ) {
+    // Colors
     val primaryColor by prefStorage.primaryColor.collectAsState(initial = DefaultAccentColor)
     val backgroundColor by prefStorage.backgroundColor.collectAsState(initial = Color.White)
     val onPrimaryColor by prefStorage.onPrimaryColor.collectAsState(initial = Color.White)
     val onBackgroundColor by prefStorage.onBackgroundColor.collectAsState(initial = Color.Black)
     val card by prefStorage.cardColor.collectAsState(initial = Color(248, 248, 248))
+    val cardBorderColor by prefStorage.cardBorderColor.collectAsState(initial = Color.Gray)
+
+    // Dimens
     val cardElevation by prefStorage.cardElevation.collectAsState(initial = 0)
+    val cardBorderWidth by prefStorage.cardBorderWidth.collectAsState(initial = 0)
+
+    // Shape values
+    val shapeSmallTopLeftRadius by prefStorage.shapeSmallTopStartRadius.collectAsState(initial = 0)
+    val shapeSmallTopRightRadius by prefStorage.shapeSmallTopEndRadius.collectAsState(initial = 0)
+    val shapeSmallBottomLeftRadius by prefStorage.shapeSmallBottomStartRadius.collectAsState(initial = 0)
+    val shapeSmallBottomRightRadius by prefStorage.shapeSmallBottomEndRadius.collectAsState(
+        initial = 0
+    )
+
+
+    // Animated colors
+    val animatedBackgroundColor by animateColorAsState(targetValue = backgroundColor)
 
     val colors = lightReboundColors(
         primary = primaryColor,
         onPrimary = onPrimaryColor,
         onBackground = onBackgroundColor,
-        background = backgroundColor,
+        background = animatedBackgroundColor,
         card = card,
+        cardBorder = cardBorderColor,
     )
 
     val dimens = defaultDimens(
-        cardElevation = cardElevation.dp
+        cardElevation = cardElevation.dp,
+        cardBorderWidth = cardBorderWidth.dp,
     )
+
+    val shapes = Shapes(
+        small = RoundedCornerShape(
+            topStart = shapeSmallTopLeftRadius.dp,
+            topEnd = shapeSmallTopRightRadius.dp,
+            bottomStart = shapeSmallBottomLeftRadius.dp,
+            bottomEnd = shapeSmallBottomRightRadius.dp
+        ),
+        medium = RoundedCornerShape(
+            topStart = shapeSmallTopLeftRadius.dp,
+            topEnd = shapeSmallTopRightRadius.dp,
+            bottomStart = shapeSmallBottomLeftRadius.dp,
+            bottomEnd = shapeSmallBottomRightRadius.dp
+        ),
+        large = RoundedCornerShape(
+            topStart = shapeSmallTopLeftRadius.dp,
+            topEnd = shapeSmallTopRightRadius.dp,
+            bottomStart = shapeSmallBottomLeftRadius.dp,
+            bottomEnd = shapeSmallBottomRightRadius.dp
+        ),
+    )
+
     ReboundTheme(
         colors = colors,
         dimens = dimens,
@@ -197,8 +233,11 @@ class ReboundColors(
 @Stable
 class ReboundDimens(
     cardElevation: Dp,
+    cardBorderWidth: Dp,
 ) {
     var cardElevation by mutableStateOf(cardElevation, structuralEqualityPolicy())
+        internal set
+    var cardBorderWidth by mutableStateOf(cardBorderWidth, structuralEqualityPolicy())
         internal set
 }
 
@@ -228,11 +267,12 @@ object ReboundTheme {
 internal val LocalReboundColors = staticCompositionLocalOf { lightReboundColors() }
 internal val LocalReboundDimens = staticCompositionLocalOf { defaultDimens() }
 internal val LocalReboundTypography = staticCompositionLocalOf { Typography() }
-internal val LocalReboundShapes = staticCompositionLocalOf { Shapes() }
 
-fun defaultDimens(cardElevation: Dp = 0.dp): ReboundDimens = ReboundDimens(
-    cardElevation = cardElevation
-)
+fun defaultDimens(cardElevation: Dp = 0.dp, cardBorderWidth: Dp = 0.dp): ReboundDimens =
+    ReboundDimens(
+        cardElevation = cardElevation,
+        cardBorderWidth = cardBorderWidth
+    )
 
 fun lightReboundColors(
     primary: Color = Color(0xFF6200EE),
@@ -242,9 +282,9 @@ fun lightReboundColors(
     onBackground: Color = Color.Black,
     onError: Color = Color.White,
     card: Color = Color.White,
+    cardBorder: Color = Color.Gray,
     cardMainContent: Color = Color.Black,
     cardSecondaryContent: Color = Color.Black,
-    cardBorder: Color = Color.Black,
     topBar: Color = Color.White,
     topBarTitle: Color = Color.Black,
     topBarSubtitle: Color = Color.Black,
@@ -258,9 +298,9 @@ fun lightReboundColors(
     onError = onError,
     isLight = true,
     card = card,
+    cardBorder = cardBorder,
     cardMainContent = cardMainContent,
     cardSecondaryContent = cardSecondaryContent,
-    cardBorder = cardBorder,
     topBar = topBar,
     topBarTitle = topBarTitle,
     topBarSubtitle = topBarSubtitle,

@@ -23,17 +23,15 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 @Composable
 fun AppCard(
     modifier: Modifier = Modifier,
-    viewModel: AppCardViewModel = hiltViewModel(),
     content: @Composable () -> Unit
 ) {
-    val bgColor by viewModel.cardColor.collectAsState(initial = Color(248, 248, 248))
-    val elevation by viewModel.elevation.collectAsState(initial = 0)
 
     Card(
         modifier = modifier,
         elevation = ReboundTheme.dimens.cardElevation,
         shape = MaterialTheme.shapes.medium,
         backgroundColor = ReboundTheme.colors.card,
+        border = BorderStroke(width = ReboundTheme.dimens.cardBorderWidth, color = ReboundTheme.colors.cardBorder),
         content = content
     )
 }
@@ -48,18 +46,15 @@ fun AppCard(
 @Composable
 fun AppCard(
     modifier: Modifier = Modifier,
-    viewModel: AppCardViewModel = hiltViewModel(),
     onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    val bgColor by viewModel.cardColor.collectAsState(initial = Color(248, 248, 248))
-    val elevation by viewModel.elevation.collectAsState(initial = 0)
-
     Card(
         modifier = modifier,
         elevation = ReboundTheme.dimens.cardElevation,
         shape = MaterialTheme.shapes.medium,
         backgroundColor = ReboundTheme.colors.card,
+        border = BorderStroke(width = ReboundTheme.dimens.cardBorderWidth, color = ReboundTheme.colors.cardBorder),
         onClick = onClick,
         content = content
     )

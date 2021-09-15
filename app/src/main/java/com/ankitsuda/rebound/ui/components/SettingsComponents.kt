@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerAltDialog
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
+import com.ankitsuda.rebound.ui.theme.ShapeValues
 
 @Composable
 fun ColorPickerCardItem(
@@ -34,7 +35,10 @@ fun ColorPickerCardItem(
             if (enableAutoColorPicker) {
                 dialogContent = {
                     if (useAltColorPicker) {
-                        ColorPickerAltDialog(defaultColor = selectedColor, colorSelected = onNewColorSelected)
+                        ColorPickerAltDialog(
+                            defaultColor = selectedColor,
+                            colorSelected = onNewColorSelected
+                        )
                     } else {
                         ColorPickerDialog(onColorSelected = onNewColorSelected)
                     }
@@ -154,6 +158,148 @@ fun SliderCardItem(
                     steps = steps,
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun ShapesEditorCardItem(
+    modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
+    text: String,
+    description: String = "",
+    defaultValues: ShapeValues = ShapeValues(),
+    onValueChange: (ShapeValues) -> Unit
+) {
+    var isTopLeftExpanded by remember {
+        mutableStateOf(false)
+    }
+    var isTopRightExpanded by remember {
+        mutableStateOf(false)
+    }
+    var isBottomLeftExpanded by remember {
+        mutableStateOf(false)
+    }
+    var isBottomRightExpanded by remember {
+        mutableStateOf(false)
+    }
+
+    var currentShapeValues by remember {
+        mutableStateOf(defaultValues)
+    }
+
+    AppCard(modifier = modifier) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (icon != null) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = text,
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                }
+                Column(modifier = Modifier.fillMaxWidth()) {
+
+                    Text(text = text)
+                    if (description.isNotEmpty()) {
+                        Text(
+                            text = description,
+                            style = MaterialTheme.typography.caption,
+                            color = Color(117, 117, 117)
+                        )
+                    }
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+            ) {
+                Box() {
+                    Button(onClick = { isTopLeftExpanded = !isTopLeftExpanded }) {
+                        Text(text = currentShapeValues.topStart.toString())
+                    }
+                    DropdownMenu(
+                        modifier = Modifier.align(Alignment.TopStart),
+                        expanded = isTopLeftExpanded,
+                        onDismissRequest = { isTopLeftExpanded = false }) {
+                        repeat(100) {
+                            DropdownMenuItem(onClick = {
+                                isTopLeftExpanded = false
+                                currentShapeValues = currentShapeValues.copy(topStart = it)
+                                onValueChange(currentShapeValues)
+                            }) {
+                                Text(text = it.toString())
+                            }
+                        }
+                    }
+                }
+                Box(
+                    modifier = Modifier.align(Alignment.TopEnd)) {
+                    Button(onClick = { isTopRightExpanded = !isTopRightExpanded }) {
+                        Text(text = currentShapeValues.topEnd.toString())
+                    }
+                DropdownMenu(
+                    expanded = isTopRightExpanded,
+                    onDismissRequest = { isTopRightExpanded = false }) {
+                    repeat(100) {
+                        DropdownMenuItem(onClick = {
+                            currentShapeValues = currentShapeValues.copy(topEnd = it)
+                            onValueChange(currentShapeValues)
+                        }) {
+                            Text(text = it.toString())
+                        }
+                    }
+                }}
+
+                Box(
+                    modifier = Modifier.align(Alignment.BottomStart),) {
+                    Button(onClick = { isBottomLeftExpanded = !isBottomLeftExpanded }) {
+                        Text(text = currentShapeValues.bottomStart.toString())
+                    }
+                    DropdownMenu(
+                        expanded = isBottomLeftExpanded,
+                        onDismissRequest = { isBottomLeftExpanded = false }) {
+                        repeat(100) {
+                            DropdownMenuItem(onClick = {
+                                currentShapeValues = currentShapeValues.copy(bottomStart = it)
+                                onValueChange(currentShapeValues)
+                            }) {
+                                Text(text = it.toString())
+                            }
+                        }
+                    }
+                }
+
+
+                Box(
+                    modifier = Modifier.align(Alignment.BottomEnd),) {
+                    Button(onClick = { isBottomRightExpanded = !isBottomRightExpanded }) {
+                        Text(text = currentShapeValues.bottomEnd.toString())
+                    }
+                    DropdownMenu(
+                        expanded = isBottomRightExpanded,
+                        onDismissRequest = { isBottomRightExpanded = false }) {
+                        repeat(100) {
+                            DropdownMenuItem(onClick = {
+                                currentShapeValues = currentShapeValues.copy(bottomEnd = it)
+                                onValueChange(currentShapeValues)
+                            }) {
+                                Text(text = it.toString())
+                            }
+                        }
+                    }
+                }
+
             }
         }
     }

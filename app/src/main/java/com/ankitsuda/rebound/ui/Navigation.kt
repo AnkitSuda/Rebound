@@ -17,6 +17,8 @@ import com.ankitsuda.rebound.ui.screens.personalization.ColorPickerDemoScreen
 import com.ankitsuda.rebound.ui.screens.personalization.PersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.card.CardPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.main_colors.MainColorsPersonalizationScreen
+import com.ankitsuda.rebound.ui.screens.personalization.shapes.ShapesPersonalizationScreen
+import com.ankitsuda.rebound.ui.screens.personalization.shapes.ShapesPersonalizationScreenViewModel
 import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -87,6 +89,9 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
             }
             composable(Route.MainColorsPersonalization.route) {
                 MainColorsPersonalizationScreen(navController)
+            }
+            composable(Route.ShapesPersonalization.route) {
+                ShapesPersonalizationScreen(navController)
             }
             composable(Route.CardsPersonalization.route) {
                 CardPersonalizationScreen(navController)

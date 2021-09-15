@@ -64,6 +64,16 @@ fun PersonalizationScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
+                    text = "Shapes",
+                    onClick = {
+                        navController.navigate(Route.ShapesPersonalization.route)
+                    })
+            }
+            item {
+                MoreItemCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
                     text = "Cards",
                     onClick = {
                         navController.navigate(Route.CardsPersonalization.route)

@@ -1,6 +1,7 @@
 package com.ankitsuda.rebound.data.datastore
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import kotlinx.coroutines.flow.Flow
 
 interface PrefStorage {
@@ -19,11 +20,29 @@ interface PrefStorage {
     val cardColor: Flow<Color>
     suspend fun setCardColor(color: Color)
 
-    val cardBorderEnabled: Flow<Boolean>
-    suspend fun setCardBorderEnabled(enabled: Boolean)
+    val cardBorderWidth: Flow<Int>
+    suspend fun setCardBorderWidth(value: Int)
+
+    val cardBorderColor: Flow<Color>
+    suspend fun setCardBorderColor(color: Color)
 
     val cardElevation: Flow<Int>
     suspend fun setCardElevation(value: Int)
+
+    // Shapes
+    // Small Shape
+    val shapeSmallTopStartRadius: Flow<Int>
+    suspend fun setShapeSmallTopStartRadius(value: Int)
+
+    val shapeSmallTopEndRadius: Flow<Int>
+    suspend fun setShapeSmallTopEndRadius(value: Int)
+
+    val shapeSmallBottomStartRadius: Flow<Int>
+    suspend fun setShapeSmallBottomStartRadius(value: Int)
+
+    val shapeSmallBottomEndRadius: Flow<Int>
+    suspend fun setShapeSmallBottomEndRadius(value: Int)
+
 
     /***
      * clears all the stored data

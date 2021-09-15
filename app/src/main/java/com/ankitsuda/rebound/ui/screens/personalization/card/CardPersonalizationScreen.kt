@@ -31,7 +31,8 @@ fun CardPersonalizationScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val cardColor by viewModel.cardColor.collectAsState(Color(248, 248, 248))
-    val borderEnabled by viewModel.borderEnabled.collectAsState(false)
+    val borderColor by viewModel.borderColor.collectAsState(Color(248, 248, 248))
+    val borderWidth by viewModel.borderWidth.collectAsState(0)
     val elevation by viewModel.elevation.collectAsState(0)
 
     Timber.d("cardColor $cardColor")
@@ -74,17 +75,30 @@ fun CardPersonalizationScreen(
                         })
 
                 }
+                item {
+
+                    ColorPickerCardItem(
+                        modifier = itemModifier,
+                        text = "Border color",
+                        selectedColor = borderColor,
+                        onNewColorSelected = {
+                            viewModel.setBorderColor(it)
+                        })
+
+                }
 
                 item {
 
-                    SwitchCardItem(
-                        modifier = itemModifier,
-                        text = "Border enabled",
-                        checked = borderEnabled,
-                        onChange = {
-                            viewModel.setBorderEnabled(it)
-                        })
 
+                    SliderCardItem(
+                        modifier = itemModifier,
+                        text = "Border width",
+                        value = borderWidth.toFloat(),
+                        steps = 25,
+                        valueRange = 0f..25f,
+                        onChange = {
+                            viewModel.setBorderWidth(it.toInt())
+                        })
                 }
 
                 item {
