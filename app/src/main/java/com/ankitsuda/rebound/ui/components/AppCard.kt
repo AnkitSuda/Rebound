@@ -26,12 +26,16 @@ fun AppCard(
     content: @Composable () -> Unit
 ) {
 
+    val border = if (ReboundTheme.dimens.cardBorderWidth == 0.dp) null else BorderStroke(
+        width = ReboundTheme.dimens.cardBorderWidth,
+        color = ReboundTheme.colors.cardBorder
+    )
     Card(
         modifier = modifier,
         elevation = ReboundTheme.dimens.cardElevation,
         shape = MaterialTheme.shapes.medium,
         backgroundColor = ReboundTheme.colors.card,
-        border = BorderStroke(width = ReboundTheme.dimens.cardBorderWidth, color = ReboundTheme.colors.cardBorder),
+        border = border,
         content = content
     )
 }
@@ -49,12 +53,17 @@ fun AppCard(
     onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
+
+    val border = if (ReboundTheme.dimens.cardBorderWidth == 0.dp) null else BorderStroke(
+        width = ReboundTheme.dimens.cardBorderWidth,
+        color = ReboundTheme.colors.cardBorder
+    )
     Card(
         modifier = modifier,
         elevation = ReboundTheme.dimens.cardElevation,
         shape = MaterialTheme.shapes.medium,
         backgroundColor = ReboundTheme.colors.card,
-        border = BorderStroke(width = ReboundTheme.dimens.cardBorderWidth, color = ReboundTheme.colors.cardBorder),
+        border = border,
         onClick = onClick,
         content = content
     )

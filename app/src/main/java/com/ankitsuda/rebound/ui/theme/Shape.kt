@@ -25,10 +25,10 @@ val Shapes = Shapes(
 )
 
 data class ShapeValues(
-    val topStart: Int = 0,
-    val bottomStart: Int = 0,
-    val topEnd: Int = 0,
-    val bottomEnd: Int = 0,
+    var topStart: Int = 0,
+    var bottomStart: Int = 0,
+    var topEnd: Int = 0,
+    var bottomEnd: Int = 0,
 )
 
 internal val LocalReboundShapes = staticCompositionLocalOf { Shapes() }

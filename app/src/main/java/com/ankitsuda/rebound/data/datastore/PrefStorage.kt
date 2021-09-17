@@ -2,6 +2,7 @@ package com.ankitsuda.rebound.data.datastore
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import com.ankitsuda.rebound.utils.LabelVisible
 import kotlinx.coroutines.flow.Flow
 
 interface PrefStorage {
@@ -29,7 +30,13 @@ interface PrefStorage {
     val cardElevation: Flow<Int>
     suspend fun setCardElevation(value: Int)
 
+    val bottomBarLabelVisible: Flow<String>
+    suspend fun setBottomBarLabelVisible(value: String)
+
     // Shapes
+    /**
+     * Dirty hack. Will implement better way to store shape values later.
+     */
     // Small Shape
     val shapeSmallTopStartRadius: Flow<Int>
     suspend fun setShapeSmallTopStartRadius(value: Int)

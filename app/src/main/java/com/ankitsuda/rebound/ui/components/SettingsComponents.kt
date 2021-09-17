@@ -235,7 +235,7 @@ fun ShapesEditorCardItem(
                         repeat(100) {
                             DropdownMenuItem(onClick = {
                                 isTopLeftExpanded = false
-                                currentShapeValues = currentShapeValues.copy(topStart = it)
+                                currentShapeValues.topStart = it
                                 onValueChange(currentShapeValues)
                             }) {
                                 Text(text = it.toString())
@@ -244,25 +244,28 @@ fun ShapesEditorCardItem(
                     }
                 }
                 Box(
-                    modifier = Modifier.align(Alignment.TopEnd)) {
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
                     Button(onClick = { isTopRightExpanded = !isTopRightExpanded }) {
                         Text(text = currentShapeValues.topEnd.toString())
                     }
-                DropdownMenu(
-                    expanded = isTopRightExpanded,
-                    onDismissRequest = { isTopRightExpanded = false }) {
-                    repeat(100) {
-                        DropdownMenuItem(onClick = {
-                            currentShapeValues = currentShapeValues.copy(topEnd = it)
-                            onValueChange(currentShapeValues)
-                        }) {
-                            Text(text = it.toString())
+                    DropdownMenu(
+                        expanded = isTopRightExpanded,
+                        onDismissRequest = { isTopRightExpanded = false }) {
+                        repeat(100) {
+                            DropdownMenuItem(onClick = {
+                                currentShapeValues = currentShapeValues.copy(topEnd = it)
+                                onValueChange(currentShapeValues)
+                            }) {
+                                Text(text = it.toString())
+                            }
                         }
                     }
-                }}
+                }
 
                 Box(
-                    modifier = Modifier.align(Alignment.BottomStart),) {
+                    modifier = Modifier.align(Alignment.BottomStart),
+                ) {
                     Button(onClick = { isBottomLeftExpanded = !isBottomLeftExpanded }) {
                         Text(text = currentShapeValues.bottomStart.toString())
                     }
@@ -282,7 +285,8 @@ fun ShapesEditorCardItem(
 
 
                 Box(
-                    modifier = Modifier.align(Alignment.BottomEnd),) {
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                ) {
                     Button(onClick = { isBottomRightExpanded = !isBottomRightExpanded }) {
                         Text(text = currentShapeValues.bottomEnd.toString())
                     }

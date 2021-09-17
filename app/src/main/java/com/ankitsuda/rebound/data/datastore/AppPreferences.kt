@@ -7,9 +7,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.ankitsuda.rebound.ui.theme.DefaultAccentColor
+import com.ankitsuda.rebound.utils.LabelVisible
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
@@ -31,23 +33,37 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
         val CARD_BORDER_WIDTH_KEY = intPreferencesKey(name = "card_border_width")
         val CARD_ELEVATION_KEY = intPreferencesKey(name = "card_elevation")
 
+        val BOTTOM_BAR_LABEL_VISIBLE_KEY = stringPreferencesKey(name = "bottom_bar_label_visible")
+
         // Small shape
-        val SHAPE_SMALL_TOP_START_RADIUS_KEY = intPreferencesKey(name = "shape_small_top_start_radius_key")
-        val SHAPE_SMALL_TOP_END_RADIUS_KEY = intPreferencesKey(name = "shape_small_top_end_radius_key")
-        val SHAPE_SMALL_BOTTOM_START_RADIUS_KEY = intPreferencesKey(name = "shape_small_bottom_start_radius_key")
-        val SHAPE_SMALL_BOTTOM_END_RADIUS_KEY = intPreferencesKey(name = "shape_small_bottom_end_radius_key")
+        val SHAPE_SMALL_TOP_START_RADIUS_KEY =
+            intPreferencesKey(name = "shape_small_top_start_radius_key")
+        val SHAPE_SMALL_TOP_END_RADIUS_KEY =
+            intPreferencesKey(name = "shape_small_top_end_radius_key")
+        val SHAPE_SMALL_BOTTOM_START_RADIUS_KEY =
+            intPreferencesKey(name = "shape_small_bottom_start_radius_key")
+        val SHAPE_SMALL_BOTTOM_END_RADIUS_KEY =
+            intPreferencesKey(name = "shape_small_bottom_end_radius_key")
 
         // Medium shape
-        val SHAPE_MEDIUM_TOP_START_RADIUS_KEY = intPreferencesKey(name = "shape_medium_top_start_radius_key")
-        val SHAPE_MEDIUM_TOP_END_RADIUS_KEY = intPreferencesKey(name = "shape_medium_top_end_radius_key")
-        val SHAPE_MEDIUM_BOTTOM_START_RADIUS_KEY = intPreferencesKey(name = "shape_medium_bottom_start_radius_key")
-        val SHAPE_MEDIUM_BOTTOM_END_RADIUS_KEY = intPreferencesKey(name = "shape_medium_bottom_end_radius_key")
+        val SHAPE_MEDIUM_TOP_START_RADIUS_KEY =
+            intPreferencesKey(name = "shape_medium_top_start_radius_key")
+        val SHAPE_MEDIUM_TOP_END_RADIUS_KEY =
+            intPreferencesKey(name = "shape_medium_top_end_radius_key")
+        val SHAPE_MEDIUM_BOTTOM_START_RADIUS_KEY =
+            intPreferencesKey(name = "shape_medium_bottom_start_radius_key")
+        val SHAPE_MEDIUM_BOTTOM_END_RADIUS_KEY =
+            intPreferencesKey(name = "shape_medium_bottom_end_radius_key")
 
         // Medium shape
-        val SHAPE_LARGE_TOP_START_RADIUS_KEY = intPreferencesKey(name = "shape_large_top_start_radius_key")
-        val SHAPE_LARGE_TOP_END_RADIUS_KEY = intPreferencesKey(name = "shape_large_top_end_radius_key")
-        val SHAPE_LARGE_BOTTOM_START_RADIUS_KEY = intPreferencesKey(name = "shape_large_bottom_start_radius_key")
-        val SHAPE_LARGE_BOTTOM_END_RADIUS_KEY = intPreferencesKey(name = "shape_large_bottom_end_radius_key")
+        val SHAPE_LARGE_TOP_START_RADIUS_KEY =
+            intPreferencesKey(name = "shape_large_top_start_radius_key")
+        val SHAPE_LARGE_TOP_END_RADIUS_KEY =
+            intPreferencesKey(name = "shape_large_top_end_radius_key")
+        val SHAPE_LARGE_BOTTOM_START_RADIUS_KEY =
+            intPreferencesKey(name = "shape_large_bottom_start_radius_key")
+        val SHAPE_LARGE_BOTTOM_END_RADIUS_KEY =
+            intPreferencesKey(name = "shape_large_bottom_end_radius_key")
     }
 
     suspend fun setColor(key: Preferences.Key<Int>, color: Color) {
@@ -97,7 +113,8 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
     override suspend fun setOnPrimaryColor(color: Color) {
         setColor(ON_PRIMARY_COLOR_KEY, color)
     }
-  override val onBackgroundColor: Flow<Color>
+
+    override val onBackgroundColor: Flow<Color>
         get() = context.dataStore.data
             .map { preferences ->
                 if (preferences[ON_BACKGROUND_COLOR_KEY] != null) {
@@ -141,6 +158,7 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
                     Color.Gray
                 }
             }
+
     override suspend fun setCardBorderColor(color: Color) {
         setColor(CARD_BORDER_COLOR_KEY, color)
     }
@@ -151,6 +169,17 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
     override suspend fun setCardElevation(value: Int) {
         context.dataStore.setValue(CARD_ELEVATION_KEY, value)
+    }
+
+    override val bottomBarLabelVisible: Flow<String>
+        get() =
+            context.dataStore.getValueAsFlow(
+                BOTTOM_BAR_LABEL_VISIBLE_KEY,
+                LabelVisible.ALWAYS
+            )
+
+    override suspend fun setBottomBarLabelVisible(value: String) {
+        context.dataStore.setValue(BOTTOM_BAR_LABEL_VISIBLE_KEY, value)
     }
 
 

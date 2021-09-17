@@ -114,14 +114,17 @@ fun HistoryScreen(
                         }
                     )
                 },
-                modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background)
             ) {
 
 
                 // User routines
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize().background(MaterialTheme.colors.background),
+                        .fillMaxSize()
+                        .background(MaterialTheme.colors.background),
                 ) {
                     // Sticky Calendar
 
@@ -161,8 +164,21 @@ fun HistoryScreen(
                     }
 
 
-                    items(50) {
-                        Text(text = it.toString(), style = MaterialTheme.typography.caption)
+                    items(2) {
+                        HistorySessionItemCard(
+                            modifier = Modifier.fillMaxWidth().padding(
+                                top = if (it == 0) 16.dp else 0.dp,
+                                start = 16.dp,
+                                end = 16.dp,
+                                bottom = 16.dp
+                            ),
+                            onClick = {
+                                Timber.d("HistorySessionItemCard clicked")
+                            },
+                            title = "Push",
+                            totalExercises = 7,
+                            time = "45 m", volume = "1000 kg", prs = 2
+                        )
                     }
 
                 }
