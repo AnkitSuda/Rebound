@@ -6,6 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainScreenViewModel @Inject constructor(val prefStorage: PrefStorage): ViewModel() {
+class MainScreenViewModel @Inject constructor(val prefStorage: PrefStorage) : ViewModel() {
     val bottomBarLabelVisible = prefStorage.bottomBarLabelVisible
+    val labelWeight = prefStorage.bottomBarLabelWeight
+    val iconSize = prefStorage.bottomBarIconSize
 }

@@ -1,13 +1,14 @@
 package com.ankitsuda.rebound.ui.screens.main_screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -128,8 +129,9 @@ private fun BottomBar(navController: NavHostController, mainScreenViewModel: Mai
     )
 
     val labelVisible by mainScreenViewModel.bottomBarLabelVisible.collectAsState(initial = LabelVisible.ALWAYS)
+    val labelWeight by mainScreenViewModel.labelWeight.collectAsState(initial = "normal")
+    val iconSize by mainScreenViewModel.iconSize.collectAsState(initial = 24)
 
-    Timber.d("Main Screen bottom bar label visible $labelVisible")
 
     BottomNavigation(
         contentColor = MaterialTheme.colors.primary,
@@ -144,11 +146,20 @@ private fun BottomBar(navController: NavHostController, mainScreenViewModel: Mai
         bottomNavigationItems.forEach { screen ->
 
             BottomNavigationItem(
-                icon = { Icon(screen.icon, screen.title) },
+                icon = { Icon(screen.icon, screen.title, Modifier.size(iconSize.dp)) },
                 label = if (labelVisible == LabelVisible.NEVER) {
                     null
                 } else {
-                    { Text(screen.title) }
+                    {
+
+                        Text(
+                            screen.title, fontWeight = when (labelWeight) {
+                                "bold" -> FontWeight.Bold
+                                else -> FontWeight.Normal
+                            }
+                        )
+
+                    }
                 },
                 selectedContentColor = ReboundTheme.colors.primary,
                 unselectedContentColor = ReboundTheme.colors.onBackground.copy(0.4f),

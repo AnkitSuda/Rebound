@@ -14,18 +14,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.ankitsuda.rebound.ui.components.ColorPickerCardItem
-import com.ankitsuda.rebound.ui.components.TopBar
-import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
-import com.ankitsuda.rebound.ui.components.TopBarIconButton
+import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.components.settings.RadioGroupCardItem
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
 import com.ankitsuda.rebound.utils.LabelVisible
+import kotlin.math.roundToInt
 
 @Composable
 fun BottomBarPersonalizationScreen(
@@ -35,6 +32,10 @@ fun BottomBarPersonalizationScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val labelVisibleItems = viewModel.labelVisibleItems
     val labelVisible by viewModel.labelVisible.collectAsState(initial = LabelVisible.ALWAYS)
+
+    val labelWeightItems = viewModel.labelWeightItems
+    val labelWeight by viewModel.labelWeight.collectAsState(initial = "normal")
+    val iconSize by viewModel.iconSize.collectAsState(initial = 24)
 
     CollapsingToolbarScaffold(
         state = collapsingState,
@@ -67,6 +68,7 @@ fun BottomBarPersonalizationScreen(
                 item {
 
                     RadioGroupCardItem(
+                        modifier = itemModifier,
                         text = "Label visible",
                         onSelectionChange = { _, value ->
                             viewModel.setLabelVisible(value)
@@ -76,6 +78,33 @@ fun BottomBarPersonalizationScreen(
                     )
 
                 }
+                item {
+
+                    RadioGroupCardItem(
+                        modifier = itemModifier,
+                        text = "Label weight",
+                        onSelectionChange = { _, value ->
+                            viewModel.setLabelWeight(value)
+                        },
+                        items = labelWeightItems,
+                        selected = labelWeight
+                    )
+                }
+
+  item {
+
+                    SliderCardItem(
+                        modifier = itemModifier,
+                        text = "Icon size",
+                        valueRange = 1f..32f,
+                        steps = 32,
+                        value = iconSize.toFloat(),
+                        onChange = {
+                            viewModel.setIconSize(it.toInt())
+                        }
+                    )
+                }
+
             }
         }
     }

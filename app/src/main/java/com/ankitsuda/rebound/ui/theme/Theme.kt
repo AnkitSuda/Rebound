@@ -31,6 +31,7 @@ fun ReboundThemeWrapper(
     content: @Composable () -> Unit
 ) {
     // Colors
+    val isLightTheme by prefStorage.isLightTheme.collectAsState(initial = false)
     val primaryColor by prefStorage.primaryColor.collectAsState(initial = DefaultAccentColor)
     val backgroundColor by prefStorage.backgroundColor.collectAsState(initial = Color.White)
     val onPrimaryColor by prefStorage.onPrimaryColor.collectAsState(initial = Color.White)
@@ -55,6 +56,7 @@ fun ReboundThemeWrapper(
     val animatedBackgroundColor by animateColorAsState(targetValue = backgroundColor)
 
     val colors = lightReboundColors(
+        isLight = isLightTheme,
         primary = primaryColor,
         onPrimary = onPrimaryColor,
         onBackground = onBackgroundColor,
@@ -88,6 +90,8 @@ fun ReboundThemeWrapper(
             bottomEnd = shapeSmallBottomRightRadius.dp
         ),
     )
+
+//    val typography = TypographyInter
 
     ReboundTheme(
         colors = colors,
@@ -145,6 +149,7 @@ fun ReboundTheme(
 
 @Stable
 class ReboundColors(
+    isLight: Boolean,
     primary: Color,
     background: Color,
     error: Color,
@@ -159,8 +164,9 @@ class ReboundColors(
     topBarTitle: Color,
     topBarSubtitle: Color,
     topBarIcons: Color,
-    isLight: Boolean
 ) {
+    var isLight by mutableStateOf(isLight, structuralEqualityPolicy())
+        internal set
     var primary by mutableStateOf(primary, structuralEqualityPolicy())
         internal set
     var background by mutableStateOf(background, structuralEqualityPolicy())
@@ -189,8 +195,6 @@ class ReboundColors(
         internal set
     var topBarIcons by mutableStateOf(topBarIcons, structuralEqualityPolicy())
         internal set
-    var isLight by mutableStateOf(isLight, structuralEqualityPolicy())
-        internal set
 
     /**
      * Returns a copy of this Colors, optionally overriding some of the values.
@@ -212,6 +216,7 @@ class ReboundColors(
         topBarIcons: Color = this.topBarIcons,
         isLight: Boolean = this.isLight
     ): ReboundColors = ReboundColors(
+        isLight,
         primary,
         background,
         error,
@@ -226,7 +231,6 @@ class ReboundColors(
         topBarSubtitle,
         topBarIcons,
         onError,
-        isLight
     )
 }
 
@@ -275,6 +279,7 @@ fun defaultDimens(cardElevation: Dp = 0.dp, cardBorderWidth: Dp = 0.dp): Rebound
     )
 
 fun lightReboundColors(
+    isLight: Boolean = false,
     primary: Color = Color(0xFF6200EE),
     background: Color = Color.White,
     error: Color = Color(0xFFB00020),
@@ -296,7 +301,7 @@ fun lightReboundColors(
     onPrimary = onPrimary,
     onBackground = onBackground,
     onError = onError,
-    isLight = true,
+    isLight = isLight,
     card = card,
     cardBorder = cardBorder,
     cardMainContent = cardMainContent,

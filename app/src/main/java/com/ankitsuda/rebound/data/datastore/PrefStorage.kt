@@ -6,6 +6,9 @@ import com.ankitsuda.rebound.utils.LabelVisible
 import kotlinx.coroutines.flow.Flow
 
 interface PrefStorage {
+    val isLightTheme: Flow<Boolean>
+    suspend fun setIsLightTheme(value: Boolean)
+
     val primaryColor: Flow<Color>
     suspend fun setPrimaryColor(color: Color)
 
@@ -32,6 +35,15 @@ interface PrefStorage {
 
     val bottomBarLabelVisible: Flow<String>
     suspend fun setBottomBarLabelVisible(value: String)
+
+    val bottomBarLabelSpacing: Flow<Int>
+    suspend fun setBottomBarLabelSpacing(value: Int)
+
+    val bottomBarLabelWeight: Flow<String>
+    suspend fun setBottomBarLabelWeight(value: String)
+
+    val bottomBarIconSize: Flow<Int>
+    suspend fun setBottomBarIconSize(value: Int)
 
     // Shapes
     /**

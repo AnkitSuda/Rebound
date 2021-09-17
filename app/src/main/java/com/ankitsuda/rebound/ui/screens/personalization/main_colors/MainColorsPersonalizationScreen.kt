@@ -28,6 +28,8 @@ fun MainColorsPersonalizationScreen(
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
+    val isLightTheme by viewModel.isLightTheme.collectAsState(initial = false)
+
     val primaryColor by viewModel.primaryColor.collectAsState(initial = DefaultAccentColor)
     val backgroundColor by viewModel.backgroundColor.collectAsState(initial = Color.White)
 
@@ -61,7 +63,18 @@ fun MainColorsPersonalizationScreen(
                     .background(MaterialTheme.colors.background),
                 contentPadding = PaddingValues(16.dp)
             ) {
+                item {
 
+                    SwitchCardItem(
+                        modifier = itemModifier,
+                        text = "Is Light Theme",
+                        checked = isLightTheme,
+                        onChange = {
+                            viewModel.setIsLightTheme(it)
+                        }
+                    )
+
+                }
                 item {
 
                     ColorPickerCardItem(
@@ -74,6 +87,7 @@ fun MainColorsPersonalizationScreen(
                     )
 
                 }
+
                 item {
 
                     ColorPickerCardItem(

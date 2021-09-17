@@ -11,7 +11,6 @@ import com.ankitsuda.rebound.utils.LabelVisible
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
@@ -24,6 +23,7 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
 
     companion object {
+        val IS_LIGHT_THEME_KEY = booleanPreferencesKey(name = "is_light_theme")
         val PRIMARY_COLOR_KEY = intPreferencesKey(name = "primary_color")
         val BACKGROUND_COLOR_KEY = intPreferencesKey(name = "background_color")
         val ON_PRIMARY_COLOR_KEY = intPreferencesKey(name = "on_primary_color")
@@ -34,6 +34,9 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
         val CARD_ELEVATION_KEY = intPreferencesKey(name = "card_elevation")
 
         val BOTTOM_BAR_LABEL_VISIBLE_KEY = stringPreferencesKey(name = "bottom_bar_label_visible")
+        val BOTTOM_BAR_LABEL_SPACING_KEY = intPreferencesKey(name = "bottom_bar_label_spacing")
+        val BOTTOM_BAR_LABEL_WEIGHT_KEY = stringPreferencesKey(name = "bottom_bar_label_weight")
+        val BOTTOM_BAR_ICON_SIZE_KEY = intPreferencesKey(name = "bottom_bar_icon_size")
 
         // Small shape
         val SHAPE_SMALL_TOP_START_RADIUS_KEY =
@@ -70,6 +73,13 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
         context.dataStore.edit { preferences ->
             preferences[key] = color.toArgb()
         }
+    }
+
+    override val isLightTheme: Flow<Boolean>
+        get() = context.dataStore.getValueAsFlow(IS_LIGHT_THEME_KEY, false)
+
+    override suspend fun setIsLightTheme(value: Boolean) {
+        context.dataStore.setValue(IS_LIGHT_THEME_KEY, value)
     }
 
     override val primaryColor: Flow<Color>
@@ -180,6 +190,27 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
     override suspend fun setBottomBarLabelVisible(value: String) {
         context.dataStore.setValue(BOTTOM_BAR_LABEL_VISIBLE_KEY, value)
+    }
+
+    override val bottomBarLabelSpacing: Flow<Int>
+        get() = context.dataStore.getValueAsFlow(BOTTOM_BAR_LABEL_SPACING_KEY, 56)
+
+    override suspend fun setBottomBarLabelSpacing(value: Int) {
+        context.dataStore.setValue(BOTTOM_BAR_LABEL_SPACING_KEY, value)
+    }
+
+    override val bottomBarLabelWeight: Flow<String>
+        get() = context.dataStore.getValueAsFlow(BOTTOM_BAR_LABEL_WEIGHT_KEY, "normal")
+
+    override suspend fun setBottomBarLabelWeight(value: String) {
+        context.dataStore.setValue(BOTTOM_BAR_LABEL_WEIGHT_KEY, value)
+    }
+
+    override val bottomBarIconSize: Flow<Int>
+        get() = context.dataStore.getValueAsFlow(BOTTOM_BAR_ICON_SIZE_KEY, 24)
+
+    override suspend fun setBottomBarIconSize(value: Int) {
+        context.dataStore.setValue(BOTTOM_BAR_ICON_SIZE_KEY, value)
     }
 
 

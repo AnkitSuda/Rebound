@@ -13,6 +13,8 @@ import javax.inject.Inject
 class MainColorsPersonalizationScreenViewModel @Inject constructor(val prefStorage: PrefStorage) :
     ViewModel() {
 
+    val isLightTheme = prefStorage.isLightTheme
+
     val primaryColor = prefStorage.primaryColor
     val backgroundColor = prefStorage.backgroundColor
 
@@ -22,6 +24,12 @@ class MainColorsPersonalizationScreenViewModel @Inject constructor(val prefStora
     fun setPrimaryColor(color: Color) {
         viewModelScope.launch {
             prefStorage.setPrimaryColor(color)
+        }
+    }
+
+    fun setIsLightTheme(value: Boolean) {
+        viewModelScope.launch {
+            prefStorage.setIsLightTheme(value)
         }
     }
 

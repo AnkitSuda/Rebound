@@ -16,6 +16,7 @@ import com.ankitsuda.rebound.ui.dialogs.ColorPickerAltDialog
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
 import com.ankitsuda.rebound.ui.theme.ShapeValues
+import kotlin.math.roundToInt
 
 @Composable
 fun ColorPickerCardItem(
@@ -122,9 +123,17 @@ fun SliderCardItem(
     description: String = "",
     value: Float,
     steps: Int = 1,
+    roundValues: Boolean = true,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     onChange: (Float) -> Unit = {}
 ) {
+    // Temporary fix for lag
+    var mValue by remember {
+        mutableStateOf(value)
+    }
+
+//    if (value != mValue) mValue = value
+
     AppCard(modifier = modifier) {
 
         Row(
@@ -142,7 +151,7 @@ fun SliderCardItem(
 
                 Row {
                     Text(text = text, modifier = Modifier.weight(1f))
-                    Text(text = value.toString())
+                    Text(text = mValue.toString())
                 }
                 if (description.isNotEmpty()) {
                     Text(
@@ -152,8 +161,12 @@ fun SliderCardItem(
                     )
                 }
                 Slider(
-                    value = value,
-                    onValueChange = onChange,
+                    value = mValue,
+                    onValueChange = {
+                        val newValue = if (roundValues) it.roundToInt().toFloat() else it
+                        onChange(newValue)
+                        mValue = newValue
+                    },
                     valueRange = valueRange,
                     steps = steps,
                     modifier = Modifier.fillMaxWidth()
