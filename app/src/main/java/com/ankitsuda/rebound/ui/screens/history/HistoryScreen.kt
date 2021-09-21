@@ -30,6 +30,7 @@ import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.calendar.WEIGHT_7DAY_WEEK
 import com.ankitsuda.rebound.utils.CalendarDate
 import java.text.SimpleDateFormat
+import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
@@ -166,14 +167,16 @@ fun HistoryScreen(
 
                     items(2) {
                         HistorySessionItemCard(
-                            modifier = Modifier.fillMaxWidth().padding(
-                                top = if (it == 0) 16.dp else 0.dp,
-                                start = 16.dp,
-                                end = 16.dp,
-                                bottom = 16.dp
-                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    top = if (it == 0) 16.dp else 0.dp,
+                                    start = 16.dp,
+                                    end = 16.dp,
+                                    bottom = 16.dp
+                                ),
                             onClick = {
-                                Timber.d("HistorySessionItemCard clicked")
+                                navController.navigate(Route.Session.createRoute(Random.nextLong(0, 100)))
                             },
                             title = "Push",
                             totalExercises = 7,

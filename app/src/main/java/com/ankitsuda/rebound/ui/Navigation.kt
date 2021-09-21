@@ -19,7 +19,7 @@ import com.ankitsuda.rebound.ui.screens.personalization.botom_bar.BottomBarPerso
 import com.ankitsuda.rebound.ui.screens.personalization.card.CardPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.main_colors.MainColorsPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.shapes.ShapesPersonalizationScreen
-import com.ankitsuda.rebound.ui.screens.personalization.shapes.ShapesPersonalizationScreenViewModel
+import com.ankitsuda.rebound.ui.screens.session.SessionScreen
 import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -49,6 +49,9 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
             }
             composable(Route.Calendar.route) {
                 CalendarScreen(navController)
+            }
+            composable(Route.Session.route) {
+                SessionScreen(navController)
             }
         }
 
