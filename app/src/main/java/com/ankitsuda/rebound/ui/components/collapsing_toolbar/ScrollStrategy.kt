@@ -29,151 +29,153 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import timber.log.Timber
 
 enum class ScrollStrategy {
-	EnterAlways {
-		override fun create(
-			offsetY: MutableState<Int>,
-			toolbarState: CollapsingToolbarState
-		): NestedScrollConnection =
-			EnterAlwaysNestedScrollConnection(offsetY, toolbarState)
-	},
-	EnterAlwaysCollapsed {
-		override fun create(
-			offsetY: MutableState<Int>,
-			toolbarState: CollapsingToolbarState
-		): NestedScrollConnection =
-			EnterAlwaysCollapsedNestedScrollConnection(offsetY, toolbarState)
-	},
-	ExitUntilCollapsed {
-		override fun create(
-			offsetY: MutableState<Int>,
-			toolbarState: CollapsingToolbarState
-		): NestedScrollConnection =
-			ExitUntilCollapsedNestedScrollConnection(toolbarState)
-	};
+    EnterAlways {
+        override fun create(
+            offsetY: MutableState<Int>,
+            toolbarState: CollapsingToolbarState
+        ): NestedScrollConnection =
+            EnterAlwaysNestedScrollConnection(offsetY, toolbarState)
+    },
+    EnterAlwaysCollapsed {
+        override fun create(
+            offsetY: MutableState<Int>,
+            toolbarState: CollapsingToolbarState
+        ): NestedScrollConnection =
+            EnterAlwaysCollapsedNestedScrollConnection(offsetY, toolbarState)
+    },
+    ExitUntilCollapsed {
+        override fun create(
+            offsetY: MutableState<Int>,
+            toolbarState: CollapsingToolbarState
+        ): NestedScrollConnection =
+            ExitUntilCollapsedNestedScrollConnection(toolbarState)
+    };
 
-	internal abstract fun create(
-		offsetY: MutableState<Int>,
-		toolbarState: CollapsingToolbarState
-	): NestedScrollConnection
+    internal abstract fun create(
+        offsetY: MutableState<Int>,
+        toolbarState: CollapsingToolbarState
+    ): NestedScrollConnection
 }
 
 private class ScrollDelegate(
-	private val offsetY: MutableState<Int>
+    private val offsetY: MutableState<Int>
 ) {
-	private var scrollToBeConsumed: Float = 0f
+    private var scrollToBeConsumed: Float = 0f
 
-	fun doScroll(delta: Float) {
-		val scroll = scrollToBeConsumed + delta
-		val scrollInt = scroll.toInt()
+    fun doScroll(delta: Float) {
+        val scroll = scrollToBeConsumed + delta
+        val scrollInt = scroll.toInt()
 
-		scrollToBeConsumed = scroll - scrollInt
+        scrollToBeConsumed = scroll - scrollInt
 
-		offsetY.value += scrollInt
-	}
+        offsetY.value += scrollInt
+    }
 }
 
 internal class EnterAlwaysNestedScrollConnection(
-	private val offsetY: MutableState<Int>,
-	private val toolbarState: CollapsingToolbarState
-): NestedScrollConnection {
-	private val scrollDelegate = ScrollDelegate(offsetY)
+    private val offsetY: MutableState<Int>,
+    private val toolbarState: CollapsingToolbarState
+) : NestedScrollConnection {
+    private val scrollDelegate = ScrollDelegate(offsetY)
 
-	override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-		val dy = available.y
+    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+        val dy = available.y
 
-		val toolbar = toolbarState.height.toFloat()
-		val offset = offsetY.value.toFloat()
+        val toolbar = toolbarState.height.toFloat()
+        val offset = offsetY.value.toFloat()
 
-		// -toolbarHeight <= offsetY + dy <= 0
+        // -toolbarHeight <= offsetY + dy <= 0
 
-		val consume = if(dy < 0) {
-			val toolbarConsumption = toolbarState.feedScroll(dy)
-			val remaining = dy - toolbarConsumption
-			val offsetConsumption = remaining.coerceAtLeast(-toolbar - offset)
-			scrollDelegate.doScroll(offsetConsumption)
+        val consume = if (dy < 0) {
+            val toolbarConsumption = toolbarState.feedScroll(dy)
+            val remaining = dy - toolbarConsumption
+            val offsetConsumption = remaining.coerceAtLeast(-toolbar - offset)
+            scrollDelegate.doScroll(offsetConsumption)
 
-			toolbarConsumption + offsetConsumption
-		}else{
-			val offsetConsumption = dy.coerceAtMost(-offset)
-			scrollDelegate.doScroll(offsetConsumption)
+            toolbarConsumption + offsetConsumption
+        } else {
+            val offsetConsumption = dy.coerceAtMost(-offset)
+            scrollDelegate.doScroll(offsetConsumption)
 
-			val toolbarConsumption = toolbarState.feedScroll(dy - offsetConsumption)
+            val toolbarConsumption = toolbarState.feedScroll(dy - offsetConsumption)
 
-			offsetConsumption + toolbarConsumption
-		}
+            offsetConsumption + toolbarConsumption
+        }
 
-		return Offset(0f, consume)
-	}
+        return Offset(0f, consume)
+    }
 }
 
 internal class EnterAlwaysCollapsedNestedScrollConnection(
-	private val offsetY: MutableState<Int>,
-	private val toolbarState: CollapsingToolbarState
-): NestedScrollConnection {
-	private val scrollDelegate = ScrollDelegate(offsetY)
+    private val offsetY: MutableState<Int>,
+    private val toolbarState: CollapsingToolbarState
+) : NestedScrollConnection {
+    private val scrollDelegate = ScrollDelegate(offsetY)
 
-	override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-		val dy = available.y
+    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+        val dy = available.y
 
-		val consumed = if(dy > 0) { // expanding: offset -> body -> toolbar
-			val offsetConsumption = dy.coerceAtMost(-offsetY.value.toFloat())
-			scrollDelegate.doScroll(offsetConsumption)
+        val consumed = if (dy > 0) { // expanding: offset -> body -> toolbar
+            val offsetConsumption = dy.coerceAtMost(-offsetY.value.toFloat())
+            scrollDelegate.doScroll(offsetConsumption)
 
-			offsetConsumption
-		}else{ // collapsing: toolbar -> offset -> body
-			val toolbarConsumption = toolbarState.feedScroll(dy)
-			val offsetConsumption = (dy - toolbarConsumption).coerceAtLeast(-toolbarState.height.toFloat() - offsetY.value)
+            offsetConsumption
+        } else { // collapsing: toolbar -> offset -> body
+            val toolbarConsumption = toolbarState.feedScroll(dy)
+            val offsetConsumption =
+                (dy - toolbarConsumption).coerceAtLeast(-toolbarState.height.toFloat() - offsetY.value)
 
-			scrollDelegate.doScroll(offsetConsumption)
+            scrollDelegate.doScroll(offsetConsumption)
 
-			toolbarConsumption + offsetConsumption
-		}
+            toolbarConsumption + offsetConsumption
+        }
 
-		return Offset(0f, consumed)
-	}
+        return Offset(0f, consumed)
+    }
 
-	override fun onPostScroll(
-		consumed: Offset,
-		available: Offset,
-		source: NestedScrollSource
-	): Offset {
-		val dy = available.y
+    override fun onPostScroll(
+        consumed: Offset,
+        available: Offset,
+        source: NestedScrollSource
+    ): Offset {
+        val dy = available.y
 
-		return if(dy > 0) {
-			Offset(0f, toolbarState.feedScroll(dy))
-		}else{
-			Offset(0f, 0f)
-		}
-	}
+
+        return if (dy > 0) {
+            Offset(0f, toolbarState.feedScroll(dy))
+        } else {
+            Offset(0f, 0f)
+        }
+    }
 }
 
 internal class ExitUntilCollapsedNestedScrollConnection(
-	private val toolbarState: CollapsingToolbarState
-): NestedScrollConnection {
-	override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-		val dy = available.y
-		val consume = if(dy < 0) { // collapsing: toolbar -> body
-			toolbarState.feedScroll(dy)
-		}else{
-			0f
-		}
+    private val toolbarState: CollapsingToolbarState
+) : NestedScrollConnection {
+    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+        val dy = available.y
+        val consume = if (dy < 0) { // collapsing: toolbar -> body
+            toolbarState.feedScroll(dy)
+        } else {
+            0f
+        }
 
-		return Offset(0f, consume)
-	}
+        return Offset(0f, consume)
+    }
 
-	override fun onPostScroll(
-		consumed: Offset,
-		available: Offset,
-		source: NestedScrollSource
-	): Offset {
-		val dy = available.y
+    override fun onPostScroll(
+        consumed: Offset,
+        available: Offset,
+        source: NestedScrollSource
+    ): Offset {
+        val dy = available.y
 
-		val consume = if(dy > 0) { // expanding: body -> toolbar
-			toolbarState.feedScroll(dy)
-		}else{
-			0f
-		}
+        val consume = if (dy > 0) { // expanding: body -> toolbar
+            toolbarState.feedScroll(dy)
+        } else {
+            0f
+        }
 
-		return Offset(0f, consume)
-	}
+        return Offset(0f, consume)
+    }
 }

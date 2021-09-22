@@ -71,7 +71,7 @@ fun TopBar(
             // Main TopBar content
             Box(
                 modifier = Modifier
-                    .height(56.dp)
+                    .height(60.dp)
                     .padding(start = 8.dp, end = 8.dp)
                     .fillMaxWidth(),
 
