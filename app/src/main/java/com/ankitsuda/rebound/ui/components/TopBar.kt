@@ -43,6 +43,7 @@ fun TopBar(
     strictLeftIconAlignToStart: Boolean = true,
     alignRightIconToLeftWhenTitleAlignIsNotCenter: Boolean = false,
     rightIconBtn: (@Composable () -> Unit)? = null,
+    elevationEnabled: Boolean = true,
     viewModel: TopBarViewModel = hiltViewModel()
 ) {
 
@@ -56,7 +57,7 @@ fun TopBar(
 
     val titleAlignment by viewModel.titleAlignment.collectAsState(initial = TopBarAlignment.CENTER)
 
-    Surface(elevation = 2.dp, modifier = Modifier.zIndex(2f)) {
+    Surface(elevation = if (elevationEnabled) 2.dp else 0.dp, modifier = Modifier.zIndex(2f)) {
         Column(modifier = modifier.fillMaxWidth()) {
             // Status bar
             if (statusBarEnabled) {

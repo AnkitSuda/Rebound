@@ -93,6 +93,7 @@ fun HistoryScreen(
                 state = collapsingState,
                 toolbar = {
                     TopBar(
+                        elevationEnabled = false,
                         title = if (isToday) "Today" else dayFormatter.format(date),
                         statusBarEnabled = false,strictLeftIconAlignToStart = false,
                         leftIconBtn = {
@@ -135,6 +136,7 @@ fun HistoryScreen(
 
                             Card(
                                 shape = RoundedCornerShape(0),
+                                elevation = 2.dp,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
 

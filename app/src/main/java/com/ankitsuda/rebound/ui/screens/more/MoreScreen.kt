@@ -34,7 +34,7 @@ fun MoreScreen(navController: NavHostController) {
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "More")
+            TopBar(title = "More", elevationEnabled = true)
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
     ) {

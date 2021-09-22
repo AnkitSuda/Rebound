@@ -26,6 +26,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import timber.log.Timber
 
 enum class ScrollStrategy {
 	EnterAlways {
@@ -84,6 +85,7 @@ internal class EnterAlwaysNestedScrollConnection(
 		val offset = offsetY.value.toFloat()
 
 		// -toolbarHeight <= offsetY + dy <= 0
+
 		val consume = if(dy < 0) {
 			val toolbarConsumption = toolbarState.feedScroll(dy)
 			val remaining = dy - toolbarConsumption
