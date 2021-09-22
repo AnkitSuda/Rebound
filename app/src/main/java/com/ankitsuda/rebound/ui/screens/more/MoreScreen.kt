@@ -58,6 +58,17 @@ fun MoreScreen(navController: NavHostController) {
                     })
             }
             item {
+                MoreItemCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    icon = Icons.Outlined.SportsScore,
+                    text = "Achievements",
+                    description = "0 achievements",
+                    onClick = {
+                    })
+            }
+            item {
                 MoreSectionHeader(text = "Settings")
             }
             item {

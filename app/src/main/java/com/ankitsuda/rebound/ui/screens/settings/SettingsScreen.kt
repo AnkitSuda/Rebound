@@ -20,6 +20,7 @@ import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.MoreItemCard
 import com.ankitsuda.rebound.ui.components.MoreSectionHeader
 import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 
@@ -30,7 +31,11 @@ fun SettingsScreen(navController: NavHostController) {
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Settings")
+            TopBar(title = "Settings", leftIconBtn = {
+                TopBarBackIconButton {
+                    navController.popBackStack()
+                }
+            })
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
     ) {
