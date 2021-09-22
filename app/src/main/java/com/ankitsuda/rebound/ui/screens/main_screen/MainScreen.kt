@@ -2,6 +2,7 @@ package com.ankitsuda.rebound.ui.screens.main_screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -25,6 +26,7 @@ import com.ankitsuda.rebound.ui.components.PanelTopExpanded
 import com.ankitsuda.rebound.ui.components.WorkoutPanel
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.LabelVisible
+import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import kotlinx.coroutines.launch
@@ -36,7 +38,23 @@ data class MainDialog(
     var hideDialog: () -> Unit = {}
 )
 
+data class MainBottomSheet(
+    var sheetContent: @Composable () -> Unit = {},
+    var showSheet: () -> Unit = {},
+    var hideSheet: () -> Unit = {}
+) {
+    fun hide() {
+        hideSheet()
+    }
+
+    fun show(content: @Composable () -> Unit) {
+        sheetContent = content
+        showSheet()
+    }
+}
+
 val LocalDialog = compositionLocalOf { MainDialog() }
+val LocalBottomSheet = compositionLocalOf { MainBottomSheet() }
 
 /**
  * Root screen of the app
@@ -48,6 +66,7 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
 
 
     val swipeableState = rememberSwipeableState(0)
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val coroutine = rememberCoroutineScope()
 
     BackHandler(swipeableState.currentValue != 0) {
@@ -60,10 +79,15 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
         mutableStateOf({})
     }
 
+    var sheetContent: @Composable () -> Unit by remember {
+        mutableStateOf({})
+    }
+
     var dialogVisible by remember {
         mutableStateOf(false)
     }
 
+    // Dialog
     val dialog = MainDialog()
     dialog.showDialog = {
         dialogContent = dialog.dialogContent
@@ -74,37 +98,72 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
         dialogVisible = false
     }
 
-    CompositionLocalProvider(LocalDialog provides dialog) {
+    // Bottom sheet
+    val bottomSheet = MainBottomSheet()
+    bottomSheet.showSheet = {
+        sheetContent = bottomSheet.sheetContent
+        coroutine.launch {
+            sheetState.show()
+        }
+        Timber.d("show sheet")
+    }
+    bottomSheet.hideSheet = {
+        coroutine.launch {
+            sheetState.hide()
+        }
+    }
+
+    CompositionLocalProvider(LocalDialog provides dialog, LocalBottomSheet provides bottomSheet) {
         Surface() {
-            MainScreenScaffold(
-                modifier = Modifier,
-                swipeableState = swipeableState,
-                bottomBar = {
-                    BottomBar(navController = navController, viewModel)
+            ModalBottomSheetLayout(
+                sheetState = sheetState,
+                sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                sheetContent = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .defaultMinSize(minHeight = 100.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            sheetContent()
+                        }
+                    }
                 },
-                panel = {
-                    WorkoutPanel()
-                },
-                panelTopCommon = {
-                    PanelTopDragHandle()
-                },
-                panelTopCollapsed = {
-
-                    PanelTopCollapsed()
-
-                },
-                panelTopExpanded = {
-                    PanelTopExpanded(
-                        onCollapseBtnClicked = {
-                            coroutine.launch {
-                                swipeableState.animateTo(0)
-                            }
+                content = {
+                    MainScreenScaffold(
+                        modifier = Modifier,
+                        swipeableState = swipeableState,
+                        bottomBar = {
+                            BottomBar(navController = navController, viewModel)
                         },
-                        onTimerBtnClicked = { },
-                        onFinishBtnClicked = {})
-                }) {
-                MainScreenNavigationConfigurations(navController = navController)
-            }
+                        panel = {
+                            WorkoutPanel()
+                        },
+                        panelTopCommon = {
+                            PanelTopDragHandle()
+                        },
+                        panelTopCollapsed = {
+
+                            PanelTopCollapsed()
+
+                        },
+                        panelTopExpanded = {
+                            PanelTopExpanded(
+                                onCollapseBtnClicked = {
+                                    coroutine.launch {
+                                        swipeableState.animateTo(0)
+                                    }
+                                },
+                                onTimerBtnClicked = { },
+                                onFinishBtnClicked = {})
+                        }) {
+                        MainScreenNavigationConfigurations(navController = navController)
+                    }
+                })
+
 
             if (dialogVisible) {
                 AlertDialog(onDismissRequest = {

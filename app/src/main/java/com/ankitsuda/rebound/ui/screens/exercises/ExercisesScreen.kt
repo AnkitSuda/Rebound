@@ -26,6 +26,8 @@ import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import com.ankitsuda.rebound.ui.components.TopSearchBar
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.rebound.ui.screens.create_exercise.CreateExerciseScreen
+import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -44,6 +46,7 @@ fun ExercisesScreen(
     navController: NavHostController,
     viewModel: ExercisesScreenViewModel = hiltViewModel()
 ) {
+    val bottomSheet = LocalBottomSheet.current
     val tabData = arrayListOf<String>()
 
     repeat(10) { tabData.add("Muscle") }
@@ -74,7 +77,10 @@ fun ExercisesScreen(
                         icon = Icons.Outlined.Add,
                         title = "Create Exercise",
                         onClick = {
-                            navController.navigate(Route.CreateExercise.route)
+                            bottomSheet.show {
+                                CreateExerciseScreen()
+                            }
+//                            navController.navigate(Route.CreateExercise.route)
                         })
                 })
 
@@ -128,7 +134,9 @@ fun ExercisesScreen(
         ) { index ->
 
             LazyColumn(
-                modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

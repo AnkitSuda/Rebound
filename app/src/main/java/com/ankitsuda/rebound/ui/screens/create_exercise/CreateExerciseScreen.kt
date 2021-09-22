@@ -9,6 +9,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,15 +28,17 @@ import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
+import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import kotlin.random.Random
 
 @Composable
 fun CreateExerciseScreen(
-    navController: NavHostController,
+//    navController: NavHostController,
     viewModel: CreateExerciseScreenViewModel = hiltViewModel()
 ) {
+    val bottomSheet = LocalBottomSheet.current
     val scrollState = rememberScrollState()
 
     // Dummy lists
@@ -53,9 +57,10 @@ fun CreateExerciseScreen(
 
     Column() {
         TopBar(title = "New Exercise", leftIconBtn = {
-            TopBarBackIconButton {
-                navController.popBackStack()
-            }
+            TopBarIconButton(icon = Icons.Outlined.Close, title = "Back", onClick = {
+                bottomSheet.hide()
+//                navController.popBackStack()
+            })
         }, rightIconBtn = {
             TopBarIconButton(
                 icon = Icons.Outlined.Done,

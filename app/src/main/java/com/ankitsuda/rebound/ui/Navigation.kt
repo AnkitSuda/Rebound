@@ -76,9 +76,9 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
                 ExerciseDetailScreen(navController)
             }
 
-            composable(Route.CreateExercise.route) {
-                CreateExerciseScreen(navController)
-            }
+//            composable(Route.CreateExercise.route) {
+//                CreateExerciseScreen(navController)
+//            }
         }
 
         navigation(
