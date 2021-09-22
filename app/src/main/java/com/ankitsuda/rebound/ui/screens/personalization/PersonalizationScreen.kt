@@ -22,7 +22,6 @@ import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
-import com.ankitsuda.rebound.ui.screens.more.SectionHeader
 
 @Composable
 fun PersonalizationScreen(navController: NavController) {

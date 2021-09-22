@@ -12,6 +12,7 @@ import com.ankitsuda.rebound.ui.screens.create_exercise.CreateExerciseScreen
 import com.ankitsuda.rebound.ui.screens.history.HistoryScreen
 import com.ankitsuda.rebound.ui.screens.home.HomeScreen
 import com.ankitsuda.rebound.ui.screens.main_screen.BottomNavigationScreens
+import com.ankitsuda.rebound.ui.screens.measure.MeasureScreen
 import com.ankitsuda.rebound.ui.screens.more.MoreScreen
 import com.ankitsuda.rebound.ui.screens.personalization.ColorPickerDemoScreen
 import com.ankitsuda.rebound.ui.screens.personalization.PersonalizationScreen
@@ -20,6 +21,7 @@ import com.ankitsuda.rebound.ui.screens.personalization.card.CardPersonalization
 import com.ankitsuda.rebound.ui.screens.personalization.main_colors.MainColorsPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.shapes.ShapesPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.session.SessionScreen
+import com.ankitsuda.rebound.ui.screens.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -87,6 +89,12 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
         ) {
             composable(Route.More.route) {
                 MoreScreen(navController)
+            }
+            composable(Route.Measure.route) {
+                MeasureScreen(navController)
+            }
+            composable(Route.Settings.route) {
+                SettingsScreen(navController)
             }
             composable(Route.Personalization.route) {
                 PersonalizationScreen(navController)
