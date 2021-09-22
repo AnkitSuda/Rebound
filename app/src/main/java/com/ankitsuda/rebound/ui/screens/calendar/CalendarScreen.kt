@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -76,7 +77,7 @@ fun CalendarScreen(
         state = collapsingState,
         toolbar = {
             TopBar(title = "Calendar", leftIconBtn = {
-                TopBarBackIconButton {
+                TopBarIconButton(icon = Icons.Outlined.Close, title = "Close calendar") {
                     navController.popBackStack()
                 }
             }, rightIconBtn = {
@@ -94,7 +95,9 @@ fun CalendarScreen(
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
     ) {
-        LazyColumn(state = scrollState, modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
+        LazyColumn(state = scrollState, modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)) {
             items(calendar.size) {
                 val month = calendar[it] as MonthItem
                 CalendarMonthItem(
