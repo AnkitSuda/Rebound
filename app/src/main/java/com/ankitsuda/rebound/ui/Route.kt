@@ -24,6 +24,9 @@ sealed class Route(val route: String) {
     object More : Route("more")
 
     object Measure : Route("measure")
+    object PartMeasurements : Route("part_measurements/{partId}") {
+        fun createRoute(partId: String) = "part_measurements/$partId"
+    }
 
     object Settings : Route("settings")
     object Personalization : Route("personalization")

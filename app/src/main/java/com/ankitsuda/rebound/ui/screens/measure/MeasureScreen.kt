@@ -73,6 +73,7 @@ fun MeasureScreen(navController: NavHostController) {
                         .padding(bottom = 8.dp),
                     text = part,
                     onClick = {
+                        navController.navigate(Route.PartMeasurements.createRoute(part))
                     })
             }
 
@@ -87,6 +88,7 @@ fun MeasureScreen(navController: NavHostController) {
                         .padding(bottom = 8.dp),
                     text = part,
                     onClick = {
+                        navController.navigate(Route.PartMeasurements.createRoute(part))
                     })
             }
 

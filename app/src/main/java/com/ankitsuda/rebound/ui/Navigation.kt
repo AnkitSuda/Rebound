@@ -14,6 +14,7 @@ import com.ankitsuda.rebound.ui.screens.home.HomeScreen
 import com.ankitsuda.rebound.ui.screens.main_screen.BottomNavigationScreens
 import com.ankitsuda.rebound.ui.screens.measure.MeasureScreen
 import com.ankitsuda.rebound.ui.screens.more.MoreScreen
+import com.ankitsuda.rebound.ui.screens.part_measurements.PartMeasurementsScreen
 import com.ankitsuda.rebound.ui.screens.personalization.ColorPickerDemoScreen
 import com.ankitsuda.rebound.ui.screens.personalization.PersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.botom_bar.BottomBarPersonalizationScreen
@@ -92,6 +93,9 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
             }
             composable(Route.Measure.route) {
                 MeasureScreen(navController)
+            }
+            composable(Route.PartMeasurements.route) {
+                PartMeasurementsScreen(navController)
             }
             composable(Route.Settings.route) {
                 SettingsScreen(navController)
