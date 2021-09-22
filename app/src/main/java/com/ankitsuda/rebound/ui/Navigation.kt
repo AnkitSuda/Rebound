@@ -21,6 +21,7 @@ import com.ankitsuda.rebound.ui.screens.personalization.botom_bar.BottomBarPerso
 import com.ankitsuda.rebound.ui.screens.personalization.card.CardPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.main_colors.MainColorsPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.shapes.ShapesPersonalizationScreen
+import com.ankitsuda.rebound.ui.screens.personalization.top_bar.TopBarPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.session.SessionScreen
 import com.ankitsuda.rebound.ui.screens.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
@@ -111,6 +112,9 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
             }
             composable(Route.CardsPersonalization.route) {
                 CardPersonalizationScreen(navController)
+            }
+            composable(Route.TopBarPersonalization.route) {
+                TopBarPersonalizationScreen(navController)
             }
             composable(Route.BottomBarPersonalization.route) {
                 BottomBarPersonalizationScreen(navController)

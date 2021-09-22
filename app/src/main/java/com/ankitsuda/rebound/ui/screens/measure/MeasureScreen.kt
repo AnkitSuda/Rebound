@@ -47,7 +47,7 @@ fun MeasureScreen(navController: NavHostController) {
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Measure", leftIconBtn = {
+            TopBar(title = "Measure", strictLeftIconAlignToStart = true,leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }

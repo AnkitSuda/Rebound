@@ -38,6 +38,8 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
         val BOTTOM_BAR_LABEL_WEIGHT_KEY = stringPreferencesKey(name = "bottom_bar_label_weight")
         val BOTTOM_BAR_ICON_SIZE_KEY = intPreferencesKey(name = "bottom_bar_icon_size")
 
+        val TOP_BAR_TITLE_ALIGNMENT_KEY = stringPreferencesKey(name = "top_bar_alignment")
+
         // Small shape
         val SHAPE_SMALL_TOP_START_RADIUS_KEY =
             intPreferencesKey(name = "shape_small_top_start_radius_key")
@@ -211,6 +213,13 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
     override suspend fun setBottomBarIconSize(value: Int) {
         context.dataStore.setValue(BOTTOM_BAR_ICON_SIZE_KEY, value)
+    }
+
+    override val topBarTitleAlignment: Flow<String>
+        get() = context.dataStore.getValueAsFlow(TOP_BAR_TITLE_ALIGNMENT_KEY, "center")
+
+    override suspend fun setTopBarTitleAlignment(value: String) {
+        context.dataStore.setValue(TOP_BAR_TITLE_ALIGNMENT_KEY, value)
     }
 
 

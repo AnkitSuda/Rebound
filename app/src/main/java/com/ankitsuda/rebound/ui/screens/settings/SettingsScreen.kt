@@ -31,7 +31,7 @@ fun SettingsScreen(navController: NavHostController) {
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Settings", leftIconBtn = {
+            TopBar(title = "Settings", strictLeftIconAlignToStart = true,leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }

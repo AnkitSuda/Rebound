@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.screens.personalization.botom_bar
+package com.ankitsuda.rebound.ui.screens.personalization.top_bar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,34 +13,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.components.settings.RadioGroupCardItem
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
-import com.ankitsuda.rebound.utils.LabelVisible
-import kotlin.math.roundToInt
+import com.ankitsuda.rebound.ui.screens.personalization.card.CardPersonalizationScreenViewModel
+import timber.log.Timber
 
 @Composable
-fun BottomBarPersonalizationScreen(
-    navController: NavController,
-    viewModel: BottomBarPersonalizationViewModel = hiltViewModel()
+fun TopBarPersonalizationScreen(
+    navController: NavHostController,
+    viewModel: TopBarPersonalizationScreenViewModel = hiltViewModel()
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
-    val labelVisibleItems = viewModel.labelVisibleItems
-    val labelVisible by viewModel.labelVisible.collectAsState(initial = LabelVisible.ALWAYS)
 
-    val labelWeightItems = viewModel.labelWeightItems
-    val labelWeight by viewModel.labelWeight.collectAsState(initial = "normal")
-    val iconSize by viewModel.iconSize.collectAsState(initial = 24)
+    val titleAlignment by viewModel.titleAlignment.collectAsState("center")
 
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Bottom Bar", strictLeftIconAlignToStart = true,leftIconBtn = {
+            TopBar(title = "Top Bar", strictLeftIconAlignToStart = true,leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }
@@ -68,40 +65,12 @@ fun BottomBarPersonalizationScreen(
                 item {
 
                     RadioGroupCardItem(
-                        modifier = itemModifier,
-                        text = "Label visible",
+                        text = "Title Alignment",
                         onSelectionChange = { _, value ->
-                            viewModel.setLabelVisible(value)
+                            viewModel.setTitleAlignment(value)
                         },
-                        items = labelVisibleItems,
-                        selected = labelVisible
-                    )
-
-                }
-                item {
-
-                    RadioGroupCardItem(
-                        modifier = itemModifier,
-                        text = "Label weight",
-                        onSelectionChange = { _, value ->
-                            viewModel.setLabelWeight(value)
-                        },
-                        items = labelWeightItems,
-                        selected = labelWeight
-                    )
-                }
-
-  item {
-
-                    SliderCardItem(
-                        modifier = itemModifier,
-                        text = "Icon size",
-                        valueRange = 1f..32f,
-                        steps = 32,
-                        value = iconSize.toFloat(),
-                        onChange = {
-                            viewModel.setIconSize(it.toInt())
-                        }
+                        items = viewModel.allTitleAlignments,
+                        selected = titleAlignment
                     )
                 }
 

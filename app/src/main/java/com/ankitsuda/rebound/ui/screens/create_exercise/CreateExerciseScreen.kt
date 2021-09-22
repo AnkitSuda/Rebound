@@ -56,7 +56,7 @@ fun CreateExerciseScreen(
 
 
     Column() {
-        TopBar(title = "New Exercise", leftIconBtn = {
+        TopBar(title = "New Exercise", strictLeftIconAlignToStart = true, leftIconBtn = {
             TopBarIconButton(icon = Icons.Outlined.Close, title = "Back", onClick = {
                 bottomSheet.hide()
 //                navController.popBackStack()

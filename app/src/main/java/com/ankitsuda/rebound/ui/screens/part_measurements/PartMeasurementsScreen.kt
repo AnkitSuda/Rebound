@@ -33,7 +33,7 @@ fun PartMeasurementsScreen(navController: NavHostController) {
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = partId.toString(), leftIconBtn = {
+            TopBar(title = partId.toString(), strictLeftIconAlignToStart = true,leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }

@@ -33,6 +33,7 @@ sealed class Route(val route: String) {
     object MainColorsPersonalization : Route("personalization/main_colors")
     object ShapesPersonalization : Route("personalization/shapes")
     object CardsPersonalization : Route("personalization/cards")
+    object TopBarPersonalization : Route("personalization/top_bar")
     object BottomBarPersonalization : Route("personalization/bottom_bar")
     object ColorPickerDemo : Route("personalization/color_picker_demo")
 

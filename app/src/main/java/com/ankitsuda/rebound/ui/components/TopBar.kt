@@ -7,24 +7,26 @@ import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsHeight
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.rebound.utils.TopBarAlignment
+import kotlin.math.max
 
 /**
  * TopBar, usage as a toolbar
@@ -36,8 +38,38 @@ fun TopBar(
     title: String,
     statusBarEnabled: Boolean = true,
     leftIconBtn: (@Composable () -> Unit)? = null,
-    rightIconBtn: (@Composable () -> Unit)? = null
+    strictLeftIconAlignToStart: Boolean = true,
+    alignRightIconToLeftWhenTitleAlignIsNotCenter: Boolean = false,
+    rightIconBtn: (@Composable () -> Unit)? = null,
+    viewModel: TopBarViewModel = hiltViewModel()
 ) {
+
+    var startBoxWidth by remember {
+        mutableStateOf(64.dp)
+    }
+    var endBoxWidth by remember {
+        mutableStateOf(64.dp)
+    }
+
+
+    val titleAlignment by viewModel.titleAlignment.collectAsState(initial = TopBarAlignment.CENTER)
+
+//    val titlePadding =
+//        if ((leftIconBtn != null || rightIconBtn != null)) {
+//            if (leftIconBtn != null && rightIconBtn != null) {
+//                if (titleAlignment != TopBarAlignment.CENTER && !strictLeftIconAlignToStart) {
+//                    (64 * 2).dp
+//                } else {
+//                    64.dp
+//                }
+//            } else {
+//                64.dp
+//            }
+//        } else {
+//            8.dp
+//        }
+
+
     Column(modifier = modifier.fillMaxWidth()) {
         // Status bar
         if (statusBarEnabled) {
@@ -50,23 +82,78 @@ fun TopBar(
                 .height(56.dp)
                 .padding(start = 8.dp, end = 8.dp)
                 .fillMaxWidth(),
-        ) {
-            leftIconBtn?.let {
-                Box(modifier = Modifier.align(Alignment.CenterStart)) {
-                    it()
+
+            ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .onGloballyPositioned(with(LocalDensity.current) {
+                        {
+                            startBoxWidth = it.size.width.toDp()
+                        }
+                    })
+            ) {
+                if (titleAlignment == TopBarAlignment.CENTER || strictLeftIconAlignToStart) {
+                    leftIconBtn?.let {
+                        it()
+                    }
                 }
             }
 
             Text(
                 text = title,
                 style = MaterialTheme.typography.h5,
-                modifier = Modifier.align(Alignment.Center),
+                textAlign =
+                when (titleAlignment) {
+                    TopBarAlignment.START -> TextAlign.Start
+                    TopBarAlignment.END -> TextAlign.End
+                    else -> TextAlign.Center
+                },
+                modifier = Modifier
+                    .align(
+                        when (titleAlignment) {
+                            TopBarAlignment.START -> Alignment.CenterStart
+                            TopBarAlignment.END -> Alignment.CenterEnd
+                            else -> Alignment.Center
+                        },
+                    )
+                    .padding(
+                        start = if (titleAlignment != TopBarAlignment.CENTER) startBoxWidth + 8.dp else 16.dp,
+                        end = if (titleAlignment != TopBarAlignment.CENTER) endBoxWidth + 8.dp else 16.dp
+                    ),
                 color = MaterialTheme.colors.onBackground,
             )
 
-            rightIconBtn?.let {
-                Box(modifier = Modifier.align(Alignment.CenterEnd)) {
-                    it()
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .onGloballyPositioned(with(LocalDensity.current) {
+                        {
+                            endBoxWidth = it.size.width.toDp()
+                        }
+                    }),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (alignRightIconToLeftWhenTitleAlignIsNotCenter) {
+                    rightIconBtn?.let {
+                        Box() {
+                            it()
+                        }
+                    }
+                }
+                if (titleAlignment != TopBarAlignment.CENTER && !strictLeftIconAlignToStart) {
+                    leftIconBtn?.let {
+                        Box() {
+                            it()
+                        }
+                    }
+                }
+                if (!alignRightIconToLeftWhenTitleAlignIsNotCenter) {
+                    rightIconBtn?.let {
+                        Box() {
+                            it()
+                        }
+                    }
                 }
             }
         }

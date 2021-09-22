@@ -76,7 +76,7 @@ fun CalendarScreen(
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Calendar", leftIconBtn = {
+            TopBar(title = "Calendar", strictLeftIconAlignToStart = true, leftIconBtn = {
                 TopBarIconButton(icon = Icons.Outlined.Close, title = "Close calendar") {
                     navController.popBackStack()
                 }

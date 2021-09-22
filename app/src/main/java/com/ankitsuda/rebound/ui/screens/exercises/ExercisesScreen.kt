@@ -68,21 +68,26 @@ fun ExercisesScreen(
         Box(Modifier.background(MaterialTheme.colors.background)) {
 
             if (!isSearchMode) {
-                TopBar(title = "Exercises", leftIconBtn = {
-                    TopBarIconButton(icon = Icons.Outlined.Search, title = "Search", onClick = {
-                        viewModel.toggleSearchMode()
-                    })
-                }, rightIconBtn = {
-                    TopBarIconButton(
-                        icon = Icons.Outlined.Add,
-                        title = "Create Exercise",
-                        onClick = {
-                            bottomSheet.show {
-                                CreateExerciseScreen()
-                            }
-//                            navController.navigate(Route.CreateExercise.route)
+                TopBar(
+                    title = "Exercises",
+                    strictLeftIconAlignToStart = false,
+                    alignRightIconToLeftWhenTitleAlignIsNotCenter = true,
+                    leftIconBtn = {
+                        TopBarIconButton(icon = Icons.Outlined.Search, title = "Search", onClick = {
+                            viewModel.toggleSearchMode()
                         })
-                })
+                    },
+                    rightIconBtn = {
+                        TopBarIconButton(
+                            icon = Icons.Outlined.Add,
+                            title = "Create Exercise",
+                            onClick = {
+                                bottomSheet.show {
+                                    CreateExerciseScreen()
+                                }
+//                            navController.navigate(Route.CreateExercise.route)
+                            })
+                    })
 
             } else {
                 TopSearchBar(

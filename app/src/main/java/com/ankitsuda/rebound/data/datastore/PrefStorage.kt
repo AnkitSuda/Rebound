@@ -45,6 +45,10 @@ interface PrefStorage {
     val bottomBarIconSize: Flow<Int>
     suspend fun setBottomBarIconSize(value: Int)
 
+
+    val topBarTitleAlignment: Flow<String>
+    suspend fun setTopBarTitleAlignment(value: String)
+
     // Shapes
     /**
      * Dirty hack. Will implement better way to store shape values later.

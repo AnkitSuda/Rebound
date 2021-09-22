@@ -40,7 +40,7 @@ fun ExerciseDetailScreen(navController: NavHostController) {
 
 
     Column() {
-        TopBar(title = "Exercise", leftIconBtn = {
+        TopBar(title = "Exercise",  strictLeftIconAlignToStart = true, leftIconBtn = {
             TopBarBackIconButton(onClick = {
                 navController.popBackStack()
             })

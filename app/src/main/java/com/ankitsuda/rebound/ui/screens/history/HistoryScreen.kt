@@ -94,7 +94,7 @@ fun HistoryScreen(
                 toolbar = {
                     TopBar(
                         title = if (isToday) "Today" else dayFormatter.format(date),
-                        statusBarEnabled = false,
+                        statusBarEnabled = false,strictLeftIconAlignToStart = false,
                         leftIconBtn = {
                             TopBarIconButton(
                                 icon = Icons.Outlined.DateRange,

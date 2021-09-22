@@ -39,7 +39,7 @@ fun ShapesPersonalizationScreen(
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Shapes", leftIconBtn = {
+            TopBar(title = "Shapes", strictLeftIconAlignToStart = true,leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }

@@ -39,7 +39,7 @@ fun MainColorsPersonalizationScreen(
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Main Colors", leftIconBtn = {
+            TopBar(title = "Main Colors", strictLeftIconAlignToStart = true,leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }

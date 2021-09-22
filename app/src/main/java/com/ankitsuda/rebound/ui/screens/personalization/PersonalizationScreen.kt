@@ -30,7 +30,7 @@ fun PersonalizationScreen(navController: NavController) {
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Personalization", leftIconBtn = {
+            TopBar(title = "Personalization", strictLeftIconAlignToStart = true,leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }
@@ -76,6 +76,16 @@ fun PersonalizationScreen(navController: NavController) {
                     text = "Cards",
                     onClick = {
                         navController.navigate(Route.CardsPersonalization.route)
+                    })
+            }
+            item {
+                MoreItemCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    text = "Top Bar",
+                    onClick = {
+                        navController.navigate(Route.TopBarPersonalization.route)
                     })
             }
             item {

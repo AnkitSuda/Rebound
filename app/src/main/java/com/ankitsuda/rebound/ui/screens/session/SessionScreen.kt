@@ -37,7 +37,7 @@ fun SessionScreen(navController: NavHostController) {
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Session $sessionId", leftIconBtn = {
+            TopBar(title = "Session $sessionId", strictLeftIconAlignToStart = true,leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }

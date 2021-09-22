@@ -40,7 +40,7 @@ fun CardPersonalizationScreen(
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Cards", leftIconBtn = {
+            TopBar(title = "Cards", strictLeftIconAlignToStart = true,leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }
