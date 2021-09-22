@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.rebound.R
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.Utils
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.statusBarsHeight
@@ -120,7 +121,7 @@ fun MainScreenScaffold(
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsHeight()
-                    .background(Color.White)
+                    .background(ReboundTheme.colors.background)
             )
         }.map { it.measure(statusBarConstraints) }
 
