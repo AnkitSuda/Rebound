@@ -7,8 +7,11 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +32,7 @@ import com.ankitsuda.rebound.utils.LabelVisible
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.statusBarsHeight
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -114,7 +118,12 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
     }
 
     CompositionLocalProvider(LocalDialog provides dialog, LocalBottomSheet provides bottomSheet) {
-        Surface() {
+        Box() {
+            /**
+             * Temporary using ModalBottomSheetLayout
+             * will create a custom implementation later in MainScreenScaffold with proper status bar padding
+             * and auto corner radius
+             */
             ModalBottomSheetLayout(
                 sheetState = sheetState,
                 sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
@@ -124,12 +133,9 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
                             .fillMaxWidth()
                             .defaultMinSize(minHeight = 100.dp)
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            sheetContent()
-                        }
+
+                        sheetContent()
+
                     }
                 },
                 content = {
@@ -163,7 +169,6 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
                         MainScreenNavigationConfigurations(navController = navController)
                     }
                 })
-
 
             if (dialogVisible) {
                 AlertDialog(onDismissRequest = {
