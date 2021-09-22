@@ -14,12 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import kotlin.random.Random
 
 @Composable
@@ -57,10 +59,14 @@ fun SessionScreen(navController: NavHostController) {
             item {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
                 ) {
                     Column() {
                         Text(text = "7 Exercises")
+                        AutoSpacer(space = 4.dp)
                         SessionCompleteQuickInfo(
                             time = "45 m",
                             volume = "1000 kg",
@@ -68,14 +74,16 @@ fun SessionScreen(navController: NavHostController) {
                         )
                     }
                     IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit session")
+                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit session", tint = ReboundTheme.colors.primary)
                     }
                 }
             }
 
             items(10) {
                 SessionExerciseCardItem(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
                     onClick = { },
                     exerciseName = "Bench Press: Barbell",
                     sets = listOf(
