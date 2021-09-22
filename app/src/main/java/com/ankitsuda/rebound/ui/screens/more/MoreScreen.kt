@@ -41,8 +41,7 @@ fun MoreScreen(navController: NavHostController) {
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
+                .fillMaxSize(),
             contentPadding = PaddingValues(16.dp)
         ) {
             item {

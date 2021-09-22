@@ -168,7 +168,7 @@ fun CollapsingToolbar(
 		measurePolicy = measurePolicy,
 		modifier = modifier
 
-			.clipToBounds()
+//			.clipToBounds()
 	)
 }
 

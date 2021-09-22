@@ -24,7 +24,9 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.TopBarAlignment
 import kotlin.math.max
 
@@ -54,110 +56,100 @@ fun TopBar(
 
     val titleAlignment by viewModel.titleAlignment.collectAsState(initial = TopBarAlignment.CENTER)
 
-//    val titlePadding =
-//        if ((leftIconBtn != null || rightIconBtn != null)) {
-//            if (leftIconBtn != null && rightIconBtn != null) {
-//                if (titleAlignment != TopBarAlignment.CENTER && !strictLeftIconAlignToStart) {
-//                    (64 * 2).dp
-//                } else {
-//                    64.dp
-//                }
-//            } else {
-//                64.dp
-//            }
-//        } else {
-//            8.dp
-//        }
+    Surface(elevation = 2.dp, modifier = Modifier.zIndex(2f)) {
+        Column(modifier = modifier.fillMaxWidth()) {
+            // Status bar
+            if (statusBarEnabled) {
+                Box(
+                    modifier = Modifier
+                        .statusBarsHeight()
+                        .background(ReboundTheme.colors.background)
+                )
+            }
 
-
-    Column(modifier = modifier.fillMaxWidth()) {
-        // Status bar
-        if (statusBarEnabled) {
-            Box(modifier = Modifier.statusBarsHeight())
-        }
-
-        // Main TopBar content
-        Box(
-            modifier = Modifier
-                .height(56.dp)
-                .padding(start = 8.dp, end = 8.dp)
-                .fillMaxWidth(),
-
-            ) {
+            // Main TopBar content
             Box(
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .onGloballyPositioned(with(LocalDensity.current) {
-                        {
-                            startBoxWidth = it.size.width.toDp()
+                    .height(56.dp)
+                    .padding(start = 8.dp, end = 8.dp)
+                    .fillMaxWidth(),
+
+                ) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .onGloballyPositioned(with(LocalDensity.current) {
+                            {
+                                startBoxWidth = it.size.width.toDp()
+                            }
+                        })
+                ) {
+                    if (titleAlignment == TopBarAlignment.CENTER || strictLeftIconAlignToStart) {
+                        leftIconBtn?.let {
+                            it()
                         }
-                    })
-            ) {
-                if (titleAlignment == TopBarAlignment.CENTER || strictLeftIconAlignToStart) {
-                    leftIconBtn?.let {
-                        it()
+                    }
+                }
+
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.h5,
+                    textAlign =
+                    when (titleAlignment) {
+                        TopBarAlignment.START -> TextAlign.Start
+                        TopBarAlignment.END -> TextAlign.End
+                        else -> TextAlign.Center
+                    },
+                    modifier = Modifier
+                        .align(
+                            when (titleAlignment) {
+                                TopBarAlignment.START -> Alignment.CenterStart
+                                TopBarAlignment.END -> Alignment.CenterEnd
+                                else -> Alignment.Center
+                            },
+                        )
+                        .padding(
+                            start = if (titleAlignment != TopBarAlignment.CENTER) startBoxWidth + 8.dp else 16.dp,
+                            end = if (titleAlignment != TopBarAlignment.CENTER) endBoxWidth + 8.dp else 16.dp
+                        ),
+                    color = MaterialTheme.colors.onBackground,
+                )
+
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .onGloballyPositioned(with(LocalDensity.current) {
+                            {
+                                endBoxWidth = it.size.width.toDp()
+                            }
+                        }),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (alignRightIconToLeftWhenTitleAlignIsNotCenter) {
+                        rightIconBtn?.let {
+                            Box() {
+                                it()
+                            }
+                        }
+                    }
+                    if (titleAlignment != TopBarAlignment.CENTER && !strictLeftIconAlignToStart) {
+                        leftIconBtn?.let {
+                            Box() {
+                                it()
+                            }
+                        }
+                    }
+                    if (!alignRightIconToLeftWhenTitleAlignIsNotCenter) {
+                        rightIconBtn?.let {
+                            Box() {
+                                it()
+                            }
+                        }
                     }
                 }
             }
 
-            Text(
-                text = title,
-                style = MaterialTheme.typography.h5,
-                textAlign =
-                when (titleAlignment) {
-                    TopBarAlignment.START -> TextAlign.Start
-                    TopBarAlignment.END -> TextAlign.End
-                    else -> TextAlign.Center
-                },
-                modifier = Modifier
-                    .align(
-                        when (titleAlignment) {
-                            TopBarAlignment.START -> Alignment.CenterStart
-                            TopBarAlignment.END -> Alignment.CenterEnd
-                            else -> Alignment.Center
-                        },
-                    )
-                    .padding(
-                        start = if (titleAlignment != TopBarAlignment.CENTER) startBoxWidth + 8.dp else 16.dp,
-                        end = if (titleAlignment != TopBarAlignment.CENTER) endBoxWidth + 8.dp else 16.dp
-                    ),
-                color = MaterialTheme.colors.onBackground,
-            )
-
-            Row(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .onGloballyPositioned(with(LocalDensity.current) {
-                        {
-                            endBoxWidth = it.size.width.toDp()
-                        }
-                    }),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (alignRightIconToLeftWhenTitleAlignIsNotCenter) {
-                    rightIconBtn?.let {
-                        Box() {
-                            it()
-                        }
-                    }
-                }
-                if (titleAlignment != TopBarAlignment.CENTER && !strictLeftIconAlignToStart) {
-                    leftIconBtn?.let {
-                        Box() {
-                            it()
-                        }
-                    }
-                }
-                if (!alignRightIconToLeftWhenTitleAlignIsNotCenter) {
-                    rightIconBtn?.let {
-                        Box() {
-                            it()
-                        }
-                    }
-                }
-            }
         }
-
     }
 }
 
