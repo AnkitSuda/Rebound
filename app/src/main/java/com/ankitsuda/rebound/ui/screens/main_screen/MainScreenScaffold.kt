@@ -133,7 +133,9 @@ fun MainScreenScaffold(
             minHeight = 0,
         )
         val bottomBarPlaceables = subcompose(MainScreenScaffoldContent.BottomBar) {
-            bottomBar()
+            Box(Modifier.fillMaxWidth().alpha((1f- outOf1).coerceIn(0.5f, 1f))) {
+                bottomBar()
+            }
         }.map { it.measure(bottomBarConstraints) }
 
         bottomBarHeight = bottomBarPlaceables.maxOfOrNull { it.height } ?: 0
