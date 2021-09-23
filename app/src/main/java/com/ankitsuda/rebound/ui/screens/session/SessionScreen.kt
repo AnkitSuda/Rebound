@@ -66,7 +66,7 @@ fun SessionScreen(navController: NavHostController) {
                 ) {
                     Column() {
                         Text(text = "7 Exercises")
-                        AutoSpacer(space = 4.dp)
+                        RSpacer(space = 4.dp)
                         SessionCompleteQuickInfo(
                             time = "45 m",
                             volume = "1000 kg",

@@ -109,28 +109,10 @@ fun ExerciseDetailScreen(navController: NavHostController) {
                     }
                 }
                 1 -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "History",
-                        )
-                    }
-
+                    ExerciseDetailHistoryTab()
                 }
                 2 -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "About",
-                        )
-                    }
-
+                    ExerciseDetailAboutTab()
                 }
                 else -> {
                     Column(

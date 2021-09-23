@@ -25,12 +25,12 @@ fun SessionExerciseCardItem(
     AppCard(modifier = modifier, onClick = onClick) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = exerciseName, style = ReboundTheme.typography.body1)
-            AutoSpacer(8.dp)
+            RSpacer(8.dp)
             for (i in sets.indices) {
                 val set = sets[i]
                 SessionExerciseSetItem(order = i, set = set)
                 if (i != sets.size - 1) {
-                    AutoSpacer(8.dp)
+                    RSpacer(8.dp)
                 }
             }
         }
@@ -38,7 +38,7 @@ fun SessionExerciseCardItem(
 }
 
 @Composable
-private fun SessionExerciseSetItem(order: Int, set: Pair<Int, Int>) {
+fun SessionExerciseSetItem(order: Int, set: Pair<Int, Int>) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -55,14 +55,14 @@ private fun SessionExerciseSetItem(order: Int, set: Pair<Int, Int>) {
             )
         }
 
-        AutoSpacer(16.dp)
+        RSpacer(16.dp)
         Text(text = buildAnnotatedString {
             append(set.first.toString())
             withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
                 append(" kg")
             }
         })
-        AutoSpacer(20.dp)
+        RSpacer(20.dp)
         Text(text = buildAnnotatedString {
             append(set.second.toString())
             withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
