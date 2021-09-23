@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.R
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.utils.cmprs
 import com.google.accompanist.insets.statusBarsHeight
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -91,7 +92,6 @@ fun MainScreenScaffold(
             0f,
             1f
         )
-    Timber.d("$newOffsetY , $panelFullHeight , $panelHiddenContentHeight , $panelTopHeight , $outOf1")
 
     SubcomposeLayout(
         modifier = modifier
@@ -123,7 +123,7 @@ fun MainScreenScaffold(
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .alpha((1f - outOf1).coerceIn(0.5f, 1f))
+                    .alpha((1f - outOf1).coerceIn(0.7f, 1f))
             ) {
                 bottomBar()
             }
@@ -139,7 +139,7 @@ fun MainScreenScaffold(
             maxHeight = constraints.maxHeight - statusBarHeight
         )
         val panelPlaceables = subcompose(MainScreenScaffoldContent.HashtagsPanel) {
-            val cornerRadius = (12 - (12 * outOf1))
+            val cornerRadius = (12 - (12 * (1f-(2f - (outOf1 * 2)).coerceIn(0f, 1f))))
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -232,12 +232,12 @@ fun MainScreenScaffold(
                     ) {
 
                         // Using additional Box so we can set alpha without recomposing the panelTopExpanded
-                        Box(modifier = Modifier.alpha(outOf1)) {
+                        Box(modifier = Modifier.alpha(1f - (2f - (outOf1 * 2)).coerceIn(0f, 1f))) {
                             panelTopExpanded()
                         }
 
                         // Using additional Box so we can set alpha without recomposing the panelTopCollapsed
-                        Box(modifier = Modifier.alpha(1f - outOf1)) {
+                        Box(modifier = Modifier.alpha(1f - (outOf1 * 2).coerceIn(0f, 1f))) {
                             panelTopCollapsed()
                         }
 
@@ -331,7 +331,7 @@ fun MainScreenScaffold(
             statusBarPlaceables.forEach {
                 it.place(
                     0,
-                    -(statusBarHeight - statusBarHeight * outOf1).roundToInt()
+                    -(statusBarHeight - statusBarHeight * (1f- (2f - (outOf1 * 2)).coerceIn(0f, 1f))).roundToInt()
                 )
             }
 
