@@ -139,7 +139,7 @@ fun MainScreenScaffold(
             maxHeight = constraints.maxHeight - statusBarHeight
         )
         val panelPlaceables = subcompose(MainScreenScaffoldContent.HashtagsPanel) {
-            val cornerRadius = (12 - (12 * (1f-(2f - (outOf1 * 2)).coerceIn(0f, 1f))))
+            val cornerRadius = (12 - (12 * (1f - (2f - (outOf1 * 2)).coerceIn(0f, 1f))))
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -232,13 +232,21 @@ fun MainScreenScaffold(
                     ) {
 
                         // Using additional Box so we can set alpha without recomposing the panelTopExpanded
-                        Box(modifier = Modifier.alpha(1f - (2f - (outOf1 * 2)).coerceIn(0f, 1f))) {
-                            panelTopExpanded()
+                        (1f - (2f - (outOf1 * 2)).coerceIn(0f, 1f)).let { alpha ->
+                            if (alpha > 0f) {
+                                Box(modifier = Modifier.alpha(alpha)) {
+                                    panelTopExpanded()
+                                }
+                            }
                         }
 
                         // Using additional Box so we can set alpha without recomposing the panelTopCollapsed
-                        Box(modifier = Modifier.alpha(1f - (outOf1 * 2).coerceIn(0f, 1f))) {
-                            panelTopCollapsed()
+                        (1f - (outOf1 * 2).coerceIn(0f, 1f)).let { alpha ->
+                            if (alpha > 0f) {
+                                Box(modifier = Modifier.alpha(alpha)) {
+                                    panelTopCollapsed()
+                                }
+                            }
                         }
 
                         // This panelTopCommon is always visible regard less of panel state 
@@ -331,7 +339,10 @@ fun MainScreenScaffold(
             statusBarPlaceables.forEach {
                 it.place(
                     0,
-                    -(statusBarHeight - statusBarHeight * (1f- (2f - (outOf1 * 2)).coerceIn(0f, 1f))).roundToInt()
+                    -(statusBarHeight - statusBarHeight * (1f - (2f - (outOf1 * 2)).coerceIn(
+                        0f,
+                        1f
+                    ))).roundToInt()
                 )
             }
 
