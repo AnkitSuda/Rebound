@@ -92,6 +92,11 @@ fun WorkoutPanel() {
                 )
             }
         }
+
+        // Just for testing panel sliding
+        items(150) {
+            Text(text = it.toString())
+        }
     }
 }
 

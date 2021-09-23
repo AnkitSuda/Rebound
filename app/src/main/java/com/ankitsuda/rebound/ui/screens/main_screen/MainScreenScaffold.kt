@@ -1,8 +1,6 @@
 package com.ankitsuda.rebound.ui
 
 
-import android.os.Bundle
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,46 +11,34 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.SaverScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.rebound.R
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import com.ankitsuda.rebound.utils.Utils
-import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.statusBarsHeight
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import kotlin.math.max
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 
 /**
  * Skeleton of sliding panel and main content
- * Issue: Sliding doesn't work when panel has component with a scroll property, will fix it later.
  *
  * @param swipeableState State of sliding panel
  * @param onPanelTopHeightChange Returns panel top height
  * @param bottomBar Bottom Nav Bar component
+ * @param panel Panel main contents
  * @param panelTopCommon Common component of top panel views when fading between states
  * @param panelTopCollapsed Collapsed component of panel top
  * @param panelTopExpanded Expanded component of panel top
@@ -134,7 +120,11 @@ fun MainScreenScaffold(
             minHeight = 0,
         )
         val bottomBarPlaceables = subcompose(MainScreenScaffoldContent.BottomBar) {
-            Box(Modifier.fillMaxWidth().alpha((1f- outOf1).coerceIn(0.5f, 1f))) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .alpha((1f - outOf1).coerceIn(0.5f, 1f))
+            ) {
                 bottomBar()
             }
         }.map { it.measure(bottomBarConstraints) }
@@ -150,18 +140,70 @@ fun MainScreenScaffold(
         )
         val panelPlaceables = subcompose(MainScreenScaffoldContent.HashtagsPanel) {
             val cornerRadius = (12 - (12 * outOf1))
-            Card(
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
                     .swipeable(
                         state = swipeableState,
                         anchors = anchors,
                         thresholds = { _, _ ->
+                            // Automaticly toggle the state when user lifts the finger
+                            // when drag is reached 0.1f FractionalThreshold
                             FractionalThreshold(0.1f)
                         },
-                        resistance = null,
+                        resistance = null, // passing null so the panel doesn't go beyond the specified height
                         orientation = Orientation.Vertical
-                    ),
+                    )
+                    .nestedScroll(
+                        // We are using NestedScrollConnection to make panel swipeable when
+                        // user scrolls inside the panel
+                        object : NestedScrollConnection {
+                            override fun onPreScroll(
+                                available: Offset,
+                                source: NestedScrollSource
+                            ): Offset {
+                                val delta = available.y
+                                return if (delta < 0) {
+                                    // User is moving the finger upwards. If the gesture goes in that direction,
+                                    // we’re scrolling either the draggable composable or the scrollable inner content.
+                                    Offset(0f, swipeableState.performDrag(delta))
+                                } else {
+                                    // User is scrolling down. We can ignore this and pass all
+                                    // the consumable space down to the child
+                                    Offset.Zero
+                                }
+                            }
+
+                            override fun onPostScroll(
+                                consumed: Offset,
+                                available: Offset,
+                                source: NestedScrollSource
+                            ): Offset {
+                                val delta = available.y
+                                // if the list has finished scrolling, we will pass all the leftover space
+                                // to performDrag that will drag if necessary.
+                                return Offset(0f, swipeableState.performDrag(delta))
+                            }
+
+                            // Same as preScroll but this time we handle the fling
+                            override suspend fun onPreFling(available: Velocity): Velocity {
+                                return if (available.y < 0 && swipeableState.currentValue == 0) {
+                                    swipeableState.performFling(available.y)
+                                    available
+                                } else {
+                                    Velocity.Zero
+                                }
+                            }
+
+                            // Same as postScroll but this time we handle the fling
+                            override suspend fun onPostFling(
+                                consumed: Velocity,
+                                available: Velocity
+                            ): Velocity {
+                                swipeableState.performFling(velocity = available.y)
+                                return super.onPostFling(consumed, available)
+                            }
+                        }),
                 elevation = 8.dp,
                 shape = RoundedCornerShape(topStart = cornerRadius.dp, topEnd = cornerRadius.dp)
             ) {
@@ -179,7 +221,7 @@ fun MainScreenScaffold(
                                 panelTopHeight = constraints.size.height
                             }
                             .clickable(
-                                indication = null,
+                                indication = null, // passing null in indication so there won't be any ripple effect
                                 interactionSource = remember { MutableInteractionSource() }
                             ) {
                                 coroutine.launch {
@@ -189,20 +231,22 @@ fun MainScreenScaffold(
                             },
                     ) {
 
+                        // Using additional Box so we can set alpha without recomposing the panelTopExpanded
                         Box(modifier = Modifier.alpha(outOf1)) {
                             panelTopExpanded()
                         }
 
+                        // Using additional Box so we can set alpha without recomposing the panelTopCollapsed
                         Box(modifier = Modifier.alpha(1f - outOf1)) {
                             panelTopCollapsed()
                         }
 
+                        // This panelTopCommon is always visible regard less of panel state 
                         panelTopCommon()
 
                     }
 
-
-
+                    // Main panel contents
                     panel()
                 }
             }
@@ -223,20 +267,20 @@ fun MainScreenScaffold(
         }.map { it.measure(bodyConstraints) }
 
 
-        val backDropConstraints = constraints.copy(
+        val panelScrimConstraints = constraints.copy(
             minWidth = 0,
             minHeight = 0,
             maxHeight = constraints.maxHeight - bottomBarHeight
         )
 
-        val backDropPlaceables = subcompose(MainScreenScaffoldContent.BackDrop) {
+        val panelScrimPlaceables = subcompose(MainScreenScaffoldContent.PanelScrim) {
             if (outOf1 > 0f) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
                         .alpha(outOf1)
-                        .background(color = colorResource(id = R.color.backdrop))
+                        .background(color = Color.Black.copy(alpha = 0.32f))
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onTap = {
@@ -248,7 +292,7 @@ fun MainScreenScaffold(
                         },
                 )
             }
-        }.map { it.measure(backDropConstraints) }
+        }.map { it.measure(panelScrimConstraints) }
 
 
         val width = constraints.maxWidth
@@ -262,7 +306,7 @@ fun MainScreenScaffold(
                 )
             }
 
-            backDropPlaceables.forEach {
+            panelScrimPlaceables.forEach {
                 it.place(
                     0,
                     0
@@ -280,9 +324,7 @@ fun MainScreenScaffold(
                 it.place(
                     0,
                     height - (bottomBarHeight - bottomBarHeight * outOf1).roundToInt()
-                        .also { test ->
-                            Timber.d("bottomBarPlaceables $test , $bottomBarHeight")
-                        }
+
                 )
             }
 
@@ -298,5 +340,5 @@ fun MainScreenScaffold(
 }
 
 private enum class MainScreenScaffoldContent {
-    Body, BottomBar, HashtagsPanel, StatusBar, BackDrop
+    Body, BottomBar, HashtagsPanel, StatusBar, PanelScrim
 }
