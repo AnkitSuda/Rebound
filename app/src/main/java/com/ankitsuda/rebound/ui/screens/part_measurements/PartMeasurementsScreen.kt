@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
+import com.ankitsuda.rebound.ui.components.charts.line.LineChart
+import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 
@@ -33,7 +35,7 @@ fun PartMeasurementsScreen(navController: NavHostController) {
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = partId.toString(), strictLeftIconAlignToStart = true,leftIconBtn = {
+            TopBar(title = partId.toString(), strictLeftIconAlignToStart = true, leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }
@@ -51,7 +53,26 @@ fun PartMeasurementsScreen(navController: NavHostController) {
 
             item {
                 Box() {
-
+                    LineChart(
+                        lineChartData = LineChartData(
+                            points = listOf(
+                                LineChartData.Point(
+                                    1f,
+                                    "Label 1"
+                                ),
+                                LineChartData.Point(
+                                    12f,
+                                    "Label 2"
+                                ),
+                                LineChartData.Point(
+                                    5f,
+                                    "Label 3"
+                                ),
+                        )
+                    ),
+                    // Optional properties.
+                    modifier = Modifier.height(150.dp).fillMaxSize(),
+                    )
                 }
             }
         }

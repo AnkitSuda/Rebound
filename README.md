@@ -40,6 +40,10 @@ Rebound uses latest Android technologies and most best practices. Here is the te
  - DataStore
  - Hilt
 
+## Thanks to
+https://github.com/tehras/charts
+https://github.com/onebone/compose-collapsing-toolbar
+
 ## Want to Contribute ?
 Want to contribute? Great! All contributions are welcome, from code to documentation to graphics to design suggestions to bug reports. Please use GitHub to its fullest-- contribute Pull Requests, contribute tutorials or other wiki content-- whatever you have to offer, we can use it!
 
