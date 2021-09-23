@@ -233,20 +233,20 @@ fun MainScreenScaffold(
 
                         // Using additional Box so we can set alpha without recomposing the panelTopExpanded
                         (1f - (2f - (outOf1 * 2)).coerceIn(0f, 1f)).let { alpha ->
-                            if (alpha > 0f) {
+//                            if (alpha > 0f) {
                                 Box(modifier = Modifier.alpha(alpha)) {
                                     panelTopExpanded()
                                 }
-                            }
+//                            }
                         }
 
                         // Using additional Box so we can set alpha without recomposing the panelTopCollapsed
                         (1f - (outOf1 * 2).coerceIn(0f, 1f)).let { alpha ->
-                            if (alpha > 0f) {
+//                            if (alpha > 0f) {
                                 Box(modifier = Modifier.alpha(alpha)) {
                                     panelTopCollapsed()
                                 }
-                            }
+//                            }
                         }
 
                         // This panelTopCommon is always visible regard less of panel state 
