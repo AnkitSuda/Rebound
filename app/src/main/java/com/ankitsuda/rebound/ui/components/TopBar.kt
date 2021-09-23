@@ -173,7 +173,9 @@ fun TopSearchBar(
     Column(modifier = modifier.background(Color(248, 248, 248))) {
         Box(Modifier.statusBarsHeight())
         Row(
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+            modifier = Modifier
+                .height(60.dp)
+                .padding(start = 8.dp, end = 8.dp),
         ) {
             IconButton(onClick = {
                 onBackClick()
