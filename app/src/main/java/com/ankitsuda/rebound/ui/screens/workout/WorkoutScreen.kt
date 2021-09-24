@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.RoutineItemCard
+import com.ankitsuda.rebound.ui.components.TemplateItemCard
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
@@ -66,15 +67,15 @@ fun WorkoutScreen(navController: NavHostController) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background)
-                .padding(16.dp),
+                .background(MaterialTheme.colors.background),
+            contentPadding = PaddingValues(bottom = 64.dp)
         ) {
             item {
                 Column {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp),
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -97,7 +98,12 @@ fun WorkoutScreen(navController: NavHostController) {
                                 name = "Push",
                                 date = "2 Aug 2021",
                                 totalExercises = 7,
-                                modifier = Modifier.width(((LocalConfiguration.current.screenWidthDp / 2) - 24).dp)
+                                modifier = Modifier
+                                    .width(((LocalConfiguration.current.screenWidthDp / 2) - 24).dp)
+                                    .padding(
+                                        start = if (it == 0) 16.dp else 0.dp,
+                                        end = 16.dp
+                                    )
                             ) {
 
                             }
@@ -113,7 +119,7 @@ fun WorkoutScreen(navController: NavHostController) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp),
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -134,11 +140,12 @@ fun WorkoutScreen(navController: NavHostController) {
             }
 
             items(5) {
-                RoutineItemCard(
+                TemplateItemCard(
                     name = "Push",
-                    date = "2 Aug 2021",
                     totalExercises = 7,
-                    modifier = Modifier.width(((LocalConfiguration.current.screenWidthDp / 2) - 24).dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                 ) {
 
                 }
