@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -14,6 +15,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.RoutineItemCard
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
@@ -54,7 +56,9 @@ fun WorkoutScreen(navController: NavHostController) {
 
         },
         floatingActionButtonPosition = FabPosition.Center,
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
     ) {
 
 
@@ -65,6 +69,42 @@ fun WorkoutScreen(navController: NavHostController) {
                 .background(MaterialTheme.colors.background)
                 .padding(16.dp),
         ) {
+            item {
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Plans", style = MaterialTheme.typography.body1)
+                        TextButton(onClick = {
+
+                        }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Add,
+                                contentDescription = "New Plan"
+                            )
+                            RSpacer(space = 4.dp)
+                            Text(text = "NEW", style = MaterialTheme.typography.button)
+                        }
+                    }
+
+                    LazyRow() {
+                        items(5) {
+                            RoutineItemCard(
+                                name = "Push",
+                                date = "2 Aug 2021",
+                                totalExercises = 7,
+                                modifier = Modifier.width(((LocalConfiguration.current.screenWidthDp / 2) - 24).dp)
+                            ) {
+
+                            }
+                        }
+                    }
+                }
+            }
             item {
 
                 Column() {
@@ -77,32 +117,15 @@ fun WorkoutScreen(navController: NavHostController) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "My Routines", style = MaterialTheme.typography.body1)
+                        Text(text = "Templates", style = MaterialTheme.typography.body1)
                         TextButton(onClick = {
 
                         }) {
                             Icon(
                                 imageVector = Icons.Outlined.Add,
-                                contentDescription = "New Routine"
+                                contentDescription = "New Template"
                             )
-                            Text(text = "New Routine", style = MaterialTheme.typography.button)
-                        }
-                    }
-                    FlowRow(
-                        mainAxisAlignment = MainAxisAlignment.Start,
-                        mainAxisSize = SizeMode.Expand,
-                        crossAxisSpacing = 16.dp,
-                        mainAxisSpacing = 16.dp
-                    ) {
-                        repeat(4) {
-                            RoutineItemCard(
-                                name = "Push",
-                                date = "2 Aug 2021",
-                                totalExercises = 7,
-                                modifier = Modifier.width(((LocalConfiguration.current.screenWidthDp / 2) - 24).dp)
-                            ) {
-
-                            }
+                            Text(text = "NEW", style = MaterialTheme.typography.button)
                         }
                     }
 
@@ -110,6 +133,16 @@ fun WorkoutScreen(navController: NavHostController) {
                 }
             }
 
+            items(5) {
+                RoutineItemCard(
+                    name = "Push",
+                    date = "2 Aug 2021",
+                    totalExercises = 7,
+                    modifier = Modifier.width(((LocalConfiguration.current.screenWidthDp / 2) - 24).dp)
+                ) {
+
+                }
+            }
 
         }
 
