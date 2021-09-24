@@ -24,6 +24,8 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
     companion object {
         val IS_LIGHT_THEME_KEY = booleanPreferencesKey(name = "is_light_theme")
+        val IS_DARK_STATUS_BAR_ICONS_KEY = booleanPreferencesKey(name = "is_dark_status_bar_icons")
+        val IS_DARK_NAVIGATION_BAR_ICONS_KEY = booleanPreferencesKey(name = "is_dark_navigation_bar_icons")
         val PRIMARY_COLOR_KEY = intPreferencesKey(name = "primary_color")
         val BACKGROUND_COLOR_KEY = intPreferencesKey(name = "background_color")
         val ON_PRIMARY_COLOR_KEY = intPreferencesKey(name = "on_primary_color")
@@ -87,6 +89,20 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
     override suspend fun setIsLightTheme(value: Boolean) {
         context.dataStore.setValue(IS_LIGHT_THEME_KEY, value)
+    }
+
+    override val isDarkStatusBarIcons: Flow<Boolean>
+        get() = context.dataStore.getValueAsFlow(IS_DARK_STATUS_BAR_ICONS_KEY, true)
+
+    override suspend fun setIsDarkStatusBarIcons(value: Boolean) {
+        context.dataStore.setValue(IS_DARK_STATUS_BAR_ICONS_KEY, value)
+    }
+
+    override val isDarkNavigationBarIcons: Flow<Boolean>
+        get() = context.dataStore.getValueAsFlow(IS_DARK_NAVIGATION_BAR_ICONS_KEY, true)
+
+    override suspend fun setIsDarkNavigationBarIcons(value: Boolean) {
+        context.dataStore.setValue(IS_DARK_NAVIGATION_BAR_ICONS_KEY, value)
     }
 
     override val primaryColor: Flow<Color>

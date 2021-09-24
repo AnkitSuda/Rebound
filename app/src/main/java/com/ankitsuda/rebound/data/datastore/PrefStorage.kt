@@ -9,6 +9,12 @@ interface PrefStorage {
     val isLightTheme: Flow<Boolean>
     suspend fun setIsLightTheme(value: Boolean)
 
+    val isDarkStatusBarIcons: Flow<Boolean>
+    suspend fun setIsDarkStatusBarIcons(value: Boolean)
+
+    val isDarkNavigationBarIcons: Flow<Boolean>
+    suspend fun setIsDarkNavigationBarIcons(value: Boolean)
+
     val primaryColor: Flow<Color>
     suspend fun setPrimaryColor(color: Color)
 

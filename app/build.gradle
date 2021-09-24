@@ -85,7 +85,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-insets:$accompanistVersion"
     implementation "com.google.accompanist:accompanist-flowlayout:$accompanistVersion"
     implementation "com.google.accompanist:accompanist-placeholder-material:$accompanistVersion"
-
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion"
 
 
     implementation "org.threeten:threetenbp:1.5.1"

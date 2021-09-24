@@ -10,6 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.data.datastore.PrefStorage
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import timber.log.Timber
 
 private val DarkColorPalette = darkColors(
     primary = DefaultAccentColor,
@@ -32,6 +34,8 @@ fun ReboundThemeWrapper(
 ) {
     // Colors
     val isLightTheme by prefStorage.isLightTheme.collectAsState(initial = false)
+    val isDarkStatusBarIcons by prefStorage.isDarkStatusBarIcons.collectAsState(initial = true)
+    val isDarkNavigationBarIcons by prefStorage.isDarkNavigationBarIcons.collectAsState(initial = true)
     val primaryColor by prefStorage.primaryColor.collectAsState(initial = DefaultAccentColor)
     val backgroundColor by prefStorage.backgroundColor.collectAsState(initial = Color.White)
     val onPrimaryColor by prefStorage.onPrimaryColor.collectAsState(initial = Color.White)
@@ -57,6 +61,8 @@ fun ReboundThemeWrapper(
 
     val colors = lightReboundColors(
         isLight = isLightTheme,
+        isDarkStatusBarIcons = isDarkStatusBarIcons,
+        isDarkNavigationBarIcons = isDarkNavigationBarIcons,
         primary = primaryColor,
         onPrimary = onPrimaryColor,
         onBackground = onBackgroundColor,
@@ -92,6 +98,23 @@ fun ReboundThemeWrapper(
     )
 
 //    val typography = TypographyInter
+
+    // Getting instance of systemUiController
+    val systemUiController = rememberSystemUiController()
+
+    SideEffect {
+       // Changing status bar icons as user pref
+        systemUiController.setStatusBarColor(
+            color = Color.Transparent,
+            darkIcons = isDarkStatusBarIcons
+        )
+
+        // Changing navigation bar icons as user pref
+        systemUiController.setNavigationBarColor(
+            color = Color.Transparent,
+            darkIcons = isDarkNavigationBarIcons
+        )
+    }
 
     ReboundTheme(
         colors = colors,
@@ -150,6 +173,8 @@ fun ReboundTheme(
 @Stable
 class ReboundColors(
     isLight: Boolean,
+    isDarkNavigationBarIcons: Boolean,
+    isDarkStatusBarIcons: Boolean,
     primary: Color,
     background: Color,
     error: Color,
@@ -166,6 +191,10 @@ class ReboundColors(
     topBarIcons: Color,
 ) {
     var isLight by mutableStateOf(isLight, structuralEqualityPolicy())
+        internal set
+    var isDarkNavigationBarIcons by mutableStateOf(isDarkNavigationBarIcons, structuralEqualityPolicy())
+        internal set
+    var isDarkStatusBarIcons by mutableStateOf(isDarkStatusBarIcons, structuralEqualityPolicy())
         internal set
     var primary by mutableStateOf(primary, structuralEqualityPolicy())
         internal set
@@ -214,23 +243,27 @@ class ReboundColors(
         topBarTitle: Color = this.topBarTitle,
         topBarSubtitle: Color = this.topBarSubtitle,
         topBarIcons: Color = this.topBarIcons,
-        isLight: Boolean = this.isLight
+        isLight: Boolean = this.isLight,
+        isDarkStatusBarIcons: Boolean = this.isDarkStatusBarIcons,
+        isDarkNavigationBarIcons: Boolean = this.isDarkNavigationBarIcons
     ): ReboundColors = ReboundColors(
-        isLight,
-        primary,
-        background,
-        error,
-        onPrimary,
-        onBackground,
-        card,
-        cardMainContent,
-        cardSecondaryContent,
-        cardBorder,
-        topBar,
-        topBarTitle,
-        topBarSubtitle,
-        topBarIcons,
-        onError,
+        isLight = isLight,
+        isDarkStatusBarIcons = isDarkStatusBarIcons,
+        isDarkNavigationBarIcons = isDarkNavigationBarIcons,
+        primary = primary,
+        background = background,
+        error = error,
+        onPrimary = onPrimary,
+        onBackground = onBackground,
+        card = card,
+        cardMainContent = cardMainContent,
+        cardSecondaryContent = cardSecondaryContent,
+        cardBorder = cardBorder,
+        topBar = topBar,
+        topBarTitle = topBarTitle,
+        topBarSubtitle = topBarSubtitle,
+        topBarIcons = topBarIcons,
+        onError = onError,
     )
 }
 
@@ -280,6 +313,8 @@ fun defaultDimens(cardElevation: Dp = 0.dp, cardBorderWidth: Dp = 0.dp): Rebound
 
 fun lightReboundColors(
     isLight: Boolean = false,
+    isDarkStatusBarIcons: Boolean = true,
+    isDarkNavigationBarIcons: Boolean = true,
     primary: Color = Color(0xFF6200EE),
     background: Color = Color.White,
     error: Color = Color(0xFFB00020),
@@ -302,6 +337,8 @@ fun lightReboundColors(
     onBackground = onBackground,
     onError = onError,
     isLight = isLight,
+    isDarkStatusBarIcons = isDarkStatusBarIcons,
+    isDarkNavigationBarIcons = isDarkNavigationBarIcons,
     card = card,
     cardBorder = cardBorder,
     cardMainContent = cardMainContent,
@@ -312,40 +349,6 @@ fun lightReboundColors(
     topBarIcons = topBarIcons,
 )
 
-fun darkReboundColors(
-    primary: Color = Color(0xFFBB86FC),
-    secondary: Color = Color(0xFF03DAC6),
-    background: Color = Color(0xFF121212),
-    error: Color = Color(0xFFCF6679),
-    onPrimary: Color = Color.Black,
-    onBackground: Color = Color.White,
-    onError: Color = Color.Black,
-    // Not actual dark colors
-    card: Color = Color.White,
-    cardMainContent: Color = Color.Black,
-    cardSecondaryContent: Color = Color.Black,
-    cardBorder: Color = Color.Black,
-    topBar: Color = Color.White,
-    topBarTitle: Color = Color.Black,
-    topBarSubtitle: Color = Color.Black,
-    topBarIcons: Color = Color.Black,
-): ReboundColors = ReboundColors(
-    primary = primary,
-    background = background,
-    error = error,
-    onPrimary = onPrimary,
-    onBackground = onBackground,
-    onError = onError,
-    isLight = true,
-    card = card,
-    cardMainContent = cardMainContent,
-    cardSecondaryContent = cardSecondaryContent,
-    cardBorder = cardBorder,
-    topBar = topBar,
-    topBarTitle = topBarTitle,
-    topBarSubtitle = topBarSubtitle,
-    topBarIcons = topBarIcons,
-)
 
 fun ReboundColors.updateColorsFrom(other: ReboundColors) {
     primary = other.primary
@@ -355,6 +358,8 @@ fun ReboundColors.updateColorsFrom(other: ReboundColors) {
     onBackground = other.onBackground
     onError = other.onError
     isLight = other.isLight
+    isDarkNavigationBarIcons = other.isDarkNavigationBarIcons
+    isDarkStatusBarIcons = other.isDarkStatusBarIcons
     card = other.card
     cardMainContent = other.cardMainContent
     cardSecondaryContent = other.cardSecondaryContent

@@ -29,6 +29,8 @@ fun MainColorsPersonalizationScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val isLightTheme by viewModel.isLightTheme.collectAsState(initial = false)
+    val isDarkStatusBarIcons by viewModel.isDarkStatusBarIcons.collectAsState(initial = true)
+    val isDarkNavigationBarIcons by viewModel.isDarkNavigationBarIcons.collectAsState(initial = true)
 
     val primaryColor by viewModel.primaryColor.collectAsState(initial = DefaultAccentColor)
     val backgroundColor by viewModel.backgroundColor.collectAsState(initial = Color.White)
@@ -63,18 +65,7 @@ fun MainColorsPersonalizationScreen(
                     .background(MaterialTheme.colors.background),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                item {
 
-                    SwitchCardItem(
-                        modifier = itemModifier,
-                        text = "Is Light Theme",
-                        checked = isLightTheme,
-                        onChange = {
-                            viewModel.setIsLightTheme(it)
-                        }
-                    )
-
-                }
                 item {
 
                     ColorPickerCardItem(
@@ -119,6 +110,44 @@ fun MainColorsPersonalizationScreen(
                         onNewColorSelected = {
                             viewModel.setOnBackgroundColor(it)
                         })
+                }
+
+                item {
+
+                    SwitchCardItem(
+                        modifier = itemModifier,
+                        text = "Is Light Theme",
+                        checked = isLightTheme,
+                        onChange = {
+                            viewModel.setIsLightTheme(it)
+                        }
+                    )
+
+                }
+
+                item {
+
+                    SwitchCardItem(
+                        modifier = itemModifier,
+                        text = "Dark status bar icons",
+                        checked = isDarkStatusBarIcons,
+                        onChange = {
+                            viewModel.setIsDarkStatusBarIcons(it)
+                        }
+                    )
+
+                }
+                item {
+
+                    SwitchCardItem(
+                        modifier = itemModifier,
+                        text = "Dark navigation bar icons",
+                        checked = isDarkNavigationBarIcons,
+                        onChange = {
+                            viewModel.setIsDarkNavigationBarIcons(it)
+                        }
+                    )
+
                 }
             }
         }

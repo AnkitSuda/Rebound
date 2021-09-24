@@ -14,6 +14,8 @@ class MainColorsPersonalizationScreenViewModel @Inject constructor(val prefStora
     ViewModel() {
 
     val isLightTheme = prefStorage.isLightTheme
+    val isDarkStatusBarIcons = prefStorage.isDarkStatusBarIcons
+    val isDarkNavigationBarIcons = prefStorage.isDarkNavigationBarIcons
 
     val primaryColor = prefStorage.primaryColor
     val backgroundColor = prefStorage.backgroundColor
@@ -30,6 +32,18 @@ class MainColorsPersonalizationScreenViewModel @Inject constructor(val prefStora
     fun setIsLightTheme(value: Boolean) {
         viewModelScope.launch {
             prefStorage.setIsLightTheme(value)
+        }
+    }
+
+    fun setIsDarkNavigationBarIcons(value: Boolean) {
+        viewModelScope.launch {
+            prefStorage.setIsDarkNavigationBarIcons(value)
+        }
+    }
+
+    fun setIsDarkStatusBarIcons(value: Boolean) {
+        viewModelScope.launch {
+            prefStorage.setIsDarkStatusBarIcons(value)
         }
     }
 
