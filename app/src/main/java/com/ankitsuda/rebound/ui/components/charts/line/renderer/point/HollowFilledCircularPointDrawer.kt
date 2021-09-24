@@ -10,15 +10,22 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-data class HollowCircularPointDrawer(
+data class HollowFilledCircularPointDrawer(
     val diameter: Dp = 8.dp,
     val lineThickness: Dp = 2.dp,
-    val color: Color = Color.Blue
+    val strokeColor: Color = Color.Blue,
+    val fillColor: Color = Color.White,
 ) : PointDrawer {
 
-    private val paint = Paint().apply {
-        color = this@HollowCircularPointDrawer.color
+    private val paintStroke = Paint().apply {
+        color = this@HollowFilledCircularPointDrawer.strokeColor
         style = PaintingStyle.Stroke
+        isAntiAlias = true
+    }
+
+    private val paintFill = Paint().apply {
+        color = this@HollowFilledCircularPointDrawer.fillColor
+        style = PaintingStyle.Fill
         isAntiAlias = true
     }
 
@@ -31,7 +38,12 @@ data class HollowCircularPointDrawer(
             canvas.drawCircle(
                 center = center,
                 radius = diameter.toPx() / 2f,
-                paint = paint.apply {
+                paint = paintFill
+            )
+            canvas.drawCircle(
+                center = center,
+                radius = diameter.toPx() / 2f,
+                paint = paintStroke.apply {
                     strokeWidth = lineThickness.toPx()
                 }
             )

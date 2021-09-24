@@ -265,7 +265,7 @@ sealed class BottomNavigationScreens(val route: String, val title: String, val i
         BottomNavigationScreens(Route.HistoryTab.route, "History", Icons.Outlined.AccessTime)
 
     object Workout :
-        BottomNavigationScreens(Route.WorkoutTab.route, "Workout", Icons.Outlined.Add)
+        BottomNavigationScreens(Route.WorkoutTab.route, "Workout", Icons.Outlined.PlayArrow)
 
     object Exercises :
         BottomNavigationScreens(Route.ExercisesTab.route, "Exercises", Icons.Outlined.FitnessCenter)

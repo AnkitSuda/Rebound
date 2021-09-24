@@ -116,11 +116,12 @@ fun LineChart(
       }
 
       // Draw the X Axis line.
-      xAxisDrawer.drawAxisLine(
-        drawScope = this,
-        drawableArea = xAxisDrawableArea,
-        canvas = canvas
-      )
+        xAxisDrawer.drawAxisLine(
+          drawScope = this,
+          drawableArea = xAxisDrawableArea,
+          canvas = canvas
+        )
+
 
       xAxisDrawer.drawAxisLabels(
         drawScope = this,
@@ -130,11 +131,12 @@ fun LineChart(
       )
 
       // Draw the Y Axis line.
-      yAxisDrawer.drawAxisLine(
-        drawScope = this,
-        canvas = canvas,
-        drawableArea = yAxisDrawableArea
-      )
+        yAxisDrawer.drawAxisLine(
+          drawScope = this,
+          canvas = canvas,
+          drawableArea = yAxisDrawableArea
+        )
+
 
       yAxisDrawer.drawAxisLabels(
         drawScope = this,
@@ -143,6 +145,8 @@ fun LineChart(
         minValue = lineChartData.minYValue,
         maxValue = lineChartData.maxYValue
       )
+
+
     }
   }
 }
