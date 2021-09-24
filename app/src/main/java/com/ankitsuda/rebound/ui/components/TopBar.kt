@@ -28,6 +28,8 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.TopBarAlignment
+import com.ankitsuda.rebound.utils.isDark
+import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 import kotlin.math.max
 
 /**
@@ -162,6 +164,7 @@ fun TopSearchBar(
     value: String,
     onValueChange: (String) -> Unit,
     onBackClick: () -> Unit = {},
+    backgroundColor: Color = ReboundTheme.colors.background.lighterOrDarkerColor(0.09f),
     leftBackBtnEnabled: Boolean = true,
     rightClearBtnEnabled: Boolean = true,
 ) {
@@ -170,7 +173,7 @@ fun TopSearchBar(
         mutableStateOf(0)
     }
 
-    Column(modifier = modifier.background(Color(248, 248, 248))) {
+    Column(modifier = modifier.background(backgroundColor)) {
         Box(Modifier.statusBarsHeight())
         Row(
             modifier = Modifier
@@ -186,13 +189,14 @@ fun TopSearchBar(
                 }) {
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "Back"
+                    contentDescription = "Back",
+                    tint = if (backgroundColor.isDark()) Color.White else Color.Black,
                 )
             }
             // TextField
             TextField(
                 colors = TextFieldDefaults.textFieldColors(
-                    textColor = Color.Black,
+                    textColor = if (backgroundColor.isDark()) Color.White else Color.Black,
                     disabledTextColor = Color.Transparent,
                     backgroundColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
@@ -226,6 +230,7 @@ fun TopSearchBar(
                         clearBtnWidth = it.parentCoordinates!!.size.width
                     }) {
                     Icon(
+                        tint = if (backgroundColor.isDark()) Color.White else Color.Black,
                         imageVector = Icons.Outlined.Close,
                         contentDescription = "Clear"
                     )

@@ -13,7 +13,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.ColorUtils
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 
 @Composable
 fun SessionExerciseCardItem(
@@ -46,7 +48,8 @@ fun SessionExerciseSetItem(order: Int, set: Pair<Int, Int>) {
             modifier = Modifier
                 .size(28.dp)
                 .clip(CircleShape)
-                .background(Color(224, 224, 224))
+//                .background(Color(224, 224, 224))
+                .background(ReboundTheme.colors.card.lighterOrDarkerColor(0.15f))
             ,
             contentAlignment = Alignment.Center,
         ) {
