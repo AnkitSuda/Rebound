@@ -65,85 +65,86 @@ fun ExercisesScreen(
 
     val isSearchMode by viewModel.isSearchMode.observeAsState(false)
     val searchTerm by viewModel.searchTerm.observeAsState("")
+    CollapsingToolbarScaffold(
+        toolbar = {
+            Surface(
+                Modifier
+                    .background(ReboundTheme.colors.background)
+                    .zIndex(2f), elevation = 2.dp
+            ) {
 
-    Column {
-        Surface(
-            Modifier
-                .background(ReboundTheme.colors.background)
-                .zIndex(2f), elevation = 2.dp) {
-
-            Column() {
-                if (!isSearchMode) {
-                    TopBar(
-                        elevationEnabled = false,
-                        title = "Exercises",
-                        strictLeftIconAlignToStart = false,
-                        alignRightIconToLeftWhenTitleAlignIsNotCenter = true,
-                        leftIconBtn = {
-                            TopBarIconButton(
-                                icon = Icons.Outlined.Search,
-                                title = "Search",
-                                onClick = {
-                                    viewModel.toggleSearchMode()
-                                })
-                        },
-                        rightIconBtn = {
-                            TopBarIconButton(
-                                icon = Icons.Outlined.Add,
-                                title = "Create Exercise",
-                                onClick = {
-                                    bottomSheet.show {
-                                        CreateExerciseScreen()
-                                    }
+                Column() {
+                    if (!isSearchMode) {
+                        TopBar(
+                            elevationEnabled = false,
+                            title = "Exercises",
+                            strictLeftIconAlignToStart = false,
+                            alignRightIconToLeftWhenTitleAlignIsNotCenter = true,
+                            leftIconBtn = {
+                                TopBarIconButton(
+                                    icon = Icons.Outlined.Search,
+                                    title = "Search",
+                                    onClick = {
+                                        viewModel.toggleSearchMode()
+                                    })
+                            },
+                            rightIconBtn = {
+                                TopBarIconButton(
+                                    icon = Icons.Outlined.Add,
+                                    title = "Create Exercise",
+                                    onClick = {
+                                        bottomSheet.show {
+                                            CreateExerciseScreen()
+                                        }
 //                            navController.navigate(Route.CreateExercise.route)
-                                })
-                        })
+                                    })
+                            })
 
-                } else {
-                    TopSearchBar(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        placeholder = "Search here...",
-                        value = searchTerm,
-                        onBackClick = {
-                            viewModel.toggleSearchMode()
-                        },
-                        onValueChange = {
-                            viewModel.setSearchTerm(it)
-                        },
-                    )
-                }
-
-                ScrollableTabRow(
-                    selectedTabIndex = tabIndex,
-                    edgePadding = 0.dp,
-                    backgroundColor = ReboundTheme.colors.background,
-                    divider = { Divider(thickness = 0.dp) },
-                    indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
-                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                    } else {
+                        TopSearchBar(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            placeholder = "Search here...",
+                            value = searchTerm,
+                            onBackClick = {
+                                viewModel.toggleSearchMode()
+                            },
+                            onValueChange = {
+                                viewModel.setSearchTerm(it)
+                            },
                         )
                     }
-                ) {
-                    tabData.forEachIndexed { index, pair ->
-                        Tab(
-                            selected = tabIndex == index,
-                            onClick = {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            },
-                            text = {
-                                Text(text = pair)
 
-                            }
-                        )
+                    ScrollableTabRow(
+                        selectedTabIndex = tabIndex,
+                        edgePadding = 0.dp,
+                        backgroundColor = ReboundTheme.colors.background,
+                        divider = { Divider(thickness = 0.dp) },
+                        indicator = { tabPositions ->
+                            TabRowDefaults.Indicator(
+                                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                            )
+                        }
+                    ) {
+                        tabData.forEachIndexed { index, pair ->
+                            Tab(
+                                selected = tabIndex == index,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                                text = {
+                                    Text(text = pair)
+
+                                }
+                            )
+                        }
                     }
                 }
             }
-        }
-
-
+        },
+    ) {
 
 
         HorizontalPager(
@@ -168,6 +169,7 @@ fun ExercisesScreen(
                 }
             }
         }
+
 
     }
 }

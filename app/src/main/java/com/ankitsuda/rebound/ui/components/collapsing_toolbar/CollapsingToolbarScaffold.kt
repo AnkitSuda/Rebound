@@ -86,7 +86,7 @@ internal class FabPlacement(
 @Composable
 fun CollapsingToolbarScaffold(
     modifier: Modifier = Modifier.fillMaxSize(),
-    state: CollapsingToolbarScaffoldState,
+    state: CollapsingToolbarScaffoldState = rememberCollapsingToolbarScaffoldState(),
     scrollStrategy: ScrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
     toolbarModifier: Modifier = Modifier,
     toolbar: @Composable CollapsingToolbarScope.() -> Unit,

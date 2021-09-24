@@ -21,21 +21,21 @@ fun ExerciseDetailAboutTab() {
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        Text(text = "Instructions", style = ReboundTheme.typography.overline)
+        Text(text = "Instructions", style = ReboundTheme.typography.caption)
         RSpacer(space = 4.dp)
-        Text(text = "Notes here", style = ReboundTheme.typography.body2)
+        Text(text = "Notes here", style = ReboundTheme.typography.body1)
 
         RSpacer(space = 16.dp)
 
-        Text(text = "Primary Muscle", style = ReboundTheme.typography.overline)
+        Text(text = "Primary Muscle", style = ReboundTheme.typography.caption)
         RSpacer(space = 4.dp)
-        Text(text = "Chest", style = ReboundTheme.typography.body2)
+        Text(text = "Chest", style = ReboundTheme.typography.body1)
 
         RSpacer(space = 16.dp)
 
-        Text(text = "Category", style = ReboundTheme.typography.overline)
+        Text(text = "Category", style = ReboundTheme.typography.caption)
         RSpacer(space = 4.dp)
-        Text(text = "Weight & Reps", style = ReboundTheme.typography.body2)
+        Text(text = "Weight & Reps", style = ReboundTheme.typography.body1)
 
     }
 
