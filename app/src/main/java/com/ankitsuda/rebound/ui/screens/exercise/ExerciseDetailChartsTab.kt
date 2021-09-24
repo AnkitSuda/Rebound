@@ -21,8 +21,8 @@ fun ExerciseDetailChartsTab() {
 
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+            .fillMaxSize(),
+        contentPadding = PaddingValues(16.dp)
     ) {
         items(4) {
             AppCard(modifier = Modifier.padding(bottom = 16.dp)) {
