@@ -98,15 +98,7 @@ fun ExerciseDetailScreen(navController: NavHostController) {
         ) { index ->
             when (index) {
                 0 -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Charts",
-                        )
-                    }
+                    ExerciseDetailChartsTab()
                 }
                 1 -> {
                     ExerciseDetailHistoryTab()

@@ -19,6 +19,7 @@ import com.ankitsuda.rebound.ui.screens.personalization.ColorPickerDemoScreen
 import com.ankitsuda.rebound.ui.screens.personalization.PersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.botom_bar.BottomBarPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.card.CardPersonalizationScreen
+import com.ankitsuda.rebound.ui.screens.personalization.charts.ChartsPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.main_colors.MainColorsPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.shapes.ShapesPersonalizationScreen
 import com.ankitsuda.rebound.ui.screens.personalization.top_bar.TopBarPersonalizationScreen
@@ -118,6 +119,9 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
             }
             composable(Route.BottomBarPersonalization.route) {
                 BottomBarPersonalizationScreen(navController)
+            }
+            composable(Route.ChartsPersonalization.route) {
+                ChartsPersonalizationScreen(navController)
             }
             composable(Route.ColorPickerDemo.route) {
                 ColorPickerDemoScreen()

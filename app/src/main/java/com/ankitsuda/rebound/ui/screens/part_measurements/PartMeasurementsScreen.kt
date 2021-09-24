@@ -23,6 +23,7 @@ import com.ankitsuda.rebound.ui.components.charts.line.renderer.point.HollowCirc
 import com.ankitsuda.rebound.ui.components.charts.line.renderer.point.HollowFilledCircularPointDrawer
 import com.ankitsuda.rebound.ui.components.charts.line.renderer.xaxis.SimpleXAxisDrawer
 import com.ankitsuda.rebound.ui.components.charts.line.renderer.yaxis.SimpleYAxisDrawer
+import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -74,46 +75,13 @@ fun PartMeasurementsScreen(navController: NavHostController) {
         ) {
 
             item {
-                AppCard() {
-                    LineChart(
-                        lineChartData = LineChartData(
-                            points = points
-                        ),
-                        // Optional properties.
+                AppCard {
+                    ReboundChart(
+                        points = points,
                         modifier = Modifier
                             .height(250.dp)
                             .fillMaxWidth()
                             .padding(16.dp),
-                        pointDrawer = HollowFilledCircularPointDrawer(
-                            diameter = 6.dp,
-                            lineThickness = 2.dp,
-                            strokeColor = ReboundTheme.colors.primary,
-                            fillColor = Color.White,
-                        ),
-                        lineDrawer = SolidLineDrawer(
-                            thickness = 2.dp,
-                            color = ReboundTheme.colors.primary
-                        ),
-                        xAxisDrawer = SimpleXAxisDrawer(
-                            axisLineThickness = 1.dp,
-                            labelTextColor = ReboundTheme.colors.onBackground.copy(alpha = 0.7f),
-                            axisLineColor = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
-                        ),
-                        yAxisDrawer = SimpleYAxisDrawer(
-                            axisLineThickness = 1.dp,
-                            labelTextColor = ReboundTheme.colors.onBackground.copy(alpha = 0.7f),
-                            axisLineColor = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
-                        ),
-                        horizontalOffset = 0f,
-                        lineShader = GradientLineShader(
-                            colors = listOf(
-                                ReboundTheme.colors.primary.copy(alpha = 0.4f),
-                                ReboundTheme.colors.primary.copy(alpha = 0.3f),
-                                ReboundTheme.colors.primary.copy(alpha = 0.2f),
-                                ReboundTheme.colors.primary.copy(alpha = 0.05f),
-                                ReboundTheme.colors.primary.copy(alpha = 0.0f),
-                            )
-                        )
                     )
                 }
             }

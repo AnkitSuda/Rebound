@@ -121,6 +121,30 @@ fun SliderCardItem(
     icon: ImageVector? = null,
     text: String,
     description: String = "",
+    steps: Int,
+    value: Int,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    onChange: (Int) -> Unit = {}
+) {
+    SliderCardItem(
+        modifier = modifier,
+        icon = icon,
+        description = description,
+        text = text,
+        steps = steps,
+        value = value.toFloat(),
+        valueRange = valueRange,
+        onChange = {
+            onChange(it.toInt())
+        })
+}
+
+@Composable
+fun SliderCardItem(
+    modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
+    text: String,
+    description: String = "",
     value: Float,
     steps: Int = 1,
     roundValues: Boolean = true,

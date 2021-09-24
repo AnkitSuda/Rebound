@@ -40,6 +40,11 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
         val TOP_BAR_TITLE_ALIGNMENT_KEY = stringPreferencesKey(name = "top_bar_alignment")
 
+        val CHARTS_SHADER_ENABLED_KEY = booleanPreferencesKey(name = "charts_shader_enabled")
+        val CHARTS_LINE_THICKNESS_KEY = intPreferencesKey(name = "charts_line_thickness")
+        val CHARTS_POINT_DIAMETER_KEY = intPreferencesKey(name = "charts_point_diameter")
+        val CHARTS_POINT_LINE_THICKNESS_KEY = intPreferencesKey(name = "charts_point_line_thickness")
+
         // Small shape
         val SHAPE_SMALL_TOP_START_RADIUS_KEY =
             intPreferencesKey(name = "shape_small_top_start_radius_key")
@@ -220,6 +225,34 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
     override suspend fun setTopBarTitleAlignment(value: String) {
         context.dataStore.setValue(TOP_BAR_TITLE_ALIGNMENT_KEY, value)
+    }
+
+    override val chartsShaderEnabled: Flow<Boolean>
+        get() = context.dataStore.getValueAsFlow(CHARTS_SHADER_ENABLED_KEY, true)
+
+    override suspend fun setChartsShaderEnabled(value: Boolean) {
+        context.dataStore.setValue(CHARTS_SHADER_ENABLED_KEY, value)
+    }
+
+    override val chartsLineThickness: Flow<Int>
+        get() = context.dataStore.getValueAsFlow(CHARTS_LINE_THICKNESS_KEY, 2)
+
+    override suspend fun setChartsLineThickness(value: Int) {
+        context.dataStore.setValue(CHARTS_LINE_THICKNESS_KEY, value)
+    }
+
+    override val chartsPointDiameter: Flow<Int>
+        get() = context.dataStore.getValueAsFlow(CHARTS_POINT_DIAMETER_KEY, 6)
+
+    override suspend fun setChartsPointDiameter(value: Int) {
+        context.dataStore.setValue(CHARTS_POINT_DIAMETER_KEY, value)
+    }
+
+    override val chartsPointLineThickness: Flow<Int>
+        get() = context.dataStore.getValueAsFlow(CHARTS_POINT_LINE_THICKNESS_KEY, 2)
+
+    override suspend fun setChartsPointLineThickness(value: Int) {
+        context.dataStore.setValue(CHARTS_POINT_LINE_THICKNESS_KEY, value)
     }
 
 

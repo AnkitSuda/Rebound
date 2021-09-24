@@ -45,9 +45,20 @@ interface PrefStorage {
     val bottomBarIconSize: Flow<Int>
     suspend fun setBottomBarIconSize(value: Int)
 
-
     val topBarTitleAlignment: Flow<String>
     suspend fun setTopBarTitleAlignment(value: String)
+
+    val chartsShaderEnabled: Flow<Boolean>
+    suspend fun setChartsShaderEnabled(value: Boolean)
+
+    val chartsLineThickness: Flow<Int>
+    suspend fun setChartsLineThickness(value: Int)
+
+    val chartsPointDiameter: Flow<Int>
+    suspend fun setChartsPointDiameter(value: Int)
+
+    val chartsPointLineThickness: Flow<Int>
+    suspend fun setChartsPointLineThickness(value: Int)
 
     // Shapes
     /**

@@ -37,76 +37,76 @@ fun BottomBarPersonalizationScreen(
     val labelWeight by viewModel.labelWeight.collectAsState(initial = "normal")
     val iconSize by viewModel.iconSize.collectAsState(initial = 24)
 
-    CollapsingToolbarScaffold(
-        state = collapsingState,
-        toolbar = {
-            TopBar(title = "Bottom Bar", strictLeftIconAlignToStart = true,leftIconBtn = {
-                TopBarBackIconButton {
-                    navController.popBackStack()
-                }
-            }, rightIconBtn = {
-                TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+        CollapsingToolbarScaffold(
+            state = collapsingState,
+            toolbar = {
+                TopBar(title = "Bottom Bar", strictLeftIconAlignToStart = true,leftIconBtn = {
+                    TopBarBackIconButton {
+                        navController.popBackStack()
+                    }
+                }, rightIconBtn = {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+
+                    }
+                })
+            },
+            modifier = Modifier.background(MaterialTheme.colors.background)
+        ) {
+
+            val itemModifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+
+            with(LocalDialog.current) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colors.background),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+
+                    item {
+
+                        RadioGroupCardItem(
+                            modifier = itemModifier,
+                            text = "Label visible",
+                            onSelectionChange = { _, value ->
+                                viewModel.setLabelVisible(value)
+                            },
+                            items = labelVisibleItems,
+                            selected = labelVisible
+                        )
+
+                    }
+                    item {
+
+                        RadioGroupCardItem(
+                            modifier = itemModifier,
+                            text = "Label weight",
+                            onSelectionChange = { _, value ->
+                                viewModel.setLabelWeight(value)
+                            },
+                            items = labelWeightItems,
+                            selected = labelWeight
+                        )
+                    }
+
+      item {
+
+                        SliderCardItem(
+                            modifier = itemModifier,
+                            text = "Icon size",
+                            valueRange = 1f..32f,
+                            steps = 32,
+                            value = iconSize.toFloat(),
+                            onChange = {
+                                viewModel.setIconSize(it.toInt())
+                            }
+                        )
+                    }
 
                 }
-            })
-        },
-        modifier = Modifier.background(MaterialTheme.colors.background)
-    ) {
-
-        val itemModifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp)
-
-        with(LocalDialog.current) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.background),
-                contentPadding = PaddingValues(16.dp)
-            ) {
-
-                item {
-
-                    RadioGroupCardItem(
-                        modifier = itemModifier,
-                        text = "Label visible",
-                        onSelectionChange = { _, value ->
-                            viewModel.setLabelVisible(value)
-                        },
-                        items = labelVisibleItems,
-                        selected = labelVisible
-                    )
-
-                }
-                item {
-
-                    RadioGroupCardItem(
-                        modifier = itemModifier,
-                        text = "Label weight",
-                        onSelectionChange = { _, value ->
-                            viewModel.setLabelWeight(value)
-                        },
-                        items = labelWeightItems,
-                        selected = labelWeight
-                    )
-                }
-
-  item {
-
-                    SliderCardItem(
-                        modifier = itemModifier,
-                        text = "Icon size",
-                        valueRange = 1f..32f,
-                        steps = 32,
-                        value = iconSize.toFloat(),
-                        onChange = {
-                            viewModel.setIconSize(it.toInt())
-                        }
-                    )
-                }
-
             }
         }
-    }
 
 }
