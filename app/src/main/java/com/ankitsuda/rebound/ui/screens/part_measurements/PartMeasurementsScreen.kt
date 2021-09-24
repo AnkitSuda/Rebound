@@ -4,10 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
@@ -16,8 +13,14 @@ import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.charts.line.LineChart
 import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
+import com.ankitsuda.rebound.ui.components.charts.line.renderer.line.SolidLineDrawer
+import com.ankitsuda.rebound.ui.components.charts.line.renderer.point.FilledCircularPointDrawer
+import com.ankitsuda.rebound.ui.components.charts.line.renderer.xaxis.SimpleXAxisDrawer
+import com.ankitsuda.rebound.ui.components.charts.line.renderer.yaxis.SimpleYAxisDrawer
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import kotlin.random.Random
 
 @Composable
 fun PartMeasurementsScreen(navController: NavHostController) {
@@ -31,6 +34,19 @@ fun PartMeasurementsScreen(navController: NavHostController) {
 
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
+
+    val points = arrayListOf<LineChartData.Point>()
+
+
+    repeat(6) {
+        points.add(
+            LineChartData.Point(
+                Random.nextInt(1, 50).toFloat(),
+                "Label $it"
+            )
+        )
+    }
+
 
     CollapsingToolbarScaffold(
         state = collapsingState,
@@ -55,23 +71,23 @@ fun PartMeasurementsScreen(navController: NavHostController) {
                 Box() {
                     LineChart(
                         lineChartData = LineChartData(
-                            points = listOf(
-                                LineChartData.Point(
-                                    1f,
-                                    "Label 1"
-                                ),
-                                LineChartData.Point(
-                                    12f,
-                                    "Label 2"
-                                ),
-                                LineChartData.Point(
-                                    5f,
-                                    "Label 3"
-                                ),
-                        )
-                    ),
-                    // Optional properties.
-                    modifier = Modifier.height(150.dp).fillMaxSize(),
+                            points = points
+                        ),
+                        // Optional properties.
+                        modifier = Modifier
+                            .height(200.dp)
+                            .fillMaxSize(),
+                        pointDrawer = FilledCircularPointDrawer(
+                            diameter = 6.dp,
+                            color = ReboundTheme.colors.primary
+                        ),
+                        lineDrawer = SolidLineDrawer(
+                            thickness = 2.dp,
+                            color = ReboundTheme.colors.primary.copy(alpha = 0.75f)
+                        ),
+                        xAxisDrawer = SimpleXAxisDrawer(),
+                        yAxisDrawer = SimpleYAxisDrawer(),
+                        horizontalOffset = 1f,
                     )
                 }
             }
