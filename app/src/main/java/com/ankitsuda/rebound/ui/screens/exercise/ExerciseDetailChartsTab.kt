@@ -26,13 +26,28 @@ fun ExerciseDetailChartsTab() {
     ) {
         items(4) {
             AppCard(modifier = Modifier.padding(bottom = 16.dp)) {
-                ReboundChart(
-                    points = getRandomPoints(),
-                    modifier = Modifier
-                        .height(250.dp)
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                )
+                Column(
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 8.dp
+                    )
+                ) {
+                    Text(
+                        text = "Stat",
+                        style = ReboundTheme.typography.body1,
+                        )
+
+                    RSpacer(space = 16.dp)
+
+                    ReboundChart(
+                        points = getRandomPoints(),
+                        modifier = Modifier
+                            .height(250.dp)
+                            .fillMaxWidth(),
+                    )
+                }
             }
         }
     }
