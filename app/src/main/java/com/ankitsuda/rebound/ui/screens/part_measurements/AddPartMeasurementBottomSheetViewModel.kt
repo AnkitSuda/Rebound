@@ -24,4 +24,5 @@ class AddPartMeasurementBottomSheetViewModel @Inject constructor(private val mea
             measurementsRepository.addMeasurementToDb(value, partId)
         }
     }
+
 }

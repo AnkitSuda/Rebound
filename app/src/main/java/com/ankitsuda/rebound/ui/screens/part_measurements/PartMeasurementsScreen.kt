@@ -1,6 +1,7 @@
 package com.ankitsuda.rebound.ui.screens.part_measurements
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -31,6 +32,7 @@ import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarS
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import timber.log.Timber
 import kotlin.random.Random
 
 @Composable
@@ -52,17 +54,15 @@ fun PartMeasurementsScreen(
 
     val logs by viewModel.getLogsForPart(partId!!).collectAsState(initial = emptyList())
 
-    val points = arrayListOf<LineChartData.Point>()
-
-    repeat(6) {
-        points.add(
-            LineChartData.Point(
-                Random.nextInt(1, 50).toFloat(),
-                "Label $it"
-            )
-        )
+    val points = if (logs.isEmpty()) emptyList() else logs.map {
+        LineChartData.Point(it.measurement, "id ${it.id}")
     }
 
+    var showChart by remember {
+        mutableStateOf(false)
+    }
+    
+    Timber.d(points.toString())
 
     CollapsingToolbarScaffold(
         state = collapsingState,
@@ -94,17 +94,29 @@ fun PartMeasurementsScreen(
             contentPadding = PaddingValues(16.dp)
         ) {
 
-            item {
-                AppCard {
-                    ReboundChart(
-                        points = points,
-                        modifier = Modifier
-                            .height(250.dp)
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                    )
+
+            if(showChart) {
+                item {
+
+                    AppCard {
+                        ReboundChart(
+                            points = points,
+                            modifier = Modifier
+                                .height(250.dp)
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                        )
+
+                    }
                 }
             }
+
+            item {
+                Button(onClick = { showChart = !showChart }) {
+                    Text("TOGGLE CHART")
+                }
+            }
+
 
             item {
                 Text(
@@ -116,7 +128,14 @@ fun PartMeasurementsScreen(
 
             items(logs.size) {
                 val log = logs[it]
-                Row(Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 8.dp)
+                        .clickable {
+                            viewModel.deleteMeasurementToDb(log.id)
+                        }, horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
                         text = log.measurement.toString(),
                         style = MaterialTheme.typography.body2,

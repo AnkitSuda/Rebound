@@ -24,4 +24,9 @@ class MeasurementsRepository @Inject constructor(
             )
         )
     }
+
+
+    suspend fun deleteMeasurementToDb(measurementId: Long) {
+        measurementsDao.deleteMeasurementLogById(measurementId)
+    }
 }

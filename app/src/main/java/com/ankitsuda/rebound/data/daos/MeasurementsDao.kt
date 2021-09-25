@@ -1,6 +1,7 @@
 package com.ankitsuda.rebound.data.daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.ankitsuda.rebound.data.entities.BodyPartMeasurementLog
@@ -14,5 +15,8 @@ interface MeasurementsDao {
 
     @Insert
     suspend fun insertMeasurementLog(log: BodyPartMeasurementLog) : Long
+
+    @Query("DELETE FROM body_part_measurement_logs WHERE id = :logId")
+    suspend fun deleteMeasurementLogById(logId: Long)
 
 }
