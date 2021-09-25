@@ -2,6 +2,8 @@ package com.ankitsuda.rebound.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -21,6 +23,8 @@ fun AppTextField(
     placeholderValue: String,
     backgroundColor: Color = ReboundTheme.colors.background.lighterOrDarkerColor(0.1f),
     singleLine: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions(),
     onValueChange: (String) -> Unit
 ) {
     TextField(
@@ -37,6 +41,8 @@ fun AppTextField(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
         ),
+        keyboardActions = keyboardActions,
+        keyboardOptions = keyboardOptions,
         shape = MaterialTheme.shapes.medium,
         placeholder = { Text(text = placeholderValue) }
     )

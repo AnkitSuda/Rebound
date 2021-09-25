@@ -13,4 +13,7 @@ class ReboundApplication: Application() {
             Timber.plant(Timber.DebugTree())
         }
     }
+
+
+    fun getDb() = AppDatabase.getDatabase(this)
 }

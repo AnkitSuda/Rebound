@@ -14,15 +14,15 @@ data class BodyPartMeasurementLog(
     @ColumnInfo(name = "body_part_id")
     var bodyPartId: Long,
     @ColumnInfo(name = "note")
-    var note: String,
+    var note: String? = null,
     @ColumnInfo(name = "image")
-    var image: String,
+    var image: String? = null,
     @ColumnInfo(name = "measurement")
     var measurement: Float,
     @ColumnInfo(name = "measurement_unit")
-    var measurementUnit: String,
+    var measurementUnit: String? = null,
     @ColumnInfo(name = "measurement_type")
-    var measurementType: String,
+    var measurementType: String? = null,
     @ColumnInfo(name = "created_at")
     var createdAt: OffsetDateTime? = null,
     @ColumnInfo(name = "update_at")
