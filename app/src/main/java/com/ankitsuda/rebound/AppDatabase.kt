@@ -1,16 +1,18 @@
 package com.ankitsuda.rebound
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
+import com.ankitsuda.rebound.data.Converters
 import com.ankitsuda.rebound.data.daos.MeasurementsDao
+import com.ankitsuda.rebound.data.entities.BodyPart
+import com.ankitsuda.rebound.data.entities.BodyPartMeasurementLog
 
 @Database(
-    entities = [],
+    entities = [BodyPart::class, BodyPartMeasurementLog::class],
     version = 1,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun measurementsDao(): MeasurementsDao
