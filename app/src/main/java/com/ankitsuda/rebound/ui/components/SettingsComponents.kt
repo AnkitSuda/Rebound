@@ -15,8 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerAltDialog
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.theme.ShapeValues
 import com.ankitsuda.rebound.utils.lighterOrDarkerColor
+import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 @Composable
@@ -64,7 +66,7 @@ fun ColorPickerCardItem(
                     if (description.isNotEmpty()) {
                         Text(
                             text = description,
-                            style = MaterialTheme.typography.caption,
+                            style = ReboundTheme.typography.caption,
                             color = Color(117, 117, 117)
                         )
                     }
@@ -74,7 +76,11 @@ fun ColorPickerCardItem(
                         .size(28.dp)
                         .clip(CircleShape)
                         .background(selectedColor)
-                        .border(width = 1.dp, color = selectedColor.lighterOrDarkerColor(ratio = 0.2f), shape = CircleShape)
+                        .border(
+                            width = 1.dp,
+                            color = selectedColor.lighterOrDarkerColor(ratio = 0.2f),
+                            shape = CircleShape
+                        )
                 )
             }
         }
@@ -106,7 +112,7 @@ fun SwitchCardItem(
                 if (description.isNotEmpty()) {
                     Text(
                         text = description,
-                        style = MaterialTheme.typography.caption,
+                        style = ReboundTheme.typography.caption,
                         color = Color(117, 117, 117)
                     )
                 }
@@ -152,9 +158,14 @@ fun SliderCardItem(
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     onChange: (Float) -> Unit = {}
 ) {
-    // Temporary fix for lag
     var mValue by remember {
         mutableStateOf(value)
+    }
+
+    // Temporary fix for lag
+    LaunchedEffect(key1 = value) {
+        delay(65)
+        if (value != mValue) mValue = value
     }
 
 //    if (value != mValue) mValue = value
@@ -181,7 +192,7 @@ fun SliderCardItem(
                 if (description.isNotEmpty()) {
                     Text(
                         text = description,
-                        style = MaterialTheme.typography.caption,
+                        style = ReboundTheme.typography.caption,
                         color = Color(117, 117, 117)
                     )
                 }
@@ -250,7 +261,7 @@ fun ShapesEditorCardItem(
                     if (description.isNotEmpty()) {
                         Text(
                             text = description,
-                            style = MaterialTheme.typography.caption,
+                            style = ReboundTheme.typography.caption,
                             color = Color(117, 117, 117)
                         )
                     }
