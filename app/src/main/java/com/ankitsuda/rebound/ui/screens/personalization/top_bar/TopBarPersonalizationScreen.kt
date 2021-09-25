@@ -33,6 +33,9 @@ fun TopBarPersonalizationScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val titleAlignment by viewModel.titleAlignment.collectAsState("center")
+    val backgroundColor by viewModel.backgroundColor.collectAsState(Color.White)
+    val contentColor by viewModel.contentColor.collectAsState(Color.White)
+    val elevation by viewModel.elevation.collectAsState(0)
 
     CollapsingToolbarScaffold(
         state = collapsingState,
@@ -65,13 +68,51 @@ fun TopBarPersonalizationScreen(
                 item {
 
                     RadioGroupCardItem(
-                        text = "Title Alignment",
+                        modifier = itemModifier,
+                        text = "Title alignment",
                         onSelectionChange = { _, value ->
                             viewModel.setTitleAlignment(value)
                         },
                         items = viewModel.allTitleAlignments,
                         selected = titleAlignment
                     )
+                }
+
+                item {
+                    ColorPickerCardItem(
+                        modifier = itemModifier,
+                        text = "Background color",
+                        selectedColor = backgroundColor,
+                        onNewColorSelected = {
+                            viewModel.setBackgroundColor(it)
+                        })
+
+                }
+
+                item {
+                    ColorPickerCardItem(
+                        modifier = itemModifier,
+                        text = "Content color",
+                        selectedColor = contentColor,
+                        onNewColorSelected = {
+                            viewModel.setContentColor(it)
+                        })
+
+                }
+
+                item {
+
+                    SliderCardItem(
+                        modifier = itemModifier,
+                        text = "Elevation",
+                        value = elevation,
+                        steps = 50,
+                        valueRange = 0f..50f,
+                        onChange = {
+                            viewModel.setElevation(it)
+                        }
+                    )
+
                 }
 
             }

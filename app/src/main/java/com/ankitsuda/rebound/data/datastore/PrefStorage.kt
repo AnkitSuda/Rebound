@@ -54,6 +54,15 @@ interface PrefStorage {
     val topBarTitleAlignment: Flow<String>
     suspend fun setTopBarTitleAlignment(value: String)
 
+    val topBarBackgroundColor: Flow<Color>
+    suspend fun setTopBarBackgroundColor(value: Color)
+
+    val topBarContentColor: Flow<Color>
+    suspend fun setTopBarContentColor(value: Color)
+
+    val topBarElevation: Flow<Int>
+    suspend fun setTopBarElevation(value: Int)
+
     val chartsShaderEnabled: Flow<Boolean>
     suspend fun setChartsShaderEnabled(value: Boolean)
 

@@ -9,6 +9,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TopBarViewModel @Inject constructor(prefStorage: PrefStorage): ViewModel() {
     val titleAlignment = prefStorage.topBarTitleAlignment
-    val allTitleAlignments = TopBarAlignment.values()
+    val backgroundColor = prefStorage.topBarBackgroundColor
+    val contentColor = prefStorage.topBarContentColor
+    val elevation = prefStorage.topBarElevation
 
 }

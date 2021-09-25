@@ -58,15 +58,22 @@ fun TopBar(
 
 
     val titleAlignment by viewModel.titleAlignment.collectAsState(initial = TopBarAlignment.CENTER)
+    val backgroundColor by viewModel.backgroundColor.collectAsState(initial = ReboundTheme.colors.background)
+    val contentColor by viewModel.contentColor.collectAsState(initial = ReboundTheme.colors.onBackground)
+    val elevation by viewModel.elevation.collectAsState(initial = 2)
 
-    Surface(elevation = if (elevationEnabled) 2.dp else 0.dp, modifier = Modifier.zIndex(2f)) {
+    Surface(
+        elevation = if (elevationEnabled) elevation.dp else 0.dp,
+        modifier = Modifier.zIndex(elevation.toFloat()),
+        color = backgroundColor
+    ) {
         Column(modifier = modifier.fillMaxWidth()) {
             // Status bar
             if (statusBarEnabled) {
                 Box(
                     modifier = Modifier
                         .statusBarsHeight()
-                        .background(ReboundTheme.colors.background)
+                        .background(backgroundColor)
                 )
             }
 
@@ -96,7 +103,7 @@ fun TopBar(
 
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.h5,
+                    style = ReboundTheme.typography.h5,
                     textAlign =
                     when (titleAlignment) {
                         TopBarAlignment.START -> TextAlign.Start
@@ -115,7 +122,7 @@ fun TopBar(
                             start = if (titleAlignment != TopBarAlignment.CENTER) startBoxWidth + 8.dp else 16.dp,
                             end = if (titleAlignment != TopBarAlignment.CENTER) endBoxWidth + 8.dp else 16.dp
                         ),
-                    color = MaterialTheme.colors.onBackground,
+                    color = contentColor,
                 )
 
                 Row(
@@ -246,10 +253,12 @@ fun TopBarIconButton(
     icon: ImageVector,
     title: String,
     enabled: Boolean = true,
-    tint: Color = MaterialTheme.colors.onBackground,
+    customTint: Color? = null,
+    viewModel: TopBarViewModel = hiltViewModel(),
     onClick: () -> Unit
 ) {
     val alpha by animateFloatAsState(targetValue = if (enabled) 1f else 0.5f)
+    val contentColor by viewModel.contentColor.collectAsState(ReboundTheme.colors.onBackground)
 
     IconButton(
         onClick = onClick,
@@ -259,7 +268,7 @@ fun TopBarIconButton(
         Icon(
             imageVector = icon,
             contentDescription = title,
-            tint = tint,
+            tint = customTint ?: contentColor,
             modifier = Modifier.size(24.dp)
         )
     }

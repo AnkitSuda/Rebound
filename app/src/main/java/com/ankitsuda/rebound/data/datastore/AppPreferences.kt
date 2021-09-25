@@ -41,6 +41,9 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
         val BOTTOM_BAR_ICON_SIZE_KEY = intPreferencesKey(name = "bottom_bar_icon_size")
 
         val TOP_BAR_TITLE_ALIGNMENT_KEY = stringPreferencesKey(name = "top_bar_alignment")
+        val TOP_BAR_BACKGROUND_COLOR_KEY = intPreferencesKey(name = "top_bar_background_color")
+        val TOP_BAR_CONTENT_COLOR_KEY = intPreferencesKey(name = "top_bar_content_color")
+        val TOP_BAR_ELEVATION_KEY = intPreferencesKey(name = "top_bar_elevation")
 
         val CHARTS_SHADER_ENABLED_KEY = booleanPreferencesKey(name = "charts_shader_enabled")
         val CHARTS_LINE_THICKNESS_KEY = intPreferencesKey(name = "charts_line_thickness")
@@ -241,6 +244,41 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
     override suspend fun setTopBarTitleAlignment(value: String) {
         context.dataStore.setValue(TOP_BAR_TITLE_ALIGNMENT_KEY, value)
+    }
+
+    override val topBarBackgroundColor: Flow<Color>
+        get() = context.dataStore.data
+            .map { preferences ->
+                if (preferences[TOP_BAR_BACKGROUND_COLOR_KEY] != null) {
+                    Color(preferences[TOP_BAR_BACKGROUND_COLOR_KEY]!!)
+                } else {
+                    Color.White
+                }
+            }
+
+    override suspend fun setTopBarBackgroundColor(value: Color) {
+        setColor(TOP_BAR_BACKGROUND_COLOR_KEY, value)
+    }
+
+    override val topBarContentColor: Flow<Color>
+        get() = context.dataStore.data
+            .map { preferences ->
+                if (preferences[TOP_BAR_CONTENT_COLOR_KEY] != null) {
+                    Color(preferences[TOP_BAR_CONTENT_COLOR_KEY]!!)
+                } else {
+                    Color.Black
+                }
+            }
+
+    override suspend fun setTopBarContentColor(value: Color) {
+        setColor(TOP_BAR_CONTENT_COLOR_KEY, value)
+    }
+
+    override val topBarElevation: Flow<Int>
+        get() = context.dataStore.getValueAsFlow(TOP_BAR_ELEVATION_KEY, 2)
+
+    override suspend fun setTopBarElevation(value: Int) {
+        context.dataStore.setValue(TOP_BAR_ELEVATION_KEY, value)
     }
 
     override val chartsShaderEnabled: Flow<Boolean>

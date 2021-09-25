@@ -67,7 +67,7 @@ fun CreateExerciseScreen(
                 icon = Icons.Outlined.Done,
                 title = "Create",
                 enabled = isCreateBtnEnabled,
-                tint = MaterialTheme.colors.primary
+                customTint = MaterialTheme.colors.primary
             ) {
 
             }
