@@ -87,6 +87,10 @@ dependencies {
     implementation "com.google.accompanist:accompanist-placeholder-material:$accompanistVersion"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion"
 
+    def room_version = "2.3.0"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     implementation "org.threeten:threetenbp:1.5.1"
 
