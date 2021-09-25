@@ -19,7 +19,7 @@ fun AppTextField(
     modifier: Modifier = Modifier,
     value: String,
     placeholderValue: String,
-    backgroundColor: Color = ReboundTheme.colors.background.lighterOrDarkerColor(0.2f),
+    backgroundColor: Color = ReboundTheme.colors.background.lighterOrDarkerColor(0.1f),
     singleLine: Boolean = false,
     onValueChange: (String) -> Unit
 ) {
