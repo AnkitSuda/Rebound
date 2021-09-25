@@ -16,6 +16,7 @@ import com.ankitsuda.rebound.ui.dialogs.ColorPickerAltDialog
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
 import com.ankitsuda.rebound.ui.theme.ShapeValues
+import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 import kotlin.math.roundToInt
 
 @Composable
@@ -73,7 +74,7 @@ fun ColorPickerCardItem(
                         .size(28.dp)
                         .clip(CircleShape)
                         .background(selectedColor)
-                        .border(width = 1.dp, color = Color.Black, shape = CircleShape)
+                        .border(width = 1.dp, color = selectedColor.lighterOrDarkerColor(ratio = 0.2f), shape = CircleShape)
                 )
             }
         }
