@@ -13,6 +13,9 @@ interface MeasurementsDao {
     @Query("SELECT * FROM body_part_measurement_logs WHERE body_part_id = :partId")
     fun getLogsForPart(partId: Long) : Flow<List<BodyPartMeasurementLog>>
 
+    @Query("SELECT * FROM body_part_measurement_logs WHERE id = :logId")
+    suspend fun getLog(logId: Long) : BodyPartMeasurementLog
+
     @Insert
     suspend fun insertMeasurementLog(log: BodyPartMeasurementLog) : Long
 

@@ -12,6 +12,8 @@ class MeasurementsRepository @Inject constructor(
 
     fun getLogsForPart(partId: Long) = measurementsDao.getLogsForPart(partId)
 
+    suspend fun getLog(logId: Long) = measurementsDao.getLog(logId)
+
     /**
      * Testing just for now
      */
@@ -26,7 +28,7 @@ class MeasurementsRepository @Inject constructor(
     }
 
 
-    suspend fun deleteMeasurementToDb(measurementId: Long) {
+    suspend fun deleteMeasurementFromDb(measurementId: Long) {
         measurementsDao.deleteMeasurementLogById(measurementId)
     }
 }

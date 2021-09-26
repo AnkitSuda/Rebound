@@ -7,33 +7,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.*
-import com.ankitsuda.rebound.ui.components.charts.line.LineChart
 import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
-import com.ankitsuda.rebound.ui.components.charts.line.renderer.line.GradientLineShader
-import com.ankitsuda.rebound.ui.components.charts.line.renderer.line.SolidLineDrawer
-import com.ankitsuda.rebound.ui.components.charts.line.renderer.line.SolidLineShader
-import com.ankitsuda.rebound.ui.components.charts.line.renderer.point.FilledCircularPointDrawer
-import com.ankitsuda.rebound.ui.components.charts.line.renderer.point.HollowCircularPointDrawer
-import com.ankitsuda.rebound.ui.components.charts.line.renderer.point.HollowFilledCircularPointDrawer
-import com.ankitsuda.rebound.ui.components.charts.line.renderer.xaxis.SimpleXAxisDrawer
-import com.ankitsuda.rebound.ui.components.charts.line.renderer.yaxis.SimpleYAxisDrawer
 import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import timber.log.Timber
-import kotlin.random.Random
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
 
 @Composable
 fun PartMeasurementsScreen(
@@ -58,11 +45,8 @@ fun PartMeasurementsScreen(
         LineChartData.Point(it.measurement, "id ${it.id}")
     }
 
-    var showChart by remember {
-        mutableStateOf(false)
-    }
-    
-    Timber.d(points.toString())
+    val showChart = points.size > 1
+
 
     CollapsingToolbarScaffold(
         state = collapsingState,
@@ -91,14 +75,14 @@ fun PartMeasurementsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(top = 16.dp, bottom = 72.dp)
         ) {
 
 
-            if(showChart) {
+            if (showChart) {
                 item {
 
-                    AppCard {
+                    AppCard(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
                         ReboundChart(
                             points = points,
                             modifier = Modifier
@@ -112,17 +96,10 @@ fun PartMeasurementsScreen(
             }
 
             item {
-                Button(onClick = { showChart = !showChart }) {
-                    Text("TOGGLE CHART")
-                }
-            }
-
-
-            item {
                 Text(
                     text = "History",
-                    style = MaterialTheme.typography.body1,
-                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                    style = ReboundTheme.typography.h6,
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
                 )
             }
 
@@ -131,19 +108,28 @@ fun PartMeasurementsScreen(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp, bottom = 8.dp)
                         .clickable {
-                            viewModel.deleteMeasurementToDb(log.id)
-                        }, horizontalArrangement = Arrangement.SpaceBetween
+                            bottomSheet.show {
+                                AddPartMeasurementBottomSheet(partId = partId!!, logId = log.id)
+                            }
+                        }
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
                         text = log.measurement.toString(),
-                        style = MaterialTheme.typography.body2,
+                        style = ReboundTheme.typography.body2,
                         modifier = Modifier
                     )
                     Text(
-                        text = log.createdAt.toString(),
-                        style = MaterialTheme.typography.caption,
+                        text = log.createdAt!!.format(
+                            DateTimeFormatter.ofLocalizedDateTime(
+                                FormatStyle.MEDIUM,
+                                FormatStyle.SHORT
+                            )
+                        ),
+                        style = ReboundTheme.typography.caption,
+                        color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
                         modifier = Modifier
                     )
                 }
