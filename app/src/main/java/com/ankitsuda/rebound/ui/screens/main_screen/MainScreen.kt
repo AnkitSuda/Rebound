@@ -7,11 +7,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,10 +26,8 @@ import com.ankitsuda.rebound.ui.components.PanelTopExpanded
 import com.ankitsuda.rebound.ui.components.WorkoutPanel
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.LabelVisible
-import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsHeight
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -72,6 +67,14 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
     val swipeableState = rememberSwipeableState(0)
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val coroutine = rememberCoroutineScope()
+
+
+    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+
+    val panelHidden = currentWorkoutId == (-1).toLong()
+
+
+    Timber.d("currentWorkoutId $currentWorkoutId panelHidden $panelHidden")
 
     BackHandler(swipeableState.currentValue != 0) {
         coroutine.launch {
@@ -141,9 +144,14 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
                 content = {
                     MainScreenScaffold(
                         modifier = Modifier,
+                        panelHidden = panelHidden,
                         swipeableState = swipeableState,
                         bottomBar = {
-                            BottomBar(navController = navController, viewModel)
+                            BottomBar(
+                                elevationEnabled = panelHidden,
+                                navController = navController,
+                                viewModel
+                            )
                         },
                         panel = {
                             WorkoutPanel()
@@ -183,7 +191,11 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
 }
 
 @Composable
-private fun BottomBar(navController: NavHostController, mainScreenViewModel: MainScreenViewModel) {
+private fun BottomBar(
+    elevationEnabled: Boolean = false,
+    navController: NavHostController,
+    mainScreenViewModel: MainScreenViewModel
+) {
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Home,
         BottomNavigationScreens.History,
@@ -197,10 +209,11 @@ private fun BottomBar(navController: NavHostController, mainScreenViewModel: Mai
     val iconSize by mainScreenViewModel.iconSize.collectAsState(initial = 24)
 
 
+
     BottomNavigation(
         contentColor = MaterialTheme.colors.primary,
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = 0.dp,
+        elevation = if (elevationEnabled) 8.dp else 0.dp,
         modifier = Modifier
             .navigationBarsHeight(additional = 56.dp)
     ) {

@@ -1,5 +1,7 @@
 package com.ankitsuda.rebound.ui.screens.workout
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,11 +11,15 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.asLiveData
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.RoutineItemCard
@@ -26,10 +32,14 @@ import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 import timber.log.Timber
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
-fun WorkoutScreen(navController: NavHostController) {
+fun WorkoutScreen(
+    navController: NavHostController,
+    viewModel: WorkoutScreenViewModel = hiltViewModel()
+) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
+    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
 
     CollapsingToolbarScaffold(
         state = collapsingState,
@@ -38,23 +48,25 @@ fun WorkoutScreen(navController: NavHostController) {
         },
         floatingActionButton = {
 
-            ExtendedFloatingActionButton(
-                modifier = Modifier,
-                elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = 2.dp,
-                    pressedElevation = 4.dp
-                ),
-                text = { Text(text = "Empty Workout") },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Add,
-                        contentDescription = null
-                    )
-                },
-                onClick = {
-                })
+            AnimatedVisibility(visible = currentWorkoutId == (-1).toLong()) {
+                ExtendedFloatingActionButton(
+                    modifier = Modifier,
+                    elevation = FloatingActionButtonDefaults.elevation(
+                        defaultElevation = 2.dp,
+                        pressedElevation = 4.dp
+                    ),
+                    text = { Text(text = "Empty Workout") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Add,
+                            contentDescription = null
+                        )
+                    },
+                    onClick = {
+                        viewModel.startEmptyWorkout()
+                    })
 
-
+            }
         },
         floatingActionButtonPosition = FabPosition.Center,
         modifier = Modifier

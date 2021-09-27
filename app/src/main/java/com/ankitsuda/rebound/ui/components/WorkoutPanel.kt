@@ -14,13 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
+import kotlin.random.Random
 
 @Composable
-fun WorkoutPanel() {
+fun WorkoutPanel(viewModel: WorkoutPanelViewModel = hiltViewModel()) {
     var workoutName by remember {
         mutableStateOf("")
     }
@@ -28,12 +30,21 @@ fun WorkoutPanel() {
         mutableStateOf("")
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize().background(ReboundTheme.colors.background)) {
+    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ReboundTheme.colors.background)
+    ) {
         item {
             Column() {
                 WorkoutQuickInfo()
                 Divider()
             }
+        }
+        item {
+            Text(text = "TEST: current workout id $currentWorkoutId")
         }
         item {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -56,7 +67,9 @@ fun WorkoutPanel() {
 
         item {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    viewModel.setCurrentWorkoutId(Random.nextLong())
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
@@ -73,7 +86,9 @@ fun WorkoutPanel() {
 
         item {
             TextButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    viewModel.cancelCurrentWorkout()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),

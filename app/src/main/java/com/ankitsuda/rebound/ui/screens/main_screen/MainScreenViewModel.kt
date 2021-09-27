@@ -10,4 +10,5 @@ class MainScreenViewModel @Inject constructor(val prefStorage: PrefStorage) : Vi
     val bottomBarLabelVisible = prefStorage.bottomBarLabelVisible
     val labelWeight = prefStorage.bottomBarLabelWeight
     val iconSize = prefStorage.bottomBarIconSize
+    val currentWorkoutId = prefStorage.currentWorkoutId
 }
