@@ -3,26 +3,17 @@ package com.ankitsuda.rebound.data.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ankitsuda.rebound.utils.ExerciseCategory
 import org.threeten.bp.OffsetDateTime
 
-@Entity(tableName = "exercises")
-data class Exercise(
+@Entity(tableName = "workouts")
+data class Workout(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-
     @ColumnInfo(name = "name")
     var name: String? = null,
-    @ColumnInfo(name = "notes")
-    var notes: String? = null,
-
-    @ColumnInfo(name = "primary_muscle_id")
-    var primaryMuscleId: Long? = null,
-    @ColumnInfo(name = "secondary_muscle_id")
-    var secondaryMuscleId: Long? = null,
-    @ColumnInfo(name = "category")
-    var category: ExerciseCategory = ExerciseCategory.UNKNOWN,
+    @ColumnInfo(name = "note")
+    var note: String? = null,
 
     @ColumnInfo(name = "created_at")
     var createdAt: OffsetDateTime? = null,

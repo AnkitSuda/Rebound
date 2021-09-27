@@ -1,6 +1,8 @@
 package com.ankitsuda.rebound.data
 
 import androidx.room.TypeConverter
+import com.ankitsuda.rebound.utils.ExerciseCategory
+import com.ankitsuda.rebound.utils.parseToExerciseCategory
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
@@ -19,6 +21,19 @@ object Converters {
     @JvmStatic
     fun fromOffsetDateTime(date: OffsetDateTime?): String? {
         return date?.format(formatter)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun toExerciseCategory(value: String): ExerciseCategory {
+        return value.parseToExerciseCategory()
+
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromExerciseCategory(category: ExerciseCategory?): String {
+        return category?.value ?: ExerciseCategory.UNKNOWN.value
     }
 
 }
