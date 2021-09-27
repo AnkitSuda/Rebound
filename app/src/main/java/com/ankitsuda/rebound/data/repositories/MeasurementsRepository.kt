@@ -28,6 +28,10 @@ class MeasurementsRepository @Inject constructor(
     }
 
 
+    suspend fun updateMeasurement(partMeasurementLog: BodyPartMeasurementLog) {
+        measurementsDao.updateMeasurementLog(partMeasurementLog)
+    }
+
     suspend fun deleteMeasurementFromDb(measurementId: Long) {
         measurementsDao.deleteMeasurementLogById(measurementId)
     }

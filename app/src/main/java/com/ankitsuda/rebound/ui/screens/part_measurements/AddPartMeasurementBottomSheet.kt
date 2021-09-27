@@ -1,9 +1,6 @@
 package com.ankitsuda.rebound.ui.screens.part_measurements
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -32,19 +29,19 @@ fun AddPartMeasurementBottomSheet(
 ) {
     val bottomSheet = LocalBottomSheet.current
     val isUpdate = logId != null
-    var fieldValue by remember {
-        mutableStateOf("")
-    }
+    val fieldValue by viewModel.fieldValue.collectAsState("")
     val isCreateBtnEnabled = fieldValue.isNotBlank()
+
+    LaunchedEffect(key1 = partId, key2 = logId) {
+        viewModel.setFieldValue("")
+    }
 
     if (isUpdate) {
         LaunchedEffect(key1 = logId) {
-            val log =viewModel.setLogId(logId!!)
-            log?.measurement?.let {
-                fieldValue = it.toString()
-            }
+            viewModel.setLogId(logId!!)
         }
     }
+
 
     Column(
         Modifier
@@ -59,12 +56,12 @@ fun AddPartMeasurementBottomSheet(
         )
 
         AppTextField(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp),
             value = fieldValue,
             placeholderValue = "",
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = { fieldValue = it }
+            onValueChange = { viewModel.setFieldValue(it) }
         )
 
         Row(
@@ -73,7 +70,7 @@ fun AddPartMeasurementBottomSheet(
                 .align(Alignment.End)
         ) {
             if (isUpdate) {
-                TextButton(
+                BottomSheetSecondaryRButton(
                     modifier = Modifier.padding(end = 16.dp),
                     onClick = {
                         viewModel.deleteMeasurementFromDb(logId!!)
@@ -83,14 +80,21 @@ fun AddPartMeasurementBottomSheet(
                 }
             }
 
-            Button(
+            BottomSheetRButton(
                 enabled = isCreateBtnEnabled,
                 onClick = {
-                    partId?.let {
-                        viewModel.addMeasurementToDb(fieldValue.toFloat(), partId)
+                    if (isUpdate) {
+                        viewModel.updateMeasurement()
                         bottomSheet.hide()
+                    } else {
+                        partId?.let {
+                            viewModel.addMeasurementToDb(partId)
+                            bottomSheet.hide()
+                        }
                     }
-                }) {
+                },
+                modifier = Modifier.width(88.dp)
+            ) {
                 Text(if (isUpdate) "Save" else "Add")
             }
         }

@@ -12,7 +12,7 @@ data class BodyPartMeasurementLog(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     @ColumnInfo(name = "body_part_id")
-    var bodyPartId: Long,
+    var bodyPartId: Long? = null,
     @ColumnInfo(name = "note")
     var note: String? = null,
     @ColumnInfo(name = "image")
