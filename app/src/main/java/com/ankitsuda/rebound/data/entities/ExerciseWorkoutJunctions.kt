@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "exercise_log_entries")
+@Entity(tableName = "exercise_workout_junctions")
 data class ExerciseWorkoutJunctions(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

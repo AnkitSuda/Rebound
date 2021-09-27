@@ -4,18 +4,30 @@ import android.content.Context
 import androidx.room.*
 import com.ankitsuda.rebound.data.Converters
 import com.ankitsuda.rebound.data.daos.MeasurementsDao
-import com.ankitsuda.rebound.data.entities.BodyPart
-import com.ankitsuda.rebound.data.entities.BodyPartMeasurementLog
+import com.ankitsuda.rebound.data.daos.WorkoutsDao
+import com.ankitsuda.rebound.data.entities.*
 
 @Database(
-    entities = [BodyPart::class, BodyPartMeasurementLog::class],
-    version = 1,
+    entities = [
+        BodyPart::class,
+        BodyPartMeasurementLog::class,
+        Exercise::class,
+        ExerciseLog::class,
+        ExerciseLogEntry::class,
+        ExerciseWorkoutJunctions::class,
+        Muslce::class,
+        Workout::class,
+        WorkoutTemplate::class,
+        WorkoutTemplateExercise::class,
+    ],
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun measurementsDao(): MeasurementsDao
+    abstract fun workoutsDao(): WorkoutsDao
 
     companion object {
         @Volatile

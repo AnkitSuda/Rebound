@@ -92,6 +92,9 @@ interface PrefStorage {
     val shapeSmallBottomEndRadius: Flow<Int>
     suspend fun setShapeSmallBottomEndRadius(value: Int)
 
+    val currentWorkoutId: Flow<Long>
+    suspend fun setCurrentWorkoutId(value: Long)
+
 
     /***
      * clears all the stored data

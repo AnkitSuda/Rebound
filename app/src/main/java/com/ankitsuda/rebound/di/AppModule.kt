@@ -3,10 +3,10 @@ package com.ankitsuda.rebound.di
 import android.content.Context
 import com.ankitsuda.rebound.AppDatabase
 import com.ankitsuda.rebound.data.daos.MeasurementsDao
-import com.ankitsuda.rebound.data.datastore.AppPreferences
+import com.ankitsuda.rebound.data.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.data.repositories.MeasurementsRepository
-import dagger.Binds
+import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +29,16 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideWorkoutsDao(db: AppDatabase) = db.workoutsDao()
+
+    @Singleton
+    @Provides
     fun provideMeasurementsRepository(measurementsDao: MeasurementsDao) =
         MeasurementsRepository(measurementsDao)
+
+    @Singleton
+    @Provides
+    fun provideWorkoutsRepository(workoutsDao: WorkoutsDao, prefStorage: PrefStorage) =
+        WorkoutsRepository(workoutsDao,prefStorage)
 
 }

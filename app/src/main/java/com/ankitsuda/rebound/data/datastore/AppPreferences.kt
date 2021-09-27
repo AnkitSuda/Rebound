@@ -82,6 +82,10 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
             intPreferencesKey(name = "shape_large_bottom_start_radius_key")
         val SHAPE_LARGE_BOTTOM_END_RADIUS_KEY =
             intPreferencesKey(name = "shape_large_bottom_end_radius_key")
+
+
+        // Current workout id
+        val CURRENT_WORKOUT_ID_KEY = longPreferencesKey(name = "current_workout_id")
     }
 
     override val isLightTheme: Flow<Boolean> = getValue(IS_LIGHT_THEME_KEY, true)
@@ -259,6 +263,13 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
     override suspend fun setShapeSmallBottomEndRadius(value: Int) {
         setValue(SHAPE_SMALL_BOTTOM_END_RADIUS_KEY, value)
     }
+
+    override val currentWorkoutId: Flow<Long>
+        get() = getValue(CURRENT_WORKOUT_ID_KEY, -1)
+
+    override suspend fun setCurrentWorkoutId(value: Long) {
+        setValue(CURRENT_WORKOUT_ID_KEY, value)
+    }
     // SMALL SHAPE ENDS
 
     override suspend fun clearPreferenceStorage() {
@@ -281,12 +292,14 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
         .map { preferences ->
             if (preferences[key] != null) {
                 val colorStr = preferences[key]!!
-                Color(android.graphics.Color.parseColor(
-                    if (colorStr.startsWith("#"))
-                        colorStr
-                    else
-                        "#$colorStr"
-                ))
+                Color(
+                    android.graphics.Color.parseColor(
+                        if (colorStr.startsWith("#"))
+                            colorStr
+                        else
+                            "#$colorStr"
+                    )
+                )
             } else {
                 defaultColor
             }
