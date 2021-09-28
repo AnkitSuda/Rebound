@@ -160,7 +160,7 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
                         )
                     },
                     panel = {
-                        WorkoutPanel()
+                        WorkoutPanel(navController)
                     },
                     panelTopCommon = {
                         PanelTopDragHandle()

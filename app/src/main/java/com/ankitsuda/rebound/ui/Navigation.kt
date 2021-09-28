@@ -136,6 +136,9 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
         bottomSheet(Route.CreateExercise.route) {
             CreateExerciseScreen(navController)
         }
+        bottomSheet(Route.ExercisesBottomSheet.route) {
+            ExercisesScreen(navController, isBottomSheet = true)
+        }
         bottomSheet(Route.AddPartMeasurement.route) {
             AddPartMeasurementBottomSheet(navController)
         }

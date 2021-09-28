@@ -1,5 +1,6 @@
 package com.ankitsuda.rebound.ui.components
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,12 +10,17 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
@@ -23,7 +29,10 @@ import timber.log.Timber
 import kotlin.random.Random
 
 @Composable
-fun WorkoutPanel(viewModel: WorkoutPanelViewModel = hiltViewModel()) {
+fun WorkoutPanel(
+    navController: NavHostController,
+    viewModel: WorkoutPanelViewModel = hiltViewModel()
+) {
 //    var workoutName by remember {
 //        mutableStateOf("")
 //    }
@@ -41,6 +50,25 @@ fun WorkoutPanel(viewModel: WorkoutPanelViewModel = hiltViewModel()) {
 
     val workoutName = workout?.name ?: ""
     val workoutNote = workout?.note ?: ""
+
+    // Observes results when ExercisesScreen changes value of arg
+    val exercisesScreenResult = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getLiveData<Long?>("result_exercises_screen_exercise_id")?.observeAsState()
+    exercisesScreenResult?.value?.let { resultId ->
+
+        Toast.makeText(
+            LocalContext.current,
+            "Add ${resultId}",
+            Toast.LENGTH_SHORT
+        )
+            .show()
+        navController.currentBackStackEntry?.savedStateHandle?.set(
+            "result_exercises_screen_exercise_id",
+            null
+        )
+
+    }
 
 
     LazyColumn(
@@ -79,6 +107,7 @@ fun WorkoutPanel(viewModel: WorkoutPanelViewModel = hiltViewModel()) {
         item {
             Button(
                 onClick = {
+                    navController.navigate(Route.ExercisesBottomSheet.route)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

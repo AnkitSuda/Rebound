@@ -48,9 +48,9 @@ import kotlin.random.Random
 @Composable
 fun ExercisesScreen(
     navController: NavHostController,
+    isBottomSheet: Boolean = true,
     viewModel: ExercisesScreenViewModel = hiltViewModel()
 ) {
-    val bottomSheet = LocalBottomSheet.current
 
     val allExercises by viewModel.allExercises.collectAsState(initial = emptyList())
     val allMuscles by viewModel.allMuscles.collectAsState(initial = emptyList())
@@ -100,7 +100,7 @@ fun ExercisesScreen(
 //                                        bottomSheet.show {
 //                                            CreateExerciseScreen()
 //                                        }
-                            navController.navigate(Route.CreateExercise.route)
+                                        navController.navigate(Route.CreateExercise.route)
                                     })
                             })
 
@@ -173,7 +173,15 @@ fun ExercisesScreen(
                         muscle = exercise.primaryMuscleTag.toString(),
                         totalLogs = it,
                         onClick = {
-                            navController.navigate(Route.ExerciseDetails.createRoute(exerciseId = exercise.id))
+                            if (isBottomSheet) {
+                                navController.previousBackStackEntry?.savedStateHandle?.set(
+                                    "result_exercises_screen_exercise_id",
+                                    exercise.id
+                                )
+                                navController.popBackStack()
+                            } else {
+                                navController.navigate(Route.ExerciseDetails.createRoute(exerciseId = exercise.id))
+                            }
                         })
                 }
             }
