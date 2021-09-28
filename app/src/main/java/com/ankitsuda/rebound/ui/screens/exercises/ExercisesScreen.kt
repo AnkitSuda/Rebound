@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.ankitsuda.rebound.data.entities.Muscle
 import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.ExerciseItem
 import com.ankitsuda.rebound.ui.components.TopBar
@@ -49,9 +51,11 @@ fun ExercisesScreen(
     viewModel: ExercisesScreenViewModel = hiltViewModel()
 ) {
     val bottomSheet = LocalBottomSheet.current
-    val tabData = arrayListOf<String>()
 
-    repeat(10) { tabData.add("Muscle") }
+    val allExercises by viewModel.allExercises.collectAsState(initial = emptyList())
+    val allMuscles by viewModel.allMuscles.collectAsState(initial = emptyList())
+
+    val tabData = arrayListOf<Any>("All").apply { addAll(allMuscles) }
 
     val pagerState = rememberPagerState(
         pageCount = tabData.size,
@@ -126,7 +130,7 @@ fun ExercisesScreen(
                             )
                         }
                     ) {
-                        tabData.forEachIndexed { index, pair ->
+                        tabData.forEachIndexed { index, item ->
                             Tab(
                                 selected = tabIndex == index,
                                 onClick = {
@@ -135,7 +139,7 @@ fun ExercisesScreen(
                                     }
                                 },
                                 text = {
-                                    Text(text = pair)
+                                    Text(text = if (item is Muscle) item.name else item.toString())
 
                                 }
                             )
@@ -155,13 +159,18 @@ fun ExercisesScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(25) {
+                // Select all exercises for All tab or get only muscle specific exercises
+//                val exercisesForThisTab =
+//                    if (index == 0) allExercises else allExercises.filter {
+//                        it.primaryMuscleTag == allMuscles[index - 1].tag
+//                    }
+
+                items(allExercises.size) {
+                    val exercise = allExercises[it]
                     ExerciseItem(
-                        name = "Bench Press: Barbell",
-                        muscle = "Chest",
+                        name = exercise.name.toString(),
+                        muscle = exercise.primaryMuscleTag.toString(),
                         totalLogs = it,
                         onClick = {
                             navController.navigate(Route.ExerciseDetails.createRoute(0))

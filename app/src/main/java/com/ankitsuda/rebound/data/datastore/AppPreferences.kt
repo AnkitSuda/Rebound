@@ -238,27 +238,27 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
 
     // SMALL SHAPE STARTS
-    override val shapeSmallTopStartRadius: Flow<Int> = getValue(SHAPE_SMALL_TOP_START_RADIUS_KEY, 0)
+    override val shapeSmallTopStartRadius: Flow<Int> = getValue(SHAPE_SMALL_TOP_START_RADIUS_KEY, 8)
 
     override suspend fun setShapeSmallTopStartRadius(value: Int) {
         setValue(SHAPE_SMALL_TOP_START_RADIUS_KEY, value)
     }
 
-    override val shapeSmallTopEndRadius: Flow<Int> = getValue(SHAPE_SMALL_TOP_END_RADIUS_KEY, 0)
+    override val shapeSmallTopEndRadius: Flow<Int> = getValue(SHAPE_SMALL_TOP_END_RADIUS_KEY, 8)
 
     override suspend fun setShapeSmallTopEndRadius(value: Int) {
         setValue(SHAPE_SMALL_TOP_END_RADIUS_KEY, value)
     }
 
     override val shapeSmallBottomStartRadius: Flow<Int> =
-        getValue(SHAPE_SMALL_BOTTOM_START_RADIUS_KEY, 0)
+        getValue(SHAPE_SMALL_BOTTOM_START_RADIUS_KEY, 8)
 
     override suspend fun setShapeSmallBottomStartRadius(value: Int) {
         setValue(SHAPE_SMALL_BOTTOM_START_RADIUS_KEY, value)
     }
 
     override val shapeSmallBottomEndRadius: Flow<Int> =
-        getValue(SHAPE_SMALL_BOTTOM_END_RADIUS_KEY, 0)
+        getValue(SHAPE_SMALL_BOTTOM_END_RADIUS_KEY, 8)
 
     override suspend fun setShapeSmallBottomEndRadius(value: Int) {
         setValue(SHAPE_SMALL_BOTTOM_END_RADIUS_KEY, value)

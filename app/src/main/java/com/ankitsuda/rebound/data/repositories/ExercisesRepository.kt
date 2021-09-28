@@ -7,6 +7,8 @@ import javax.inject.Inject
 
 class ExercisesRepository @Inject constructor(private val exercisesDao: ExercisesDao) {
 
+    fun getAllExercises() = exercisesDao.getAllExercises()
+
     suspend fun createExercise(exercise: Exercise) {
         exercisesDao.insertExercise(
             exercise.copy(

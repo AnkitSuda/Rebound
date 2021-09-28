@@ -48,11 +48,11 @@ fun ReboundThemeWrapper(
     val cardBorderWidth by prefStorage.cardBorderWidth.collectAsState(initial = 0)
 
     // Shape values
-    val shapeSmallTopLeftRadius by prefStorage.shapeSmallTopStartRadius.collectAsState(initial = 0)
-    val shapeSmallTopRightRadius by prefStorage.shapeSmallTopEndRadius.collectAsState(initial = 0)
-    val shapeSmallBottomLeftRadius by prefStorage.shapeSmallBottomStartRadius.collectAsState(initial = 0)
+    val shapeSmallTopLeftRadius by prefStorage.shapeSmallTopStartRadius.collectAsState(initial = 8)
+    val shapeSmallTopRightRadius by prefStorage.shapeSmallTopEndRadius.collectAsState(initial = 8)
+    val shapeSmallBottomLeftRadius by prefStorage.shapeSmallBottomStartRadius.collectAsState(initial = 8)
     val shapeSmallBottomRightRadius by prefStorage.shapeSmallBottomEndRadius.collectAsState(
-        initial = 0
+        initial = 8
     )
 
 

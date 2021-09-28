@@ -33,7 +33,7 @@ object Converters {
     @TypeConverter
     @JvmStatic
     fun fromExerciseCategory(category: ExerciseCategory?): String {
-        return category?.value ?: ExerciseCategory.UNKNOWN.value
+        return category?.tag ?: ExerciseCategory.UNKNOWN.tag
     }
 
 }
