@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.components
+package com.ankitsuda.rebound.ui.components.panel_tops
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,17 +8,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun PanelTopDragHandle(modifier: Modifier = Modifier) {
-    Box(modifier = modifier
-        .fillMaxWidth()
-        .padding(top = 6.dp)) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 6.dp)
+    ) {
         Box(
             modifier = Modifier
                 .height(2.dp)
@@ -31,7 +36,9 @@ fun PanelTopDragHandle(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PanelTopCollapsed() {
+fun PanelTopCollapsed(viewModel: PanelTopsViewModel = hiltViewModel()) {
+    val workoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+    val workout by viewModel.getWorkout(workoutId).collectAsState(initial = null)
     Column(
         modifier = Modifier
             .padding(6.dp)
@@ -39,7 +46,9 @@ fun PanelTopCollapsed() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Push", style = MaterialTheme.typography.h6)
+        workout?.name?.let {
+            Text(text = it, style = MaterialTheme.typography.h6)
+        }
         Text(text = "32:12m", style = MaterialTheme.typography.caption)
     }
 }
@@ -79,7 +88,7 @@ fun PanelTopExpanded(
                 onClick = onFinishBtnClicked,
                 elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp)
             ) {
-                    Text(text = "Finish", style = MaterialTheme.typography.button)
+                Text(text = "Finish", style = MaterialTheme.typography.button)
             }
         }
     }

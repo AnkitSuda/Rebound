@@ -21,7 +21,7 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     var mWorkoutId: Long = -1
     var mWorkout: Workout? = null
 
-    fun getWorkout(workoutId: Long): Flow<Workout> =
+    fun getWorkout(workoutId: Long): Flow<Workout?> =
         workoutsRepository.getWorkout(workoutId)
 
     fun updateWorkoutName(name: String) {

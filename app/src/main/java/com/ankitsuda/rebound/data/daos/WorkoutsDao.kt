@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface WorkoutsDao {
 
     @Query("SELECT * FROM workouts WHERE id = :workoutId")
-    fun getWorkout(workoutId: Long): Flow<Workout>
+    fun getWorkout(workoutId: Long): Flow<Workout?>
 
     @Insert
     suspend fun insertWorkout(workout: Workout): Long

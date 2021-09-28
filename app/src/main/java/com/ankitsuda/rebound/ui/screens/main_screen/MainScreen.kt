@@ -20,9 +20,9 @@ import androidx.navigation.compose.rememberNavController
 import com.ankitsuda.rebound.ui.MainScreenNavigationConfigurations
 import com.ankitsuda.rebound.ui.MainScreenScaffold
 import com.ankitsuda.rebound.ui.Route
-import com.ankitsuda.rebound.ui.components.PanelTopCollapsed
-import com.ankitsuda.rebound.ui.components.PanelTopDragHandle
-import com.ankitsuda.rebound.ui.components.PanelTopExpanded
+import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopCollapsed
+import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopDragHandle
+import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded
 import com.ankitsuda.rebound.ui.components.WorkoutPanel
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.LabelVisible
