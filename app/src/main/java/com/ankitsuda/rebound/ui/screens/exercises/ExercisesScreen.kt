@@ -155,19 +155,20 @@ fun ExercisesScreen(
             state = pagerState,
             verticalAlignment = Alignment.Top,
         ) { index ->
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
             ) {
-                // Select all exercises for All tab or get only muscle specific exercises
-//                val exercisesForThisTab =
-//                    if (index == 0) allExercises else allExercises.filter {
-//                        it.primaryMuscleTag == allMuscles[index - 1].tag
-//                    }
 
-                items(allExercises.size) {
-                    val exercise = allExercises[it]
+
+                // Select all exercises for All tab or get only muscle specific exercises
+                val exercisesForThisTab =
+                    if (index == 0) allExercises else allExercises.filter {
+                        it.primaryMuscleTag == allMuscles[index - 1].tag
+                    }
+
+                items(exercisesForThisTab.size) {
+                    val exercise = exercisesForThisTab[it]
                     ExerciseItem(
                         name = exercise.name.toString(),
                         muscle = exercise.primaryMuscleTag.toString(),

@@ -24,7 +24,7 @@ import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded
-import com.ankitsuda.rebound.ui.components.WorkoutPanel
+import com.ankitsuda.rebound.ui.components.workout_panel.WorkoutPanel
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.LabelVisible
 import com.google.accompanist.insets.navigationBarsHeight

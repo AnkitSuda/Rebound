@@ -1,17 +1,12 @@
-package com.ankitsuda.rebound.ui.components
+package com.ankitsuda.rebound.ui.components.workout_panel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.data.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
