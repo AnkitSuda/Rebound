@@ -173,7 +173,7 @@ fun ExercisesScreen(
                         muscle = exercise.primaryMuscleTag.toString(),
                         totalLogs = it,
                         onClick = {
-                            navController.navigate(Route.ExerciseDetails.createRoute(0))
+                            navController.navigate(Route.ExerciseDetails.createRoute(exerciseId = exercise.id))
                         })
                 }
             }

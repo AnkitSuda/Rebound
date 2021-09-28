@@ -19,6 +19,7 @@ sealed class Route(val route: String) {
         fun createRoute(date: Date) =
             "history/${date.time}"
     }
+
     object Workout : Route("workout")
     object Exercises : Route("exercises")
     object More : Route("more")
@@ -50,6 +51,7 @@ sealed class Route(val route: String) {
     }
 
     object ExerciseDetails : Route("exercises/{exerciseId}") {
+
         fun createRoute(exerciseId: Long) = "exercises/$exerciseId"
     }
 }

@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ExercisesDao {
 
+    @Query("SELECT * FROM exercises WHERE id = :exerciseId")
+    fun getSingleExercise(exerciseId: Long) : Flow<Exercise>
+
     @Query("SELECT * FROM exercises ORDER BY name")
     fun getAllExercises() : Flow<List<Exercise>>
 

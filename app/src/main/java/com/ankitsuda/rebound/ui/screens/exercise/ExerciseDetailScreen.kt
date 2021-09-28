@@ -10,12 +10,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.StarBorder
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
@@ -32,7 +32,18 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ExerciseDetailScreen(navController: NavHostController) {
+fun ExerciseDetailScreen(
+    navController: NavHostController,
+    viewModel: ExerciseDetailScreenViewModel = hiltViewModel()
+) {
+    val exerciseId by remember {
+        mutableStateOf(
+            navController.currentBackStackEntry?.arguments?.getString("exerciseId")?.toLong()!!
+        )
+    }
+
+    val exercise by viewModel.getExercise(exerciseId).collectAsState(initial = null)
+
     val tabData = listOf(
         "Charts",
         "History",
@@ -57,7 +68,7 @@ fun ExerciseDetailScreen(navController: NavHostController) {
                 Column() {
                     TopBar(
                         elevationEnabled = false,
-                        title = "Exercise",
+                        title = exercise?.name.toString(),
                         strictLeftIconAlignToStart = true,
                         leftIconBtn = {
                             TopBarBackIconButton(onClick = {
@@ -113,7 +124,9 @@ fun ExerciseDetailScreen(navController: NavHostController) {
                     ExerciseDetailHistoryTab()
                 }
                 2 -> {
-                    ExerciseDetailAboutTab()
+                    exercise?.let {
+                        ExerciseDetailAboutTab(it)
+                    }
                 }
             }
 
