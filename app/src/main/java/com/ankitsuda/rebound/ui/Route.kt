@@ -39,7 +39,11 @@ sealed class Route(val route: String) {
     object ChartsPersonalization : Route("personalization/charts")
     object ColorPickerDemo : Route("personalization/color_picker_demo")
 
-//    object CreateExercise : Route("create_exercise")
+    object CreateExercise : Route("create_exercise")
+    object AddPartMeasurement : Route("add_part_measurement?partId={partId}&logId={logId}") {
+        fun createRoute(partId: Long? = null, logId: Long? = null) =
+            "add_part_measurement?partId=$partId&logId=$logId"
+    }
 
     object Calendar : Route("calendar/{selectedDate}") {
         fun createRoute(selectedDate: Date) = "calendar/${selectedDate.time}"

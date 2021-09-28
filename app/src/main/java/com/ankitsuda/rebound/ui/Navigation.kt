@@ -14,6 +14,7 @@ import com.ankitsuda.rebound.ui.screens.home.HomeScreen
 import com.ankitsuda.rebound.ui.screens.main_screen.BottomNavigationScreens
 import com.ankitsuda.rebound.ui.screens.measure.MeasureScreen
 import com.ankitsuda.rebound.ui.screens.more.MoreScreen
+import com.ankitsuda.rebound.ui.screens.part_measurements.AddPartMeasurementBottomSheet
 import com.ankitsuda.rebound.ui.screens.part_measurements.PartMeasurementsScreen
 import com.ankitsuda.rebound.ui.screens.personalization.ColorPickerDemoScreen
 import com.ankitsuda.rebound.ui.screens.personalization.PersonalizationScreen
@@ -26,10 +27,12 @@ import com.ankitsuda.rebound.ui.screens.personalization.top_bar.TopBarPersonaliz
 import com.ankitsuda.rebound.ui.screens.session.SessionScreen
 import com.ankitsuda.rebound.ui.screens.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.bottomSheet
 import kotlinx.coroutines.DelicateCoroutinesApi
 
 
-@OptIn(DelicateCoroutinesApi::class)
+@OptIn(DelicateCoroutinesApi::class, ExperimentalMaterialNavigationApi::class)
 @Composable
 fun MainScreenNavigationConfigurations(navController: NavHostController) {
 
@@ -126,6 +129,15 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
             composable(Route.ColorPickerDemo.route) {
                 ColorPickerDemoScreen()
             }
+
+
+        }
+
+        bottomSheet(Route.CreateExercise.route) {
+            CreateExerciseScreen(navController)
+        }
+        bottomSheet(Route.AddPartMeasurement.route) {
+            AddPartMeasurementBottomSheet(navController)
         }
     }
 }

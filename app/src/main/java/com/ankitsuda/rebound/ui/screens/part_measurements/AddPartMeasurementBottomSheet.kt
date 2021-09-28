@@ -17,17 +17,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.google.accompanist.insets.navigationBarsPadding
 
 @Composable
 fun AddPartMeasurementBottomSheet(
-    partId: Long? = null,
-    logId: Long? = null,
+//    partId: Long? = null,
+//    logId: Long? = null,
+    navController: NavHostController,
     viewModel: AddPartMeasurementBottomSheetViewModel = hiltViewModel()
 ) {
-    val bottomSheet = LocalBottomSheet.current
+    val partId = try {
+        navController.currentBackStackEntry?.arguments?.getString("partId")?.toLong()
+    } catch (e: Exception) {
+        null
+    }
+    val logId = try {
+        navController.currentBackStackEntry?.arguments?.getString("logId")?.toLong()
+    } catch (e: Exception) {
+        null
+    }
+
     val isUpdate = logId != null
     val fieldValue by viewModel.fieldValue.collectAsState("")
     val isCreateBtnEnabled = fieldValue.isNotBlank()
@@ -74,7 +87,7 @@ fun AddPartMeasurementBottomSheet(
                     modifier = Modifier.padding(end = 16.dp),
                     onClick = {
                         viewModel.deleteMeasurementFromDb(logId!!)
-                        bottomSheet.hide()
+                        navController.popBackStack()
                     }) {
                     Text("Delete")
                 }
@@ -85,13 +98,12 @@ fun AddPartMeasurementBottomSheet(
                 onClick = {
                     if (isUpdate) {
                         viewModel.updateMeasurement()
-                        bottomSheet.hide()
                     } else {
                         partId?.let {
                             viewModel.addMeasurementToDb(partId)
-                            bottomSheet.hide()
                         }
                     }
+                    navController.popBackStack()
                 },
                 modifier = Modifier.width(88.dp)
             ) {

@@ -97,10 +97,10 @@ fun ExercisesScreen(
                                     icon = Icons.Outlined.Add,
                                     title = "Create Exercise",
                                     onClick = {
-                                        bottomSheet.show {
-                                            CreateExerciseScreen()
-                                        }
-//                            navController.navigate(Route.CreateExercise.route)
+//                                        bottomSheet.show {
+//                                            CreateExerciseScreen()
+//                                        }
+                            navController.navigate(Route.CreateExercise.route)
                                     })
                             })
 

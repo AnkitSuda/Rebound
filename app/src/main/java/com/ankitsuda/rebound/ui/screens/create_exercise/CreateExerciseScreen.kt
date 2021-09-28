@@ -32,10 +32,9 @@ import kotlin.random.Random
 
 @Composable
 fun CreateExerciseScreen(
-//    navController: NavHostController,
+    navController: NavHostController,
     viewModel: CreateExerciseScreenViewModel = hiltViewModel()
 ) {
-    val bottomSheet = LocalBottomSheet.current
     val scrollState = rememberScrollState()
 
     // Dummy lists
@@ -59,8 +58,7 @@ fun CreateExerciseScreen(
             strictLeftIconAlignToStart = true,
             leftIconBtn = {
                 TopBarIconButton(icon = Icons.Outlined.Close, title = "Back", onClick = {
-                    bottomSheet.hide()
-//                navController.popBackStack()
+                    navController.popBackStack()
                 })
             },
             rightIconBtn = {
@@ -71,7 +69,7 @@ fun CreateExerciseScreen(
                     customTint = MaterialTheme.colors.primary
                 ) {
                     viewModel.createExercise()
-                    bottomSheet.hide()
+                    navController.popBackStack()
                 }
             })
 

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
 import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
@@ -59,11 +60,12 @@ fun PartMeasurementsScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                bottomSheet.show {
-                    partId?.let {
-                        AddPartMeasurementBottomSheet(it)
-                    }
+//                bottomSheet.show {
+                partId?.let {
+//                        AddPartMeasurementBottomSheet(it)
+                    navController.navigate(Route.AddPartMeasurement.createRoute(partId = it))
                 }
+//                }
             }) {
                 Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add measurement")
             }
@@ -109,9 +111,15 @@ fun PartMeasurementsScreen(
                     Modifier
                         .fillMaxWidth()
                         .clickable {
-                            bottomSheet.show {
-                                AddPartMeasurementBottomSheet(partId = partId!!, logId = log.id)
-                            }
+//                            bottomSheet.show {
+                            navController.navigate(
+                                Route.AddPartMeasurement.createRoute(
+                                    partId = partId!!,
+                                    logId = log.id
+                                )
+                            )
+//                            AddPartMeasurementBottomSheet(partId = partId!!, logId = log.id)
+//                            }
                         }
                         .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween

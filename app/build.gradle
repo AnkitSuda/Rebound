@@ -86,6 +86,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-flowlayout:$accompanistVersion"
     implementation "com.google.accompanist:accompanist-placeholder-material:$accompanistVersion"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion"
+    implementation "com.google.accompanist:accompanist-navigation-material:$accompanistVersion"
 
     def room_version = "2.3.0"
 //    implementation "androidx.room:room-runtime:$room_version"

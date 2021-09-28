@@ -17,6 +17,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.plusAssign
 import com.ankitsuda.rebound.ui.MainScreenNavigationConfigurations
 import com.ankitsuda.rebound.ui.MainScreenScaffold
 import com.ankitsuda.rebound.ui.Route
@@ -28,6 +29,8 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.LabelVisible
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -58,10 +61,12 @@ val LocalBottomSheet = compositionLocalOf { MainBottomSheet() }
 /**
  * Root screen of the app
  */
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
 @Composable
 fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
     val navController = rememberNavController()
+    val bottomSheetNavigator = rememberBottomSheetNavigator()
+    navController.navigatorProvider += bottomSheetNavigator
 
 
     val swipeableState = rememberSwipeableState(0)
@@ -127,56 +132,57 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
              * will create a custom implementation later in MainScreenScaffold with proper status bar padding
              * and auto corner radius
              */
-            ModalBottomSheetLayout(
-                sheetState = sheetState,
+            com.google.accompanist.navigation.material.ModalBottomSheetLayout(
+//                sheetState = sheetState,
                 sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-                sheetContent = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .defaultMinSize(minHeight = 100.dp)
-                    ) {
+//                sheetContent = {
+//                    Box(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .defaultMinSize(minHeight = 100.dp)
+//                    ) {
+//
+//                        sheetContent()
+//
+//                    }
+//                },
+                bottomSheetNavigator = bottomSheetNavigator
+            ) {
+                MainScreenScaffold(
+                    modifier = Modifier,
+                    panelHidden = panelHidden,
+                    swipeableState = swipeableState,
+                    bottomBar = {
+                        BottomBar(
+                            elevationEnabled = panelHidden,
+                            navController = navController,
+                            viewModel
+                        )
+                    },
+                    panel = {
+                        WorkoutPanel()
+                    },
+                    panelTopCommon = {
+                        PanelTopDragHandle()
+                    },
+                    panelTopCollapsed = {
 
-                        sheetContent()
+                        PanelTopCollapsed()
 
-                    }
-                },
-                content = {
-                    MainScreenScaffold(
-                        modifier = Modifier,
-                        panelHidden = panelHidden,
-                        swipeableState = swipeableState,
-                        bottomBar = {
-                            BottomBar(
-                                elevationEnabled = panelHidden,
-                                navController = navController,
-                                viewModel
-                            )
-                        },
-                        panel = {
-                            WorkoutPanel()
-                        },
-                        panelTopCommon = {
-                            PanelTopDragHandle()
-                        },
-                        panelTopCollapsed = {
-
-                            PanelTopCollapsed()
-
-                        },
-                        panelTopExpanded = {
-                            PanelTopExpanded(
-                                onCollapseBtnClicked = {
-                                    coroutine.launch {
-                                        swipeableState.animateTo(0)
-                                    }
-                                },
-                                onTimerBtnClicked = { },
-                                onFinishBtnClicked = {})
-                        }) {
-                        MainScreenNavigationConfigurations(navController = navController)
-                    }
-                })
+                    },
+                    panelTopExpanded = {
+                        PanelTopExpanded(
+                            onCollapseBtnClicked = {
+                                coroutine.launch {
+                                    swipeableState.animateTo(0)
+                                }
+                            },
+                            onTimerBtnClicked = { },
+                            onFinishBtnClicked = {})
+                    }) {
+                    MainScreenNavigationConfigurations(navController = navController)
+                }
+            }
 
             if (dialogVisible) {
                 AlertDialog(onDismissRequest = {
