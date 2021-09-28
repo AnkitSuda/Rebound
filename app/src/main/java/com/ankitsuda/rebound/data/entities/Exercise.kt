@@ -17,10 +17,10 @@ data class Exercise(
     @ColumnInfo(name = "notes")
     var notes: String? = null,
 
-    @ColumnInfo(name = "primary_muscle_id")
-    var primaryMuscleId: Long? = null,
-    @ColumnInfo(name = "secondary_muscle_id")
-    var secondaryMuscleId: Long? = null,
+    @ColumnInfo(name = "primary_muscle_tag")
+    var primaryMuscleTag: String? = null,
+    @ColumnInfo(name = "secondary_muscle_tag")
+    var secondaryMuscleTag: String? = null,
     @ColumnInfo(name = "category")
     var category: ExerciseCategory = ExerciseCategory.UNKNOWN,
 

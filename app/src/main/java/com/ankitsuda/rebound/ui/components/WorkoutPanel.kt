@@ -19,18 +19,29 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
+import timber.log.Timber
 import kotlin.random.Random
 
 @Composable
 fun WorkoutPanel(viewModel: WorkoutPanelViewModel = hiltViewModel()) {
-    var workoutName by remember {
-        mutableStateOf("")
-    }
-    var workoutNote by remember {
-        mutableStateOf("")
-    }
+//    var workoutName by remember {
+//        mutableStateOf("")
+//    }
+//    var workoutNote by remember {
+//        mutableStateOf("")
+//    }
 
     val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+    val workout by viewModel.getWorkout(currentWorkoutId).collectAsState(null)
+
+    if (viewModel.mWorkout == null || viewModel.mWorkout != workout) {
+        Timber.d("Updating viewModel mWorkout to currentWorkout")
+        viewModel.mWorkout = workout
+    }
+
+    val workoutName = workout?.name ?: ""
+    val workoutNote = workout?.note ?: ""
+
 
     LazyColumn(
         modifier = Modifier
@@ -50,13 +61,13 @@ fun WorkoutPanel(viewModel: WorkoutPanelViewModel = hiltViewModel()) {
             Column(modifier = Modifier.padding(16.dp)) {
                 AppTextField(
                     value = workoutName,
-                    onValueChange = { workoutName = it },
+                    onValueChange = { viewModel.updateWorkoutName(it) },
                     placeholderValue = "Workout name",
                     modifier = Modifier.fillMaxWidth()
                 )
                 AppTextField(
                     value = workoutNote,
-                    onValueChange = { workoutNote = it },
+                    onValueChange = { viewModel.updateWorkoutNote(it) },
                     placeholderValue = "Workout note",
                     modifier = Modifier
                         .fillMaxWidth()
@@ -68,7 +79,6 @@ fun WorkoutPanel(viewModel: WorkoutPanelViewModel = hiltViewModel()) {
         item {
             Button(
                 onClick = {
-                    viewModel.setCurrentWorkoutId(Random.nextLong())
                 },
                 modifier = Modifier
                     .fillMaxWidth()

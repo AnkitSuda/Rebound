@@ -12,11 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Done
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -43,13 +40,13 @@ fun CreateExerciseScreen(
 
     // Dummy lists
     val categoriesList = viewModel.allCategories
-    val musclesList = viewModel.allPrimaryMuscles
+    val musclesList by viewModel.allPrimaryMuscles.collectAsState(initial = emptyList())
 
     val nameValue by viewModel.name.observeAsState("")
     val noteValue by viewModel.note.observeAsState("")
 
     val selectedCategory by viewModel.selectedCategory.observeAsState("Weights & Reps")
-    val selectedMuscle by viewModel.selectedMuscle.observeAsState("Abductors")
+    val selectedMuscle by viewModel.selectedMuscle.observeAsState("abductors")
 
     val isCreateBtnEnabled = nameValue.trim().isNotEmpty()
 
@@ -57,21 +54,26 @@ fun CreateExerciseScreen(
 
     Column() {
         TopBar(
-            elevationEnabled = false,title = "New Exercise", strictLeftIconAlignToStart = true, leftIconBtn = {
-            TopBarIconButton(icon = Icons.Outlined.Close, title = "Back", onClick = {
-                bottomSheet.hide()
+            elevationEnabled = false,
+            title = "New Exercise",
+            strictLeftIconAlignToStart = true,
+            leftIconBtn = {
+                TopBarIconButton(icon = Icons.Outlined.Close, title = "Back", onClick = {
+                    bottomSheet.hide()
 //                navController.popBackStack()
+                })
+            },
+            rightIconBtn = {
+                TopBarIconButton(
+                    icon = Icons.Outlined.Done,
+                    title = "Create",
+                    enabled = isCreateBtnEnabled,
+                    customTint = MaterialTheme.colors.primary
+                ) {
+                    viewModel.createExercise()
+                    bottomSheet.hide()
+                }
             })
-        }, rightIconBtn = {
-            TopBarIconButton(
-                icon = Icons.Outlined.Done,
-                title = "Create",
-                enabled = isCreateBtnEnabled,
-                customTint = MaterialTheme.colors.primary
-            ) {
-
-            }
-        })
 
         Column(
             modifier = Modifier
@@ -132,17 +134,22 @@ fun CreateExerciseScreen(
 
                 FlowRow(crossAxisSpacing = 8.dp) {
                     for (category in categoriesList) {
-                        Row(modifier = Modifier.width((LocalConfiguration.current.screenWidthDp / 2.5).dp)) {
+                        Row(
+                            modifier = Modifier
+                                .width((LocalConfiguration.current.screenWidthDp / 2.5).dp)
+                                .clickable(onClick = {
+                                    viewModel.setCategory(category)
+                                }, indication = null,
+                                    interactionSource = remember { MutableInteractionSource() })
+                        ) {
                             RadioButton(selected = selectedCategory == category, onClick = {
                                 viewModel.setCategory(category)
                             })
                             Spacer(modifier = Modifier.width(8.dp))
 
                             Text(
-                                text = category, modifier = Modifier.clickable(onClick = {
-                                    viewModel.setCategory(category)
-                                }, indication = null,
-                                    interactionSource = remember { MutableInteractionSource() }))
+                                text = category.cName
+                            )
                         }
                     }
                 }
@@ -162,16 +169,21 @@ fun CreateExerciseScreen(
 
                 FlowRow(crossAxisSpacing = 8.dp) {
                     for (muscle in musclesList) {
-                        Row(modifier = Modifier.width((LocalConfiguration.current.screenWidthDp / 2.5).dp)) {
-                            RadioButton(selected = selectedMuscle == muscle, onClick = {
-                                viewModel.setPrimaryMuscle(muscle)
+                        Row(
+                            modifier = Modifier
+                                .width((LocalConfiguration.current.screenWidthDp / 2.5).dp)
+                                .clickable(onClick =
+                                {
+                                    viewModel.setPrimaryMuscle(muscle.tag)
+                                }, indication = null,
+                                    interactionSource = remember { MutableInteractionSource() })
+                        ) {
+                            RadioButton(selected = selectedMuscle == muscle.tag, onClick = {
+                                viewModel.setPrimaryMuscle(muscle.tag)
                             })
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = muscle, modifier = Modifier.clickable(onClick = {
-                                    viewModel.setPrimaryMuscle(muscle)
-                                }, indication = null,
-                                    interactionSource = remember { MutableInteractionSource() })
+                                text = muscle.name,
                             )
                         }
                     }

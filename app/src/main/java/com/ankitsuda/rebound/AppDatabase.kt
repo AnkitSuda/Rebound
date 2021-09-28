@@ -2,10 +2,15 @@ package com.ankitsuda.rebound
 
 import android.content.Context
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ankitsuda.rebound.data.Converters
+import com.ankitsuda.rebound.data.DataGenerator
+import com.ankitsuda.rebound.data.daos.ExercisesDao
 import com.ankitsuda.rebound.data.daos.MeasurementsDao
+import com.ankitsuda.rebound.data.daos.MusclesDao
 import com.ankitsuda.rebound.data.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.entities.*
+import java.util.concurrent.Executors
 
 @Database(
     entities = [
@@ -15,12 +20,12 @@ import com.ankitsuda.rebound.data.entities.*
         ExerciseLog::class,
         ExerciseLogEntry::class,
         ExerciseWorkoutJunctions::class,
-        Muslce::class,
+        Muscle::class,
         Workout::class,
         WorkoutTemplate::class,
         WorkoutTemplateExercise::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -28,6 +33,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun measurementsDao(): MeasurementsDao
     abstract fun workoutsDao(): WorkoutsDao
+    abstract fun musclesDao(): MusclesDao
+    abstract fun exercisesDao(): ExercisesDao
 
     companion object {
         @Volatile
@@ -42,6 +49,15 @@ abstract class AppDatabase : RoomDatabase() {
 
         private fun buildDatabase(appContext: Context) =
             Room.databaseBuilder(appContext, AppDatabase::class.java, "ReboundDb.db")
+                .addCallback(object : RoomDatabase.Callback() {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        super.onCreate(db)
+                        //pre-populate data
+                        Executors.newSingleThreadExecutor().execute {
+                            instance?.musclesDao()?.insertMuscles(DataGenerator.getMuscles())
+                        }
+                    }
+                })
                 .fallbackToDestructiveMigration()
                 .build()
     }
