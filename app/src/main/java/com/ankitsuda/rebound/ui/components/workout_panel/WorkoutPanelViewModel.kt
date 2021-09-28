@@ -19,6 +19,9 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     fun getWorkout(workoutId: Long): Flow<Workout?> =
         workoutsRepository.getWorkout(workoutId)
 
+    fun getExerciseWorkoutJunctions() =
+        workoutsRepository.getExerciseWorkoutJunctions(mWorkout?.id ?: -1)
+
     fun updateWorkoutName(name: String) {
         viewModelScope.launch {
             mWorkout?.let {
@@ -38,6 +41,17 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     fun cancelCurrentWorkout() {
         viewModelScope.launch {
             workoutsRepository.setCurrentWorkoutId(-1)
+        }
+    }
+
+    fun addExerciseToWorkout(exerciseId: Long) {
+        viewModelScope.launch {
+            if (mWorkout != null) {
+                workoutsRepository.addExerciseToWorkout(
+                    workoutId = mWorkout!!.id,
+                    exerciseId = exerciseId
+                )
+            }
         }
     }
 }

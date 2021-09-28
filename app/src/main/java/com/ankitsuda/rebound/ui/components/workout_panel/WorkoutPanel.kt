@@ -18,8 +18,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.AppTextField
+import com.ankitsuda.rebound.ui.components.WorkoutExerciseItem
 import com.ankitsuda.rebound.ui.components.workout_panel.WorkoutPanelViewModel
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.flowlayout.FlowRow
@@ -32,15 +34,11 @@ fun WorkoutPanel(
     navController: NavHostController,
     viewModel: WorkoutPanelViewModel = hiltViewModel()
 ) {
-//    var workoutName by remember {
-//        mutableStateOf("")
-//    }
-//    var workoutNote by remember {
-//        mutableStateOf("")
-//    }
 
     val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
     val workout by viewModel.getWorkout(currentWorkoutId).collectAsState(null)
+    val exerciseWorkoutJunctions by viewModel.getExerciseWorkoutJunctions()
+        .collectAsState(emptyList())
 
     if (viewModel.mWorkout == null || viewModel.mWorkout != workout) {
         Timber.d("Updating viewModel mWorkout to currentWorkout")
@@ -56,12 +54,8 @@ fun WorkoutPanel(
         ?.getLiveData<Long?>("result_exercises_screen_exercise_id")?.observeAsState()
     exercisesScreenResult?.value?.let { resultId ->
 
-        Toast.makeText(
-            LocalContext.current,
-            "Add ${resultId}",
-            Toast.LENGTH_SHORT
-        )
-            .show()
+        viewModel.addExerciseToWorkout(resultId)
+
         navController.currentBackStackEntry?.savedStateHandle?.set(
             "result_exercises_screen_exercise_id",
             null
@@ -147,8 +141,28 @@ fun WorkoutPanel(
         }
 
         // Just for testing panel sliding
-        items(150) {
-            Text(text = it.toString())
+        items(exerciseWorkoutJunctions.size) {
+            val junction = exerciseWorkoutJunctions[it]
+            WorkoutExerciseItem(
+                modifier = Modifier.fillMaxWidth(),
+                exerciseLogEntries = listOf(
+                    ExerciseLogEntry(logId = 0, junctionId = 0, setNumber = 1),
+                    ExerciseLogEntry(logId = 0, junctionId = 0, setNumber = 2),
+                    ExerciseLogEntry(logId = 0, junctionId = 0, setNumber = 3),
+                ),
+                onWeightChange = {
+
+                },
+                onRepsChange = {
+
+                },
+                onCompleteChange = {
+
+                },
+                onSwipeDelete = {
+
+                }
+            )
         }
     }
 }

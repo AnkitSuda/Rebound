@@ -19,7 +19,7 @@ import java.util.concurrent.Executors
         Exercise::class,
         ExerciseLog::class,
         ExerciseLogEntry::class,
-        ExerciseWorkoutJunctions::class,
+        ExerciseWorkoutJunction::class,
         Muscle::class,
         Workout::class,
         WorkoutTemplate::class,
