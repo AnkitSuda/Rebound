@@ -87,9 +87,9 @@ fun SessionScreen(navController: NavHostController) {
                     onClick = { },
                     exerciseName = "Bench Press: Barbell",
                     sets = listOf(
-                        Pair(Random.nextInt(10, 50), Random.nextInt(1, 8)),
-                        Pair(Random.nextInt(50, 75), Random.nextInt(8, 12)),
-                        Pair(Random.nextInt(75, 100), Random.nextInt(12, 20)),
+                        Pair(Random.nextInt(10, 50).toFloat(), Random.nextInt(1, 8)),
+                        Pair(Random.nextInt(50, 75).toFloat(), Random.nextInt(8, 12)),
+                        Pair(Random.nextInt(75, 100).toFloat(), Random.nextInt(12, 20)),
                     )
                 )
             }

@@ -9,6 +9,8 @@ class ExercisesRepository @Inject constructor(private val exercisesDao: Exercise
 
     fun getExercise(exerciseId: Long) = exercisesDao.getSingleExercise(exerciseId)
 
+    fun getAllLogEntries(exerciseId: Long) = exercisesDao.getAllLogEntries(exerciseId)
+
     fun getAllExercises() = exercisesDao.getAllExercises()
 
     suspend fun createExercise(exercise: Exercise) {

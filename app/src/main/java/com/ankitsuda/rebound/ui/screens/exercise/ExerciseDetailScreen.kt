@@ -43,9 +43,10 @@ fun ExerciseDetailScreen(
     }
 
     val exercise by viewModel.getExercise(exerciseId).collectAsState(initial = null)
+    val logEntriesWithWorkoutList by viewModel.getHistory(exerciseId).collectAsState(initial = emptyList())
 
     val tabData = listOf(
-        "Charts",
+        "Statistics",
         "History",
         "About"
     )
@@ -121,7 +122,7 @@ fun ExerciseDetailScreen(
                     ExerciseDetailChartsTab()
                 }
                 1 -> {
-                    ExerciseDetailHistoryTab()
+                    ExerciseDetailHistoryTab(logEntriesWithWorkoutList)
                 }
                 2 -> {
                     exercise?.let {

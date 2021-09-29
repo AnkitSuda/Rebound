@@ -10,4 +10,6 @@ class ExerciseDetailScreenViewModel @Inject constructor(private val exercisesRep
     ViewModel() {
 
     fun getExercise(exerciseId: Long) = exercisesRepository.getExercise(exerciseId)
+
+    fun getHistory(exerciseId: Long) = exercisesRepository.getAllLogEntries(exerciseId)
 }

@@ -8,31 +8,34 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.data.entities.LogEntriesWithWorkout
 import com.ankitsuda.rebound.ui.components.ExerciseHistoryCardItem
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
 import kotlin.random.Random
 
 @Composable
-fun ExerciseDetailHistoryTab() {
+fun ExerciseDetailHistoryTab(list: List<LogEntriesWithWorkout>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
         contentPadding = PaddingValues(16.dp)
     ) {
 
-        items(10) {
+        items(list.size) {
+            val item = list[it]
+            val workout = item.workout
+            val entries = item.logEntries
+
             ExerciseHistoryCardItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
                 onClick = { },
-                date = "Monday, 20 September, 2021, 7:45 AM",
-                sets = listOf(
-                    Pair(Random.nextInt(10, 50), Random.nextInt(1, 8)),
-                    Pair(Random.nextInt(50, 75), Random.nextInt(8, 12)),
-                    Pair(Random.nextInt(75, 100), Random.nextInt(12, 20)),
-                )
+               workout = workout,
+                entries = entries
             )
         }
 

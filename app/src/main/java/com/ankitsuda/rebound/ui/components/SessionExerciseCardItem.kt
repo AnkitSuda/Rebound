@@ -22,7 +22,7 @@ fun SessionExerciseCardItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     exerciseName: String,
-    sets: List<Pair<Int, Int>>
+    sets: List<Pair<Float, Int>>
 ) {
     AppCard(modifier = modifier, onClick = onClick) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -40,7 +40,7 @@ fun SessionExerciseCardItem(
 }
 
 @Composable
-fun SessionExerciseSetItem(order: Int, set: Pair<Int, Int>) {
+fun SessionExerciseSetItem(order: Int, set: Pair<Float, Int>) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
