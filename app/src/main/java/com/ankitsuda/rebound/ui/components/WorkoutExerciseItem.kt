@@ -109,12 +109,17 @@ fun LazyListScope.WorkoutExerciseItemAlt(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1.25f)
             )
-            Icon(
-                imageVector = Icons.Outlined.Done,
-                contentDescription = null,
-                tint = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-                modifier = Modifier.weight(0.5f)
-            )
+            Box(
+                modifier = Modifier.weight(0.5f),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Done,
+                    contentDescription = null,
+                    tint = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
     }
 
