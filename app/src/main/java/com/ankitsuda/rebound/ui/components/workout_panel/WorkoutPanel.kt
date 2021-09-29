@@ -22,6 +22,7 @@ import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.components.WorkoutExerciseItem
+import com.ankitsuda.rebound.ui.components.WorkoutExerciseItemAlt
 import com.ankitsuda.rebound.ui.components.workout_panel.WorkoutPanelViewModel
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.flowlayout.FlowRow
@@ -103,16 +104,45 @@ fun WorkoutPanel(
 
 
         // Just for testing panel sliding
-        items(logEntriesWithJunction.size) {
-            val item = logEntriesWithJunction[it]
-            val junction = item.junction
-            val logEntries = item.logEntries
+//        items(logEntriesWithJunction.size) {
+//            val item = logEntriesWithJunction[it]
+//            val junction = item.junction
+//            val logEntries = item.logEntries
+//
+//            WorkoutExerciseItem(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(bottom = 16.dp),
+//                exerciseLogEntries = logEntries,
+//                onWeightChange = { entry, value ->
+//                    viewModel.updateLogEntry(entry.copy(weight = value))
+//                },
+//                onRepsChange = { entry, value ->
+//                    viewModel.updateLogEntry(entry.copy(reps = value))
+//                },
+//                onCompleteChange = { entry, value ->
+//                    viewModel.updateLogEntry(entry.copy(completed = value))
+//                },
+//                onSwipeDelete = { entryToDelete ->
+//                    Timber.d("Swiped entry $entryToDelete")
+//                    viewModel.deleteLogEntry(entryToDelete)
+//                },
+//                onAddSet = {
+//                    viewModel.addEmptySetToExercise(
+//                        try {
+//                            logEntries[logEntries.size - 1].setNumber + 1
+//                        } catch (e: Exception) {
+//                            1
+//                        },
+//                        junction
+//                    )
+//                }
+//            )
+//        }
 
-            WorkoutExerciseItem(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                exerciseLogEntries = logEntries,
+        for (logEntriesWithJunctionItem in logEntriesWithJunction) {
+            WorkoutExerciseItemAlt(
+                logEntriesWithJunction = logEntriesWithJunctionItem,
                 onWeightChange = { entry, value ->
                     viewModel.updateLogEntry(entry.copy(weight = value))
                 },
@@ -129,11 +159,11 @@ fun WorkoutPanel(
                 onAddSet = {
                     viewModel.addEmptySetToExercise(
                         try {
-                            logEntries[logEntries.size - 1].setNumber + 1
+                            logEntriesWithJunctionItem.logEntries[logEntriesWithJunctionItem.logEntries.size - 1].setNumber + 1
                         } catch (e: Exception) {
                             1
                         },
-                        junction
+                        logEntriesWithJunctionItem.junction
                     )
                 }
             )

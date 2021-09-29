@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -27,13 +28,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
+import com.ankitsuda.rebound.data.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.darkerColor
 import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 import timber.log.Timber
 
 fun LazyListScope.WorkoutExerciseItemAlt(
-    exerciseLogEntries: List<ExerciseLogEntry>,
+    logEntriesWithJunction: LogEntriesWithExerciseJunction,
     onWeightChange: (ExerciseLogEntry, Float) -> Unit,
     onRepsChange: (ExerciseLogEntry, Int) -> Unit,
     onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
@@ -41,8 +43,106 @@ fun LazyListScope.WorkoutExerciseItemAlt(
     onAddSet: () -> Unit,
 ) {
 
+    val junction = logEntriesWithJunction.junction
+    val logEntries = logEntriesWithJunction.logEntries
 
+    // Exercise info
+    item {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Name",
+                style = ReboundTheme.typography.body2,
+                color = ReboundTheme.colors.primary
+            )
 
+            IconButton(onClick = {
+
+            }) {
+                Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = "More")
+            }
+        }
+    }
+
+    // Titles
+    item {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = "SET",
+                style = ReboundTheme.typography.caption,
+                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+            )
+            Text(
+                text = "PREVIOUS",
+                style = ReboundTheme.typography.caption,
+                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+            )
+            Text(
+                text = "KG",
+                style = ReboundTheme.typography.caption,
+                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+            )
+            Text(
+                text = "REPS",
+                style = ReboundTheme.typography.caption,
+                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+            )
+            Icon(
+                imageVector = Icons.Outlined.Done,
+                contentDescription = null,
+                tint = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+            )
+        }
+    }
+
+    // Sets
+    items(items = logEntries, key = { it.id }) { entry ->
+        SetItem(
+            exerciseLogEntry = entry,
+            onWeightChange = onWeightChange,
+            onRepsChange = onRepsChange,
+            onCompleteChange = onCompleteChange,
+            onSwipeDelete = onSwipeDelete
+        )
+    }
+
+    // Add set button
+    item {
+        RButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp),
+            elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = ReboundTheme.colors.background.lighterOrDarkerColor(
+                    0.05f
+                ),
+                contentColor = ReboundTheme.colors.onBackground
+            ),
+            onClick = onAddSet
+        ) {
+            Icon(imageVector = Icons.Outlined.Add, contentDescription = null)
+            RSpacer(space = 8.dp)
+            Text(text = "Add set")
+        }
+    }
+
+    // Space
+    item {
+        Spacer(modifier = Modifier.height(16.dp))
+    }
 }
 
 @Composable
@@ -183,26 +283,31 @@ private fun SetItem(
             Box(
                 Modifier
                     .fillMaxSize()
+                    .background(ReboundTheme.colors.error.copy(alpha = 0.10f))
                     .padding(horizontal = 20.dp),
             ) {
+
+                val direction =
+                    dismissState.dismissDirection ?: DismissDirection.StartToEnd
+
+                val alignment = when (direction) {
+                    DismissDirection.StartToEnd -> Alignment.CenterStart
+                    DismissDirection.EndToStart -> Alignment.CenterEnd
+                }
+
                 val scale by animateFloatAsState(
                     if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
                 )
 
                 Icon(
                     Icons.Outlined.Delete,
+                    tint = ReboundTheme.colors.error,
                     contentDescription = "Delete",
                     modifier = Modifier
                         .scale(scale)
-                        .align(Alignment.CenterStart)
+                        .align(alignment)
                 )
-                Icon(
-                    Icons.Outlined.Delete,
-                    contentDescription = "Delete",
-                    modifier = Modifier
-                        .scale(scale)
-                        .align(Alignment.CenterEnd)
-                )
+
             }
         },
     ) {
@@ -228,7 +333,7 @@ private fun SetItem(
             SetTextField(
                 value = (exerciseLogEntry.weight ?: 0f).toString(),
                 onValueChange = {
-                    val newValue = if (it.isBlank()) 0f else it.trim().toFloat()
+                    val newValue = (if (it.isBlank()) "0" else it.trim()/*.filter { it.isDigit() }*/).toFloat()
                     onWeightChange(exerciseLogEntry, newValue)
                 },
                 contentColor = contentColor,
@@ -237,7 +342,7 @@ private fun SetItem(
             SetTextField(
                 value = (exerciseLogEntry.reps ?: 0).toString(),
                 onValueChange = {
-                    val newValue = if (it.isBlank()) 0 else it.trim().toInt()
+                    val newValue = (if (it.isBlank()) "0" else it.trim()/*.filter { it.isDigit() }*/).toInt()
                     onRepsChange(exerciseLogEntry, newValue)
                 },
                 contentColor = contentColor,
