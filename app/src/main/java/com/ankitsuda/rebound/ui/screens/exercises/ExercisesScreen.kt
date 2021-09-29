@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ExercisesScreen(
     navController: NavHostController,
-    isBottomSheet: Boolean = true,
+    isBottomSheet: Boolean,
     viewModel: ExercisesScreenViewModel = hiltViewModel()
 ) {
 

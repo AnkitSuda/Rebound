@@ -21,7 +21,6 @@ import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.AppTextField
-import com.ankitsuda.rebound.ui.components.WorkoutExerciseItem
 import com.ankitsuda.rebound.ui.components.WorkoutExerciseItemAlt
 import com.ankitsuda.rebound.ui.components.workout_panel.WorkoutPanelViewModel
 import com.ankitsuda.rebound.ui.theme.ReboundTheme

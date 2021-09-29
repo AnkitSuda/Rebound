@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -278,11 +279,22 @@ private fun SetItem(
                 },
                 modifier = Modifier.weight(0.5f)
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Done,
-                    contentDescription = null,
-                    tint = contentColor
-                )
+                Box(
+                    modifier = Modifier
+                        .size(30.dp)
+                        .background(
+                            shape = CircleShape,
+                            color = bgColor.lighterOrDarkerColor(0.05f)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Done,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
             }
         }
 

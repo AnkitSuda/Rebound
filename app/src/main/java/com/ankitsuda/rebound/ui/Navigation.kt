@@ -77,7 +77,7 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
             route = Route.ExercisesTab.route
         ) {
             composable(Route.Exercises.route) {
-                ExercisesScreen(navController)
+                ExercisesScreen(navController, isBottomSheet = false)
             }
 
             composable(Route.ExerciseDetails.route) {
