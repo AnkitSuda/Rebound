@@ -39,6 +39,10 @@ fun WorkoutPanel(
     val workout by viewModel.getWorkout(currentWorkoutId).collectAsState(null)
     val exerciseWorkoutJunctions by viewModel.getExerciseWorkoutJunctions()
         .collectAsState(emptyList())
+    val logEntriesWithJunction by viewModel.getLogEntriesWithExerciseJunction()
+        .collectAsState(emptyList())
+
+    Timber.d("logEntriesWithJunction $logEntriesWithJunction")
 
     if (viewModel.mWorkout == null || viewModel.mWorkout != workout) {
         Timber.d("Updating viewModel mWorkout to currentWorkout")
@@ -97,6 +101,44 @@ fun WorkoutPanel(
             }
         }
 
+
+        // Just for testing panel sliding
+        items(logEntriesWithJunction.size) {
+            val item = logEntriesWithJunction[it]
+            val junction = item.junction
+            val logEntries = item.logEntries
+
+            WorkoutExerciseItem(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                exerciseLogEntries = logEntries,
+                onWeightChange = { entry, value ->
+                    viewModel.updateLogEntry(entry.copy(weight = value))
+                },
+                onRepsChange = { entry, value ->
+                    viewModel.updateLogEntry(entry.copy(reps = value))
+                },
+                onCompleteChange = { entry, value ->
+                    viewModel.updateLogEntry(entry.copy(completed = value))
+                },
+                onSwipeDelete = { entryToDelete ->
+                    Timber.d("Swiped entry $entryToDelete")
+                    viewModel.deleteLogEntry(entryToDelete)
+                },
+                onAddSet = {
+                    viewModel.addEmptySetToExercise(
+                        try {
+                            logEntries[logEntries.size - 1].setNumber + 1
+                        } catch (e: Exception) {
+                            1
+                        },
+                        junction
+                    )
+                }
+            )
+        }
+
         item {
             Button(
                 onClick = {
@@ -138,31 +180,6 @@ fun WorkoutPanel(
                     color = Color.Red
                 )
             }
-        }
-
-        // Just for testing panel sliding
-        items(exerciseWorkoutJunctions.size) {
-            val junction = exerciseWorkoutJunctions[it]
-            WorkoutExerciseItem(
-                modifier = Modifier.fillMaxWidth(),
-                exerciseLogEntries = listOf(
-                    ExerciseLogEntry(logId = 0, junctionId = 0, setNumber = 1),
-                    ExerciseLogEntry(logId = 0, junctionId = 0, setNumber = 2),
-                    ExerciseLogEntry(logId = 0, junctionId = 0, setNumber = 3),
-                ),
-                onWeightChange = {
-
-                },
-                onRepsChange = {
-
-                },
-                onCompleteChange = {
-
-                },
-                onSwipeDelete = {
-
-                }
-            )
         }
     }
 }

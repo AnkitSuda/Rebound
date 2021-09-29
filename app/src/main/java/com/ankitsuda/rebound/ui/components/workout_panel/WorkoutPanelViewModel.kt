@@ -2,6 +2,9 @@ package com.ankitsuda.rebound.ui.components.workout_panel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
+import com.ankitsuda.rebound.data.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.data.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +24,9 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
 
     fun getExerciseWorkoutJunctions() =
         workoutsRepository.getExerciseWorkoutJunctions(mWorkout?.id ?: -1)
+
+    fun getLogEntriesWithExerciseJunction() =
+        workoutsRepository.getLogEntriesWithExerciseJunction(mWorkout?.id ?: -1)
 
     fun updateWorkoutName(name: String) {
         viewModelScope.launch {
@@ -52,6 +58,24 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
                     exerciseId = exerciseId
                 )
             }
+        }
+    }
+
+    fun addEmptySetToExercise(setNumber: Int, exerciseWorkoutJunction: ExerciseWorkoutJunction) {
+        viewModelScope.launch {
+            workoutsRepository.addEmptySetToExercise(setNumber, exerciseWorkoutJunction)
+        }
+    }
+
+    fun updateLogEntry(entry: ExerciseLogEntry) {
+        viewModelScope.launch {
+            workoutsRepository.updateExerciseLogEntry(entry)
+        }
+    }
+
+    fun deleteLogEntry(entry: ExerciseLogEntry) {
+        viewModelScope.launch {
+            workoutsRepository.deleteExerciseLogEntry(entry)
         }
     }
 }

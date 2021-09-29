@@ -24,6 +24,9 @@ data class ExerciseLogEntry(
     @ColumnInfo(name = "reps")
     var reps: Int? = null,
 
+    @ColumnInfo(name = "completed")
+    var completed: Boolean = false,
+
     // Time in milliseconds
     @ColumnInfo(name = "time_recorded")
     var timeRecorded: Long? = null,

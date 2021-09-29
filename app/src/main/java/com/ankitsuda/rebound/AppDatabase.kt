@@ -25,7 +25,7 @@ import java.util.concurrent.Executors
         WorkoutTemplate::class,
         WorkoutTemplateExercise::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
