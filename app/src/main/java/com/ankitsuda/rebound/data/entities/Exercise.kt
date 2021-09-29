@@ -9,7 +9,8 @@ import org.threeten.bp.OffsetDateTime
 @Entity(tableName = "exercises")
 data class Exercise(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @ColumnInfo(name = "exercise_id")
+    val exerciseId: Long = 0,
 
 
     @ColumnInfo(name = "name")

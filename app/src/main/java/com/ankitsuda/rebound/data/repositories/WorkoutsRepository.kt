@@ -1,15 +1,11 @@
 package com.ankitsuda.rebound.data.repositories
 
-import androidx.lifecycle.viewModelScope
 import com.ankitsuda.rebound.data.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.data.entities.ExerciseLog
 import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.data.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.data.entities.Workout
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import org.threeten.bp.OffsetDateTime
 import javax.inject.Inject
 
@@ -75,7 +71,7 @@ class WorkoutsRepository @Inject constructor(
 
         val entryId = workoutsDao.insertExerciseLogEntry(entry)
 
-        return entry.copy(id = entryId)
+        return entry.copy(entryId = entryId)
     }
 
     suspend fun updateExerciseLogEntry(entry: ExerciseLogEntry) {

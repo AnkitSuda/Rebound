@@ -16,7 +16,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,17 +27,12 @@ import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import com.ankitsuda.rebound.ui.components.TopSearchBar
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
-import com.ankitsuda.rebound.ui.screens.create_exercise.CreateExerciseScreen
-import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 @OptIn(
     ExperimentalPagerApi::class,
@@ -177,11 +171,11 @@ fun ExercisesScreen(
                             if (isBottomSheet) {
                                 navController.previousBackStackEntry?.savedStateHandle?.set(
                                     "result_exercises_screen_exercise_id",
-                                    exercise.id
+                                    exercise.exerciseId
                                 )
                                 navController.popBackStack()
                             } else {
-                                navController.navigate(Route.ExerciseDetails.createRoute(exerciseId = exercise.id))
+                                navController.navigate(Route.ExerciseDetails.createRoute(exerciseId = exercise.exerciseId))
                             }
                         })
                 }

@@ -1,6 +1,5 @@
 package com.ankitsuda.rebound.ui.components
 
-import android.graphics.Paint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -9,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -21,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -30,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.data.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import com.ankitsuda.rebound.utils.darkerColor
 import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 import timber.log.Timber
 
@@ -43,11 +39,12 @@ fun LazyListScope.WorkoutExerciseItemAlt(
     onAddSet: () -> Unit,
 ) {
 
-    val junction = logEntriesWithJunction.junction
+    val exercise = logEntriesWithJunction.exercise
     val logEntries = logEntriesWithJunction.logEntries
 
     // Exercise info
     item {
+        val contentColor = ReboundTheme.colors.primary
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,15 +53,19 @@ fun LazyListScope.WorkoutExerciseItemAlt(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Name",
+                text = exercise.name.toString(),
                 style = ReboundTheme.typography.body2,
-                color = ReboundTheme.colors.primary
+                color = contentColor,
             )
 
             IconButton(onClick = {
 
             }) {
-                Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = "More")
+                Icon(
+                    imageVector = Icons.Outlined.MoreVert,
+                    contentDescription = "More",
+                    tint = contentColor
+                )
             }
         }
     }
@@ -108,7 +109,7 @@ fun LazyListScope.WorkoutExerciseItemAlt(
     }
 
     // Sets
-    items(items = logEntries, key = { it.id }) { entry ->
+    items(items = logEntries, key = { it.entryId }) { entry ->
         SetItem(
             exerciseLogEntry = entry,
             onWeightChange = onWeightChange,
@@ -333,7 +334,8 @@ private fun SetItem(
             SetTextField(
                 value = (exerciseLogEntry.weight ?: 0f).toString(),
                 onValueChange = {
-                    val newValue = (if (it.isBlank()) "0" else it.trim()/*.filter { it.isDigit() }*/).toFloat()
+                    val newValue =
+                        (if (it.isBlank()) "0" else it.trim()/*.filter { it.isDigit() }*/).toFloat()
                     onWeightChange(exerciseLogEntry, newValue)
                 },
                 contentColor = contentColor,
@@ -342,7 +344,8 @@ private fun SetItem(
             SetTextField(
                 value = (exerciseLogEntry.reps ?: 0).toString(),
                 onValueChange = {
-                    val newValue = (if (it.isBlank()) "0" else it.trim()/*.filter { it.isDigit() }*/).toInt()
+                    val newValue =
+                        (if (it.isBlank()) "0" else it.trim()/*.filter { it.isDigit() }*/).toInt()
                     onRepsChange(exerciseLogEntry, newValue)
                 },
                 contentColor = contentColor,

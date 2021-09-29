@@ -8,7 +8,8 @@ import org.threeten.bp.OffsetDateTime
 @Entity(tableName = "exercise_log_entries")
 data class ExerciseLogEntry(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @ColumnInfo(name = "entry_id")
+    val entryId: Long = 0,
 
     @ColumnInfo(name = "log_id")
     var logId: Long,

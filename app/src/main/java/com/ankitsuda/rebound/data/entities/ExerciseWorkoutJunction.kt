@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class ExerciseWorkoutJunction(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    @ColumnInfo(name = "exercise_d")
+    @ColumnInfo(name = "exercise_id")
     var exerciseId: Long,
     @ColumnInfo(name = "workout_id")
     var workoutId: Long,
