@@ -76,34 +76,43 @@ fun LazyListScope.WorkoutExerciseItemAlt(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
+                .padding(start = 8.dp, end = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = "SET",
                 style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(0.5f)
             )
             Text(
                 text = "PREVIOUS",
                 style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1.5f)
             )
             Text(
                 text = "KG",
                 style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1.25f)
             )
             Text(
                 text = "REPS",
                 style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1.25f)
             )
             Icon(
                 imageVector = Icons.Outlined.Done,
                 contentDescription = null,
-                tint = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+                tint = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+                modifier = Modifier.weight(0.5f)
             )
         }
     }
@@ -143,102 +152,6 @@ fun LazyListScope.WorkoutExerciseItemAlt(
     // Space
     item {
         Spacer(modifier = Modifier.height(16.dp))
-    }
-}
-
-@Composable
-fun WorkoutExerciseItem(
-    modifier: Modifier = Modifier,
-    exerciseLogEntries: List<ExerciseLogEntry>,
-    onWeightChange: (ExerciseLogEntry, Float) -> Unit,
-    onRepsChange: (ExerciseLogEntry, Int) -> Unit,
-    onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
-    onSwipeDelete: (ExerciseLogEntry) -> Unit,
-    onAddSet: () -> Unit,
-) {
-    Column(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Name",
-                style = ReboundTheme.typography.body2,
-                color = ReboundTheme.colors.primary
-            )
-
-            IconButton(onClick = {
-
-            }) {
-                Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = "More")
-            }
-        }
-
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = "SET",
-                style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
-            )
-            Text(
-                text = "PREVIOUS",
-                style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
-            )
-            Text(
-                text = "KG",
-                style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
-            )
-            Text(
-                text = "REPS",
-                style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
-            )
-            Icon(
-                imageVector = Icons.Outlined.Done,
-                contentDescription = null,
-                tint = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
-            )
-        }
-
-        for (entry in exerciseLogEntries) {
-            SetItem(
-                exerciseLogEntry = entry,
-                onWeightChange = onWeightChange,
-                onRepsChange = onRepsChange,
-                onCompleteChange = onCompleteChange,
-                onSwipeDelete = onSwipeDelete
-            )
-        }
-
-        RButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp),
-            elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = ReboundTheme.colors.background.lighterOrDarkerColor(
-                    0.05f
-                ),
-                contentColor = ReboundTheme.colors.onBackground
-            ),
-            onClick = onAddSet
-        ) {
-            Icon(imageVector = Icons.Outlined.Add, contentDescription = null)
-            RSpacer(space = 8.dp)
-            Text(text = "Add set")
-        }
     }
 }
 
@@ -316,19 +229,23 @@ private fun SetItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = bgColor)
-                .padding(start = 16.dp, end = 16.dp, bottom = 4.dp, top = 4.dp),
+                .padding(start = 8.dp, end = 8.dp, bottom = 4.dp, top = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+//            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = (exerciseLogEntry.setNumber ?: 0).toString(),
                 style = ReboundTheme.typography.caption,
                 color = contentColor,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(0.5f)
             )
             Text(
                 text = "2.5 kg x 12",
                 style = ReboundTheme.typography.caption,
+                textAlign = TextAlign.Center,
                 color = contentColor,
+                modifier = Modifier.weight(1.5f)
             )
 
             SetTextField(
@@ -339,7 +256,7 @@ private fun SetItem(
                     onWeightChange(exerciseLogEntry, newValue)
                 },
                 contentColor = contentColor,
-                bgColor = bgColor
+                bgColor = bgColor,
             )
             SetTextField(
                 value = (exerciseLogEntry.reps ?: 0).toString(),
@@ -352,12 +269,15 @@ private fun SetItem(
                 bgColor = bgColor
             )
 
-            IconButton(onClick = {
-                onCompleteChange(
-                    exerciseLogEntry,
-                    !exerciseLogEntry.completed
-                )
-            }) {
+            IconButton(
+                onClick = {
+                    onCompleteChange(
+                        exerciseLogEntry,
+                        !exerciseLogEntry.completed
+                    )
+                },
+                modifier = Modifier.weight(0.5f)
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.Done,
                     contentDescription = null,
@@ -370,7 +290,7 @@ private fun SetItem(
 }
 
 @Composable
-fun SetTextField(
+fun RowScope.SetTextField(
     value: String,
     onValueChange: (String) -> Unit,
     contentColor: Color,
@@ -378,9 +298,10 @@ fun SetTextField(
 ) {
     BasicTextField(
         modifier = Modifier
-            .width(64.dp)
+//            .width(64.dp)
             .height(32.dp)
-            .padding(0.dp)
+            .padding(start = 8.dp, end = 8.dp)
+            .weight(1.25f)
             .clip(RoundedCornerShape(12.dp))
             .background(bgColor.lighterOrDarkerColor(0.05f)),
         textStyle = LocalTextStyle.current.copy(
@@ -402,13 +323,5 @@ fun SetTextField(
             imeAction = ImeAction.Done
         ),
         singleLine = true,
-//        colors = TextFieldDefaults.textFieldColors(
-//            textColor = contentColor,
-//            backgroundColor = bgColor.darkerColor(0.05f),
-//            disabledIndicatorColor = Color.Transparent,
-//            errorIndicatorColor = Color.Red,
-//            focusedIndicatorColor = Color.Transparent,
-//            unfocusedIndicatorColor = Color.Transparent,
-//        )
     )
 }
