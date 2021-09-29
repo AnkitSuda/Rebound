@@ -7,6 +7,8 @@ import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.data.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.data.entities.Workout
 import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.format.DateTimeFormatter
+import timber.log.Timber
 import javax.inject.Inject
 
 class WorkoutsRepository @Inject constructor(
@@ -17,6 +19,12 @@ class WorkoutsRepository @Inject constructor(
 
 
     fun getWorkout(workoutId: Long) = workoutsDao.getWorkout(workoutId)
+
+    fun getAllWorkoutsOnDate(date: OffsetDateTime) = workoutsDao.getAllWorkoutsOnDate(
+        date.format(DateTimeFormatter.ISO_LOCAL_DATE).also {
+            Timber.d("Formatted date for $it")
+        }
+    )
 
     fun getExerciseWorkoutJunctions(workoutId: Long) =
         workoutsDao.getExerciseWorkoutJunction(workoutId)

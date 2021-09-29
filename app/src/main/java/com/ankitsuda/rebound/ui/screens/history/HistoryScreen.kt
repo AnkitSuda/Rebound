@@ -14,9 +14,6 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
-import com.google.accompanist.flowlayout.SizeMode
 import com.google.accompanist.insets.statusBarsHeight
 import timber.log.Timber
 import java.util.*
@@ -29,6 +26,8 @@ import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.calendar.WEIGHT_7DAY_WEEK
 import com.ankitsuda.rebound.utils.CalendarDate
+import org.threeten.bp.LocalTime
+import org.threeten.bp.OffsetDateTime
 import java.text.SimpleDateFormat
 import kotlin.random.Random
 
@@ -74,6 +73,10 @@ fun HistoryScreen(
         }
     }
 
+    val workouts by viewModel.getWorkoutsOnDate(OffsetDateTime.now())
+        .collectAsState(initial = emptyList())
+
+    Timber.d("workouts $workouts")
 
     val isWeekHeaderVisible = week.any { it == date }
 
@@ -95,7 +98,7 @@ fun HistoryScreen(
                     TopBar(
                         elevationEnabled = false,
                         title = if (isToday) "Today" else dayFormatter.format(date),
-                        statusBarEnabled = false,strictLeftIconAlignToStart = false,
+                        statusBarEnabled = false, strictLeftIconAlignToStart = false,
                         leftIconBtn = {
                             TopBarIconButton(
                                 icon = Icons.Outlined.DateRange,
@@ -167,7 +170,8 @@ fun HistoryScreen(
                     }
 
 
-                    items(2) {
+                    items(workouts.size) {
+                        val workout = workouts[it]
                         HistorySessionItemCard(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -178,9 +182,16 @@ fun HistoryScreen(
                                     bottom = 16.dp
                                 ),
                             onClick = {
-                                navController.navigate(Route.Session.createRoute(Random.nextLong(0, 100)))
+                                navController.navigate(
+                                    Route.Session.createRoute(
+                                        Random.nextLong(
+                                            0,
+                                            100
+                                        )
+                                    )
+                                )
                             },
-                            title = "Push",
+                            title = workout.name.toString(),
                             totalExercises = 7,
                             time = "45 m", volume = "1000 kg", prs = 2
                         )

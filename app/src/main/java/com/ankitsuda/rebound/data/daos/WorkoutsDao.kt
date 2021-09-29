@@ -3,12 +3,19 @@ package com.ankitsuda.rebound.data.daos
 import androidx.room.*
 import com.ankitsuda.rebound.data.entities.*
 import kotlinx.coroutines.flow.Flow
+import org.threeten.bp.OffsetDateTime
 
 @Dao
 interface WorkoutsDao {
 
     @Query("SELECT * FROM workouts WHERE id = :workoutId")
     fun getWorkout(workoutId: Long): Flow<Workout?>
+
+    @Query("SELECT * FROM workouts")
+    fun getAllWorkouts(): Flow<List<Workout>>
+
+    @Query("SELECT * FROM workouts WHERE created_at = date(:date)")
+    fun getAllWorkoutsOnDate(date: String): Flow<List<Workout>>
 
     @Query("SELECT * FROM exercise_workout_junctions WHERE workout_id = :workoutId")
     fun getExerciseWorkoutJunction(workoutId: Long): Flow<List<ExerciseWorkoutJunction>>

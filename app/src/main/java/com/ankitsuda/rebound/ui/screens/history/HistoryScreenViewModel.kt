@@ -2,16 +2,19 @@ package com.ankitsuda.rebound.ui.screens.history
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ankitsuda.rebound.data.entities.Workout
+import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.utils.CalendarDate
-import com.ankitsuda.rebound.utils.CalendarItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import org.threeten.bp.OffsetDateTime
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class HistoryScreenViewModel @Inject constructor() : ViewModel() {
+class HistoryScreenViewModel @Inject constructor(private val workoutsRepository: WorkoutsRepository) :
+    ViewModel() {
     private var _week: SnapshotStateList<Date> = mutableStateListOf()
     val week = _week
 
@@ -34,5 +37,8 @@ class HistoryScreenViewModel @Inject constructor() : ViewModel() {
         week.clear()
         week.addAll(tempList)
     }
+
+    fun getWorkoutsOnDate(date: OffsetDateTime): Flow<List<Workout>> =
+        workoutsRepository.getAllWorkoutsOnDate(date)
 
 }
