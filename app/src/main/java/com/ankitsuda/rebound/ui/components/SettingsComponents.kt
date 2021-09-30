@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerAltDialog
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog
+import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog1
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.theme.ShapeValues
@@ -39,9 +40,13 @@ fun ColorPickerCardItem(
             if (enableAutoColorPicker) {
                 dialogContent = {
                     if (useAltColorPicker) {
-                        ColorPickerAltDialog(
-                            defaultColor = selectedColor,
-                            colorSelected = onNewColorSelected
+                        /* ColorPickerAltDialog(
+                             defaultColor = selectedColor,
+                             colorSelected = onNewColorSelected
+                         )*/
+                        ColorPickerDialog1(
+                            colorSelected = onNewColorSelected,
+                            defaultColor = selectedColor
                         )
                     } else {
                         ColorPickerDialog(onColorSelected = onNewColorSelected)
