@@ -27,6 +27,18 @@ interface WorkoutsDao {
     @Delete
     suspend fun deleteExerciseLogEntry(exerciseLogEntry: ExerciseLogEntry)
 
+    @Query("DELETE FROM exercise_log_entries WHERE entry_id IN (:ids)")
+    suspend fun deleteExerciseLogEntries(ids: List<Long>)
+
+    @Delete
+    suspend fun deleteExerciseLog(exerciseLog: ExerciseLog)
+
+    @Query("DELETE FROM exercise_logs WHERE id IN (:ids)")
+    suspend fun deleteExerciseLogs(ids: List<Long>)
+
+    @Delete
+    suspend fun deleteExerciseWorkoutJunction(exerciseWorkoutJunction: ExerciseWorkoutJunction)
+
     @Update
     suspend fun updateExerciseLogEntry(exerciseLogEntry: ExerciseLogEntry)
 

@@ -13,8 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,18 +37,25 @@ fun LazyListScope.WorkoutExerciseItemAlt(
     onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
     onAddSet: () -> Unit,
+    onDeleteExercise: () -> Unit
 ) {
 
     val exercise = logEntriesWithJunction.exercise
     val logEntries = logEntriesWithJunction.logEntries
 
+
     // Exercise info
     item {
         val contentColor = ReboundTheme.colors.primary
+        var popupMenuExpanded by remember {
+            mutableStateOf(false)
+        }
+
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
+                .padding(start = 16.dp, end = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -59,15 +65,23 @@ fun LazyListScope.WorkoutExerciseItemAlt(
                 color = contentColor,
             )
 
-            IconButton(onClick = {
-
-            }) {
-                Icon(
-                    imageVector = Icons.Outlined.MoreVert,
-                    contentDescription = "More",
-                    tint = contentColor
+            Column() {
+                IconButton(onClick = {
+                    popupMenuExpanded = true
+                }) {
+                    Icon(
+                        imageVector = Icons.Outlined.MoreVert,
+                        contentDescription = "More",
+                        tint = contentColor
+                    )
+                }
+                ExercisePopupMenu(
+                    expanded = popupMenuExpanded,
+                    onDismissRequest = { popupMenuExpanded = false },
+                    onDeleteExercise = onDeleteExercise,
                 )
             }
+
         }
     }
 
@@ -341,4 +355,26 @@ fun RowScope.SetTextField(
         ),
         singleLine = true,
     )
+}
+
+@Composable
+fun ExercisePopupMenu(
+    modifier: Modifier = Modifier,
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    onDeleteExercise: () -> Unit,
+) {
+
+    DropdownMenu(
+        modifier = modifier,
+        expanded = expanded,
+        onDismissRequest = onDismissRequest
+    ) {
+        DropdownMenuItem(onClick = {
+            onDismissRequest()
+            onDeleteExercise()
+        }) {
+            Text("Delete exercise")
+        }
+    }
 }

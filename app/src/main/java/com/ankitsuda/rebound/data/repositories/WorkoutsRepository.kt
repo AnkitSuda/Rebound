@@ -2,10 +2,7 @@ package com.ankitsuda.rebound.data.repositories
 
 import com.ankitsuda.rebound.data.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
-import com.ankitsuda.rebound.data.entities.ExerciseLog
-import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
-import com.ankitsuda.rebound.data.entities.ExerciseWorkoutJunction
-import com.ankitsuda.rebound.data.entities.Workout
+import com.ankitsuda.rebound.data.entities.*
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
@@ -88,5 +85,13 @@ class WorkoutsRepository @Inject constructor(
 
     suspend fun deleteExerciseLogEntry(entry: ExerciseLogEntry) {
         workoutsDao.deleteExerciseLogEntry(entry)
+    }
+
+    suspend fun deleteExerciseFromWorkout(logEntriesWithJunctionItem: LogEntriesWithExerciseJunction) {
+        with(logEntriesWithJunctionItem) {
+            workoutsDao.deleteExerciseWorkoutJunction(junction)
+            workoutsDao.deleteExerciseLogEntries(logEntries.map { it.entryId })
+            workoutsDao.deleteExerciseLogs(logEntries.map { it.logId })
+        }
     }
 }

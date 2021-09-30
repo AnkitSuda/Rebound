@@ -2,9 +2,9 @@ package com.ankitsuda.rebound.ui.components.workout_panel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.data.entities.ExerciseWorkoutJunction
+import com.ankitsuda.rebound.data.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.data.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -76,6 +76,12 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     fun deleteLogEntry(entry: ExerciseLogEntry) {
         viewModelScope.launch {
             workoutsRepository.deleteExerciseLogEntry(entry)
+        }
+    }
+
+    fun deleteExerciseFromWorkout(logEntriesWithJunctionItem: LogEntriesWithExerciseJunction) {
+        viewModelScope.launch {
+            workoutsRepository.deleteExerciseFromWorkout(logEntriesWithJunctionItem)
         }
     }
 }

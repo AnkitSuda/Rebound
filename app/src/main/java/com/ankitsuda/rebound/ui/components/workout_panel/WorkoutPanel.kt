@@ -1,6 +1,5 @@
 package com.ankitsuda.rebound.ui.components.workout_panel
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,16 +12,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.Route
 import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.components.WorkoutExerciseItemAlt
-import com.ankitsuda.rebound.ui.components.workout_panel.WorkoutPanelViewModel
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
@@ -164,6 +160,9 @@ fun WorkoutPanel(
                         },
                         logEntriesWithJunctionItem.junction
                     )
+                },
+                onDeleteExercise = {
+                    viewModel.deleteExerciseFromWorkout(logEntriesWithJunctionItem)
                 }
             )
         }
