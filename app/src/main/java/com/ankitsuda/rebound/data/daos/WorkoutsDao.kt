@@ -20,6 +20,18 @@ interface WorkoutsDao {
     @Query("SELECT * FROM exercise_workout_junctions WHERE workout_id = :workoutId")
     fun getExerciseWorkoutJunction(workoutId: Long): Flow<List<ExerciseWorkoutJunction>>
 
+    @Query("SELECT * FROM exercise_workout_junctions WHERE workout_id = :workoutId")
+    suspend fun getExerciseWorkoutJunctionsNonFlow(workoutId: Long): List<ExerciseWorkoutJunction>
+
+    @Query("SELECT * FROM exercise_log_entries WHERE junction_id = :junctionId")
+    suspend fun getExerciseLogEntriesNonFlow(junctionId: Long): List<ExerciseLogEntry>
+
+    @Query("DELETE FROM exercise_log_entries WHERE junction_id IN (:junctionIds)")
+    suspend fun deleteAllLogEntriesForJunctionIds(junctionIds: List<Long>)
+
+    @Query("DELETE FROM exercise_logs WHERE workout_id = :workoutId")
+    suspend fun deleteAllLogsForWorkoutId(workoutId: Long)
+
     @Transaction
     @Query("SELECT * FROM exercise_workout_junctions WHERE workout_id = :workoutId")
     fun getLogEntriesWithExerciseJunction(workoutId: Long): Flow<List<LogEntriesWithExerciseJunction>>
@@ -33,11 +45,22 @@ interface WorkoutsDao {
     @Delete
     suspend fun deleteExerciseLog(exerciseLog: ExerciseLog)
 
+
     @Query("DELETE FROM exercise_logs WHERE id IN (:ids)")
     suspend fun deleteExerciseLogs(ids: List<Long>)
 
     @Delete
     suspend fun deleteExerciseWorkoutJunction(exerciseWorkoutJunction: ExerciseWorkoutJunction)
+
+    @Query("DELETE FROM exercise_workout_junctions WHERE id IN (:ids)")
+    suspend fun deleteExerciseWorkoutJunctions(ids: List<Long>)
+
+
+    @Delete
+    suspend fun deleteWorkout(workout: Workout)
+
+    @Query("DELETE FROM workouts WHERE id = :workoutId")
+    suspend fun deleteWorkoutById(workoutId: Long)
 
     @Update
     suspend fun updateExerciseLogEntry(exerciseLogEntry: ExerciseLogEntry)

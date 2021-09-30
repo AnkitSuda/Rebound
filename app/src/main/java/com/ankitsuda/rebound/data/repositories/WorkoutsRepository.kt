@@ -41,8 +41,20 @@ class WorkoutsRepository @Inject constructor(
         prefStorage.setCurrentWorkoutId(value)
     }
 
-    suspend fun cancelCurrentWorkout() {
-        prefStorage.setCurrentWorkoutId(-1)
+    /**
+     * Deletes everything related to workout
+     */
+    suspend fun deleteWorkoutWithEverything(workout: Workout) {
+        // Get all ExerciseWorkoutJunctions related to workout
+        val junctions = workoutsDao.getExerciseWorkoutJunctionsNonFlow(workout.id)
+        // Delete workout
+        workoutsDao.deleteWorkout(workout)
+        // Delete all ExerciseLogEntries for workout using junction ids
+        workoutsDao.deleteAllLogEntriesForJunctionIds(junctionIds = junctions.map { it.id })
+        // Delete all ExerciseLogs for workout
+        workoutsDao.deleteAllLogsForWorkoutId(workoutId = workout.id)
+        // Delete all junctions related to workout
+        workoutsDao.deleteExerciseWorkoutJunctions(junctions.map { it.id })
     }
 
     suspend fun addExerciseToWorkout(workoutId: Long, exerciseId: Long) {

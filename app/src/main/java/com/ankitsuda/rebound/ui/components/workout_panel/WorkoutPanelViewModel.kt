@@ -47,6 +47,10 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     fun cancelCurrentWorkout() {
         viewModelScope.launch {
             workoutsRepository.setCurrentWorkoutId(-1)
+
+            mWorkout?.let {
+                workoutsRepository.deleteWorkoutWithEverything(it)
+            }
         }
     }
 
