@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.ui.Route
+import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.components.WorkoutExerciseItemAlt
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -154,7 +154,7 @@ fun WorkoutPanel(
                 onAddSet = {
                     viewModel.addEmptySetToExercise(
                         try {
-                            logEntriesWithJunctionItem.logEntries[logEntriesWithJunctionItem.logEntries.size - 1].setNumber + 1
+                            logEntriesWithJunctionItem.logEntries[logEntriesWithJunctionItem.logEntries.size - 1].setNumber!! + 1
                         } catch (e: Exception) {
                             1
                         },

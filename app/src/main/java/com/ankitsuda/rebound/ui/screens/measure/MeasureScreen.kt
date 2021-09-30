@@ -1,17 +1,14 @@
 package com.ankitsuda.rebound.ui.screens.measure
 
-import android.graphics.Color
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.BubbleChart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.ui.Route
+import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.rebound.ui.components.MoreItemCard
 import com.ankitsuda.rebound.ui.components.MoreSectionHeader
 import com.ankitsuda.rebound.ui.components.TopBar

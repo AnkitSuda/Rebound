@@ -12,13 +12,13 @@ data class ExerciseLogEntry(
     val entryId: Long = 0,
 
     @ColumnInfo(name = "log_id")
-    var logId: Long,
+    var logId: Long? = null,
     @ColumnInfo(name = "junction_id")
-    var junctionId: Long,
+    var junctionId: Long? = null,
 
     // Number of set
     @ColumnInfo(name = "set_number")
-    var setNumber: Int,
+    var setNumber: Int? = null,
 
     @ColumnInfo(name = "weight")
     var weight: Float? = null,

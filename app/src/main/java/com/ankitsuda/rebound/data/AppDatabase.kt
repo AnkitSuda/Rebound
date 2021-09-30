@@ -1,10 +1,8 @@
-package com.ankitsuda.rebound
+package com.ankitsuda.rebound.data
 
 import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.ankitsuda.rebound.data.Converters
-import com.ankitsuda.rebound.data.DataGenerator
 import com.ankitsuda.rebound.data.daos.ExercisesDao
 import com.ankitsuda.rebound.data.daos.MeasurementsDao
 import com.ankitsuda.rebound.data.daos.MusclesDao
@@ -25,7 +23,7 @@ import java.util.concurrent.Executors
         WorkoutTemplate::class,
         WorkoutTemplateExercise::class,
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

@@ -3,29 +3,19 @@ package com.ankitsuda.rebound.ui.screens.more
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.BuildConfig
-import com.ankitsuda.rebound.ui.Route
+import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.rebound.ui.components.MoreItemCard
 import com.ankitsuda.rebound.ui.components.MoreSectionHeader
-import com.ankitsuda.rebound.ui.components.RoutineItemCard
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
-import com.google.accompanist.flowlayout.SizeMode
 
 @Composable
 fun MoreScreen(navController: NavHostController) {

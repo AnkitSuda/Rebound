@@ -9,8 +9,8 @@ data class ExerciseWorkoutJunction(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     @ColumnInfo(name = "exercise_id")
-    var exerciseId: Long,
+    var exerciseId: Long? = null,
     @ColumnInfo(name = "workout_id")
-    var workoutId: Long,
+    var workoutId: Long? = null,
 )
 

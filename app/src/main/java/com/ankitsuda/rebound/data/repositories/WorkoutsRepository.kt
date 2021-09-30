@@ -47,14 +47,14 @@ class WorkoutsRepository @Inject constructor(
     suspend fun deleteWorkoutWithEverything(workout: Workout) {
         // Get all ExerciseWorkoutJunctions related to workout
         val junctions = workoutsDao.getExerciseWorkoutJunctionsNonFlow(workout.id)
-        // Delete workout
-        workoutsDao.deleteWorkout(workout)
         // Delete all ExerciseLogEntries for workout using junction ids
         workoutsDao.deleteAllLogEntriesForJunctionIds(junctionIds = junctions.map { it.id })
         // Delete all ExerciseLogs for workout
         workoutsDao.deleteAllLogsForWorkoutId(workoutId = workout.id)
         // Delete all junctions related to workout
         workoutsDao.deleteExerciseWorkoutJunctions(junctions.map { it.id })
+        // Delete workout
+        workoutsDao.deleteWorkout(workout)
     }
 
     suspend fun addExerciseToWorkout(workoutId: Long, exerciseId: Long) {
@@ -103,7 +103,7 @@ class WorkoutsRepository @Inject constructor(
         with(logEntriesWithJunctionItem) {
             workoutsDao.deleteExerciseWorkoutJunction(junction)
             workoutsDao.deleteExerciseLogEntries(logEntries.map { it.entryId })
-            workoutsDao.deleteExerciseLogs(logEntries.map { it.logId })
+            workoutsDao.deleteExerciseLogs(logEntries.map { it.logId!! })
         }
     }
 }

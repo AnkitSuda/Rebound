@@ -18,9 +18,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
-import com.ankitsuda.rebound.ui.MainScreenNavigationConfigurations
+import com.ankitsuda.rebound.ui.navigation.MainScreenNavigationConfigurations
 import com.ankitsuda.rebound.ui.MainScreenScaffold
-import com.ankitsuda.rebound.ui.Route
+import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded

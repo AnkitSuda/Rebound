@@ -11,7 +11,7 @@ data class ExerciseLog(
     val id: Long = 0,
 
     @ColumnInfo(name = "workout_id")
-    var workoutId: Long,
+    var workoutId: Long? = null,
 
     @ColumnInfo(name = "created_at")
     var createdAt: OffsetDateTime? = null,

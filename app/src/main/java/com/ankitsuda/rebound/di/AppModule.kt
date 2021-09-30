@@ -1,7 +1,7 @@
 package com.ankitsuda.rebound.di
 
 import android.content.Context
-import com.ankitsuda.rebound.AppDatabase
+import com.ankitsuda.rebound.data.AppDatabase
 import com.ankitsuda.rebound.data.daos.ExercisesDao
 import com.ankitsuda.rebound.data.daos.MeasurementsDao
 import com.ankitsuda.rebound.data.daos.MusclesDao

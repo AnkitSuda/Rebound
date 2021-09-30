@@ -1,6 +1,7 @@
 package com.ankitsuda.rebound
 
 import android.app.Application
+import com.ankitsuda.rebound.data.AppDatabase
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 

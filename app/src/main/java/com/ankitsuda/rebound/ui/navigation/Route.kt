@@ -1,8 +1,5 @@
-package com.ankitsuda.rebound.ui
+package com.ankitsuda.rebound.ui.navigation
 
-import com.ankitsuda.rebound.utils.CalendarItem
-import com.ankitsuda.rebound.utils.CalendarUtils
-import java.text.SimpleDateFormat
 import java.util.*
 
 sealed class Route(val route: String) {

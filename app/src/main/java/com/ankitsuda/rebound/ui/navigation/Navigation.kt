@@ -1,10 +1,11 @@
-package com.ankitsuda.rebound.ui
+package com.ankitsuda.rebound.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.rebound.ui.screens.exercise.ExerciseDetailScreen
 import com.ankitsuda.rebound.ui.screens.exercises.ExercisesScreen
 import com.ankitsuda.rebound.ui.screens.calendar.CalendarScreen

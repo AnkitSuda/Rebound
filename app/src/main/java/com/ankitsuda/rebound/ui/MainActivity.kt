@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound
+package com.ankitsuda.rebound.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
