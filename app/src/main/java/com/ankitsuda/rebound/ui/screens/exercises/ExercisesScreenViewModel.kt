@@ -25,7 +25,7 @@ class ExercisesScreenViewModel @Inject constructor(
     private var _searchTerm = MutableLiveData("")
     val searchTerm = _searchTerm
 
-    val allExercises = exercisesRepository.getAllExercises()
+    val allExercises = exercisesRepository.getAllExercisesWithMuscles()
     val allMuscles = musclesRepository.getMuslces()
 
     fun toggleSearchMode() {

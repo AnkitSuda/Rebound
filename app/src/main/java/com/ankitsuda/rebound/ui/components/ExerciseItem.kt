@@ -16,7 +16,8 @@ fun ExerciseItem(
 ) {
     Box(modifier = modifier) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .clickable(onClick = onClick)
                 .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -24,9 +25,19 @@ fun ExerciseItem(
         ) {
             Column {
                 Text(text = name, style = MaterialTheme.typography.body1)
-                Text(text = muscle, style = MaterialTheme.typography.caption, color = Color(158,158,158))
+                Text(
+                    text = muscle,
+                    style = MaterialTheme.typography.caption,
+                    color = Color(158, 158, 158)
+                )
             }
-            Text(text = totalLogs.toString(), style = MaterialTheme.typography.subtitle2, color = Color(158,158,158))
+            if (totalLogs > 0) {
+                Text(
+                    text = totalLogs.toString(),
+                    style = MaterialTheme.typography.subtitle2,
+                    color = Color(158, 158, 158)
+                )
+            }
 
         }
     }

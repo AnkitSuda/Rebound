@@ -159,24 +159,24 @@ fun ExercisesScreen(
                 // Select all exercises for All tab or get only muscle specific exercises
                 val exercisesForThisTab =
                     if (index == 0) allExercises else allExercises.filter {
-                        it.primaryMuscleTag == allMuscles[index - 1].tag
+                        it.exercise.primaryMuscleTag == allMuscles[index - 1].tag
                     }
 
                 items(exercisesForThisTab.size) {
-                    val exercise = exercisesForThisTab[it]
+                    val item = exercisesForThisTab[it]
                     ExerciseItem(
-                        name = exercise.name.toString(),
-                        muscle = exercise.primaryMuscleTag.toString(),
-                        totalLogs = it,
+                        name = item.exercise.name.toString(),
+                        muscle = item.primaryMuscle?.name.toString(),
+                        totalLogs = item.junctions.size,
                         onClick = {
                             if (isBottomSheet) {
                                 navController.previousBackStackEntry?.savedStateHandle?.set(
                                     "result_exercises_screen_exercise_id",
-                                    exercise.exerciseId
+                                    item.exercise.exerciseId
                                 )
                                 navController.popBackStack()
                             } else {
-                                navController.navigate(Route.ExerciseDetails.createRoute(exerciseId = exercise.exerciseId))
+                                navController.navigate(Route.ExerciseDetails.createRoute(exerciseId = item.exercise.exerciseId))
                             }
                         })
                 }
