@@ -21,11 +21,8 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.data.entities.Muscle
+import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.navigation.Route
-import com.ankitsuda.rebound.ui.components.ExerciseItem
-import com.ankitsuda.rebound.ui.components.TopBar
-import com.ankitsuda.rebound.ui.components.TopBarIconButton
-import com.ankitsuda.rebound.ui.components.TopSearchBar
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -63,126 +60,135 @@ fun ExercisesScreen(
 
     val isSearchMode by viewModel.isSearchMode.observeAsState(false)
     val searchTerm by viewModel.searchTerm.observeAsState("")
-    CollapsingToolbarScaffold(
-        toolbar = {
-            Surface(
-                Modifier
-                    .background(ReboundTheme.colors.background)
-                    .zIndex(2f), elevation = 2.dp
-            ) {
+    Column {
+        if (isBottomSheet) {
+            BottomSheetStatusBar()
+        }
+        CollapsingToolbarScaffold(
+            toolbar = {
+                Surface(
+                    Modifier
+                        .background(ReboundTheme.colors.background), elevation = 2.dp
+                ) {
 
-                Column() {
-                    if (!isSearchMode) {
-                        TopBar(
-                            elevationEnabled = false,
-                            title = "Exercises",
-                            strictLeftIconAlignToStart = false,
-                            alignRightIconToLeftWhenTitleAlignIsNotCenter = true,
-                            leftIconBtn = {
-                                TopBarIconButton(
-                                    icon = Icons.Outlined.Search,
-                                    title = "Search",
-                                    onClick = {
-                                        viewModel.toggleSearchMode()
-                                    })
-                            },
-                            rightIconBtn = {
-                                TopBarIconButton(
-                                    icon = Icons.Outlined.Add,
-                                    title = "Create Exercise",
-                                    onClick = {
+                    Column() {
+                        if (!isSearchMode) {
+                            TopBar(
+                                statusBarEnabled = !isBottomSheet,
+                                elevationEnabled = false,
+                                title = "Exercises",
+                                strictLeftIconAlignToStart = false,
+                                alignRightIconToLeftWhenTitleAlignIsNotCenter = true,
+                                leftIconBtn = {
+                                    TopBarIconButton(
+                                        icon = Icons.Outlined.Search,
+                                        title = "Search",
+                                        onClick = {
+                                            viewModel.toggleSearchMode()
+                                        })
+                                },
+                                rightIconBtn = {
+                                    TopBarIconButton(
+                                        icon = Icons.Outlined.Add,
+                                        title = "Create Exercise",
+                                        onClick = {
 //                                        bottomSheet.show {
 //                                            CreateExerciseScreen()
 //                                        }
-                                        navController.navigate(Route.CreateExercise.route)
-                                    })
-                            })
+                                            navController.navigate(Route.CreateExercise.route)
+                                        })
+                                })
 
-                    } else {
-                        TopSearchBar(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            placeholder = "Search here...",
-                            value = searchTerm,
-                            onBackClick = {
-                                viewModel.toggleSearchMode()
-                            },
-                            onValueChange = {
-                                viewModel.setSearchTerm(it)
-                            },
-                        )
-                    }
-
-                    ScrollableTabRow(
-                        selectedTabIndex = tabIndex,
-                        edgePadding = 0.dp,
-                        backgroundColor = ReboundTheme.colors.background,
-                        divider = { Divider(thickness = 0.dp) },
-                        indicator = { tabPositions ->
-                            TabRowDefaults.Indicator(
-                                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                            )
-                        }
-                    ) {
-                        tabData.forEachIndexed { index, item ->
-                            Tab(
-                                selected = tabIndex == index,
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                    }
+                        } else {
+                            TopSearchBar(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                placeholder = "Search here...",
+                                value = searchTerm,
+                                onBackClick = {
+                                    viewModel.toggleSearchMode()
                                 },
-                                text = {
-                                    Text(text = if (item is Muscle) item.name else item.toString())
-
-                                }
+                                onValueChange = {
+                                    viewModel.setSearchTerm(it)
+                                },
                             )
+                        }
+
+                        ScrollableTabRow(
+                            selectedTabIndex = tabIndex,
+                            edgePadding = 0.dp,
+                            backgroundColor = ReboundTheme.colors.background,
+                            divider = { Divider(thickness = 0.dp) },
+                            indicator = { tabPositions ->
+                                TabRowDefaults.Indicator(
+                                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                                )
+                            }
+                        ) {
+                            tabData.forEachIndexed { index, item ->
+                                Tab(
+                                    selected = tabIndex == index,
+                                    onClick = {
+                                        coroutineScope.launch {
+                                            pagerState.animateScrollToPage(index)
+                                        }
+                                    },
+                                    text = {
+                                        Text(text = if (item is Muscle) item.name else item.toString())
+
+                                    }
+                                )
+                            }
                         }
                     }
                 }
-            }
-        },
-    ) {
+            },
+        ) {
 
 
-        HorizontalPager(
-            state = pagerState,
-            verticalAlignment = Alignment.Top,
-            count = tabData.size,
-        ) { index ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-            ) {
+            HorizontalPager(
+                state = pagerState,
+                verticalAlignment = Alignment.Top,
+                count = tabData.size,
+            ) { index ->
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                ) {
 
 
-                // Select all exercises for All tab or get only muscle specific exercises
-                val exercisesForThisTab =
-                    if (index == 0) allExercises else allExercises.filter {
-                        it.exercise.primaryMuscleTag == allMuscles[index - 1].tag
+                    // Select all exercises for All tab or get only muscle specific exercises
+                    val exercisesForThisTab =
+                        if (index == 0) allExercises else allExercises.filter {
+                            it.exercise.primaryMuscleTag == allMuscles[index - 1].tag
+                        }
+
+                    items(exercisesForThisTab.size) {
+                        val item = exercisesForThisTab[it]
+                        ExerciseItem(
+                            name = item.exercise.name.toString(),
+                            muscle = item.primaryMuscle?.name.toString(),
+                            totalLogs = item.junctions.size,
+                            onClick = {
+                                if (isBottomSheet) {
+                                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                                        "result_exercises_screen_exercise_id",
+                                        item.exercise.exerciseId
+                                    )
+                                    navController.popBackStack()
+                                } else {
+                                    navController.navigate(
+                                        Route.ExerciseDetails.createRoute(
+                                            exerciseId = item.exercise.exerciseId
+                                        )
+                                    )
+                                }
+                            })
                     }
-
-                items(exercisesForThisTab.size) {
-                    val item = exercisesForThisTab[it]
-                    ExerciseItem(
-                        name = item.exercise.name.toString(),
-                        muscle = item.primaryMuscle?.name.toString(),
-                        totalLogs = item.junctions.size,
-                        onClick = {
-                            if (isBottomSheet) {
-                                navController.previousBackStackEntry?.savedStateHandle?.set(
-                                    "result_exercises_screen_exercise_id",
-                                    item.exercise.exerciseId
-                                )
-                                navController.popBackStack()
-                            } else {
-                                navController.navigate(Route.ExerciseDetails.createRoute(exerciseId = item.exercise.exerciseId))
-                            }
-                        })
                 }
             }
+
+
         }
-
-
     }
 }

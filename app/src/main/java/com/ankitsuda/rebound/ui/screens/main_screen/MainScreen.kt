@@ -29,6 +29,7 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.LabelVisible
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.navigation.material.BottomSheetNavigatorSheetState
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import kotlinx.coroutines.launch
@@ -40,7 +41,8 @@ data class MainDialog(
     var hideDialog: () -> Unit = {}
 )
 
-data class MainBottomSheet(
+data class MainBottomSheet  @OptIn(ExperimentalMaterialNavigationApi::class) constructor(
+    var state: BottomSheetNavigatorSheetState? = null,
     var sheetContent: @Composable () -> Unit = {},
     var showSheet: () -> Unit = {},
     var hideSheet: () -> Unit = {}
@@ -123,6 +125,10 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
         coroutine.launch {
             sheetState.hide()
         }
+    }
+
+    if (bottomSheet.state == null) {
+        bottomSheet.state = bottomSheetNavigator.navigatorSheetState
     }
 
     CompositionLocalProvider(LocalDialog provides dialog, LocalBottomSheet provides bottomSheet) {

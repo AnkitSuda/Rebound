@@ -9,7 +9,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.*
@@ -17,19 +16,16 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.ui.components.AppTextField
-import com.ankitsuda.rebound.ui.components.TopBar
-import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
-import com.ankitsuda.rebound.ui.components.TopBarIconButton
-import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
+import com.ankitsuda.rebound.ui.components.*
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.SizeMode
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import timber.log.Timber
 import kotlin.random.Random
 
+@OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun CreateExerciseScreen(
     navController: NavHostController,
@@ -50,9 +46,12 @@ fun CreateExerciseScreen(
     val isCreateBtnEnabled = nameValue.trim().isNotEmpty()
 
 
+    Timber.d("TESTING RECOMPOSITION ${Random.nextInt()}")
 
-    Column() {
+    Column {
+        BottomSheetStatusBar()
         TopBar(
+            statusBarEnabled = false,
             elevationEnabled = false,
             title = "New Exercise",
             strictLeftIconAlignToStart = true,
