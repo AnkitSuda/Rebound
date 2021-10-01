@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.OpenInFull
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,12 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.ui.components.RSpacer
-import com.ankitsuda.rebound.ui.components.RoutineItemCard
-import com.ankitsuda.rebound.ui.components.TemplateItemCard
-import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.utils.NONE_WORKOUT_ID
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
@@ -82,6 +82,51 @@ fun WorkoutScreen(
                 .background(MaterialTheme.colors.background),
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
+
+            if (currentWorkoutId != NONE_WORKOUT_ID) {
+                item {
+                    AppCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp),
+                        backgroundColor = ReboundTheme.colors.primary,
+                        onClick = {
+                            // Expand panel
+                        }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column() {
+                                Text(
+                                    text = "Ongoing Workout",
+                                    style = ReboundTheme.typography.h6,
+                                    color = ReboundTheme.colors.onPrimary
+                                )
+                                RSpacer(space = 4.dp)
+                                Text(
+                                    text = "32 minutes 12 seconds",
+                                    style = ReboundTheme.typography.body2,
+                                    color = ReboundTheme.colors.onPrimary.copy(alpha = 0.7f)
+
+                                )
+                            }
+                            IconButton(onClick = { }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.OpenInFull,
+                                    contentDescription = "Open",
+                                    tint = ReboundTheme.colors.onPrimary
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
             item {
                 Column {
                     Row(

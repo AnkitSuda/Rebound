@@ -23,6 +23,7 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 @Composable
 fun AppCard(
     modifier: Modifier = Modifier,
+    backgroundColor: Color = ReboundTheme.colors.card,
     content: @Composable () -> Unit
 ) {
 
@@ -34,7 +35,7 @@ fun AppCard(
         modifier = modifier,
         elevation = ReboundTheme.dimens.cardElevation,
         shape = MaterialTheme.shapes.medium,
-        backgroundColor = ReboundTheme.colors.card,
+        backgroundColor = backgroundColor,
         border = border,
         content = content
     )
@@ -50,6 +51,7 @@ fun AppCard(
 @Composable
 fun AppCard(
     modifier: Modifier = Modifier,
+    backgroundColor: Color = ReboundTheme.colors.card,
     onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -62,7 +64,7 @@ fun AppCard(
         modifier = modifier,
         elevation = ReboundTheme.dimens.cardElevation,
         shape = MaterialTheme.shapes.medium,
-        backgroundColor = ReboundTheme.colors.card,
+        backgroundColor = backgroundColor,
         border = border,
         onClick = onClick,
         content = content
