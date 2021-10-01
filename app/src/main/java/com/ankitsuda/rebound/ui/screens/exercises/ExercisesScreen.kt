@@ -52,9 +52,9 @@ fun ExercisesScreen(
     val tabData = arrayListOf<Any>("All").apply { addAll(allMuscles) }
 
     val pagerState = rememberPagerState(
-        pageCount = tabData.size,
-        initialOffscreenLimit = 2,
-        infiniteLoop = false,
+//        pageCount = tabData.size,
+//        initialOffscreenLimit = 2,
+//        infiniteLoop = false,
         initialPage = 0,
     )
     val tabIndex = pagerState.currentPage
@@ -148,6 +148,7 @@ fun ExercisesScreen(
         HorizontalPager(
             state = pagerState,
             verticalAlignment = Alignment.Top,
+            count = tabData.size,
         ) { index ->
             LazyColumn(
                 modifier = Modifier

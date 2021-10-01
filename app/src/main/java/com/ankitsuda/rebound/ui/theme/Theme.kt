@@ -97,7 +97,7 @@ fun ReboundThemeWrapper(
         ),
     )
 
-    val typography = TypographyInter
+//    val typography = TypographyInter
 
     // Getting instance of systemUiController
     val systemUiController = rememberSystemUiController()

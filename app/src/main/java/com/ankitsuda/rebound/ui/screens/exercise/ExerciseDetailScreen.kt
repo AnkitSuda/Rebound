@@ -51,9 +51,10 @@ fun ExerciseDetailScreen(
         "About"
     )
     val pagerState = rememberPagerState(
-        pageCount = tabData.size,
-        initialOffscreenLimit = 2,
-        infiniteLoop = false,
+
+//        pageCount = tabData.size,
+//        initialOffscreenLimit = 2,
+//        infiniteLoop = false,
         initialPage = 0,
     )
     val tabIndex = pagerState.currentPage
@@ -116,6 +117,7 @@ fun ExerciseDetailScreen(
         HorizontalPager(
             state = pagerState,
             verticalAlignment = Alignment.Top,
+            count = 3,
         ) { index ->
             when (index) {
                 0 -> {
