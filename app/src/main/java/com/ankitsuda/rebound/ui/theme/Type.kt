@@ -28,7 +28,7 @@ val Typography = customFontTypography(rubikFonts)
 val TypographyUbuntu = customFontTypography(ubuntuFonts)
 val TypographyInter = customFontTypography(interFonts)
 
-fun CreateTypographyInter(
+fun createTypographyInter(
     colorH1: Color,
     colorH2: Color,
     colorH3: Color,
@@ -44,6 +44,117 @@ fun CreateTypographyInter(
     colorOverline: Color,
 ): Typography {
     val fontFamily = interFonts
+    return Typography(
+        h1 = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Light,
+            fontSize = 96.sp,
+            letterSpacing = (-1.5).sp,
+            color = colorH1
+        ),
+        h2 = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Light,
+            fontSize = 60.sp,
+            letterSpacing = (-0.5).sp,
+            color = colorH2
+        ),
+        h3 = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 48.sp,
+            letterSpacing = 0.sp,
+            color = colorH3
+        ),
+        h4 = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 34.sp,
+            letterSpacing = 0.25.sp,
+            color = colorH4
+        ),
+        h5 = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 24.sp,
+            letterSpacing = 0.sp,
+            color = colorH5
+        ),
+        h6 = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 20.sp,
+            letterSpacing = 0.15.sp,
+            color = colorH6
+        ),
+        subtitle1 = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 16.sp,
+            letterSpacing = 0.15.sp,
+            color = colorSubtitle1
+        ),
+        subtitle2 = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
+            letterSpacing = 0.1.sp,
+            color = colorSubtitle2
+        ),
+        body1 = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 16.sp,
+            letterSpacing = 0.4.sp,
+            color = colorBody1
+        ),
+        body2 = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            letterSpacing = 0.25.sp,
+            color = colorBody2
+        ),
+        button = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
+            letterSpacing = 1.25.sp,
+            color = colorButton
+        ),
+        caption = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.sp,
+            letterSpacing = 0.4.sp,
+            color = colorCaption
+        ),
+        overline = TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 10.sp,
+            letterSpacing = 1.5.sp,
+            color = colorOverline
+        )
+    )
+}
+
+fun createTypographyRubik(
+    colorH1: Color,
+    colorH2: Color,
+    colorH3: Color,
+    colorH4: Color,
+    colorH5: Color,
+    colorH6: Color,
+    colorSubtitle1: Color,
+    colorSubtitle2: Color,
+    colorBody1: Color,
+    colorBody2: Color,
+    colorButton: Color,
+    colorCaption: Color,
+    colorOverline: Color,
+): Typography {
+    val fontFamily = rubikFonts
     return Typography(
         h1 = TextStyle(
             fontFamily = fontFamily,

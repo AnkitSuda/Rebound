@@ -97,13 +97,27 @@ fun ReboundThemeWrapper(
         ),
     )
 
-//    val typography = TypographyInter
+//    val typography = createTypographyRubik(
+//        colorH1 = onBackgroundColor,
+//        colorH2 = onBackgroundColor,
+//        colorH3 = onBackgroundColor,
+//        colorH4 = onBackgroundColor,
+//        colorH5 = onBackgroundColor,
+//        colorH6 = onBackgroundColor,
+//        colorSubtitle1 = onBackgroundColor.copy(alpha = 0.7f),
+//        colorSubtitle2 = onBackgroundColor.copy(alpha = 0.7f),
+//        colorBody1 = onBackgroundColor,
+//        colorBody2 = onBackgroundColor,
+//        colorButton = onPrimaryColor,
+//        colorCaption = onBackgroundColor.copy(alpha = 0.5f),
+//        colorOverline = onBackgroundColor.copy(alpha = 0.5f),
+//    )
 
     // Getting instance of systemUiController
     val systemUiController = rememberSystemUiController()
 
     SideEffect {
-       // Changing status bar icons as user pref
+        // Changing status bar icons as user pref
         systemUiController.setStatusBarColor(
             color = Color.Transparent,
             darkIcons = isDarkStatusBarIcons
@@ -192,7 +206,10 @@ class ReboundColors(
 ) {
     var isLight by mutableStateOf(isLight, structuralEqualityPolicy())
         internal set
-    var isDarkNavigationBarIcons by mutableStateOf(isDarkNavigationBarIcons, structuralEqualityPolicy())
+    var isDarkNavigationBarIcons by mutableStateOf(
+        isDarkNavigationBarIcons,
+        structuralEqualityPolicy()
+    )
         internal set
     var isDarkStatusBarIcons by mutableStateOf(isDarkStatusBarIcons, structuralEqualityPolicy())
         internal set
