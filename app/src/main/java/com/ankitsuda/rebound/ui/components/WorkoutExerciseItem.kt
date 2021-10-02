@@ -24,17 +24,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ankitsuda.rebound.data.entities.Exercise
 import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.data.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.utils.ExerciseCategory
 import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 import timber.log.Timber
 
 fun LazyListScope.WorkoutExerciseItemAlt(
     logEntriesWithJunction: LogEntriesWithExerciseJunction,
-    onWeightChange: (ExerciseLogEntry, Float) -> Unit,
-    onRepsChange: (ExerciseLogEntry, Int) -> Unit,
-    onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
+    onValuesUpdated: (updatedEntry: ExerciseLogEntry) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
     onAddSet: () -> Unit,
     onDeleteExercise: () -> Unit
@@ -61,7 +61,8 @@ fun LazyListScope.WorkoutExerciseItemAlt(
         ) {
             Text(
                 text = exercise.name.toString(),
-                style = ReboundTheme.typography.body2,
+                style = ReboundTheme.typography.body1,
+                fontSize = 18.sp,
                 color = contentColor,
             )
 
@@ -109,15 +110,21 @@ fun LazyListScope.WorkoutExerciseItemAlt(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1.5f)
             )
+            if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
+                || exercise.category == ExerciseCategory.DISTANCE_AND_TIME
+            ) {
+                Text(
+                    text = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) "KG" else "KM",
+                    style = ReboundTheme.typography.caption,
+                    color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(1.25f)
+                )
+            }
             Text(
-                text = "KG",
-                style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1.25f)
-            )
-            Text(
-                text = "REPS",
+                text = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
+                    || exercise.category == ExerciseCategory.REPS
+                ) "Reps" else "Time",
                 style = ReboundTheme.typography.caption,
                 color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center,
@@ -140,10 +147,23 @@ fun LazyListScope.WorkoutExerciseItemAlt(
     // Sets
     items(items = logEntries, key = { it.entryId }) { entry ->
         SetItem(
+            exercise = exercise,
             exerciseLogEntry = entry,
-            onWeightChange = onWeightChange,
-            onRepsChange = onRepsChange,
-            onCompleteChange = onCompleteChange,
+            onWeightChange = { _, value ->
+                onValuesUpdated(entry.copy(weight = value))
+            },
+            onRepsChange = { _, value ->
+                onValuesUpdated(entry.copy(reps = value))
+            },
+            onDistanceChange = { _, value ->
+                onValuesUpdated(entry.copy(distance = value))
+            },
+            onTimeChange = { _, value ->
+                onValuesUpdated(entry.copy(timeRecorded = value))
+            },
+            onCompleteChange = { _, value ->
+                onValuesUpdated(entry.copy(completed = value))
+            },
             onSwipeDelete = onSwipeDelete
         )
     }
@@ -178,9 +198,12 @@ fun LazyListScope.WorkoutExerciseItemAlt(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun SetItem(
+    exercise: Exercise,
     exerciseLogEntry: ExerciseLogEntry,
-    onWeightChange: (ExerciseLogEntry, Float) -> Unit,
-    onRepsChange: (ExerciseLogEntry, Int) -> Unit,
+    onWeightChange: (ExerciseLogEntry, Float?) -> Unit,
+    onRepsChange: (ExerciseLogEntry, Int?) -> Unit,
+    onDistanceChange: (ExerciseLogEntry, Long?) -> Unit,
+    onTimeChange: (ExerciseLogEntry, Long?) -> Unit,
     onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
 ) {
@@ -189,12 +212,6 @@ private fun SetItem(
 
     val dismissState = rememberDismissState(
         confirmStateChange = {
-            Timber.d("dismiss value ${it.name}")
-//            if (it == DismissValue.DismissedToEnd) isDeleted =
-//                !isDeleted
-//            else if (it == DismissValue.DismissedToStart) isDeleted =
-//                !isDeleted
-//            it != DismissValue.DismissedToStart || it != DismissValue.DismissedToEnd
             if (it != DismissValue.Default) {
                 onSwipeDelete(exerciseLogEntry)
                 false
@@ -207,27 +224,27 @@ private fun SetItem(
     SwipeToDismiss(
         state = dismissState,
         directions = setOf(
-            DismissDirection.StartToEnd,
+//            DismissDirection.StartToEnd,
             DismissDirection.EndToStart
         ),
         dismissThresholds = { direction ->
-            FractionalThreshold(if (direction == DismissDirection.StartToEnd) 0.25f else 0.5f)
+            FractionalThreshold(0.5f)
         },
         background = {
+            val direction =
+                dismissState.dismissDirection ?: DismissDirection.EndToStart
+
             Box(
                 Modifier
                     .fillMaxSize()
-                    .background(ReboundTheme.colors.error.copy(alpha = 0.10f))
+                    .background(
+                        if (direction == DismissDirection.EndToStart) ReboundTheme.colors.error.copy(
+                            alpha = 0.10f
+                        ) else bgColor
+                    )
                     .padding(horizontal = 20.dp),
             ) {
-
-                val direction =
-                    dismissState.dismissDirection ?: DismissDirection.StartToEnd
-
-                val alignment = when (direction) {
-                    DismissDirection.StartToEnd -> Alignment.CenterStart
-                    DismissDirection.EndToStart -> Alignment.CenterEnd
-                }
+                val alignment = Alignment.CenterEnd
 
                 val scale by animateFloatAsState(
                     if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
@@ -268,25 +285,57 @@ private fun SetItem(
                 modifier = Modifier.weight(1.5f)
             )
 
+            if (exercise.category == ExerciseCategory.DISTANCE_AND_TIME || exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
+                val fieldValue = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
+                    (exerciseLogEntry.weight ?: "").toString()
+                } else {
+                    (exerciseLogEntry.distance ?: "").toString()
+                }
+
+                SetTextField(
+                    value = fieldValue,
+                    onValueChange = {
+                        if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
+                            val newValue =
+                                (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
+                                    .toFloat())
+                            onWeightChange(exerciseLogEntry, newValue)
+                        } else {
+                            val newValue =
+                                (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
+                                    .toLong())
+                            onDistanceChange(exerciseLogEntry, newValue)
+                        }
+                    },
+                    contentColor = contentColor,
+                    bgColor = bgColor,
+                )
+            }
+
+            val rightFieldValue =
+                if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS || exercise.category == ExerciseCategory.REPS) {
+                    (exerciseLogEntry.reps ?: "").toString()
+                } else {
+                    (exerciseLogEntry.timeRecorded ?: "").toString()
+                }
+
             SetTextField(
-                value = (exerciseLogEntry.weight ?: 0f).toString(),
+                value = rightFieldValue,
                 onValueChange = {
-                    val newValue =
-                        (if (it.isBlank()) "0" else it.trim()/*.filter { it.isDigit() }*/).toFloat()
-                    onWeightChange(exerciseLogEntry, newValue)
+                    if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS || exercise.category == ExerciseCategory.REPS) {
+                        val newValue =
+                            (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
+                                .toInt())
+                        onRepsChange(exerciseLogEntry, newValue)
+                    } else {
+                        val newValue =
+                            (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
+                                .toLong())
+                        onTimeChange(exerciseLogEntry, newValue)
+                    }
                 },
                 contentColor = contentColor,
                 bgColor = bgColor,
-            )
-            SetTextField(
-                value = (exerciseLogEntry.reps ?: 0).toString(),
-                onValueChange = {
-                    val newValue =
-                        (if (it.isBlank()) "0" else it.trim()/*.filter { it.isDigit() }*/).toInt()
-                    onRepsChange(exerciseLogEntry, newValue)
-                },
-                contentColor = contentColor,
-                bgColor = bgColor
             )
 
             IconButton(

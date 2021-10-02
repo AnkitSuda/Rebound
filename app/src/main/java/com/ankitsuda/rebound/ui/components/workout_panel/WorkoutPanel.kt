@@ -30,11 +30,8 @@ fun WorkoutPanel(
     navController: NavHostController,
     viewModel: WorkoutPanelViewModel = hiltViewModel()
 ) {
-
     val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
     val workout by viewModel.getWorkout(currentWorkoutId).collectAsState(null)
-    val exerciseWorkoutJunctions by viewModel.getExerciseWorkoutJunctions()
-        .collectAsState(emptyList())
     val logEntriesWithJunction by viewModel.getLogEntriesWithExerciseJunction()
         .collectAsState(emptyList())
 
@@ -138,14 +135,8 @@ fun WorkoutPanel(
         for (logEntriesWithJunctionItem in logEntriesWithJunction) {
             WorkoutExerciseItemAlt(
                 logEntriesWithJunction = logEntriesWithJunctionItem,
-                onWeightChange = { entry, value ->
-                    viewModel.updateLogEntry(entry.copy(weight = value))
-                },
-                onRepsChange = { entry, value ->
-                    viewModel.updateLogEntry(entry.copy(reps = value))
-                },
-                onCompleteChange = { entry, value ->
-                    viewModel.updateLogEntry(entry.copy(completed = value))
+                onValuesUpdated = { updatedEntry ->
+                    viewModel.updateLogEntry(updatedEntry)
                 },
                 onSwipeDelete = { entryToDelete ->
                     Timber.d("Swiped entry $entryToDelete")
