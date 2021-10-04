@@ -1,17 +1,10 @@
 package com.ankitsuda.rebound.ui.screens.exercises
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
 import com.ankitsuda.rebound.data.repositories.MusclesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +19,7 @@ class ExercisesScreenViewModel @Inject constructor(
     val searchTerm = _searchTerm
 
     val allExercises = exercisesRepository.getAllExercisesWithMuscles()
-    val allMuscles = musclesRepository.getMuslces()
+    val allMuscles = musclesRepository.getMuscles()
 
     fun toggleSearchMode() {
         _isSearchMode.value = !(_isSearchMode.value)!!

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.threeten.bp.OffsetDateTime
+import java.util.*
 
 @Entity(tableName = "workout_templates")
 data class WorkoutTemplate(
@@ -18,7 +19,7 @@ data class WorkoutTemplate(
     var image: String? = null,
 
     @ColumnInfo(name = "created_at")
-    var createdAt: OffsetDateTime? = null,
+    var createdAt: Date? = null,
     @ColumnInfo(name = "update_at")
-    var updatedAt: OffsetDateTime? = null,
+    var updatedAt: Date? = null,
 )

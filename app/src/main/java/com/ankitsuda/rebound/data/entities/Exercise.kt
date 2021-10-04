@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ankitsuda.rebound.utils.ExerciseCategory
 import org.threeten.bp.OffsetDateTime
+import java.util.*
 
 @Entity(tableName = "exercises")
 data class Exercise(
@@ -26,7 +27,7 @@ data class Exercise(
     var category: ExerciseCategory = ExerciseCategory.UNKNOWN,
 
     @ColumnInfo(name = "created_at")
-    var createdAt: OffsetDateTime? = null,
+    var createdAt: Date? = null,
     @ColumnInfo(name = "update_at")
-    var updatedAt: OffsetDateTime? = null,
+    var updatedAt: Date? = null,
 )

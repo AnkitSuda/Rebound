@@ -28,7 +28,7 @@ fun ExerciseHistoryCardItem(
                 RSpacer(4.dp)
             }
 
-            workout.createdAt?.let {
+           /* workout.createdAt?.let {
                 Text(
                     text = it.format(
                         DateTimeFormatter.ofLocalizedDateTime(
@@ -40,7 +40,7 @@ fun ExerciseHistoryCardItem(
                 )
                 if (entries.isNotEmpty())
                     RSpacer(8.dp)
-            }
+            }*/
 
             if ((workout.name != null || workout.createdAt != null) && entries.isNotEmpty()) RSpacer(
                 space = 6.dp

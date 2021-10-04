@@ -14,7 +14,7 @@ interface WorkoutsDao {
     @Query("SELECT * FROM workouts")
     fun getAllWorkouts(): Flow<List<Workout>>
 
-    @Query("SELECT * FROM workouts WHERE created_at = date(:date)")
+    @Query("SELECT * FROM workouts WHERE date(created_at) = date(:date)")
     fun getAllWorkoutsOnDate(date: String): Flow<List<Workout>>
 
     @Query("SELECT * FROM exercise_workout_junctions WHERE workout_id = :workoutId")

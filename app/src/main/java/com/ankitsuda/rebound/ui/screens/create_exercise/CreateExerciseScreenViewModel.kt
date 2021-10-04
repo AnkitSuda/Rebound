@@ -1,6 +1,5 @@
 package com.ankitsuda.rebound.ui.screens.create_exercise
 
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,7 +34,7 @@ class CreateExerciseScreenViewModel @Inject constructor(
 
     // Dummy
     val allCategories = ExerciseCategory.values()
-    val allPrimaryMuscles = musclesRepository.getMuslces()
+    val allPrimaryMuscles = musclesRepository.getMuscles()
 
     fun setName(value: String) {
         _name.value = value

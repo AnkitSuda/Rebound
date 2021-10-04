@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.threeten.bp.OffsetDateTime
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,7 +46,7 @@ class AddPartMeasurementBottomSheetViewModel @Inject constructor(private val mea
             viewModelScope.launch {
                 val mLog = log.value!!
                 mLog.measurement = fieldValue.value.toFloat()
-                mLog.updatedAt = OffsetDateTime.now()
+                mLog.updatedAt = Date()
                 measurementsRepository.updateMeasurement(
                     mLog
                 )

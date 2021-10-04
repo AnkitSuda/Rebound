@@ -129,17 +129,17 @@ fun PartMeasurementsScreen(
                         style = ReboundTheme.typography.body2,
                         modifier = Modifier
                     )
-                    Text(
-                        text = log.createdAt!!.format(
-                            DateTimeFormatter.ofLocalizedDateTime(
-                                FormatStyle.MEDIUM,
-                                FormatStyle.SHORT
-                            )
-                        ),
-                        style = ReboundTheme.typography.caption,
-                        color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-                        modifier = Modifier
-                    )
+//                    Text(
+//                        text = log.createdAt!!.format(
+//                            DateTimeFormatter.ofLocalizedDateTime(
+//                                FormatStyle.MEDIUM,
+//                                FormatStyle.SHORT
+//                            )
+//                        ),
+//                        style = ReboundTheme.typography.caption,
+//                        color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+//                        modifier = Modifier
+//                    )
                 }
             }
 

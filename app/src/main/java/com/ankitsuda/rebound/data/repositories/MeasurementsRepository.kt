@@ -4,6 +4,7 @@ import com.ankitsuda.rebound.data.daos.MeasurementsDao
 import com.ankitsuda.rebound.data.entities.BodyPartMeasurementLog
 import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.OffsetDateTime
+import java.util.*
 import javax.inject.Inject
 
 class MeasurementsRepository @Inject constructor(
@@ -22,7 +23,7 @@ class MeasurementsRepository @Inject constructor(
             BodyPartMeasurementLog(
                 bodyPartId = partId,
                 measurement = measurement,
-                createdAt = OffsetDateTime.now()
+                createdAt = Date()
             )
         )
     }

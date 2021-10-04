@@ -72,7 +72,7 @@ fun HistoryScreen(
         }
     }
 
-    val workouts by viewModel.getWorkoutsOnDate(OffsetDateTime.now())
+    val workouts by viewModel.getWorkoutsOnDate(date)
         .collectAsState(initial = emptyList())
 
     Timber.d("workouts $workouts")

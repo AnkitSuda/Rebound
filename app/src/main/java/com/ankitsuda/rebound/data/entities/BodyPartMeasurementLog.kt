@@ -24,7 +24,7 @@ data class BodyPartMeasurementLog(
     @ColumnInfo(name = "measurement_type")
     var measurementType: String? = null,
     @ColumnInfo(name = "created_at")
-    var createdAt: OffsetDateTime? = null,
+    var createdAt: Date? = null,
     @ColumnInfo(name = "update_at")
-    var updatedAt: OffsetDateTime? = null,
+    var updatedAt: Date? = null,
 )

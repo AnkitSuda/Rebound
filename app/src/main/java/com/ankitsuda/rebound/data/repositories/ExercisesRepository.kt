@@ -3,6 +3,7 @@ package com.ankitsuda.rebound.data.repositories
 import com.ankitsuda.rebound.data.daos.ExercisesDao
 import com.ankitsuda.rebound.data.entities.Exercise
 import org.threeten.bp.OffsetDateTime
+import java.util.*
 import javax.inject.Inject
 
 class ExercisesRepository @Inject constructor(private val exercisesDao: ExercisesDao) {
@@ -17,8 +18,8 @@ class ExercisesRepository @Inject constructor(private val exercisesDao: Exercise
     suspend fun createExercise(exercise: Exercise) {
         exercisesDao.insertExercise(
             exercise.copy(
-                createdAt = OffsetDateTime.now(),
-                updatedAt = OffsetDateTime.now()
+                createdAt = Date(),
+                updatedAt = Date()
             )
         )
     }

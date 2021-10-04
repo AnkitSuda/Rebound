@@ -3,9 +3,12 @@ package com.ankitsuda.rebound.data.repositories
 import com.ankitsuda.rebound.data.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.data.entities.*
+import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class WorkoutsRepository @Inject constructor(
@@ -17,11 +20,11 @@ class WorkoutsRepository @Inject constructor(
 
     fun getWorkout(workoutId: Long) = workoutsDao.getWorkout(workoutId)
 
-    fun getAllWorkoutsOnDate(date: OffsetDateTime) = workoutsDao.getAllWorkoutsOnDate(
-        date.format(DateTimeFormatter.ISO_LOCAL_DATE).also {
-            Timber.d("Formatted date for $it")
-        }
-    )
+    fun getAllWorkoutsOnDate(date: Date): Flow<List<Workout>> {
+        val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val str = df.format(date)
+        return workoutsDao.getAllWorkoutsOnDate(str)
+    }
 
     fun getExerciseWorkoutJunctions(workoutId: Long) =
         workoutsDao.getExerciseWorkoutJunction(workoutId)
@@ -30,11 +33,11 @@ class WorkoutsRepository @Inject constructor(
         workoutsDao.getLogEntriesWithExerciseJunction(workoutId)
 
     suspend fun updateWorkout(workout: Workout) {
-        workoutsDao.updateWorkout(workout.copy(updatedAt = OffsetDateTime.now()))
+        workoutsDao.updateWorkout(workout.copy(updatedAt = Date()))
     }
 
     suspend fun createWorkout(workout: Workout): Long {
-        return workoutsDao.insertWorkout(workout.copy(createdAt = OffsetDateTime.now()))
+        return workoutsDao.insertWorkout(workout.copy(createdAt = Date()))
     }
 
     suspend fun setCurrentWorkoutId(value: Long) {
@@ -73,8 +76,8 @@ class WorkoutsRepository @Inject constructor(
         val logId = workoutsDao.insertExerciseLog(
             ExerciseLog(
                 workoutId = exerciseWorkoutJunction.workoutId,
-                createdAt = OffsetDateTime.now(),
-                updatedAt = OffsetDateTime.now(),
+                createdAt = Date(),
+                updatedAt = Date(),
             )
         )
 
@@ -82,8 +85,8 @@ class WorkoutsRepository @Inject constructor(
             logId = logId,
             junctionId = exerciseWorkoutJunction.id,
             setNumber = setNumber,
-            createdAt = OffsetDateTime.now(),
-            updatedAt = OffsetDateTime.now()
+            createdAt = Date(),
+            updatedAt = Date()
         )
 
         val entryId = workoutsDao.insertExerciseLogEntry(entry)
@@ -92,7 +95,7 @@ class WorkoutsRepository @Inject constructor(
     }
 
     suspend fun updateExerciseLogEntry(entry: ExerciseLogEntry) {
-        workoutsDao.updateExerciseLogEntry(entry.copy(updatedAt = OffsetDateTime.now()))
+        workoutsDao.updateExerciseLogEntry(entry.copy(updatedAt = Date()))
     }
 
     suspend fun deleteExerciseLogEntry(entry: ExerciseLogEntry) {

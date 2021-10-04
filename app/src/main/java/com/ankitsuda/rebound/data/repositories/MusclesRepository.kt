@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 class MusclesRepository @Inject constructor(private val musclesDao: MusclesDao) {
 
-    fun getMuslces() = musclesDao.getMuscles()
+    fun getMuscles() = musclesDao.getMuscles()
 }

@@ -38,7 +38,7 @@ class HistoryScreenViewModel @Inject constructor(private val workoutsRepository:
         week.addAll(tempList)
     }
 
-    fun getWorkoutsOnDate(date: OffsetDateTime): Flow<List<Workout>> =
+    fun getWorkoutsOnDate(date: Date): Flow<List<Workout>> =
         workoutsRepository.getAllWorkoutsOnDate(date)
 
 }

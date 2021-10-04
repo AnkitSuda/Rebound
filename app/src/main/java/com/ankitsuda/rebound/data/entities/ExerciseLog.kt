@@ -3,7 +3,7 @@ package com.ankitsuda.rebound.data.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.threeten.bp.OffsetDateTime
+import java.util.*
 
 @Entity(tableName = "exercise_logs")
 data class ExerciseLog(
@@ -14,7 +14,7 @@ data class ExerciseLog(
     var workoutId: Long? = null,
 
     @ColumnInfo(name = "created_at")
-    var createdAt: OffsetDateTime? = null,
+    var createdAt: Date? = null,
     @ColumnInfo(name = "update_at")
-    var updatedAt: OffsetDateTime? = null,
+    var updatedAt: Date? = null,
 )

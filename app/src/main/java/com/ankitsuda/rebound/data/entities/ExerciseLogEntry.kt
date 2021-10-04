@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.threeten.bp.OffsetDateTime
+import java.util.*
 
 @Entity(tableName = "exercise_log_entries")
 data class ExerciseLogEntry(
@@ -42,7 +43,7 @@ data class ExerciseLogEntry(
 
 
     @ColumnInfo(name = "created_at")
-    var createdAt: OffsetDateTime? = null,
+    var createdAt: Date? = null,
     @ColumnInfo(name = "update_at")
-    var updatedAt: OffsetDateTime? = null,
+    var updatedAt: Date? = null,
 )
