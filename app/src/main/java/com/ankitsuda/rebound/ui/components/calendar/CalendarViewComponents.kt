@@ -68,7 +68,7 @@ fun CalendarMonthItem(
                             ),
                             isSelected = day.date == selectedDate,
                             isToday = isToday,
-                            dotVisible = Random.nextBoolean(),
+                            dotVisible = false,
                             onClick = {
                                 onClickOnDay(day)
                             }
