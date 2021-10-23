@@ -4,6 +4,11 @@ Feature Rich & Highly Customizable Workout Log App
 > Rebound app is currently under heavy development, many things may be 
 > changed or completely removed in future.
 
+## Screenshots (Dummy data)
+| <img src="arts/workout_panel.png" width="200"/> | <img src="arts/workout_tab.png" width="200"/> | <img src="arts/history_tab.png" width="200"/> | <img src="arts/exercises_tab.png" width="200"/> | <img src="arts/calendar_screen.png" width="200"/> | <img src="arts/more_tab.png" width="200"/> | <img src="arts/personalization_screen.png" width="200"/> | <img src="arts/main_colors_screen.png" width="200"/> | <img src="arts/exercise_details_stats.png" width="200"/> | <img src="arts/themed_workout_panel.png" width="200"/> | <img src="arts/themed_workout_details.png" width="200"/> | <img src="arts/themed_exercise_details.png" width="200"/> |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|Workout Panel|Workout Tab|History Tab|Exercises Tab|Calendar Screen|More Tab|Personalization Screen|Main Colors Customizations|Exercise Details Stats|Themed Workout Panel|Themed Workout Details|Themed Exercise Details|
+
 ## Features
 As of now I am trying to implement most of the core features, but more features will be added soon. Most of the below features are not implement yet, but will be soon.
 
@@ -44,8 +49,8 @@ Rebound uses latest Android technologies and most best practices. Here is the te
 https://github.com/tehras/charts
 https://github.com/onebone/compose-collapsing-toolbar
 
-## Want to Contribute ?
-Want to contribute? Great! All contributions are welcome, from code to documentation to graphics to design suggestions to bug reports. Please use GitHub to its fullest-- contribute Pull Requests, contribute tutorials or other wiki content-- whatever you have to offer, we can use it!
+> App is under really heavy development, so I'll be not accepting any contributions right now.
+> Contributions will be open once the app is stable enough.
 
 ## License
 Rebound is released under the GNU General Public License v3.0 (GPLv3), which can be found [here](LICENSE.md)
