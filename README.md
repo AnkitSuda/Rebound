@@ -7,14 +7,21 @@ Feature Rich & Highly Customizable Workout Log App
 
 ## Screenshots (Dummy data)
 
-| <img src="arts/workout_panel.png" width="200"/> | <img src="arts/workout_tab.png" width="200"/> | <img src="arts/history_tab.png" width="200"/> | <img src="arts/exercises_tab.png" width="200"/> | <img src="arts/calendar_screen.png" width="200"/> | 
-|:---:|:---:|:---:|:---:|:---:|
-|Workout Panel|Workout Tab|History Tab|Exercises Tab|Calendar Screen|
+| <img src="arts/workout_panel.png" width="200"/> | <img src="arts/workout_tab.png" width="200"/> | <img src="arts/history_tab.png" width="200"/> | 
+|:---:|:---:|:---:|
+|Workout Panel|Workout Tab|History Tab|
 
-|<img src="arts/more_tab.png" width="200"/> | <img src="arts/personalization_screen.png" width="200"/> | <img src="arts/main_colors_screen.png" width="200"/> | <img src="arts/exercise_details_stats.png" width="200"/> | <img src="arts/themed_workout_panel.png" width="200"/> | <img src="arts/themed_workout_details.png" width="200"/> | <img src="arts/themed_exercise_details_history.png" width="200"/> |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-|More Tab|Personalization Screen|Main Colors Customizations|Exercise Details Stats|Themed Workout Panel|Themed Workout Details|Themed Exercise Details|
+| <img src="arts/exercises_tab.png" width="200"/> | <img src="arts/calendar_screen.png" width="200"/> |<img src="arts/more_tab.png" width="200"/> |
+|:---:|:---:|:---:|
+|Exercises Tab|Calendar Screen|More Tab|
 
+| <img src="arts/personalization_screen.png" width="200"/> | <img src="arts/main_colors_screen.png" width="200"/> | <img src="arts/exercise_details_stats.png" width="200"/> | 
+|:---:|:---:|:---:|
+|Personalization Screen|Main Colors Customizations|Exercise Details Stats|
+
+| <img src="arts/themed_workout_panel.png" width="200"/> | <img src="arts/themed_workout_details.png" width="200"/> | <img src="arts/themed_exercise_details_history.png" width="200"/> |
+|:---:|:---:|:---:|
+|Themed Workout Panel|Themed Workout Details|Themed Exercise Details|
 ## Features
 
 As of now I am trying to implement most of the core features, but more features will be added soon.
