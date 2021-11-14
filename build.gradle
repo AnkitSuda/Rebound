@@ -1,26 +1,47 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
+import com.ankitsuda.rebound.buildSrc.Deps
 
 buildscript {
-    ext {
-        compose_version = '1.1.0-beta02'
+    repositories {
+        google()
+        mavenCentral()
     }
+
+    dependencies {
+        classpath Deps.Android.gradle
+        classpath Deps.Kotlin.gradle
+//        classpath Deps.Android.navigationSafeArgs
+        classpath Deps.Dagger.hiltGradle
+    }
+}
+
+
+allprojects {
     repositories {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        jcenter()
     }
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.40'
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+            freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+            freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
+            freeCompilerArgs += "-Xopt-in=kotlin.Experimental"
+            freeCompilerArgs += "-Xopt-in=coil.annotation.ExperimentalCoilApi"
+            freeCompilerArgs += "-Xopt-in=com.google.accompanist.pager.ExperimentalPagerApi"
+        }
     }
 }
 
+subprojects {
+    configurations.configureEach {
+        exclude group: 'androidx.appcompat'
+        exclude group: 'com.google.android.material', module: 'material'
+    }
+}
 
 task clean(type: Delete) {
     delete rootProject.buildDir
