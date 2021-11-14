@@ -2,6 +2,7 @@ package com.ankitsuda.rebound.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
@@ -225,8 +226,8 @@ fun TopSearchBar(
             )
             AnimatedVisibility(
                 visible = value.isNotEmpty(),
-                enter = slideIn({ IntOffset(clearBtnWidth, 0) }),
-                exit = slideOut({ IntOffset(clearBtnWidth, 0) }),
+//                enter = slideIn({ IntOffset(clearBtnWidth, 0) }),
+//                exit = slideOut({ IntOffset(clearBtnWidth, 0) }),
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
             ) {
