@@ -3,3 +3,4 @@ rootProject.name = "Rebound"
 include ':app'
 include ":modules:base"
 include ':modules:base-android'
+include ':modules:common-ui-compose'
