@@ -76,7 +76,9 @@ dependencies {
 
 
     // OTHER
-//    api Deps.Kotlin.stdlib
+    api Deps.Kotlin.stdlib
+    api Deps.Kotlin.coroutinesCore
+    api Deps.Kotlin.coroutinesAndroid
 
     api Deps.Utils.coil
 

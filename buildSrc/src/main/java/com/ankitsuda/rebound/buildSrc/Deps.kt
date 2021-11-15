@@ -8,6 +8,11 @@ object Deps {
         const val version = "1.5.31"
 
         const val gradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
+        const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version"
+
+        const val coroutinesVersion = "1.5.2"
+        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+        const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     }
 
     object Android {
