@@ -1,6 +1,3 @@
 <resources>
     <string name="app_name">Rebound</string>
-    <string name="title_base">base</string>
-    <string name="title_base_android">base</string>
-    <string name="title_common_ui_compose">Module Title</string>
 </resources>
