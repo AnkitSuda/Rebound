@@ -1,0 +1,42 @@
+import com.ankitsuda.rebound.buildSrc.App
+import com.ankitsuda.rebound.buildSrc.Deps
+
+plugins {
+    id "com.android.library"
+    id "kotlin-android"
+    id "kotlin-kapt"
+}
+android {
+    compileSdkVersion App.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion App.minSdkVersion
+    }
+
+    lintOptions {
+        disable "GradleCompatible"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    api Deps.Kotlin.stdlib
+    api Deps.Kotlin.coroutinesCore
+
+    api Deps.Utils.timber
+
+    api Deps.Dagger.hilt
+    kapt Deps.Dagger.hiltCompiler
+
+    api Deps.Android.Paging.runtime
+    api Deps.Android.Paging.common
+}

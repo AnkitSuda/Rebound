@@ -58,6 +58,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
+    implementation project(":modules:base")
 
 //    implementation Deps.Kotlin.coroutinesAndroid
 

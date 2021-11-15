@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Rebound</string>
+    <string name="title_base">base</string>
+    <string name="title_base_android">base</string>
 </resources>
