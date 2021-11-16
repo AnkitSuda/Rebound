@@ -9,7 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.rebound.data.datastore.PrefStorage
+import com.ankitsuda.base.ui.ThemeState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import timber.log.Timber
 
@@ -29,71 +29,47 @@ private val LightColorPalette = lightColors(
 @SuppressLint("ConflictingOnColor")
 @Composable
 fun ReboundThemeWrapper(
-    prefStorage: PrefStorage,
+    themeState: ThemeState,
     content: @Composable () -> Unit
 ) {
-    // Colors
-    val isLightTheme by prefStorage.isLightTheme.collectAsState(initial = false)
-    val isDarkStatusBarIcons by prefStorage.isDarkStatusBarIcons.collectAsState(initial = true)
-    val isDarkNavigationBarIcons by prefStorage.isDarkNavigationBarIcons.collectAsState(initial = true)
-    val primaryColor by prefStorage.primaryColor.collectAsState(initial = DefaultAccentColor)
-    val backgroundColor by prefStorage.backgroundColor.collectAsState(initial = Color.White)
-    val onPrimaryColor by prefStorage.onPrimaryColor.collectAsState(initial = Color.White)
-    val onBackgroundColor by prefStorage.onBackgroundColor.collectAsState(initial = Color.Black)
-    val card by prefStorage.cardColor.collectAsState(initial = Color(248, 248, 248))
-    val cardBorderColor by prefStorage.cardBorderColor.collectAsState(initial = Color.Gray)
-
-    // Dimens
-    val cardElevation by prefStorage.cardElevation.collectAsState(initial = 0)
-    val cardBorderWidth by prefStorage.cardBorderWidth.collectAsState(initial = 0)
-
-    // Shape values
-    val shapeSmallTopLeftRadius by prefStorage.shapeSmallTopStartRadius.collectAsState(initial = 8)
-    val shapeSmallTopRightRadius by prefStorage.shapeSmallTopEndRadius.collectAsState(initial = 8)
-    val shapeSmallBottomLeftRadius by prefStorage.shapeSmallBottomStartRadius.collectAsState(initial = 8)
-    val shapeSmallBottomRightRadius by prefStorage.shapeSmallBottomEndRadius.collectAsState(
-        initial = 8
-    )
-
-
     // Animated colors
-    val animatedBackgroundColor by animateColorAsState(targetValue = backgroundColor)
+    val animatedBackgroundColor by animateColorAsState(targetValue = themeState.backgroundColor)
 
     val colors = lightReboundColors(
-        isLight = isLightTheme,
-        isDarkStatusBarIcons = isDarkStatusBarIcons,
-        isDarkNavigationBarIcons = isDarkNavigationBarIcons,
-        primary = primaryColor,
-        onPrimary = onPrimaryColor,
-        onBackground = onBackgroundColor,
+        isLight = themeState.isLightTheme,
+        isDarkStatusBarIcons = themeState.isDarkStatusBarIcons,
+        isDarkNavigationBarIcons = themeState.isDarkNavigationBarIcons,
+        primary = themeState.primaryColor,
+        onPrimary = themeState.onPrimaryColor,
+        onBackground = themeState.onBackgroundColor,
         background = animatedBackgroundColor,
-        card = card,
-        cardBorder = cardBorderColor,
+        card = themeState.card,
+        cardBorder = themeState.cardBorderColor,
     )
 
     val dimens = defaultDimens(
-        cardElevation = cardElevation.dp,
-        cardBorderWidth = cardBorderWidth.dp,
+        cardElevation = themeState.cardElevation.dp,
+        cardBorderWidth = themeState.cardBorderWidth.dp,
     )
 
     val shapes = Shapes(
         small = RoundedCornerShape(
-            topStart = shapeSmallTopLeftRadius.dp,
-            topEnd = shapeSmallTopRightRadius.dp,
-            bottomStart = shapeSmallBottomLeftRadius.dp,
-            bottomEnd = shapeSmallBottomRightRadius.dp
+            topStart = themeState.shapeSmallTopLeftRadius.dp,
+            topEnd = themeState.shapeSmallTopRightRadius.dp,
+            bottomStart = themeState.shapeSmallBottomLeftRadius.dp,
+            bottomEnd = themeState.shapeSmallBottomRightRadius.dp
         ),
         medium = RoundedCornerShape(
-            topStart = shapeSmallTopLeftRadius.dp,
-            topEnd = shapeSmallTopRightRadius.dp,
-            bottomStart = shapeSmallBottomLeftRadius.dp,
-            bottomEnd = shapeSmallBottomRightRadius.dp
+            topStart = themeState.shapeSmallTopLeftRadius.dp,
+            topEnd = themeState.shapeSmallTopRightRadius.dp,
+            bottomStart = themeState.shapeSmallBottomLeftRadius.dp,
+            bottomEnd = themeState.shapeSmallBottomRightRadius.dp
         ),
         large = RoundedCornerShape(
-            topStart = shapeSmallTopLeftRadius.dp,
-            topEnd = shapeSmallTopRightRadius.dp,
-            bottomStart = shapeSmallBottomLeftRadius.dp,
-            bottomEnd = shapeSmallBottomRightRadius.dp
+            topStart = themeState.shapeSmallTopLeftRadius.dp,
+            topEnd = themeState.shapeSmallTopRightRadius.dp,
+            bottomStart = themeState.shapeSmallBottomLeftRadius.dp,
+            bottomEnd = themeState.shapeSmallBottomRightRadius.dp
         ),
     )
 
@@ -120,13 +96,13 @@ fun ReboundThemeWrapper(
         // Changing status bar icons as user pref
         systemUiController.setStatusBarColor(
             color = Color.Transparent,
-            darkIcons = isDarkStatusBarIcons
+            darkIcons = themeState.isDarkStatusBarIcons
         )
 
         // Changing navigation bar icons as user pref
         systemUiController.setNavigationBarColor(
             color = Color.Transparent,
-            darkIcons = isDarkNavigationBarIcons
+            darkIcons = themeState.isDarkNavigationBarIcons
         )
     }
 

@@ -24,7 +24,7 @@ import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import com.google.accompanist.insets.statusBarsHeight
 import kotlinx.coroutines.launch
 import timber.log.Timber

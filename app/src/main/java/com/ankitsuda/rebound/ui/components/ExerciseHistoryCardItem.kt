@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.data.entities.Workout
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 

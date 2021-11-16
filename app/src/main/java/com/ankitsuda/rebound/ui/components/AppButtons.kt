@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 
 @Composable
 fun RButton(

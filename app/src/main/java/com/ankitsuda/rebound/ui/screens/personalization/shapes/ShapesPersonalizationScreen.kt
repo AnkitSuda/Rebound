@@ -20,8 +20,8 @@ import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import com.ankitsuda.rebound.ui.theme.ShapeValues
+import com.ankitsuda.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ShapeValues
 import timber.log.Timber
 
 @Composable

@@ -3,7 +3,7 @@ package com.ankitsuda.rebound.ui.screens.personalization.shapes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.rebound.data.datastore.PrefStorage
-import com.ankitsuda.rebound.ui.theme.ShapeValues
+import com.ankitsuda.ui.theme.ShapeValues
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -19,7 +19,7 @@ import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.components.WorkoutExerciseItemAlt
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode

@@ -6,7 +6,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
-import com.ankitsuda.rebound.ui.theme.DefaultAccentColor
 import com.ankitsuda.rebound.utils.LabelVisible
 import com.ankitsuda.rebound.utils.toHexString
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -22,6 +21,7 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
     PrefStorage {
     val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "AppPrefStorage")
 
+    val DefaultAccentColor = Color.Blue
 
     companion object {
         val IS_LIGHT_THEME_KEY = booleanPreferencesKey(name = "is_light_theme")

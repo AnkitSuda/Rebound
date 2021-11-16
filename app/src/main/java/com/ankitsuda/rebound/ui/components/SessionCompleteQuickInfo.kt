@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 
 @Composable
 fun SessionCompleteQuickInfo(modifier: Modifier = Modifier, time: String, volume: String, prs: Int) {

@@ -18,6 +18,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
+import com.ankitsuda.base.ui.ThemeState
+import com.ankitsuda.common.compose.rememberFlowWithLifecycle
 import com.ankitsuda.rebound.ui.navigation.MainScreenNavigationConfigurations
 import com.ankitsuda.rebound.ui.MainScreenScaffold
 import com.ankitsuda.rebound.ui.navigation.Route
@@ -25,8 +27,10 @@ import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded
 import com.ankitsuda.rebound.ui.components.workout_panel.WorkoutPanel
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.LabelVisible
+import com.ankitsuda.ui.ThemeViewModel
+import com.ankitsuda.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundThemeWrapper
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.navigation.material.BottomSheetNavigatorSheetState
@@ -41,7 +45,7 @@ data class MainDialog(
     var hideDialog: () -> Unit = {}
 )
 
-data class MainBottomSheet  @OptIn(ExperimentalMaterialNavigationApi::class) constructor(
+data class MainBottomSheet @OptIn(ExperimentalMaterialNavigationApi::class) constructor(
     var state: BottomSheetNavigatorSheetState? = null,
     var sheetContent: @Composable () -> Unit = {},
     var showSheet: () -> Unit = {},
@@ -65,11 +69,15 @@ val LocalBottomSheet = compositionLocalOf { MainBottomSheet() }
  */
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
 @Composable
-fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
+fun MainScreen(
+    viewModel: MainScreenViewModel = hiltViewModel(),
+    themeViewModel: ThemeViewModel = hiltViewModel()
+) {
     val navController = rememberNavController()
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     navController.navigatorProvider += bottomSheetNavigator
 
+    val themeState by rememberFlowWithLifecycle(themeViewModel.themeState).collectAsState(ThemeState())
 
     val swipeableState = rememberSwipeableState(0)
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -131,16 +139,25 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
         bottomSheet.state = bottomSheetNavigator.navigatorSheetState
     }
 
-    CompositionLocalProvider(LocalDialog provides dialog, LocalBottomSheet provides bottomSheet) {
-        Box() {
-            /**
-             * Temporary using ModalBottomSheetLayout
-             * will create a custom implementation later in MainScreenScaffold with proper status bar padding
-             * and auto corner radius
-             */
-            com.google.accompanist.navigation.material.ModalBottomSheetLayout(
+    ReboundThemeWrapper(themeState = themeState) {
+        CompositionLocalProvider(
+            LocalDialog provides dialog,
+            LocalBottomSheet provides bottomSheet
+        ) {
+            Box() {
+                /**
+                 * Temporary using ModalBottomSheetLayout
+                 * will create a custom implementation later in MainScreenScaffold with proper status bar padding
+                 * and auto corner radius
+                 */
+                /**
+                 * Temporary using ModalBottomSheetLayout
+                 * will create a custom implementation later in MainScreenScaffold with proper status bar padding
+                 * and auto corner radius
+                 */
+                com.google.accompanist.navigation.material.ModalBottomSheetLayout(
 //                sheetState = sheetState,
-                sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                    sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
 //                sheetContent = {
 //                    Box(
 //                        modifier = Modifier
@@ -152,51 +169,52 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
 //
 //                    }
 //                },
-                bottomSheetNavigator = bottomSheetNavigator
-            ) {
-                MainScreenScaffold(
-                    modifier = Modifier,
-                    panelHidden = panelHidden,
-                    swipeableState = swipeableState,
-                    bottomBar = {
-                        BottomBar(
-                            elevationEnabled = panelHidden,
-                            navController = navController,
-                            viewModel
-                        )
-                    },
-                    panel = {
-                        WorkoutPanel(navController)
-                    },
-                    panelTopCommon = {
-                        PanelTopDragHandle()
-                    },
-                    panelTopCollapsed = {
+                    bottomSheetNavigator = bottomSheetNavigator
+                ) {
+                    MainScreenScaffold(
+                        modifier = Modifier,
+                        panelHidden = panelHidden,
+                        swipeableState = swipeableState,
+                        bottomBar = {
+                            BottomBar(
+                                elevationEnabled = panelHidden,
+                                navController = navController,
+                                viewModel
+                            )
+                        },
+                        panel = {
+                            WorkoutPanel(navController)
+                        },
+                        panelTopCommon = {
+                            PanelTopDragHandle()
+                        },
+                        panelTopCollapsed = {
 
-                        PanelTopCollapsed()
+                            PanelTopCollapsed()
 
-                    },
-                    panelTopExpanded = {
-                        PanelTopExpanded(
-                            onCollapseBtnClicked = {
-                                coroutine.launch {
-                                    swipeableState.animateTo(0)
-                                }
-                            },
-                            onTimerBtnClicked = { },
-                            onFinishBtnClicked = {})
-                    }) {
-                    MainScreenNavigationConfigurations(navController = navController)
+                        },
+                        panelTopExpanded = {
+                            PanelTopExpanded(
+                                onCollapseBtnClicked = {
+                                    coroutine.launch {
+                                        swipeableState.animateTo(0)
+                                    }
+                                },
+                                onTimerBtnClicked = { },
+                                onFinishBtnClicked = {})
+                        }) {
+                        MainScreenNavigationConfigurations(navController = navController)
+                    }
                 }
-            }
 
-            if (dialogVisible) {
-                AlertDialog(onDismissRequest = {
-                    dialogVisible = false
-                },
-                    buttons = {
-                        dialogContent()
-                    })
+                if (dialogVisible) {
+                    AlertDialog(onDismissRequest = {
+                        dialogVisible = false
+                    },
+                        buttons = {
+                            dialogContent()
+                        })
+                }
             }
         }
     }

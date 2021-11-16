@@ -19,7 +19,7 @@ import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 

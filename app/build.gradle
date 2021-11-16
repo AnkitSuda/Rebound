@@ -6,6 +6,8 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
+    id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
@@ -58,13 +60,10 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    implementation project(":modules:base")
+    implementation project(":modules:common-ui-compose")
+    implementation project(":modules:common-ui-theme")
 
-//    implementation Deps.Kotlin.coroutinesAndroid
-
-    // utils
-//    implementation Deps.Utils.proguardSnippets
-
+    implementation Deps.Kotlin.coroutinesAndroid
     kapt Deps.Android.Lifecycle.compiler
 
     // dagger-2

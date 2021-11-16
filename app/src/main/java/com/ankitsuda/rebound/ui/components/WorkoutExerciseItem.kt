@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.ankitsuda.rebound.data.entities.Exercise
 import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.data.entities.LogEntriesWithExerciseJunction
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.ExerciseCategory
 import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 import timber.log.Timber

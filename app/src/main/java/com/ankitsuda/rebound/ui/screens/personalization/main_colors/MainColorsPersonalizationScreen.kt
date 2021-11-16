@@ -19,7 +19,7 @@ import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarS
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
-import com.ankitsuda.rebound.ui.theme.DefaultAccentColor
+import com.ankitsuda.ui.theme.DefaultAccentColor
 
 @Composable
 fun MainColorsPersonalizationScreen(

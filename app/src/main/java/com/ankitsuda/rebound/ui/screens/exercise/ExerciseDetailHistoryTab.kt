@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.data.entities.LogEntriesWithWorkout
 import com.ankitsuda.rebound.ui.components.ExerciseHistoryCardItem
 import com.ankitsuda.rebound.ui.components.RSpacer
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 import kotlin.random.Random

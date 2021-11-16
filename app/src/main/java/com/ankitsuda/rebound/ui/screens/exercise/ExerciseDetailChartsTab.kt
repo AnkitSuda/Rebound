@@ -12,7 +12,7 @@ import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
 import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import kotlin.random.Random
 
 @Composable

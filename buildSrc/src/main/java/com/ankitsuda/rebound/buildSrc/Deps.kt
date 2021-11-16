@@ -10,6 +10,9 @@ object Deps {
         const val gradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version"
 
+        const val serialization = "org.jetbrains.kotlin:kotlin-serialization:$version"
+        const val serializationRuntime = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
+
         const val coroutinesVersion = "1.5.2"
         const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
         const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"

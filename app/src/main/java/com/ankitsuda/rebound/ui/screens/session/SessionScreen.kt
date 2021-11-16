@@ -21,7 +21,7 @@ import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import kotlin.random.Random
 
 @Composable

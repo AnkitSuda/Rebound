@@ -39,4 +39,5 @@ dependencies {
     kapt Deps.Dagger.hiltCompiler
 
     api project(":modules:common-ui-compose")
+    api project(":modules:core-data")
 }

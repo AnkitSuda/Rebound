@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.utils.TopBarAlignment
 import com.ankitsuda.rebound.utils.isDark
 import com.ankitsuda.rebound.utils.lighterOrDarkerColor

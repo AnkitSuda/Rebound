@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import timber.log.Timber

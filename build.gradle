@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath Deps.Android.gradle
         classpath Deps.Kotlin.gradle
+        classpath Deps.Kotlin.serialization
 //        classpath Deps.Android.navigationSafeArgs
         classpath Deps.Dagger.hiltGradle
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31'

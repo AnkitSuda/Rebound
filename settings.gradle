@@ -5,3 +5,6 @@ include ":modules:base"
 include ':modules:base-android'
 include ':modules:common-ui-compose'
 include ':modules:common-ui-theme'
+include ':modules:core-data'
+include ':modules:common-data'
+include ':modules:domain'

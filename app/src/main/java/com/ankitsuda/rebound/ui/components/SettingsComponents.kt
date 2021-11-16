@@ -16,8 +16,8 @@ import com.ankitsuda.rebound.ui.dialogs.ColorPickerAltDialog
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog
 import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog1
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import com.ankitsuda.rebound.ui.theme.ShapeValues
+import com.ankitsuda.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ShapeValues
 import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt

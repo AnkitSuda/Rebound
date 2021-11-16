@@ -23,7 +23,7 @@ import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import com.ankitsuda.rebound.ui.components.TopSearchBar
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.screens.create_exercise.CreateExerciseScreen
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.ui.theme.ReboundTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
