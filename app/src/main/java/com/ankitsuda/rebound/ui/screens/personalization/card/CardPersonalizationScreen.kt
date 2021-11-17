@@ -25,7 +25,7 @@ import timber.log.Timber
 
 @Composable
 fun CardPersonalizationScreen(
-    navController: NavHostController,
+    navController: NavController,
     viewModel: CardPersonalizationScreenViewModel = hiltViewModel()
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()

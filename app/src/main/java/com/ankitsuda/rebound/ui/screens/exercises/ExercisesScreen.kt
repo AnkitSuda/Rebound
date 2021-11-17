@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.data.entities.Muscle
 import com.ankitsuda.rebound.ui.components.*
@@ -38,7 +39,7 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun ExercisesScreen(
-    navController: NavHostController,
+    navController: NavController,
     isBottomSheet: Boolean,
     viewModel: ExercisesScreenViewModel = hiltViewModel()
 ) {

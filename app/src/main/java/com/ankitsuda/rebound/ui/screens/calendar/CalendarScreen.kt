@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.Today
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.navOptions
 import com.ankitsuda.rebound.ui.components.InfiniteListHandler
@@ -34,7 +35,7 @@ import java.util.*
 
 @Composable
 fun CalendarScreen(
-    navController: NavHostController,
+    navController: NavController,
     viewModel: CalendarScreenViewModel = hiltViewModel()
 ) {
     val selectedDate =

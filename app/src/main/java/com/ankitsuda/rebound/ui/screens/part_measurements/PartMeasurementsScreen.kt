@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.rebound.ui.components.*
@@ -25,7 +26,7 @@ import org.threeten.bp.format.FormatStyle
 
 @Composable
 fun PartMeasurementsScreen(
-    navController: NavHostController,
+    navController: NavController,
     viewModel: PartMeasurementsScreenViewModel = hiltViewModel()
 ) {
     val bottomSheet = LocalBottomSheet.current

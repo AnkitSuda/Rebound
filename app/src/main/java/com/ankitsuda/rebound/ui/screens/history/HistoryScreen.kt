@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.calendar.WEIGHT_7DAY_WEEK
@@ -33,7 +34,7 @@ import kotlin.random.Random
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun HistoryScreen(
-    navController: NavHostController,
+    navController: NavController,
     viewModel: HistoryScreenViewModel = hiltViewModel()
 ) {
     val argumentsDate = navController.currentBackStackEntry

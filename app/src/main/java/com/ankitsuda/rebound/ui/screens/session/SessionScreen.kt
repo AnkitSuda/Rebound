@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
@@ -25,7 +26,7 @@ import com.ankitsuda.ui.theme.ReboundTheme
 import kotlin.random.Random
 
 @Composable
-fun SessionScreen(navController: NavHostController) {
+fun SessionScreen(navController: NavController) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val sessionId by remember {

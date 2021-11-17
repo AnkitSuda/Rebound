@@ -62,6 +62,7 @@ repositories {
 dependencies {
     implementation project(":modules:common-ui-compose")
     implementation project(":modules:common-ui-theme")
+    implementation project(":modules:navigation")
 
     implementation Deps.Kotlin.coroutinesAndroid
     kapt Deps.Android.Lifecycle.compiler

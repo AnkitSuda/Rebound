@@ -45,7 +45,7 @@ fun MainScreenNavigationConfigurations(navController: NavHostController) {
             startDestination = Route.Home.route
         ) {
             composable(Route.Home.route) {
-                HomeScreen(navController)
+                HomeScreen()
             }
         }
 

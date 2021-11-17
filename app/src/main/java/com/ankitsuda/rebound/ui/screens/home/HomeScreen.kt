@@ -15,7 +15,7 @@ import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.components.TopBar
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen() {
 
     Surface(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
         Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {

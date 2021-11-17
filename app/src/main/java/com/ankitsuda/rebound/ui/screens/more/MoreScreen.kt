@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.rebound.ui.components.MoreItemCard
@@ -18,7 +19,7 @@ import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarS
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
-fun MoreScreen(navController: NavHostController) {
+fun MoreScreen(navController: NavController) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(

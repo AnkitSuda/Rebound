@@ -7,6 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.rebound.ui.components.MoreItemCard
@@ -17,7 +18,7 @@ import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarS
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
-fun MeasureScreen(navController: NavHostController) {
+fun MeasureScreen(navController: NavController) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val core = arrayListOf("Weight", "Body fat percentage", "Calorie intake")
