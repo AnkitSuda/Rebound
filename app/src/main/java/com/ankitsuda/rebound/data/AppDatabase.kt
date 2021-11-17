@@ -7,7 +7,7 @@ import com.ankitsuda.rebound.data.daos.ExercisesDao
 import com.ankitsuda.rebound.data.daos.MeasurementsDao
 import com.ankitsuda.rebound.data.daos.MusclesDao
 import com.ankitsuda.rebound.data.daos.WorkoutsDao
-import com.ankitsuda.rebound.data.entities.*
+import com.ankitsuda.rebound.domain.entities.*
 import java.util.concurrent.Executors
 
 @Database(

@@ -1,10 +1,9 @@
-package com.ankitsuda.rebound.data.entities
+package com.ankitsuda.rebound.domain.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ankitsuda.rebound.utils.ExerciseCategory
-import org.threeten.bp.OffsetDateTime
+import com.ankitsuda.rebound.domain.ExerciseCategory
 import java.util.*
 
 @Entity(tableName = "exercises")

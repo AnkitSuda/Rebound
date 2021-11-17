@@ -19,10 +19,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
 import com.ankitsuda.base.ui.ThemeState
+import com.ankitsuda.base.util.LabelVisible
 import com.ankitsuda.common.compose.LocalDialog
 import com.ankitsuda.common.compose.MainDialog
 import com.ankitsuda.common.compose.rememberFlowWithLifecycle
-import com.ankitsuda.rebound.ui.navigation.MainScreenNavigationConfigurations
+import com.ankitsuda.navigation.NavigatorHost
 import com.ankitsuda.rebound.ui.MainScreenScaffold
 import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.ui.components.panel_tops.PanelTopCollapsed
@@ -30,7 +31,6 @@ import com.ankitsuda.ui.components.panel_tops.PanelTopDragHandle
 import com.ankitsuda.ui.components.panel_tops.PanelTopExpanded
 import com.ankitsuda.ui.components.workout_panel.WorkoutPanel
 import com.ankitsuda.rebound.ui.navigation.AppNavigation
-import com.ankitsuda.rebound.utils.LabelVisible
 import com.ankitsuda.ui.ThemeViewModel
 import com.ankitsuda.ui.theme.ReboundTheme
 import com.ankitsuda.ui.theme.ReboundThemeWrapper
@@ -87,7 +87,8 @@ fun MainScreen(
     val coroutine = rememberCoroutineScope()
 
 
-    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+//    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+    val currentWorkoutId = (-1).toLong()
 
     val panelHidden = currentWorkoutId == (-1).toLong()
 
@@ -143,19 +144,20 @@ fun MainScreen(
     }
 
     ReboundThemeWrapper(themeState = themeState) {
-        CompositionLocalProvider(
-            LocalDialog provides dialog,
-            LocalBottomSheet provides bottomSheet
-        ) {
-            Box() {
-                /**
-                 * Temporary using ModalBottomSheetLayout
-                 * will create a custom implementation later in MainScreenScaffold with proper status bar padding
-                 * and auto corner radius
-                 */
-                com.google.accompanist.navigation.material.ModalBottomSheetLayout(
+        NavigatorHost {
+            CompositionLocalProvider(
+                LocalDialog provides dialog,
+                LocalBottomSheet provides bottomSheet
+            ) {
+                Box() {
+                    /**
+                     * Temporary using ModalBottomSheetLayout
+                     * will create a custom implementation later in MainScreenScaffold with proper status bar padding
+                     * and auto corner radius
+                     */
+                    com.google.accompanist.navigation.material.ModalBottomSheetLayout(
 //                sheetState = sheetState,
-                    sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
 //                sheetContent = {
 //                    Box(
 //                        modifier = Modifier
@@ -167,54 +169,55 @@ fun MainScreen(
 //
 //                    }
 //                },
-                    bottomSheetNavigator = bottomSheetNavigator
-                ) {
-                    MainScreenScaffold(
-                        modifier = Modifier,
-                        panelHidden = panelHidden,
-                        swipeableState = swipeableState,
-                        bottomBar = {
-                            BottomBar(
-                                elevationEnabled = panelHidden,
-                                navController = navController,
-                                viewModel
-                            )
-                        },
-                        panel = {
-                            WorkoutPanel(navController)
-                        },
-                        panelTopCommon = {
-                            PanelTopDragHandle()
-                        },
-                        panelTopCollapsed = {
+                        bottomSheetNavigator = bottomSheetNavigator
+                    ) {
+                        MainScreenScaffold(
+                            modifier = Modifier,
+                            panelHidden = panelHidden,
+                            swipeableState = swipeableState,
+                            bottomBar = {
+                                BottomBar(
+                                    elevationEnabled = panelHidden,
+                                    navController = navController,
+                                    viewModel
+                                )
+                            },
+                            panel = {
+                                WorkoutPanel(navController)
+                            },
+                            panelTopCommon = {
+                                PanelTopDragHandle()
+                            },
+                            panelTopCollapsed = {
 
-                            PanelTopCollapsed()
+                                PanelTopCollapsed()
 
-                        },
-                        panelTopExpanded = {
-                            PanelTopExpanded(
-                                onCollapseBtnClicked = {
-                                    coroutine.launch {
-                                        swipeableState.animateTo(0)
-                                    }
-                                },
-                                onTimerBtnClicked = { },
-                                onFinishBtnClicked = {})
-                        }) {
+                            },
+                            panelTopExpanded = {
+                                PanelTopExpanded(
+                                    onCollapseBtnClicked = {
+                                        coroutine.launch {
+                                            swipeableState.animateTo(0)
+                                        }
+                                    },
+                                    onTimerBtnClicked = { },
+                                    onFinishBtnClicked = {})
+                            }) {
 
-                        Box(Modifier.fillMaxSize()) {
-                            AppNavigation(navController)
+                            Box(Modifier.fillMaxSize()) {
+                                AppNavigation(navController)
+                            }
                         }
                     }
-                }
 
-                if (dialogVisible) {
-                    AlertDialog(onDismissRequest = {
-                        dialogVisible = false
-                    },
-                        buttons = {
-                            dialogContent()
-                        })
+                    if (dialogVisible) {
+                        AlertDialog(onDismissRequest = {
+                            dialogVisible = false
+                        },
+                            buttons = {
+                                dialogContent()
+                            })
+                    }
                 }
             }
         }
@@ -235,9 +238,14 @@ private fun BottomBar(
         BottomNavigationScreens.More
     )
 
-    val labelVisible by mainScreenViewModel.bottomBarLabelVisible.collectAsState(initial = LabelVisible.ALWAYS)
-    val labelWeight by mainScreenViewModel.labelWeight.collectAsState(initial = "normal")
-    val iconSize by mainScreenViewModel.iconSize.collectAsState(initial = 24)
+//    val labelVisible by mainScreenViewModel.bottomBarLabelVisible.collectAsState(initial = LabelVisible.ALWAYS)
+//    val labelWeight by mainScreenViewModel.labelWeight.collectAsState(initial = "normal")
+//    val iconSize by mainScreenViewModel.iconSize.collectAsState(initial = 24)
+
+
+    val labelVisible = LabelVisible.ALWAYS
+    val labelWeight = "normal"
+    val iconSize = 24
 
 
 

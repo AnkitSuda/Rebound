@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.rebound.data.entities.Exercise
+import com.ankitsuda.rebound.domain.entities.Exercise
 import com.ankitsuda.ui.components.RSpacer
 import com.ankitsuda.ui.theme.ReboundTheme
 

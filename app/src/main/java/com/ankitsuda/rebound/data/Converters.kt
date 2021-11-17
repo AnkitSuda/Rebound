@@ -1,9 +1,9 @@
 package com.ankitsuda.rebound.data
 
 import androidx.room.TypeConverter
-import com.ankitsuda.rebound.utils.C
-import com.ankitsuda.rebound.utils.ExerciseCategory
-import com.ankitsuda.rebound.utils.parseToExerciseCategory
+import com.ankitsuda.base.util.C
+import com.ankitsuda.rebound.domain.ExerciseCategory
+import com.ankitsuda.rebound.domain.parseToExerciseCategory
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.text.DateFormat
@@ -14,7 +14,7 @@ import java.util.*
 object Converters {
     private val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
-    // Set timezone value as GMT 존맛탱... to make time as reasonable
+    // Set timezone value as GMT ... to make time as reasonable
     var df: DateFormat = SimpleDateFormat(C.DB_DATE_FORMAT, Locale.getDefault())
 
 

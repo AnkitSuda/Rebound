@@ -1,9 +1,8 @@
-package com.ankitsuda.rebound.data.entities
+package com.ankitsuda.rebound.domain.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.ColumnInfo
-import org.threeten.bp.OffsetDateTime
 import java.util.*
 
 

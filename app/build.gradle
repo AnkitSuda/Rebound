@@ -65,6 +65,7 @@ dependencies {
     implementation project(":modules:common-ui-components")
     implementation project(":modules:ui-settings")
     implementation project(":modules:navigation")
+    implementation project(":modules:domain")
 
     implementation Deps.Kotlin.coroutinesAndroid
     kapt Deps.Android.Lifecycle.compiler

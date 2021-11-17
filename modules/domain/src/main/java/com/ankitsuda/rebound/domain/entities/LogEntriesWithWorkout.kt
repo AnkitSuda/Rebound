@@ -1,16 +1,16 @@
-package com.ankitsuda.rebound.data.entities
+package com.ankitsuda.rebound.domain.entities
 
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 
-data class LogEntriesWithExerciseJunction(
+data class LogEntriesWithWorkout(
     @Embedded val junction: ExerciseWorkoutJunction,
     @Relation(
-        parentColumn = "exercise_id",
-        entityColumn = "exercise_id"
+        parentColumn = "workout_id",
+        entityColumn = "id"
     )
-    val exercise: Exercise,
+    val workout: Workout,
     @Relation(
         parentColumn = "id",
         entityColumn = "junction_id",

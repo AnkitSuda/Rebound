@@ -3,10 +3,10 @@ package com.ankitsuda.rebound.ui.screens.create_exercise
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.rebound.data.entities.Exercise
+import com.ankitsuda.rebound.domain.entities.Exercise
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
 import com.ankitsuda.rebound.data.repositories.MusclesRepository
-import com.ankitsuda.rebound.utils.ExerciseCategory
+import com.ankitsuda.rebound.domain.ExerciseCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -3,9 +3,9 @@ package com.ankitsuda.rebound.ui.screens.history
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.ankitsuda.rebound.data.entities.Workout
+import com.ankitsuda.base.util.CalendarDate
+import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
-import com.ankitsuda.rebound.utils.CalendarDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.OffsetDateTime

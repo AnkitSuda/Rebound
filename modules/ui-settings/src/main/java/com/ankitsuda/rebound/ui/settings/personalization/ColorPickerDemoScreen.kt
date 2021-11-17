@@ -29,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker
+import com.ankitsuda.ui.components.color_picker.ColorPicker
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay

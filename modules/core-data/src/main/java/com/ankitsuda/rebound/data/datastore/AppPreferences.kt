@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.ankitsuda.data.DatastoreUtils
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import timber.log.Timber
@@ -26,7 +29,17 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
     }
 
     override val themeState: Flow<ThemeState>
-        get() = TODO("Not yet implemented")
+        get() = flow {
+            getValue(THEME_STATE_KEY, Json.encodeToString(ThemeState())).mapLatest {
+                val deserializedString = Json.decodeFromString<ThemeState>(it)
+
+                Timber.i("deserializedString $deserializedString")
+
+
+                emit(deserializedString)
+            }
+        }
+
 
     override suspend fun setThemeState(value: ThemeState) {
         val serializedString = Json.encodeToString(value)

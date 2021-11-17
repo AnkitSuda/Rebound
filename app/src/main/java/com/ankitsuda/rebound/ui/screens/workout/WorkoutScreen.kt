@@ -23,11 +23,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.ui.components.*
 import com.ankitsuda.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.ui.theme.ReboundTheme
-import com.ankitsuda.rebound.utils.NONE_WORKOUT_ID
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode

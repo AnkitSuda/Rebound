@@ -37,8 +37,8 @@ fun PanelTopDragHandle(modifier: Modifier = Modifier) {
 
 @Composable
 fun PanelTopCollapsed(viewModel: PanelTopsViewModel = hiltViewModel()) {
-    val workoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
-    val workout by viewModel.getWorkout(workoutId).collectAsState(initial = null)
+//    val workoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+//    val workout by viewModel.getWorkout(workoutId).collectAsState(initial = null)
     Column(
         modifier = Modifier
             .padding(6.dp)
@@ -46,9 +46,9 @@ fun PanelTopCollapsed(viewModel: PanelTopsViewModel = hiltViewModel()) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        workout?.name?.let {
-            Text(text = it, style = MaterialTheme.typography.h6)
-        }
+//        workout?.name?.let {
+//            Text(text = it, style = MaterialTheme.typography.h6)
+//        }
         Text(text = "32:12m", style = MaterialTheme.typography.caption)
     }
 }

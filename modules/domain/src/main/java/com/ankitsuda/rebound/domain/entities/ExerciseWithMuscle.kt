@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.data.entities
+package com.ankitsuda.rebound.domain.entities
 
 import androidx.room.Embedded
 import androidx.room.Relation

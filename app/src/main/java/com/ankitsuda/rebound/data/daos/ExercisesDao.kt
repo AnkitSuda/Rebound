@@ -4,9 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import com.ankitsuda.rebound.data.entities.Exercise
-import com.ankitsuda.rebound.data.entities.ExerciseWithMuscle
-import com.ankitsuda.rebound.data.entities.LogEntriesWithWorkout
+import com.ankitsuda.rebound.domain.entities.Exercise
+import com.ankitsuda.rebound.domain.entities.ExerciseWithMuscle
+import com.ankitsuda.rebound.domain.entities.LogEntriesWithWorkout
 import kotlinx.coroutines.flow.Flow
 
 @Dao

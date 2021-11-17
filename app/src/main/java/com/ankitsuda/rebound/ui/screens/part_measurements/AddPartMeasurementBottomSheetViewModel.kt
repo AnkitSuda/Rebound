@@ -2,7 +2,7 @@ package com.ankitsuda.rebound.ui.screens.part_measurements
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.rebound.data.entities.BodyPartMeasurementLog
+import com.ankitsuda.rebound.domain.entities.BodyPartMeasurementLog
 import com.ankitsuda.rebound.data.repositories.MeasurementsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

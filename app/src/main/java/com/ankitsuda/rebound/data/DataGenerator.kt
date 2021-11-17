@@ -1,6 +1,6 @@
 package com.ankitsuda.rebound.data
 
-import com.ankitsuda.rebound.data.entities.Muscle
+import com.ankitsuda.rebound.domain.entities.Muscle
 
 class DataGenerator {
     companion object {

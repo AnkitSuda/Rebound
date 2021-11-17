@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.ankitsuda.ui.components.AppTextField
-import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
 import timber.log.Timber
 
 @Composable

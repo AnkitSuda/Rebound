@@ -24,7 +24,7 @@ import androidx.navigation.NavHostController
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.rebound.data.entities.Muscle
+import com.ankitsuda.rebound.domain.entities.Muscle
 import com.ankitsuda.ui.components.*
 import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.ui.components.collapsing_toolbar.CollapsingToolbarScaffold

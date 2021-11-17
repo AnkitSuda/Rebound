@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.utils
+package com.ankitsuda.base.util
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance

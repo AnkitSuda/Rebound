@@ -17,7 +17,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ankitsuda.rebound.utils.*
+import com.ankitsuda.base.util.*
+import com.ankitsuda.base.utils.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random

@@ -2,7 +2,7 @@ package com.ankitsuda.rebound.data.repositories
 
 import com.ankitsuda.rebound.data.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
-import com.ankitsuda.rebound.data.entities.*
+import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter

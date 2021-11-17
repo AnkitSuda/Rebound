@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.utils
+package com.ankitsuda.base.util
 
 /**
  * This class responsible for providing [DatesRange] according to incoming params.

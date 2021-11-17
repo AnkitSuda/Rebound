@@ -1,7 +1,7 @@
 package com.ankitsuda.rebound.data.daos
 
 import androidx.room.*
-import com.ankitsuda.rebound.data.entities.BodyPartMeasurementLog
+import com.ankitsuda.rebound.domain.entities.BodyPartMeasurementLog
 import kotlinx.coroutines.flow.Flow
 
 @Dao

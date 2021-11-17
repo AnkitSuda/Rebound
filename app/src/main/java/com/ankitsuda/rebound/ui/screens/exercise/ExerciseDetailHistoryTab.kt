@@ -8,7 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.rebound.data.entities.LogEntriesWithWorkout
+import com.ankitsuda.rebound.domain.entities.LogEntriesWithWorkout
 import com.ankitsuda.ui.components.ExerciseHistoryCardItem
 import com.ankitsuda.ui.components.RSpacer
 import com.ankitsuda.ui.theme.ReboundTheme
@@ -34,8 +34,8 @@ fun ExerciseDetailHistoryTab(list: List<LogEntriesWithWorkout>) {
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
                 onClick = { },
-               workout = workout,
-                entries = entries
+//               workout = workout,
+//                entries = entries
             )
         }
 

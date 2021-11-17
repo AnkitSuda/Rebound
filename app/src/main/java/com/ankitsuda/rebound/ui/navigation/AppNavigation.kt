@@ -85,8 +85,8 @@ private fun NavGraphBuilder.addHomeRoot(navController: NavController) {
 
 private fun NavGraphBuilder.addHistoryRoot(navController: NavController) {
     navigation(
-        route = RootScreen.HomeTab.route,
-        startDestination = LeafScreen.Home().createRoute()
+        route = RootScreen.HistoryTab.route,
+        startDestination = LeafScreen.History().createRoute()
     ) {
         addHistory(navController)
         addCalendar(navController)
@@ -96,8 +96,8 @@ private fun NavGraphBuilder.addHistoryRoot(navController: NavController) {
 
 private fun NavGraphBuilder.addWorkoutRoot(navController: NavController) {
     navigation(
-        route = RootScreen.HomeTab.route,
-        startDestination = LeafScreen.Home().createRoute()
+        route = RootScreen.WorkoutTab.route,
+        startDestination = LeafScreen.Workout().createRoute()
     ) {
         addWorkout(navController)
     }
@@ -105,8 +105,8 @@ private fun NavGraphBuilder.addWorkoutRoot(navController: NavController) {
 
 private fun NavGraphBuilder.addExercisesRoot(navController: NavController) {
     navigation(
-        route = RootScreen.HomeTab.route,
-        startDestination = LeafScreen.Home().createRoute()
+        route = RootScreen.ExercisesTab.route,
+        startDestination = LeafScreen.Exercises().createRoute()
     ) {
         addExercises(navController)
         addExerciseDetail(navController)
@@ -115,8 +115,8 @@ private fun NavGraphBuilder.addExercisesRoot(navController: NavController) {
 
 private fun NavGraphBuilder.addMoreRoot(navController: NavController) {
     navigation(
-        route = RootScreen.HomeTab.route,
-        startDestination = LeafScreen.Home().createRoute()
+        route = RootScreen.MoreTab.route,
+        startDestination = LeafScreen.More().createRoute()
     ) {
         addMoreScreen(navController)
         addMeasureScreen(navController)
@@ -178,73 +178,73 @@ private fun NavGraphBuilder.addExerciseDetail(navController: NavController) {
 }
 
 private fun NavGraphBuilder.addMoreScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.More()) {
         MoreScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addMeasureScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.Measure()) {
         MeasureScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addPartMeasurementsScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.PartMeasurements()) {
         PartMeasurementsScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addSettingsScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.Settings()) {
         SettingsScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addPersonalizationScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.Personalization()) {
         PersonalizationScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addMainColorsPersonalizationScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.MainColorsPersonalization()) {
         MainColorsPersonalizationScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addShapesPersonalizationScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.ShapesPersonalization()) {
         ShapesPersonalizationScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addCardPersonalizationScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.CardsPersonalization()) {
         CardPersonalizationScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addTopBarPersonalizationScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.TopBarPersonalization()) {
         TopBarPersonalizationScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addBottomBarPersonalizationScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.BottomBarPersonalization()) {
         BottomBarPersonalizationScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addChartsPersonalizationScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.ChartsPersonalization()) {
         ChartsPersonalizationScreen(navController)
     }
 }
 
 private fun NavGraphBuilder.addColorPickerDemoScreen(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+    composableScreen(LeafScreen.ColorPickerDemo()) {
         ColorPickerDemoScreen()
     }
 }

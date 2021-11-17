@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.utils
+package com.ankitsuda.base.util
 
 object LabelVisible {
     const val ALWAYS = "always"

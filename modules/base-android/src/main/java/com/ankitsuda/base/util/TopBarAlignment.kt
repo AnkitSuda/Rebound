@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.utils
+package com.ankitsuda.base.util
 
 object TopBarAlignment {
     const val START = "start"

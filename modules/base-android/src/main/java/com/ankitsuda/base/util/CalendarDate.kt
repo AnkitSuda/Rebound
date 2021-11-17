@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.utils
+package com.ankitsuda.base.util
 
 import android.os.Parcel
 import android.os.Parcelable

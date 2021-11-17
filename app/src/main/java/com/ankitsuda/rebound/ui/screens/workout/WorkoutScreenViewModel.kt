@@ -2,7 +2,7 @@ package com.ankitsuda.rebound.ui.screens.workout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.rebound.data.entities.Workout
+import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

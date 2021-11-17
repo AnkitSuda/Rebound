@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.utils
+package com.ankitsuda.rebound.domain
 
 enum class ExerciseCategory(val tag: String, val cName: String) {
     WEIGHTS_AND_REPS("weights_and_reps", "Weights & Reps"),

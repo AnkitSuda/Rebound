@@ -1,7 +1,7 @@
 package com.ankitsuda.rebound.data.repositories
 
 import com.ankitsuda.rebound.data.daos.MeasurementsDao
-import com.ankitsuda.rebound.data.entities.BodyPartMeasurementLog
+import com.ankitsuda.rebound.domain.entities.BodyPartMeasurementLog
 import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.OffsetDateTime
 import java.util.*

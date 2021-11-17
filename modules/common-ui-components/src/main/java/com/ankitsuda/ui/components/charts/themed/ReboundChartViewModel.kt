@@ -9,9 +9,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ReboundChartViewModel @Inject constructor(val prefStorage: PrefStorage) : ViewModel() {
-    val shaderEnabled = prefStorage.chartsShaderEnabled
-    val lineThickness = prefStorage.chartsLineThickness
-    val pointDiameter = prefStorage.chartsPointDiameter
-    val pointLineThickness = prefStorage.chartsPointLineThickness
+class ReboundChartViewModel @Inject constructor(/*val prefStorage: PrefStorage*/) : ViewModel() {
+//    val shaderEnabled = prefStorage.chartsShaderEnabled
+//    val lineThickness = prefStorage.chartsLineThickness
+//    val pointDiameter = prefStorage.chartsPointDiameter
+//    val pointLineThickness = prefStorage.chartsPointLineThickness
 }

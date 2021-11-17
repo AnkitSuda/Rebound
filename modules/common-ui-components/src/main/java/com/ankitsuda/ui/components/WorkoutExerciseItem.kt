@@ -24,12 +24,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ankitsuda.rebound.data.entities.Exercise
-import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
-import com.ankitsuda.rebound.data.entities.LogEntriesWithExerciseJunction
+import com.ankitsuda.rebound.domain.entities.Exercise
+import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
+import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.ui.theme.ReboundTheme
-import com.ankitsuda.rebound.utils.ExerciseCategory
-import com.ankitsuda.rebound.utils.lighterOrDarkerColor
+import com.ankitsuda.rebound.domain.ExerciseCategory
+//import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 import timber.log.Timber
 
 fun LazyListScope.WorkoutExerciseItemAlt(
@@ -176,9 +176,9 @@ fun LazyListScope.WorkoutExerciseItemAlt(
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp),
             elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = ReboundTheme.colors.background.lighterOrDarkerColor(
+                backgroundColor = ReboundTheme.colors.background/*.lighterOrDarkerColor(
                     0.05f
-                ),
+                )*/,
                 contentColor = ReboundTheme.colors.onBackground
             ),
             onClick = onAddSet
@@ -352,7 +352,7 @@ private fun SetItem(
                         .size(30.dp)
                         .background(
                             shape = CircleShape,
-                            color = bgColor.lighterOrDarkerColor(0.05f)
+                            color = bgColor/*.lighterOrDarkerColor(0.05f)*/
                         ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -383,7 +383,7 @@ fun RowScope.SetTextField(
             .padding(start = 8.dp, end = 8.dp)
             .weight(1.25f)
             .clip(RoundedCornerShape(12.dp))
-            .background(bgColor.lighterOrDarkerColor(0.05f)),
+            .background(bgColor/*.lighterOrDarkerColor(0.05f)*/),
         textStyle = LocalTextStyle.current.copy(
             textAlign = TextAlign.Center,
             fontSize = 14.sp,

@@ -44,11 +44,11 @@ sealed class RootScreen(
     val arguments: List<NamedNavArgument> = emptyList(),
     val deepLinks: List<NavDeepLink> = emptyList(),
 ) : Screen {
-    object HomeTab : RootScreen("home_root", LeafScreen.HomeTab())
-    object HistoryTab : RootScreen("history_root", LeafScreen.HistoryTab())
-    object WorkoutTab : RootScreen("workout_root", LeafScreen.WorkoutTab())
-    object ExercisesTab : RootScreen("exercises_root", LeafScreen.ExercisesTab())
-    object MoreTab : RootScreen("more_root", LeafScreen.MoreTab())
+    object HomeTab : RootScreen("home_tab", LeafScreen.HomeTab())
+    object HistoryTab : RootScreen("history_tab", LeafScreen.HistoryTab())
+    object WorkoutTab : RootScreen("workout_tab", LeafScreen.WorkoutTab())
+    object ExercisesTab : RootScreen("exercises_tab", LeafScreen.ExercisesTab())
+    object MoreTab : RootScreen("more_tab", LeafScreen.MoreTab())
 }
 
 sealed class LeafScreen(

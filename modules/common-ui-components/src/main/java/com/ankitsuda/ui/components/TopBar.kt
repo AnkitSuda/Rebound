@@ -58,10 +58,14 @@ fun TopBar(
     }
 
 
-    val titleAlignment by viewModel.titleAlignment.collectAsState(initial = TopBarAlignment.CENTER)
-    val backgroundColor by viewModel.backgroundColor.collectAsState(initial = ReboundTheme.colors.background)
-    val contentColor by viewModel.contentColor.collectAsState(initial = ReboundTheme.colors.onBackground)
-    val elevation by viewModel.elevation.collectAsState(initial = 2)
+//    val titleAlignment by viewModel.titleAlignment.collectAsState(initial = TopBarAlignment.CENTER)
+//    val backgroundColor by viewModel.backgroundColor.collectAsState(initial = ReboundTheme.colors.background)
+//    val contentColor by viewModel.contentColor.collectAsState(initial = ReboundTheme.colors.onBackground)
+//    val elevation by viewModel.elevation.collectAsState(initial = 2)
+
+    val backgroundColor = ReboundTheme.colors.background
+    val contentColor = ReboundTheme.colors.onBackground
+    val elevation = 2
 
     Surface(
         elevation = if (elevationEnabled) elevation.dp else 0.dp,
@@ -95,11 +99,11 @@ fun TopBar(
                             }
                         })
                 ) {
-                    if (titleAlignment == TopBarAlignment.CENTER || strictLeftIconAlignToStart) {
-                        leftIconBtn?.let {
-                            it()
-                        }
+//                    if (titleAlignment == TopBarAlignment.CENTER || strictLeftIconAlignToStart) {
+                    leftIconBtn?.let {
+                        it()
                     }
+//                    }
                 }
 
                 Text(
@@ -111,16 +115,16 @@ fun TopBar(
 //                        TopBarAlignment.END -> TextAlign.End
 //                        else -> TextAlign.Center
 //                    },
-                    TextAlign.Center
-                            modifier = Modifier
-                            . align (
+                    TextAlign.Center,
+                    modifier = Modifier
+                        .align(
 //                            when (titleAlignment) {
 //                                TopBarAlignment.START -> Alignment.CenterStart
 //                                TopBarAlignment.END -> Alignment.CenterEnd
 //                                else -> Alignment.Center
 //                            },
                             Alignment.Center
-                            )
+                        )
                         .padding(
                             start = /*if (titleAlignment != TopBarAlignment.CENTER) startBoxWidth + 8.dp else*/ 16.dp,
                             end = /*if (titleAlignment != TopBarAlignment.CENTER) endBoxWidth + 8.dp else*/ 16.dp
@@ -261,7 +265,8 @@ fun TopBarIconButton(
     onClick: () -> Unit
 ) {
     val alpha by animateFloatAsState(targetValue = if (enabled) 1f else 0.5f)
-    val contentColor by viewModel.contentColor.collectAsState(ReboundTheme.colors.onBackground)
+//    val contentColor by viewModel.contentColor.collectAsState(ReboundTheme.colors.onBackground)
+    val contentColor = ReboundTheme.colors.onBackground
 
     IconButton(
         onClick = onClick,

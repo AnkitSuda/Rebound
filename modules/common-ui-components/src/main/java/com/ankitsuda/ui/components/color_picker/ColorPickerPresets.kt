@@ -20,8 +20,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
-import com.ankitsuda.rebound.utils.lighterOrDarkerColor
+import com.ankitsuda.base.util.lighterOrDarkerColor
+//import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
+//import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)

@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.utils
+package com.ankitsuda.base.util
 
 fun Float.cmprs(min: Float, max: Float) = min + (max - min) * this
 fun Float.cmprs(min: Int, max: Int) = this.cmprs(min.toFloat(), max.toFloat())

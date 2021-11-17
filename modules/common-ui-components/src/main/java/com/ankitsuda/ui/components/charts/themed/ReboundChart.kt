@@ -26,10 +26,15 @@ fun ReboundChart(
     points: List<LineChartData.Point>,
     viewModel: ReboundChartViewModel = hiltViewModel()
 ) {
-    val shaderEnabled by viewModel.shaderEnabled.collectAsState(initial = true)
-    val lineThickness by viewModel.lineThickness.collectAsState(initial = 2)
-    val pointDiameter by viewModel.pointDiameter.collectAsState(initial = 6)
-    val pointLineThickness by viewModel.pointLineThickness.collectAsState(initial = 2)
+//    val shaderEnabled by viewModel.shaderEnabled.collectAsState(initial = true)
+//    val lineThickness by viewModel.lineThickness.collectAsState(initial = 2)
+//    val pointDiameter by viewModel.pointDiameter.collectAsState(initial = 6)
+//    val pointLineThickness by viewModel.pointLineThickness.collectAsState(initial = 2)
+
+    val shaderEnabled = true
+    val lineThickness = 2
+    val pointDiameter = 6
+    val pointLineThickness = 2
 
     LineChart(
         lineChartData = LineChartData(
