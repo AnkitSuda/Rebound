@@ -21,10 +21,13 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.ankitsuda.navigation.LeafScreen
+import com.ankitsuda.navigation.LocalNavigator
+import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.data.entities.Muscle
-import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.ui.components.*
 import com.ankitsuda.rebound.ui.navigation.Route
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
+import com.ankitsuda.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.ui.theme.ReboundTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -41,6 +44,7 @@ import kotlinx.coroutines.launch
 fun ExercisesScreen(
     navController: NavController,
     isBottomSheet: Boolean,
+    navigator: Navigator = LocalNavigator.current,
     viewModel: ExercisesScreenViewModel = hiltViewModel()
 ) {
 
@@ -96,7 +100,7 @@ fun ExercisesScreen(
 //                                        bottomSheet.show {
 //                                            CreateExerciseScreen()
 //                                        }
-                                            navController.navigate(Route.CreateExercise.route)
+                                            navigator.navigate(LeafScreen.CreateExercise().route)
                                         })
                                 })
 
@@ -178,8 +182,13 @@ fun ExercisesScreen(
                                     )
                                     navController.popBackStack()
                                 } else {
-                                    navController.navigate(
-                                        Route.ExerciseDetails.createRoute(
+//                                    navController.navigate(
+//                                        Route.ExerciseDetails.createRoute(
+//                                            exerciseId = item.exercise.exerciseId
+//                                        )
+//                                    )
+                                    navigator.navigate(
+                                        LeafScreen.ExerciseDetails.createRoute(
                                             exerciseId = item.exercise.exerciseId
                                         )
                                     )

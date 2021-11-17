@@ -9,16 +9,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.ankitsuda.navigation.LeafScreen
+import com.ankitsuda.navigation.LocalNavigator
+import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.navigation.Route
-import com.ankitsuda.rebound.ui.components.MoreItemCard
-import com.ankitsuda.rebound.ui.components.MoreSectionHeader
-import com.ankitsuda.rebound.ui.components.TopBar
-import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.ui.components.MoreItemCard
+import com.ankitsuda.ui.components.MoreSectionHeader
+import com.ankitsuda.ui.components.TopBar
+import com.ankitsuda.ui.components.TopBarBackIconButton
+import com.ankitsuda.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
+import com.ankitsuda.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
-fun MeasureScreen(navController: NavController) {
+fun MeasureScreen(
+    navController: NavController,navigator: Navigator = LocalNavigator.current,
+) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val core = arrayListOf("Weight", "Body fat percentage", "Calorie intake")
@@ -43,7 +48,7 @@ fun MeasureScreen(navController: NavController) {
     CollapsingToolbarScaffold(
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Measure", strictLeftIconAlignToStart = true,leftIconBtn = {
+            TopBar(title = "Measure", strictLeftIconAlignToStart = true, leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }
@@ -69,7 +74,8 @@ fun MeasureScreen(navController: NavController) {
                         .padding(bottom = 8.dp),
                     text = part,
                     onClick = {
-                        navController.navigate(Route.PartMeasurements.createRoute(it.toLong()))
+//                        navController.navigate(Route.PartMeasurements.createRoute(it.toLong()))
+                        navigator.navigate(LeafScreen.PartMeasurements.createRoute(it.toLong()))
                     })
             }
 
@@ -84,7 +90,8 @@ fun MeasureScreen(navController: NavController) {
                         .padding(bottom = 8.dp),
                     text = part,
                     onClick = {
-                        navController.navigate(Route.PartMeasurements.createRoute((it + core.size).toLong()))
+//                        navController.navigate(Route.PartMeasurements.createRoute((it + core.size).toLong()))
+                        navigator.navigate(LeafScreen.PartMeasurements.createRoute((it + core.size).toLong()))
                     })
             }
 

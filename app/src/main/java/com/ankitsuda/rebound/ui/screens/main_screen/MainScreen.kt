@@ -19,14 +19,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
 import com.ankitsuda.base.ui.ThemeState
+import com.ankitsuda.common.compose.LocalDialog
+import com.ankitsuda.common.compose.MainDialog
 import com.ankitsuda.common.compose.rememberFlowWithLifecycle
 import com.ankitsuda.rebound.ui.navigation.MainScreenNavigationConfigurations
 import com.ankitsuda.rebound.ui.MainScreenScaffold
 import com.ankitsuda.rebound.ui.navigation.Route
-import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopCollapsed
-import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopDragHandle
-import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded
-import com.ankitsuda.rebound.ui.components.workout_panel.WorkoutPanel
+import com.ankitsuda.ui.components.panel_tops.PanelTopCollapsed
+import com.ankitsuda.ui.components.panel_tops.PanelTopDragHandle
+import com.ankitsuda.ui.components.panel_tops.PanelTopExpanded
+import com.ankitsuda.ui.components.workout_panel.WorkoutPanel
+import com.ankitsuda.rebound.ui.navigation.AppNavigation
 import com.ankitsuda.rebound.utils.LabelVisible
 import com.ankitsuda.ui.ThemeViewModel
 import com.ankitsuda.ui.theme.ReboundTheme
@@ -39,11 +42,11 @@ import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-data class MainDialog(
-    var dialogContent: @Composable () -> Unit = {},
-    var showDialog: () -> Unit = {},
-    var hideDialog: () -> Unit = {}
-)
+//data class MainDialog(
+//    var dialogContent: @Composable () -> Unit = {},
+//    var showDialog: () -> Unit = {},
+//    var hideDialog: () -> Unit = {}
+//)
 
 data class MainBottomSheet @OptIn(ExperimentalMaterialNavigationApi::class) constructor(
     var state: BottomSheetNavigatorSheetState? = null,
@@ -61,7 +64,7 @@ data class MainBottomSheet @OptIn(ExperimentalMaterialNavigationApi::class) cons
     }
 }
 
-val LocalDialog = compositionLocalOf { MainDialog() }
+//val LocalDialog = compositionLocalOf { MainDialog() }
 val LocalBottomSheet = compositionLocalOf { MainBottomSheet() }
 
 /**
@@ -150,11 +153,6 @@ fun MainScreen(
                  * will create a custom implementation later in MainScreenScaffold with proper status bar padding
                  * and auto corner radius
                  */
-                /**
-                 * Temporary using ModalBottomSheetLayout
-                 * will create a custom implementation later in MainScreenScaffold with proper status bar padding
-                 * and auto corner radius
-                 */
                 com.google.accompanist.navigation.material.ModalBottomSheetLayout(
 //                sheetState = sheetState,
                     sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
@@ -203,7 +201,10 @@ fun MainScreen(
                                 onTimerBtnClicked = { },
                                 onFinishBtnClicked = {})
                         }) {
-                        MainScreenNavigationConfigurations(navController = navController)
+
+                        Box(Modifier.fillMaxSize()) {
+                            AppNavigation(navController)
+                        }
                     }
                 }
 

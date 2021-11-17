@@ -18,11 +18,11 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.ui.components.TopBar
-import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
-import com.ankitsuda.rebound.ui.components.TopBarIconButton
-import com.ankitsuda.rebound.ui.components.TopSearchBar
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
+import com.ankitsuda.ui.components.TopBar
+import com.ankitsuda.ui.components.TopBarBackIconButton
+import com.ankitsuda.ui.components.TopBarIconButton
+import com.ankitsuda.ui.components.TopSearchBar
+import com.ankitsuda.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.screens.create_exercise.CreateExerciseScreen
 import com.ankitsuda.ui.theme.ReboundTheme
 import com.google.accompanist.pager.ExperimentalPagerApi

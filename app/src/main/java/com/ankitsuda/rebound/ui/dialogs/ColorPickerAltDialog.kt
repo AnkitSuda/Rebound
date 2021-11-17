@@ -29,8 +29,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.toSize
-import com.ankitsuda.rebound.ui.components.AppTextField
-import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
+import com.ankitsuda.ui.components.AppTextField
 
 
 /**

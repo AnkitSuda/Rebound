@@ -26,6 +26,7 @@ sealed class Route(val route: String) {
 
     object Measure : Route("measure")
     object PartMeasurements : Route("part_measurements/{partId}") {
+
         fun createRoute(partId: Long) = "part_measurements/$partId"
     }
 

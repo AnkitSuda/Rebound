@@ -11,15 +11,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.ankitsuda.navigation.LeafScreen
+import com.ankitsuda.navigation.LocalNavigator
+import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.navigation.Route
-import com.ankitsuda.rebound.ui.components.MoreItemCard
-import com.ankitsuda.rebound.ui.components.MoreSectionHeader
-import com.ankitsuda.rebound.ui.components.TopBar
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.ui.components.MoreItemCard
+import com.ankitsuda.ui.components.MoreSectionHeader
+import com.ankitsuda.ui.components.TopBar
+import com.ankitsuda.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
+import com.ankitsuda.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
-fun MoreScreen(navController: NavController) {
+fun MoreScreen(
+      navController: NavController,navigator: Navigator = LocalNavigator.current) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(
@@ -44,7 +48,8 @@ fun MoreScreen(navController: NavController) {
                     text = "Measure",
                     description = "Body measurements",
                     onClick = {
-                        navController.navigate(Route.Measure.route)
+//                        navController.navigate(Route.Measure.route)
+                        navigator.navigate(LeafScreen.Measure().route)
                     })
             }
             item {
@@ -70,7 +75,8 @@ fun MoreScreen(navController: NavController) {
                     text = "Personalization",
                     description = "Make rebound yours",
                     onClick = {
-                        navController.navigate(Route.Personalization.route)
+//                        navController.navigate(Route.Personalization.route)
+                        navigator.navigate(LeafScreen.Personalization().route)
                     })
             }
             item {
@@ -82,7 +88,8 @@ fun MoreScreen(navController: NavController) {
                     text = "Settings",
                     description = "Units, backups etc.",
                     onClick = {
-                        navController.navigate(Route.Settings.route)
+                        navigator.navigate(LeafScreen.Settings().route)
+//                        navController.navigate(Route.Settings.route)
                     })
             }
         }

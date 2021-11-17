@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
+import com.ankitsuda.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.google.accompanist.insets.statusBarsHeight
 import timber.log.Timber
 import java.util.*
@@ -23,9 +23,12 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ankitsuda.navigation.LeafScreen
+import com.ankitsuda.navigation.LocalNavigator
+import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.navigation.Route
-import com.ankitsuda.rebound.ui.components.*
-import com.ankitsuda.rebound.ui.components.calendar.WEIGHT_7DAY_WEEK
+import com.ankitsuda.ui.components.*
+import com.ankitsuda.ui.components.calendar.WEIGHT_7DAY_WEEK
 import com.ankitsuda.rebound.utils.CalendarDate
 import org.threeten.bp.OffsetDateTime
 import java.text.SimpleDateFormat
@@ -35,6 +38,7 @@ import kotlin.random.Random
 @Composable
 fun HistoryScreen(
     navController: NavController,
+    navigator: Navigator = LocalNavigator.current,
     viewModel: HistoryScreenViewModel = hiltViewModel()
 ) {
     val argumentsDate = navController.currentBackStackEntry
@@ -104,7 +108,8 @@ fun HistoryScreen(
                                 icon = Icons.Outlined.DateRange,
                                 title = "Show calendar",
                                 onClick = {
-                                    navController.navigate(Route.Calendar.createRoute(selectedDate = date))
+//                                    navController.navigate(Route.Calendar.createRoute(selectedDate = date))
+                                    navigator.navigate(LeafScreen.Calendar.createRoute(selectedDate = date))
                                 }
                             )
                         },
@@ -182,8 +187,16 @@ fun HistoryScreen(
                                     bottom = 16.dp
                                 ),
                             onClick = {
-                                navController.navigate(
-                                    Route.Session.createRoute(
+//                                navController.navigate(
+//                                    Route.Session.createRoute(
+//                                        Random.nextLong(
+//                                            0,
+//                                            100
+//                                        )
+//                                    )
+//                                )
+                                navigator.navigate(
+                                    LeafScreen.Session.createRoute(
                                         Random.nextLong(
                                             0,
                                             100

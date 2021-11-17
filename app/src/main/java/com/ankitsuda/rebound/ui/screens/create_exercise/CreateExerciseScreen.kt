@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.ui.components.*
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import timber.log.Timber

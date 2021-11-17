@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.ui.components.*
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.google.accompanist.insets.navigationBarsPadding
 

@@ -13,12 +13,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.ankitsuda.navigation.LeafScreen
+import com.ankitsuda.navigation.LocalNavigator
+import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.navigation.Route
-import com.ankitsuda.rebound.ui.components.*
-import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
-import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.ui.components.*
+import com.ankitsuda.ui.components.charts.line.LineChartData
+import com.ankitsuda.ui.components.charts.themed.ReboundChart
+import com.ankitsuda.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
+import com.ankitsuda.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.ankitsuda.ui.theme.ReboundTheme
 import org.threeten.bp.format.DateTimeFormatter
@@ -27,6 +30,7 @@ import org.threeten.bp.format.FormatStyle
 @Composable
 fun PartMeasurementsScreen(
     navController: NavController,
+    navigator: Navigator = LocalNavigator.current,
     viewModel: PartMeasurementsScreenViewModel = hiltViewModel()
 ) {
     val bottomSheet = LocalBottomSheet.current
@@ -64,7 +68,8 @@ fun PartMeasurementsScreen(
 //                bottomSheet.show {
                 partId?.let {
 //                        AddPartMeasurementBottomSheet(it)
-                    navController.navigate(Route.AddPartMeasurement.createRoute(partId = it))
+//                    navController.navigate(Route.AddPartMeasurement.createRoute(partId = it))
+                    navigator.navigate(LeafScreen.AddPartMeasurement.createRoute(partId = it))
                 }
 //                }
             }) {
@@ -113,8 +118,14 @@ fun PartMeasurementsScreen(
                         .fillMaxWidth()
                         .clickable {
 //                            bottomSheet.show {
-                            navController.navigate(
-                                Route.AddPartMeasurement.createRoute(
+//                            navController.navigate(
+//                                Route.AddPartMeasurement.createRoute(
+//                                    partId = partId!!,
+//                                    logId = log.id
+//                                )
+//                            )
+                            navigator.navigate(
+                                LeafScreen.AddPartMeasurement.createRoute(
                                     partId = partId!!,
                                     logId = log.id
                                 )

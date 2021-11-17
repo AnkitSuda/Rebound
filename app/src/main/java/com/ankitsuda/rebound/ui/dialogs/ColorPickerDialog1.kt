@@ -10,8 +10,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker1
-import com.ankitsuda.rebound.ui.components.color_picker.ColorPickerPresets
+import com.ankitsuda.ui.components.color_picker.ColorPicker1
+import com.ankitsuda.ui.components.color_picker.ColorPickerPresets
 import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
 
 

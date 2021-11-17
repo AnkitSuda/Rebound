@@ -8,10 +8,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.rebound.ui.components.AppCard
-import com.ankitsuda.rebound.ui.components.RSpacer
-import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
-import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
+import com.ankitsuda.ui.components.AppCard
+import com.ankitsuda.ui.components.RSpacer
+import com.ankitsuda.ui.components.charts.line.LineChartData
+import com.ankitsuda.ui.components.charts.themed.ReboundChart
 import com.ankitsuda.ui.theme.ReboundTheme
 import kotlin.random.Random
 

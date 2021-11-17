@@ -59,6 +59,7 @@ sealed class LeafScreen(
     val deepLinks: List<NavDeepLink> = emptyList(),
 ) : Screen {
 
+
     fun createRoute(root: RootScreen? = null) = when (val rootPath = (root ?: this.root)?.route) {
         is String -> "$rootPath/$route"
         else -> route
@@ -97,7 +98,9 @@ sealed class LeafScreen(
     data class Measure(override val route: String = "measure") : LeafScreen(route)
     data class PartMeasurements(override val route: String = "part_measurements/{partId}") :
         LeafScreen(route) {
-        fun createRoute(partId: Long) = "part_measurements/$partId"
+        companion object {
+            fun createRoute(partId: Long) = "part_measurements/$partId"
+        }
     }
 
     data class Settings(override val route: String = "settings") : LeafScreen(route)
@@ -126,24 +129,35 @@ sealed class LeafScreen(
     data class CreateExercise(override val route: String = "create_exercise") : LeafScreen(route)
     data class AddPartMeasurement(override val route: String = "add_part_measurement?partId={partId}&logId={logId}") :
         LeafScreen(route) {
-        fun createRoute(partId: Long? = null, logId: Long? = null) =
-            "add_part_measurement?partId=$partId&logId=$logId"
+        companion object {
+
+            fun createRoute(partId: Long? = null, logId: Long? = null) =
+                "add_part_measurement?partId=$partId&logId=$logId"
+        }
     }
 
     data class Calendar(override val route: String = "calendar/{selectedDate}") :
         LeafScreen(route) {
-        fun createRoute(selectedDate: Date) = "calendar/${selectedDate.time}"
-        fun createRoute(selectedDate: Long) = "calendar/${selectedDate}"
+        companion object {
+
+            fun createRoute(selectedDate: Date) = "calendar/${selectedDate.time}"
+            fun createRoute(selectedDate: Long) = "calendar/${selectedDate}"
+        }
     }
 
     data class Session(override val route: String = "session/{sessionId}") : LeafScreen(route) {
-        fun createRoute(sessionId: Long) = "session/$sessionId"
+        companion object {
+
+            fun createRoute(sessionId: Long) = "session/$sessionId"
+
+        }
     }
 
     data class ExerciseDetails(override val route: String = "exercises/{exerciseId}") :
         LeafScreen(route) {
-
-        fun createRoute(exerciseId: Long) = "exercises/$exerciseId"
+        companion object {
+            fun createRoute(exerciseId: Long) = "exercises/$exerciseId"
+        }
     }
 }
 

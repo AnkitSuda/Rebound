@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.ui.components.TopBar
 
 @Composable
 fun HomeScreen() {

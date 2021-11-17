@@ -1,33 +1,39 @@
+import com.ankitsuda.rebound.buildSrc.App
+import com.ankitsuda.rebound.buildSrc.Deps
+
 plugins {
-    id 'com.android.dynamic-feature'
-    id 'kotlin-android'
+    id "com.android.library"
+    id "kotlin-android"
+    id "kotlin-kapt"
 }
+
 android {
-    compileSdk 31
+    compileSdkVersion App.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.ankitsuda.ui.components"
-        minSdk 21
-        targetSdk 31
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        minSdkVersion App.minSdkVersion
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion Deps.Android.Compose.version
+    }
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
-    implementation project(":app")
-    implementation 'androidx.core:core-ktx:1.7.0'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    androidTestImplementation 'androidx.annotation:annotation:1.3.0'
+    api project(":modules:common-ui-compose")
+    api project(":modules:common-ui-theme")
+    api project(":modules:navigation")
 }
