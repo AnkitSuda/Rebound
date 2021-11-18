@@ -1,12 +1,12 @@
-package com.ankitsuda.rebound.data
+package com.ankitsuda.rebound.data.db
 
 import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.ankitsuda.rebound.data.daos.ExercisesDao
-import com.ankitsuda.rebound.data.daos.MeasurementsDao
-import com.ankitsuda.rebound.data.daos.MusclesDao
-import com.ankitsuda.rebound.data.daos.WorkoutsDao
+import com.ankitsuda.rebound.data.db.daos.ExercisesDao
+import com.ankitsuda.rebound.data.db.daos.MeasurementsDao
+import com.ankitsuda.rebound.data.db.daos.MusclesDao
+import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
 import com.ankitsuda.rebound.domain.entities.*
 import java.util.concurrent.Executors
 

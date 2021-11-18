@@ -1,9 +1,8 @@
-package com.ankitsuda.rebound.data.daos
+package com.ankitsuda.rebound.data.db.daos
 
 import androidx.room.*
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
-import org.threeten.bp.OffsetDateTime
 
 @Dao
 interface WorkoutsDao {

@@ -1,8 +1,7 @@
 package com.ankitsuda.rebound.data.repositories
 
-import com.ankitsuda.rebound.data.daos.ExercisesDao
+import com.ankitsuda.rebound.data.db.daos.ExercisesDao
 import com.ankitsuda.rebound.domain.entities.Exercise
-import org.threeten.bp.OffsetDateTime
 import java.util.*
 import javax.inject.Inject
 

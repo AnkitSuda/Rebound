@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.data.daos
+package com.ankitsuda.rebound.data.db.daos
 
 import androidx.room.Dao
 import androidx.room.Insert

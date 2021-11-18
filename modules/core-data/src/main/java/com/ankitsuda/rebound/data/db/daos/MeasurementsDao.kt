@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.data.daos
+package com.ankitsuda.rebound.data.db.daos
 
 import androidx.room.*
 import com.ankitsuda.rebound.domain.entities.BodyPartMeasurementLog

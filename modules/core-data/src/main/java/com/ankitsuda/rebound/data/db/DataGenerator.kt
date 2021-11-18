@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.data
+package com.ankitsuda.rebound.data.db
 
 import com.ankitsuda.rebound.domain.entities.Muscle
 

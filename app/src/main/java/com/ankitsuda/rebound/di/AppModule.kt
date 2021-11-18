@@ -6,11 +6,11 @@ import android.content.res.Resources
 import com.ankitsuda.base.initializers.AppInitializers
 import com.ankitsuda.base.initializers.TimberInitializer
 import com.ankitsuda.base.utils.CoroutineDispatchers
-import com.ankitsuda.rebound.data.AppDatabase
-import com.ankitsuda.rebound.data.daos.ExercisesDao
-import com.ankitsuda.rebound.data.daos.MeasurementsDao
-import com.ankitsuda.rebound.data.daos.MusclesDao
-import com.ankitsuda.rebound.data.daos.WorkoutsDao
+import com.ankitsuda.rebound.data.db.AppDatabase
+import com.ankitsuda.rebound.data.db.daos.ExercisesDao
+import com.ankitsuda.rebound.data.db.daos.MeasurementsDao
+import com.ankitsuda.rebound.data.db.daos.MusclesDao
+import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
 import com.ankitsuda.rebound.data.repositories.MeasurementsRepository
@@ -51,45 +51,6 @@ object AppModule {
             timberManager,
         )
     }
-    @Singleton
-    @Provides
-    fun provideDatabase(@ApplicationContext appContext: Context) =
-        AppDatabase.getDatabase(appContext)
 
-    @Singleton
-    @Provides
-    fun provideMeasurementsDao(db: AppDatabase) = db.measurementsDao()
-
-    @Singleton
-    @Provides
-    fun provideWorkoutsDao(db: AppDatabase) = db.workoutsDao()
-
-    @Singleton
-    @Provides
-    fun provideMusclesDao(db: AppDatabase) = db.musclesDao()
-
-    @Singleton
-    @Provides
-    fun provideExercisesDao(db: AppDatabase) = db.exercisesDao()
-
-    @Singleton
-    @Provides
-    fun provideMeasurementsRepository(measurementsDao: MeasurementsDao) =
-        MeasurementsRepository(measurementsDao)
-
-    @Singleton
-    @Provides
-    fun provideWorkoutsRepository(workoutsDao: WorkoutsDao, prefStorage: PrefStorage) =
-        WorkoutsRepository(workoutsDao, prefStorage)
-
-    @Singleton
-    @Provides
-    fun provideMusclesRepository(musclesDao: MusclesDao) =
-        MusclesRepository(musclesDao)
-
-    @Singleton
-    @Provides
-    fun provideExercisesRepository(exercisesDao: ExercisesDao) =
-        ExercisesRepository(exercisesDao)
 
 }

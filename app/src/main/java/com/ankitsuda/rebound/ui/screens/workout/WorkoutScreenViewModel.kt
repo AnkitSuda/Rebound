@@ -7,7 +7,6 @@ import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class WorkoutScreenViewModel @Inject constructor(private val workoutsRepository: WorkoutsRepository) :
