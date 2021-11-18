@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.screens.part_measurements
+package com.ankitsuda.ui.measure.part.overview
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,16 +16,12 @@ import androidx.navigation.NavHostController
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.rebound.ui.navigation.Route
 import com.ankitsuda.ui.components.*
 import com.ankitsuda.ui.components.charts.line.LineChartData
 import com.ankitsuda.ui.components.charts.themed.ReboundChart
 import com.ankitsuda.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
-import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.ankitsuda.ui.theme.ReboundTheme
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.format.FormatStyle
 
 @Composable
 fun PartMeasurementsScreen(
@@ -33,7 +29,6 @@ fun PartMeasurementsScreen(
     navigator: Navigator = LocalNavigator.current,
     viewModel: PartMeasurementsScreenViewModel = hiltViewModel()
 ) {
-    val bottomSheet = LocalBottomSheet.current
     val partId by remember {
         mutableStateOf(
             navController.currentBackStackEntry?.arguments?.getString(

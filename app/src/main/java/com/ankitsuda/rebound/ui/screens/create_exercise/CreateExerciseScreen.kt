@@ -19,6 +19,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.ankitsuda.navigation.LocalNavigator
+import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.ui.components.*
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -28,7 +30,7 @@ import kotlin.random.Random
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun CreateExerciseScreen(
-    navController: NavHostController,
+    navigator: Navigator = LocalNavigator.current,
     viewModel: CreateExerciseScreenViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
@@ -57,7 +59,7 @@ fun CreateExerciseScreen(
             strictLeftIconAlignToStart = true,
             leftIconBtn = {
                 TopBarIconButton(icon = Icons.Outlined.Close, title = "Back", onClick = {
-                    navController.popBackStack()
+                    navigator.goBack()
                 })
             },
             rightIconBtn = {
@@ -68,7 +70,7 @@ fun CreateExerciseScreen(
                     customTint = MaterialTheme.colors.primary
                 ) {
                     viewModel.createExercise()
-                    navController.popBackStack()
+                    navigator.goBack()
                 }
             })
 

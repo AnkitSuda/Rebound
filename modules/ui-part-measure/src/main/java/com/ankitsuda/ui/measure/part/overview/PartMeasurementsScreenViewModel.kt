@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.screens.part_measurements
+package com.ankitsuda.ui.measure.part.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

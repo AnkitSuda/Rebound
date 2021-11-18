@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
 import com.ankitsuda.common.compose.collectEvent
 import com.ankitsuda.navigation.*
+import com.ankitsuda.rebound.ui.measure.MeasureScreen
 import com.ankitsuda.rebound.ui.screens.exercise.ExerciseDetailScreen
 import com.ankitsuda.rebound.ui.screens.exercises.ExercisesScreen
 import com.ankitsuda.rebound.ui.screens.calendar.CalendarScreen
@@ -17,10 +18,7 @@ import com.ankitsuda.rebound.ui.screens.create_exercise.CreateExerciseScreen
 import com.ankitsuda.rebound.ui.screens.history.HistoryScreen
 import com.ankitsuda.rebound.ui.screens.home.HomeScreen
 import com.ankitsuda.rebound.ui.screens.main_screen.BottomNavigationScreens
-import com.ankitsuda.rebound.ui.screens.measure.MeasureScreen
 import com.ankitsuda.rebound.ui.screens.more.MoreScreen
-import com.ankitsuda.rebound.ui.screens.part_measurements.AddPartMeasurementBottomSheet
-import com.ankitsuda.rebound.ui.screens.part_measurements.PartMeasurementsScreen
 import com.ankitsuda.rebound.ui.settings.personalization.ColorPickerDemoScreen
 import com.ankitsuda.rebound.ui.settings.personalization.PersonalizationScreen
 import com.ankitsuda.rebound.ui.settings.personalization.botom_bar.BottomBarPersonalizationScreen
@@ -32,6 +30,8 @@ import com.ankitsuda.rebound.ui.settings.personalization.top_bar.TopBarPersonali
 import com.ankitsuda.rebound.ui.screens.session.SessionScreen
 import com.ankitsuda.rebound.ui.screens.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.screens.workout.WorkoutScreen
+import com.ankitsuda.ui.measure.part.add_sheet.AddPartMeasurementBottomSheet
+import com.ankitsuda.ui.measure.part.overview.PartMeasurementsScreen
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -110,6 +110,7 @@ private fun NavGraphBuilder.addExercisesRoot(navController: NavController) {
     ) {
         addExercises(navController)
         addExerciseDetail(navController)
+        addCreateExerciseBottomSheet(navController)
     }
 }
 
@@ -130,6 +131,8 @@ private fun NavGraphBuilder.addMoreRoot(navController: NavController) {
         addBottomBarPersonalizationScreen(navController)
         addChartsPersonalizationScreen(navController)
         addColorPickerDemoScreen(navController)
+
+        addAddPartMeasurementBottomSheet(navController)
     }
 }
 
@@ -249,6 +252,18 @@ private fun NavGraphBuilder.addColorPickerDemoScreen(navController: NavControlle
     }
 }
 
+private fun NavGraphBuilder.addCreateExerciseBottomSheet(navController: NavController) {
+    bottomSheetScreen(LeafScreen.CreateExercise()) {
+        CreateExerciseScreen()
+    }
+}
+
+private fun NavGraphBuilder.addAddPartMeasurementBottomSheet(navController: NavController) {
+    bottomSheetScreen(LeafScreen.AddPartMeasurement()) {
+        AddPartMeasurementBottomSheet(navController)
+    }
+}
+
 
 /**
  * Adds an [NavController.OnDestinationChangedListener] to this [NavController] and updates the
@@ -261,9 +276,10 @@ internal fun NavController.currentScreenAsState(): State<RootScreen> {
     val rootScreens = ROOT_SCREENS
     DisposableEffect(this) {
         val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
-            rootScreens.firstOrNull { rs -> destination.hierarchy.any { it.route == rs.route } }?.let {
-                selectedItem.value = it
-            }
+            rootScreens.firstOrNull { rs -> destination.hierarchy.any { it.route == rs.route } }
+                ?.let {
+                    selectedItem.value = it
+                }
         }
         addOnDestinationChangedListener(listener)
 

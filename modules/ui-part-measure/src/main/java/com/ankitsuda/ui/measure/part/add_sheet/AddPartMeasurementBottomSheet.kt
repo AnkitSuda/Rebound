@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.screens.part_measurements
+package com.ankitsuda.ui.measure.part.add_sheet
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,15 +19,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.ankitsuda.navigation.LocalNavigator
+import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.ui.components.*
-import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.google.accompanist.insets.navigationBarsPadding
 
 @Composable
 fun AddPartMeasurementBottomSheet(
 //    partId: Long? = null,
 //    logId: Long? = null,
-    navController: NavHostController,
+    navController: NavController,
+    navigator: Navigator = LocalNavigator.current,
     viewModel: AddPartMeasurementBottomSheetViewModel = hiltViewModel()
 ) {
     val partId = try {
@@ -87,7 +89,7 @@ fun AddPartMeasurementBottomSheet(
                     modifier = Modifier.padding(end = 16.dp),
                     onClick = {
                         viewModel.deleteMeasurementFromDb(logId!!)
-                        navController.popBackStack()
+                        navigator.goBack()
                     }) {
                     Text("Delete")
                 }
@@ -103,7 +105,7 @@ fun AddPartMeasurementBottomSheet(
                             viewModel.addMeasurementToDb(partId)
                         }
                     }
-                    navController.popBackStack()
+                    navigator.goBack()
                 },
                 modifier = Modifier.width(88.dp)
             ) {
