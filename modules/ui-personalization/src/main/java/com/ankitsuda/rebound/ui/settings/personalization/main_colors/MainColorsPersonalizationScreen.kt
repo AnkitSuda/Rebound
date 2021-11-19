@@ -1,0 +1,145 @@
+package com.ankitsuda.rebound.ui.settings.personalization.main_colors
+
+import androidx.compose.runtime.*
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+//import com.ankitsuda.rebound.ui.components.*
+//import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
+//import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+//import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker
+//import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
+
+@Composable
+fun MainColorsPersonalizationScreen(
+    navController: NavController,
+    viewModel: MainColorsPersonalizationScreenViewModel = hiltViewModel()
+) {
+//    val collapsingState = rememberCollapsingToolbarScaffoldState()
+//
+//    val isLightTheme by viewModel.isLightTheme.collectAsState(initial = false)
+//    val isDarkStatusBarIcons by viewModel.isDarkStatusBarIcons.collectAsState(initial = true)
+//    val isDarkNavigationBarIcons by viewModel.isDarkNavigationBarIcons.collectAsState(initial = true)
+//
+//    val primaryColor by viewModel.primaryColor.collectAsState(initial = DefaultAccentColor)
+//    val backgroundColor by viewModel.backgroundColor.collectAsState(initial = Color.White)
+//
+//    val onPrimaryColor by viewModel.onPrimaryColor.collectAsState(initial = Color.White)
+//    val onBackgroundColor by viewModel.onBackgroundColor.collectAsState(initial = Color.Black)
+//
+//    CollapsingToolbarScaffold(
+//        state = collapsingState,
+//        toolbar = {
+//            TopBar(title = "Main Colors", strictLeftIconAlignToStart = true,leftIconBtn = {
+//                TopBarBackIconButton {
+//                    navController.popBackStack()
+//                }
+//            }, rightIconBtn = {
+//                TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+//
+//                }
+//            })
+//        },
+//        modifier = Modifier.background(MaterialTheme.colors.background)
+//    ) {
+//
+//        val itemModifier = Modifier
+//            .fillMaxWidth()
+//            .padding(bottom = 8.dp)
+//
+//        with(LocalDialog.current) {
+//            LazyColumn(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .background(MaterialTheme.colors.background),
+//                contentPadding = PaddingValues(16.dp)
+//            ) {
+//
+//                item {
+//
+//                    ColorPickerCardItem(
+//                        modifier = itemModifier,
+//                        text = "Primary Color",
+//                        selectedColor = primaryColor,
+//                        onNewColorSelected = {
+//                            viewModel.setPrimaryColor(it)
+//                        },
+//                    )
+//
+//                }
+//
+//                item {
+//
+//                    ColorPickerCardItem(
+//                        modifier = itemModifier,
+//                        text = "Background Color",
+//                        selectedColor = backgroundColor,
+//                        onNewColorSelected = {
+//                            viewModel.setBackgroundColor(it)
+//                        }
+//                    )
+//
+//                }
+//
+//                item {
+//                    ColorPickerCardItem(
+//                        modifier = itemModifier,
+//                        text = "On Primary Color",
+//                        selectedColor = onPrimaryColor,
+//                        useAltColorPicker = true,
+//                        onNewColorSelected = {
+//                            viewModel.setOnPrimaryColor(it)
+//                        })
+//                }
+//                item {
+//                    ColorPickerCardItem(
+//                        modifier = itemModifier,
+//                        text = "On Background Color",
+//                        selectedColor = onBackgroundColor,
+//                        onNewColorSelected = {
+//                            viewModel.setOnBackgroundColor(it)
+//                        })
+//                }
+//
+//                item {
+//
+//                    SwitchCardItem(
+//                        modifier = itemModifier,
+//                        text = "Is Light Theme",
+//                        checked = isLightTheme,
+//                        onChange = {
+//                            viewModel.setIsLightTheme(it)
+//                        }
+//                    )
+//
+//                }
+//
+//                item {
+//
+//                    SwitchCardItem(
+//                        modifier = itemModifier,
+//                        text = "Dark status bar icons",
+//                        checked = isDarkStatusBarIcons,
+//                        onChange = {
+//                            viewModel.setIsDarkStatusBarIcons(it)
+//                        }
+//                    )
+//
+//                }
+//                item {
+//
+//                    SwitchCardItem(
+//                        modifier = itemModifier,
+//                        text = "Dark navigation bar icons",
+//                        checked = isDarkNavigationBarIcons,
+//                        onChange = {
+//                            viewModel.setIsDarkNavigationBarIcons(it)
+//                        }
+//                    )
+//
+//                }
+//            }
+//        }
+//    }
+
+}
+

@@ -62,6 +62,7 @@ dependencies {
     api Deps.Android.Accompanist.insets
     api Deps.Android.Accompanist.insetsUi
     api Deps.Android.Accompanist.pager
+    api Deps.Android.Accompanist.pagerIndicators
     api Deps.Android.Accompanist.placeholder
     api Deps.Android.Accompanist.systemUiController
     api Deps.Android.Accompanist.navigationMaterial

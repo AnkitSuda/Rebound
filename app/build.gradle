@@ -68,6 +68,16 @@ dependencies {
     implementation project(":modules:ui-settings")
     implementation project(":modules:ui-measure")
     implementation project(":modules:ui-part-measure")
+    implementation project(":modules:ui-calendar")
+    implementation project(":modules:ui-workout")
+    implementation project(":modules:ui-workout-details")
+    implementation project(":modules:ui-more-screen")
+    implementation project(":modules:ui-create-exercise")
+    implementation project(":modules:ui-exercises")
+    implementation project(":modules:ui-home")
+    implementation project(":modules:ui-history")
+    implementation project(":modules:ui-personalization")
+    implementation project(":modules:ui-exercise-details")
 
     implementation Deps.Kotlin.coroutinesAndroid
     kapt Deps.Android.Lifecycle.compiler

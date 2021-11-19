@@ -7,10 +7,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.core.view.WindowCompat
 import com.ankitsuda.rebound.data.datastore.PrefStorage
-import com.ankitsuda.rebound.ui.screens.main_screen.MainScreen
+import com.ankitsuda.rebound.ui.main.MainScreen
 import com.google.accompanist.insets.ProvideWindowInsets
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
