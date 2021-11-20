@@ -1,20 +1,31 @@
-package com.ankitsuda.data
+package com.ankitsuda.rebound.data.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.ankitsuda.domain.models.DEFAULT_JSON_FORMAT
+import com.ankitsuda.domain.models.None
+import com.ankitsuda.domain.models.Optional
+import com.ankitsuda.domain.models.some
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import java.io.IOException
 import javax.inject.Inject
-
+private val format = DEFAULT_JSON_FORMAT
 class DatastoreUtils @Inject constructor(@ApplicationContext private val context: Context) {
-    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "AppPrefStorage")
+    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+        name = "AppPrefStorage",
+    )
+
     suspend fun clearPreferenceStorage() {
         context.dataStore.edit {
             it.clear()
@@ -75,6 +86,39 @@ class DatastoreUtils @Inject constructor(@ApplicationContext private val context
         }
     }
 
+    fun <T> optional(key: Preferences.Key<T>): Flow<Optional<T>> =
+        context.dataStore.data.map { preferences -> some(preferences[key]) }
+
+    suspend fun <T> setValue(key: Preferences.Key<String>, value: T, serializer: KSerializer<T>) {
+        setValue(key, Json.encodeToString(serializer, value))
+    }
+
+    fun <T> optional(key: Preferences.Key<String>, serializer: KSerializer<T>): Flow<Optional<T>> {
+        return optional(key).map {
+            when (it) {
+                is Optional.Some<String> ->
+                    try {
+                        some(format.decodeFromString(serializer, it.value))
+                    } catch (e: SerializationException) {
+                        None
+                    }
+                else -> Optional.None
+            }
+        }
+    }
+
+    fun <T> getValue(
+        name: Preferences.Key<String>,
+        serializer: KSerializer<T>,
+        defaultValue: T
+    ): Flow<T> {
+        return optional(name, serializer).map {
+            when (it) {
+                is Optional.None -> defaultValue
+                else -> it.value()
+            }
+        }
+    }
 //    suspend fun setColor(
 //        key: Preferences.Key<String>,
 //        color: Color

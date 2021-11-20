@@ -3,13 +3,15 @@ package com.ankitsuda.rebound.data.datastore
 import android.content.Context
 import androidx.datastore.preferences.core.*
 import com.ankitsuda.base.ui.ThemeState
+import com.ankitsuda.domain.models.Optional
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
-import com.ankitsuda.data.DatastoreUtils
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
@@ -29,24 +31,12 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
     }
 
     override val themeState: Flow<ThemeState>
-        get() = flow {
-            getValue(THEME_STATE_KEY, Json.encodeToString(ThemeState())).mapLatest {
-                val deserializedString = Json.decodeFromString<ThemeState>(it)
-
-                Timber.i("deserializedString $deserializedString")
-
-
-                emit(deserializedString)
-            }
-        }
+        get() = getValue(THEME_STATE_KEY, ThemeState.serializer(), ThemeState())
 
 
     override suspend fun setThemeState(value: ThemeState) {
-        val serializedString = Json.encodeToString(value)
+        setValue(THEME_STATE_KEY, value, ThemeState.serializer())
 
-        Timber.i("serializedString $serializedString")
-
-        setValue(THEME_STATE_KEY, serializedString)
     }
 
 
@@ -70,11 +60,22 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
         datastoreUtils.setValue(key, value)
     }
 
+    private suspend fun <T> setValue(key: Preferences.Key<String>, value: T, serializer: KSerializer<T>) =
+        datastoreUtils.setValue(key, value, serializer)
+
     private fun <T> getValue(
         key: Preferences.Key<T>,
         defaultValue: T
     ): Flow<T> =
         datastoreUtils.getValue(key, defaultValue)
+
+
+    fun <T> getValue(
+        name: Preferences.Key<String>,
+        serializer: KSerializer<T>,
+        defaultValue: T
+    ): Flow<T> =
+        datastoreUtils.getValue(name, serializer, defaultValue)
 
 //    private fun getColor(
 //        key: Preferences.Key<String>,

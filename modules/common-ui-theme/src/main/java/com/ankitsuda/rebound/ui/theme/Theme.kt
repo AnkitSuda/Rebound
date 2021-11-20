@@ -106,6 +106,7 @@ fun ReboundThemeWrapper(
     }
 
     ReboundTheme(
+        themeState = themeState,
         colors = colors,
         dimens = dimens,
         typography = typography,
@@ -116,6 +117,7 @@ fun ReboundThemeWrapper(
 
 @Composable
 fun ReboundTheme(
+    themeState: ThemeState,
     colors: ReboundColors,
     dimens: ReboundDimens,
     typography: Typography,
@@ -129,6 +131,7 @@ fun ReboundTheme(
     }.apply { updateColorsFrom(colors) }
 
     CompositionLocalProvider(
+        LocalThemeState provides themeState,
         LocalReboundColors provides rememberedColors,
         LocalReboundDimens provides dimens,
         LocalReboundShapes provides shapes,
@@ -272,6 +275,10 @@ class ReboundDimens(
 
 
 object ReboundTheme {
+    val state: ThemeState
+        @Composable
+        get() = LocalThemeState.current
+
     val colors: ReboundColors
         @Composable
         @ReadOnlyComposable
@@ -293,6 +300,9 @@ object ReboundTheme {
         get() = LocalReboundShapes.current
 }
 
+val LocalThemeState = staticCompositionLocalOf<ThemeState> {
+    error("No LocalThemeState provided")
+}
 internal val LocalReboundColors = staticCompositionLocalOf { lightReboundColors() }
 internal val LocalReboundDimens = staticCompositionLocalOf { defaultDimens() }
 internal val LocalReboundTypography = staticCompositionLocalOf { Typography() }

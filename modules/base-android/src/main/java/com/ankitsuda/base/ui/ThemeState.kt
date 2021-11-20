@@ -66,9 +66,19 @@ data class ThemeState(
     @SerialName("cardBorderColor")
     @Serializable(with = ColorSerializer::class)
     var cardBorderColor: Color = Color.Gray,
+    @SerialName("topBarContentColor")
+    @Serializable(with = ColorSerializer::class)
+    var topBarContentColor: Color = Color.Black,
+    @SerialName("topBarBackgroundColor")
+    @Serializable(with = ColorSerializer::class)
+    var topBarBackgroundColor: Color = Color.White,
+
+    @SerialName("topBarTitleAlignment")
+    var topBarTitleAlignment: String = "center",
 
     var cardElevation: Int = 0,
     var cardBorderWidth: Int = 0,
+    var topBarElevation: Int = 0,
 
     var shapeSmallTopLeftRadius: Int = 8,
     var shapeSmallTopRightRadius: Int = 8,
