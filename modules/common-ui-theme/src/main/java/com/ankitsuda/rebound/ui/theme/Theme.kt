@@ -53,22 +53,22 @@ fun ReboundThemeWrapper(
 
     val shapes = Shapes(
         small = RoundedCornerShape(
-            topStart = themeState.shapeSmallTopLeftRadius.dp,
-            topEnd = themeState.shapeSmallTopRightRadius.dp,
-            bottomStart = themeState.shapeSmallBottomLeftRadius.dp,
-            bottomEnd = themeState.shapeSmallBottomRightRadius.dp
+            topStart = themeState.shapeSmallTopStartRadius.dp,
+            topEnd = themeState.shapeSmallTopEndRadius.dp,
+            bottomStart = themeState.shapeSmallBottomStartRadius.dp,
+            bottomEnd = themeState.shapeSmallBottomEndRadius.dp
         ),
         medium = RoundedCornerShape(
-            topStart = themeState.shapeSmallTopLeftRadius.dp,
-            topEnd = themeState.shapeSmallTopRightRadius.dp,
-            bottomStart = themeState.shapeSmallBottomLeftRadius.dp,
-            bottomEnd = themeState.shapeSmallBottomRightRadius.dp
+            topStart = themeState.shapeSmallTopStartRadius.dp,
+            topEnd = themeState.shapeSmallTopEndRadius.dp,
+            bottomStart = themeState.shapeSmallBottomStartRadius.dp,
+            bottomEnd = themeState.shapeSmallBottomEndRadius.dp
         ),
         large = RoundedCornerShape(
-            topStart = themeState.shapeSmallTopLeftRadius.dp,
-            topEnd = themeState.shapeSmallTopRightRadius.dp,
-            bottomStart = themeState.shapeSmallBottomLeftRadius.dp,
-            bottomEnd = themeState.shapeSmallBottomRightRadius.dp
+            topStart = themeState.shapeSmallTopStartRadius.dp,
+            topEnd = themeState.shapeSmallTopEndRadius.dp,
+            bottomStart = themeState.shapeSmallBottomStartRadius.dp,
+            bottomEnd = themeState.shapeSmallBottomEndRadius.dp
         ),
     )
 

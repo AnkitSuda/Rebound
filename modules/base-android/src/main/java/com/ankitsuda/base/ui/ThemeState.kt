@@ -90,14 +90,14 @@ data class ThemeState(
     var bottomBarIconSize: Int = 24,
 
     /* Shapes */
-    @SerialName("shapeSmallTopLeftRadius")
-    var shapeSmallTopLeftRadius: Int = 8,
-    @SerialName("shapeSmallTopRightRadius")
-    var shapeSmallTopRightRadius: Int = 8,
-    @SerialName("shapeSmallBottomLeftRadius")
-    var shapeSmallBottomLeftRadius: Int = 8,
-    @SerialName("shapeSmallBottomRightRadius")
-    var shapeSmallBottomRightRadius: Int = 8,
+    @SerialName("shapeSmallTopStartRadius")
+    var shapeSmallTopStartRadius: Int = 8,
+    @SerialName("shapeSmallTopEndRadius")
+    var shapeSmallTopEndRadius: Int = 8,
+    @SerialName("shapeSmallBottomStartRadius")
+    var shapeSmallBottomStartRadius: Int = 8,
+    @SerialName("shapeSmallBottomEndRadius")
+    var shapeSmallBottomEndRadius: Int = 8,
 
     /* Charts */
     @SerialName("chartsShaderEnabled")
