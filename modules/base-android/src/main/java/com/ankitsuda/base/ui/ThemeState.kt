@@ -75,13 +75,27 @@ data class ThemeState(
 
     @SerialName("topBarTitleAlignment")
     var topBarTitleAlignment: String = "center",
+    @SerialName("bottomBarLabelWeight")
+    var bottomBarLabelWeight: String = "bold",
+    @SerialName("bottomBarLabelVisible")
+    var bottomBarLabelVisible: String = "always",
 
+    @SerialName("cardElevation")
     var cardElevation: Int = 0,
+    @SerialName("cardBorderWidth")
     var cardBorderWidth: Int = 0,
+    @SerialName("topBarElevation")
     var topBarElevation: Int = 0,
+    @SerialName("bottomBarIconSize")
+    var bottomBarIconSize: Int = 24,
 
+
+    @SerialName("shapeSmallTopLeftRadius")
     var shapeSmallTopLeftRadius: Int = 8,
+    @SerialName("shapeSmallTopRightRadius")
     var shapeSmallTopRightRadius: Int = 8,
+    @SerialName("shapeSmallBottomLeftRadius")
     var shapeSmallBottomLeftRadius: Int = 8,
+    @SerialName("shapeSmallBottomRightRadius")
     var shapeSmallBottomRightRadius: Int = 8,
 ) : Parcelable

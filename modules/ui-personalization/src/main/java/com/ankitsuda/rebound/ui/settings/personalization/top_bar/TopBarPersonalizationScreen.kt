@@ -51,8 +51,6 @@ fun TopBarPersonalizationScreen(
             setThemeState = themeViewModel::applyThemeState,
         )
 
-    } ?: run {
-        Text("Theme state is null", modifier = Modifier.padding(16.dp))
     }
 }
 
