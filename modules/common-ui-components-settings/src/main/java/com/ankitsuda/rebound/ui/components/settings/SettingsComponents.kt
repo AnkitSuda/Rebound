@@ -12,7 +12,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.common.compose.LocalDialog
 import com.ankitsuda.rebound.ui.components.AppCard
+import com.ankitsuda.rebound.ui.components.settings.color_pickers.ColorPickerDialog
+import com.ankitsuda.rebound.ui.components.settings.color_pickers.ColorPickerDialog1
 //import com.ankitsuda.rebound.ui.dialogs.ColorPickerAltDialog
 //import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog
 //import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog1
@@ -35,59 +38,60 @@ fun ColorPickerCardItem(
     onNewColorSelected: (Color) -> Unit = {},
     onClick: () -> Unit = {}
 ) {
-//    with(LocalDialog.current) {
-    AppCard(modifier = modifier, onClick = {
-        onClick()
-//            if (enableAutoColorPicker) {
-//                dialogContent = {
-//                    if (useAltColorPicker) {
-//                        /* ColorPickerAltDialog(
-//                             defaultColor = selectedColor,
-//                             colorSelected = onNewColorSelected
-//                         )*/
-//                        ColorPickerDialog1(
-//                            colorSelected = onNewColorSelected,
-//                            defaultColor = selectedColor
-//                        )
-//                    } else {
-//                        ColorPickerDialog(onColorSelected = onNewColorSelected)
-//                    }
-//                }
-//                showDialog()
-//            }
-    }) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (icon != null) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = text,
-                    modifier = Modifier.padding(end = 16.dp)
-                )
+    with(LocalDialog.current) {
+        AppCard(modifier = modifier, onClick = {
+            onClick()
+            if (enableAutoColorPicker) {
+                dialogContent = {
+                    if (useAltColorPicker) {
+                        /* ColorPickerAltDialog(
+                             defaultColor = selectedColor,
+                             colorSelected = onNewColorSelected
+                         )*/
+                        ColorPickerDialog1(
+                            colorSelected = onNewColorSelected,
+                            defaultColor = selectedColor
+                        )
+                    } else {
+                        ColorPickerDialog(onColorSelected = onNewColorSelected)
+                    }
+                }
+                showDialog()
             }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = text)
-                if (description.isNotEmpty()) {
-                    Text(
-                        text = description,
-                        style = ReboundTheme.typography.caption,
-                        color = Color(117, 117, 117)
+        }) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (icon != null) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = text,
+                        modifier = Modifier.padding(end = 16.dp)
                     )
                 }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(text = text)
+                    if (description.isNotEmpty()) {
+                        Text(
+                            text = description,
+                            style = ReboundTheme.typography.caption,
+                            color = Color(117, 117, 117)
+                        )
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clip(CircleShape)
+                        .background(selectedColor)
+                        .border(
+                            width = 1.dp,
+                            color = selectedColor/*.lighterOrDarkerColor(ratio = 0.2f)*/,
+                            shape = CircleShape
+                        )
+                )
             }
-            Box(
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(CircleShape)
-                    .background(selectedColor)
-                    .border(
-                        width = 1.dp,
-                        color = selectedColor/*.lighterOrDarkerColor(ratio = 0.2f)*/,
-                        shape = CircleShape
-                    )
-            )
         }
     }
 }
