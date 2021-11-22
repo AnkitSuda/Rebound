@@ -16,113 +16,136 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-//import com.ankitsuda.rebound.ui.components.*
-//import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-//import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
-//import com.ankitsuda.rebound.ui.components.settings.RadioGroupCardItem
-//import com.ankitsuda.rebound.ui.screens.main_screen.LocalDialog
+import com.ankitsuda.base.ui.ThemeState
+import com.ankitsuda.common.compose.LocalDialog
+import com.ankitsuda.common.compose.rememberFlowWithLifecycle
+import com.ankitsuda.rebound.ui.ThemeViewModel
+import com.ankitsuda.rebound.ui.settings.personalization.card.CardPersonalizationScreen
+
+
+import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
+import com.ankitsuda.rebound.ui.components.TopBarIconButton
+import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
+import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.rebound.ui.components.settings.ColorPickerCardItem
+import com.ankitsuda.rebound.ui.components.settings.SliderCardItem
+import com.ankitsuda.rebound.ui.components.settings.SwitchCardItem
 
 @Composable
 fun ChartsPersonalizationScreen(
     navController: NavController,
-//    viewModel: ChartsPersonalizationScreenViewModel = hiltViewModel()
+    themeViewModel: ThemeViewModel = hiltViewModel(),
 ) {
-//    val collapsingState = rememberCollapsingToolbarScaffoldState()
-//
-//    val shaderEnabled by viewModel.shaderEnabled.collectAsState(initial = true)
-//    val lineThickness by viewModel.lineThickness.collectAsState(initial = 0)
-//    val pointDiameter by viewModel.pointDiameter.collectAsState(initial = 0)
-//    val pointLineThickness by viewModel.pointLineThickness.collectAsState(initial = 0)
-//
-//    CollapsingToolbarScaffold(
-//        state = collapsingState,
-//        toolbar = {
-//            TopBar(title = "Charts", strictLeftIconAlignToStart = true, leftIconBtn = {
-//                TopBarBackIconButton {
-//                    navController.popBackStack()
-//                }
-//            }, rightIconBtn = {
-//                TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
-//
-//                }
-//            })
-//        },
-//        modifier = Modifier.background(MaterialTheme.colors.background)
-//    ) {
-//
-//        val itemModifier = Modifier
-//            .fillMaxWidth()
-//            .padding(bottom = 8.dp)
-//
-//        with(LocalDialog.current) {
-//            LazyColumn(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .background(MaterialTheme.colors.background),
-//                contentPadding = PaddingValues(16.dp)
-//            ) {
-//
-//                item {
-//
-//                    SwitchCardItem(
-//                        modifier = itemModifier,
-//                        text = "Shader enabled",
-//                        checked = shaderEnabled,
-//                        onChange = {
-//                            viewModel.setShaderEnabled(it)
-//                        }
-//                    )
-//
-//                }
-//
-//                item {
-//
-//                    SliderCardItem(
-//                        modifier = itemModifier,
-//                        text = "Line thickness",
-//                        value = lineThickness,
-//                        steps = 16,
-//                        valueRange = 0f..16f,
-//                        onChange = {
-//                            viewModel.setLineThickness(it)
-//                        }
-//                    )
-//
-//                }
-//
-//                item {
-//
-//                    SliderCardItem(
-//                        modifier = itemModifier,
-//                        text = "Point diameter",
-//                        value = pointDiameter,
-//                        steps = 16,
-//                        valueRange = 0f..16f,
-//                        onChange = {
-//                            viewModel.setPointDiameter(it)
-//                        }
-//                    )
-//
-//                }
-//
-//                item {
-//
-//                    SliderCardItem(
-//                        modifier = itemModifier,
-//                        text = "Point line thickness",
-//                        value = pointLineThickness,
-//                        steps = 16,
-//                        valueRange = 0f..16f,
-//                        onChange = {
-//                            viewModel.setPointLineThickness(it)
-//                        }
-//                    )
-//
-//                }
-//
-//            }
-//        }
-//    }
+    val themeState by rememberFlowWithLifecycle(themeViewModel.themeState).collectAsState(initial = null)
+
+    themeState?.let { theme ->
+        ChartsPersonalizationScreen(
+            navController = navController,
+            themeState = theme,
+            setThemeState = themeViewModel::applyThemeState,
+        )
+
+    }
+}
+
+@Composable
+fun ChartsPersonalizationScreen(
+    navController: NavController,
+    themeState: ThemeState,
+    setThemeState: (ThemeState) -> Unit,
+) {
+    val collapsingState = rememberCollapsingToolbarScaffoldState()
+
+    CollapsingToolbarScaffold(
+        state = collapsingState,
+        toolbar = {
+            TopBar(title = "Charts", strictLeftIconAlignToStart = true, leftIconBtn = {
+                TopBarBackIconButton {
+                    navController.popBackStack()
+                }
+            }, rightIconBtn = {
+                TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+
+                }
+            })
+        },
+        modifier = Modifier.background(MaterialTheme.colors.background)
+    ) {
+
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
+
+        with(LocalDialog.current) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+
+                item {
+
+                    SwitchCardItem(
+                        modifier = itemModifier,
+                        text = "Shader enabled",
+                        checked = themeState.chartsShaderEnabled,
+                        onChange = {
+                            setThemeState(themeState.copy(chartsShaderEnabled = it))
+                        }
+                    )
+
+                }
+
+                item {
+
+                    SliderCardItem(
+                        modifier = itemModifier,
+                        text = "Line thickness",
+                        value = themeState.chartsLineThickness,
+                        steps = 16,
+                        valueRange = 0f..16f,
+                        onChange = {
+                            setThemeState(themeState.copy(chartsLineThickness = it))
+                        }
+                    )
+
+                }
+
+                item {
+
+                    SliderCardItem(
+                        modifier = itemModifier,
+                        text = "Point diameter",
+                        value = themeState.chartsPointDiameter,
+                        steps = 16,
+                        valueRange = 0f..16f,
+                        onChange = {
+                            setThemeState(themeState.copy(chartsPointDiameter = it))
+                        }
+                    )
+
+                }
+
+                item {
+
+                    SliderCardItem(
+                        modifier = itemModifier,
+                        text = "Point line thickness",
+                        value = themeState.chartsPointLineThickness,
+                        steps = 16,
+                        valueRange = 0f..16f,
+                        onChange = {
+                            setThemeState(themeState.copy(chartsPointLineThickness = it))
+                        }
+                    )
+
+                }
+
+            }
+        }
+    }
 
 
 }

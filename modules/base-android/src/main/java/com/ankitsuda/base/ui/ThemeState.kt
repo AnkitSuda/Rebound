@@ -89,7 +89,7 @@ data class ThemeState(
     @SerialName("bottomBarIconSize")
     var bottomBarIconSize: Int = 24,
 
-
+    /* Shapes */
     @SerialName("shapeSmallTopLeftRadius")
     var shapeSmallTopLeftRadius: Int = 8,
     @SerialName("shapeSmallTopRightRadius")
@@ -98,4 +98,14 @@ data class ThemeState(
     var shapeSmallBottomLeftRadius: Int = 8,
     @SerialName("shapeSmallBottomRightRadius")
     var shapeSmallBottomRightRadius: Int = 8,
+
+    /* Charts */
+    @SerialName("chartsShaderEnabled")
+    var chartsShaderEnabled: Boolean = true,
+    @SerialName("chartsLineThickness")
+    var chartsLineThickness: Int = 0,
+    @SerialName("chartsPointDiameter")
+    var chartsPointDiameter: Int = 0,
+    @SerialName("chartsPointLineThickness")
+    var chartsPointLineThickness: Int = 0,
 ) : Parcelable
