@@ -42,7 +42,7 @@ fun ReboundThemeWrapper(
         onPrimary = themeState.onPrimaryColor,
         onBackground = themeState.onBackgroundColor,
         background = animatedBackgroundColor,
-        card = themeState.card,
+        card = themeState.cardColor,
         cardBorder = themeState.cardBorderColor,
     )
 
