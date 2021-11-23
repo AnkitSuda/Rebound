@@ -13,23 +13,19 @@ import com.ankitsuda.rebound.ui.components.charts.line.renderer.line.SolidLineDr
 import com.ankitsuda.rebound.ui.components.charts.line.renderer.point.HollowFilledCircularPointDrawer
 import com.ankitsuda.rebound.ui.components.charts.line.renderer.xaxis.SimpleXAxisDrawer
 import com.ankitsuda.rebound.ui.components.charts.line.renderer.yaxis.SimpleYAxisDrawer
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
 fun ReboundChart(
     modifier: Modifier = Modifier,
     points: List<LineChartData.Point>,
-    viewModel: ReboundChartViewModel = hiltViewModel()
 ) {
-//    val shaderEnabled by viewModel.shaderEnabled.collectAsState(initial = true)
-//    val lineThickness by viewModel.lineThickness.collectAsState(initial = 2)
-//    val pointDiameter by viewModel.pointDiameter.collectAsState(initial = 6)
-//    val pointLineThickness by viewModel.pointLineThickness.collectAsState(initial = 2)
-
-    val shaderEnabled = true
-    val lineThickness = 2
-    val pointDiameter = 6
-    val pointLineThickness = 2
+    val theme = LocalThemeState.current
+    val shaderEnabled = theme.chartsShaderEnabled
+    val lineThickness = theme.chartsLineThickness
+    val pointDiameter = theme.chartsPointDiameter
+    val pointLineThickness = theme.chartsPointLineThickness
 
     LineChart(
         lineChartData = LineChartData(
