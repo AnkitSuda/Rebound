@@ -87,8 +87,7 @@ fun MainScreen(
     val coroutine = rememberCoroutineScope()
 
 
-//    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
-    val currentWorkoutId = (-1).toLong()
+    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
 
     val panelHidden = currentWorkoutId == (-1).toLong()
 

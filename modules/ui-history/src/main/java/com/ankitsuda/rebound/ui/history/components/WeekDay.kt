@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.components
+package com.ankitsuda.rebound.ui.history.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

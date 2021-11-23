@@ -27,7 +27,8 @@ import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
-import com.ankitsuda.rebound.ui.components.calendar.WEIGHT_7DAY_WEEK
+import com.ankitsuda.rebound.ui.history.components.HistorySessionItemCard
+import com.ankitsuda.rebound.ui.history.components.WeekDay
 import java.text.SimpleDateFormat
 import kotlin.random.Random
 
@@ -152,7 +153,7 @@ fun HistoryScreen(
                                 ) {
                                     for (day in week) {
                                         WeekDay(
-                                            modifier = Modifier.weight(WEIGHT_7DAY_WEEK),
+                                            modifier = Modifier.weight(1f / 7f),
                                             day = day,
                                             isSelected = day == date,
                                             onClick = {

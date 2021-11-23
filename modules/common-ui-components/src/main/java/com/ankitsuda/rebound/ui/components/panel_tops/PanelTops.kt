@@ -8,12 +8,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.rebound.domain.entities.Workout
 
 @Composable
 fun PanelTopDragHandle(modifier: Modifier = Modifier) {
@@ -35,8 +38,8 @@ fun PanelTopDragHandle(modifier: Modifier = Modifier) {
 
 @Composable
 fun PanelTopCollapsed(viewModel: PanelTopsViewModel = hiltViewModel()) {
-//    val workoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
-//    val workout by viewModel.getWorkout(workoutId).collectAsState(initial = null)
+    val workoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+    val workout by viewModel.getWorkout(workoutId).collectAsState(initial = null)
     Column(
         modifier = Modifier
             .padding(6.dp)
@@ -44,9 +47,9 @@ fun PanelTopCollapsed(viewModel: PanelTopsViewModel = hiltViewModel()) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        workout?.name?.let {
-//            Text(text = it, style = MaterialTheme.typography.h6)
-//        }
+        workout?.name?.let {
+            Text(text = it, style = MaterialTheme.typography.h6)
+        }
         Text(text = "32:12m", style = MaterialTheme.typography.caption)
     }
 }

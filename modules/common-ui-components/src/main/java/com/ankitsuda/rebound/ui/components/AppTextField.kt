@@ -10,16 +10,14 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
-//import com.ankitsuda.rebound.utils.isDark
-//import com.ankitsuda.rebound.utils.lighterOrDarkerColor
-
 @Composable
 fun AppTextField(
     modifier: Modifier = Modifier,
     value: String,
     placeholderValue: String,
-    backgroundColor: Color = ReboundTheme.colors.background/*.lighterOrDarkerColor(0.1f)*/,
+    backgroundColor: Color = ReboundTheme.colors.background.lighterOrDarkerColor(0.1f),
     singleLine: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions(),

@@ -70,6 +70,8 @@ internal fun AppNavigation(
         addWorkoutRoot(navController)
         addExercisesRoot(navController)
         addMoreRoot(navController)
+
+        addExercisesBottomSheet(navController)
     }
 }
 
@@ -254,6 +256,12 @@ private fun NavGraphBuilder.addColorPickerDemoScreen(navController: NavControlle
 private fun NavGraphBuilder.addCreateExerciseBottomSheet(navController: NavController) {
     bottomSheetScreen(LeafScreen.CreateExercise()) {
         CreateExerciseScreen()
+    }
+}
+
+private fun NavGraphBuilder.addExercisesBottomSheet(navController: NavController) {
+    bottomSheetScreen(LeafScreen.ExercisesBottomSheet()) {
+        ExercisesScreen(navController = navController, isBottomSheet = true)
     }
 }
 

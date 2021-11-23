@@ -37,4 +37,6 @@ dependencies {
     api project(":modules:common-ui-theme")
     api project(":modules:navigation")
     api project(":modules:domain")
+
+    kapt Deps.Dagger.hiltCompiler
 }

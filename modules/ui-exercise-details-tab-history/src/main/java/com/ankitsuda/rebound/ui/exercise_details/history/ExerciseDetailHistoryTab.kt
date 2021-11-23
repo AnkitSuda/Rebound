@@ -26,8 +26,8 @@ fun ExerciseDetailHistoryTab(list: List<LogEntriesWithWorkout>) {
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
                 onClick = { },
-//               workout = workout,
-//                entries = entries
+               workout = workout,
+                entries = entries
             )
         }
 

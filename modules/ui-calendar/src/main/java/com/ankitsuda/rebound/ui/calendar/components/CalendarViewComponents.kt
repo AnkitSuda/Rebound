@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.components.calendar
+package com.ankitsuda.rebound.ui.calendar.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

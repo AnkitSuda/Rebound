@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.components
+package com.ankitsuda.rebound.ui.history.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +8,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.components.AppCard
+import com.ankitsuda.rebound.ui.components.SessionCompleteQuickInfo
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 /**
