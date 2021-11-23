@@ -22,7 +22,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.base.util.TopBarAlignment
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+
 //import com.ankitsuda.rebound.utils.TopBarAlignment
 //import com.ankitsuda.rebound.utils.isDark
 //import com.ankitsuda.rebound.utils.lighterOrDarkerColor
@@ -41,7 +44,6 @@ fun TopBar(
     alignRightIconToLeftWhenTitleAlignIsNotCenter: Boolean = false,
     rightIconBtn: (@Composable () -> Unit)? = null,
     elevationEnabled: Boolean = true,
-    viewModel: TopBarViewModel = hiltViewModel()
 ) {
 
     var startBoxWidth by remember {
@@ -57,9 +59,12 @@ fun TopBar(
 //    val contentColor by viewModel.contentColor.collectAsState(initial = ReboundTheme.colors.onBackground)
 //    val elevation by viewModel.elevation.collectAsState(initial = 2)
 
-    val backgroundColor = ReboundTheme.colors.background
-    val contentColor = ReboundTheme.colors.onBackground
-    val elevation = 2
+    val theme = LocalThemeState.current
+
+    val titleAlignment = theme.topBarTitleAlignment
+    val backgroundColor = theme.topBarBackgroundColor
+    val contentColor = theme.topBarContentColor
+    val elevation = theme.topBarElevation
 
     Surface(
         elevation = if (elevationEnabled) elevation.dp else 0.dp,
@@ -93,35 +98,33 @@ fun TopBar(
                             }
                         })
                 ) {
-//                    if (titleAlignment == TopBarAlignment.CENTER || strictLeftIconAlignToStart) {
+                    if (titleAlignment == TopBarAlignment.CENTER || strictLeftIconAlignToStart) {
                     leftIconBtn?.let {
                         it()
                     }
-//                    }
+                    }
                 }
 
                 Text(
                     text = title,
                     style = ReboundTheme.typography.h5,
                     textAlign =
-//                    when (titleAlignment) {
-//                        TopBarAlignment.START -> TextAlign.Start
-//                        TopBarAlignment.END -> TextAlign.End
-//                        else -> TextAlign.Center
-//                    },
-                    TextAlign.Center,
+                    when (titleAlignment) {
+                        TopBarAlignment.START -> TextAlign.Start
+                        TopBarAlignment.END -> TextAlign.End
+                        else -> TextAlign.Center
+                    },
                     modifier = Modifier
                         .align(
-//                            when (titleAlignment) {
-//                                TopBarAlignment.START -> Alignment.CenterStart
-//                                TopBarAlignment.END -> Alignment.CenterEnd
-//                                else -> Alignment.Center
-//                            },
-                            Alignment.Center
+                            when (titleAlignment) {
+                                TopBarAlignment.START -> Alignment.CenterStart
+                                TopBarAlignment.END -> Alignment.CenterEnd
+                                else -> Alignment.Center
+                            },
                         )
                         .padding(
-                            start = /*if (titleAlignment != TopBarAlignment.CENTER) startBoxWidth + 8.dp else*/ 16.dp,
-                            end = /*if (titleAlignment != TopBarAlignment.CENTER) endBoxWidth + 8.dp else*/ 16.dp
+                            start = if (titleAlignment != TopBarAlignment.CENTER) startBoxWidth + 8.dp else 16.dp,
+                            end = if (titleAlignment != TopBarAlignment.CENTER) endBoxWidth + 8.dp else 16.dp
                         ),
                     color = contentColor,
                 )
@@ -255,7 +258,6 @@ fun TopBarIconButton(
     title: String,
     enabled: Boolean = true,
     customTint: Color? = null,
-    viewModel: TopBarViewModel = hiltViewModel(),
     onClick: () -> Unit
 ) {
     val alpha by animateFloatAsState(targetValue = if (enabled) 1f else 0.5f)
