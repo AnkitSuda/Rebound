@@ -31,6 +31,7 @@ import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded
 import com.ankitsuda.rebound.ui.components.workout_panel.WorkoutPanel
 import com.ankitsuda.rebound.ui.ThemeViewModel
 import com.ankitsuda.rebound.ui.navigation.AppNavigation
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.theme.ReboundThemeWrapper
 import com.google.accompanist.insets.navigationBarsHeight
@@ -178,7 +179,6 @@ fun MainScreen(
                                 BottomBar(
                                     elevationEnabled = panelHidden,
                                     navController = navController,
-                                    viewModel
                                 )
                             },
                             panel = {
@@ -227,7 +227,6 @@ fun MainScreen(
 private fun BottomBar(
     elevationEnabled: Boolean = false,
     navController: NavHostController,
-    mainScreenViewModel: MainScreenViewModel
 ) {
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Home,
@@ -237,14 +236,12 @@ private fun BottomBar(
         BottomNavigationScreens.More
     )
 
-//    val labelVisible by mainScreenViewModel.bottomBarLabelVisible.collectAsState(initial = LabelVisible.ALWAYS)
-//    val labelWeight by mainScreenViewModel.labelWeight.collectAsState(initial = "normal")
-//    val iconSize by mainScreenViewModel.iconSize.collectAsState(initial = 24)
+    val theme = LocalThemeState.current
 
+    val labelVisible = theme.bottomBarLabelVisible
+    val labelWeight = theme.bottomBarLabelWeight
+    val iconSize = theme.bottomBarIconSize
 
-    val labelVisible = LabelVisible.ALWAYS
-    val labelWeight = "normal"
-    val iconSize = 24
 
 
 
