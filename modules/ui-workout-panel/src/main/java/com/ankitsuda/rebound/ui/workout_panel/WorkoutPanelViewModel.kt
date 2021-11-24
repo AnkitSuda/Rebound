@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.components.workout_panel
+package com.ankitsuda.rebound.ui.workout_panel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,11 +7,6 @@ import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.domain.entities.Workout
-//import com.ankitsuda.rebound.data.entities.ExerciseLogEntry
-//import com.ankitsuda.rebound.data.entities.ExerciseWorkoutJunction
-//import com.ankitsuda.rebound.data.entities.LogEntriesWithExerciseJunction
-//import com.ankitsuda.rebound.data.entities.Workout
-//import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

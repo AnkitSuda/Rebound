@@ -70,6 +70,7 @@ dependencies {
     implementation project(":modules:ui-part-measure")
     implementation project(":modules:ui-calendar")
     implementation project(":modules:ui-workout")
+    implementation project(":modules:ui-workout-panel")
     implementation project(":modules:ui-workout-details")
     implementation project(":modules:ui-more-screen")
     implementation project(":modules:ui-create-exercise")

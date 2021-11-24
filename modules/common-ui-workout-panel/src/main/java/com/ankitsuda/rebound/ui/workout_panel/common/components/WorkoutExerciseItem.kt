@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.components
+package com.ankitsuda.rebound.ui.workout_panel.common.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -30,6 +30,8 @@ import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.domain.ExerciseCategory
+import com.ankitsuda.rebound.ui.components.RButton
+import com.ankitsuda.rebound.ui.components.RSpacer
 
 fun LazyListScope.WorkoutExerciseItemAlt(
     logEntriesWithJunction: LogEntriesWithExerciseJunction,

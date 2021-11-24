@@ -116,10 +116,9 @@ object Deps {
     object Dagger {
         private const val version = "2.40"
 
-        const val hiltVersion = "2.40"
-        const val hilt = "com.google.dagger:hilt-android:$hiltVersion"
-        const val hiltCompiler = "com.google.dagger:hilt-compiler:$hiltVersion"
-        const val hiltGradle = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
+        const val hilt = "com.google.dagger:hilt-android:$version"
+        const val hiltCompiler = "com.google.dagger:hilt-compiler:$version"
+        const val hiltGradle = "com.google.dagger:hilt-android-gradle-plugin:$version"
     }
 
     object LeakCanary {

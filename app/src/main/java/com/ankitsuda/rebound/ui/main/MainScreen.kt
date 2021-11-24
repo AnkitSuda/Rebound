@@ -28,12 +28,12 @@ import com.ankitsuda.navigation.RootScreen
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded
-import com.ankitsuda.rebound.ui.components.workout_panel.WorkoutPanel
 import com.ankitsuda.rebound.ui.ThemeViewModel
 import com.ankitsuda.rebound.ui.navigation.AppNavigation
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.theme.ReboundThemeWrapper
+import com.ankitsuda.rebound.ui.workout_panel.WorkoutPanel
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.navigation.material.BottomSheetNavigatorSheetState

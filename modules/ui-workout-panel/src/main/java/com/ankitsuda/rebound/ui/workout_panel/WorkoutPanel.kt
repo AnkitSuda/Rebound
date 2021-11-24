@@ -1,4 +1,4 @@
-package com.ankitsuda.rebound.ui.components.workout_panel
+package com.ankitsuda.rebound.ui.workout_panel
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,8 +20,8 @@ import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.AppTextField
-import com.ankitsuda.rebound.ui.components.WorkoutExerciseItemAlt
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.ui.workout_panel.common.components.WorkoutExerciseItemAlt
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
