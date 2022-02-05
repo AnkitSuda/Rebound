@@ -4,6 +4,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 
     dependencies {
@@ -12,7 +13,9 @@ buildscript {
         classpath Deps.Kotlin.serialization
 //        classpath Deps.Android.navigationSafeArgs
         classpath Deps.Dagger.hiltGradle
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31'
+        classpath Deps.Kotlin.gradle
+//        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.42.0"
     }
 }
 
@@ -23,6 +26,7 @@ allprojects {
         mavenCentral()
         maven { url 'https://jitpack.io' }
         jcenter()
+        gradlePluginPortal()
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

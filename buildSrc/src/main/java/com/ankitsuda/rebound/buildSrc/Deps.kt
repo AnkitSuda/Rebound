@@ -5,7 +5,7 @@ object Deps {
     }
 
     object Kotlin {
-        const val version = "1.5.31"
+        const val version = "1.6.10"
 
         const val gradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version"
@@ -13,28 +13,28 @@ object Deps {
         const val serialization = "org.jetbrains.kotlin:kotlin-serialization:$version"
         const val serializationRuntime = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
 
-        const val coroutinesVersion = "1.5.2"
+        const val coroutinesVersion = "1.6.0"
         const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
         const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     }
 
     object Android {
-        private const val gradleVersion = "7.0.3"
+        private const val gradleVersion = "7.0.4"
 
         const val gradle = "com.android.tools.build:gradle:$gradleVersion"
 
         const val activityVersion = "1.4.0"
         const val activityCompose = "androidx.activity:activity-compose:$activityVersion"
 
-        private const val navigationVersion = "2.4.0-beta02"
+        private const val navigationVersion = "2.5.0-alpha01"
 //        const val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-beta01"
         const val navigationCompose = "androidx.navigation:navigation-compose:$navigationVersion"
-        const val navigationHiltCompose = "androidx.hilt:hilt-navigation-compose:1.0.0-alpha03"
+        const val navigationHiltCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
 
         const val dataStore = "androidx.datastore:datastore-preferences:1.0.0"
 
         object Compose {
-            const val version = "1.1.0-beta02"
+            const val version = "1.2.0-alpha02"
 
             const val ui = "androidx.compose.ui:ui:$version"
             const val uiUtil = "androidx.compose.ui:ui-util:$version"
@@ -43,7 +43,7 @@ object Deps {
             const val materialDesign = "androidx.compose.material:material:$version"
             const val materialDesignIcons = "androidx.compose.material:material-icons-core:$version"
             const val materialDesignIconsExtended = "androidx.compose.material:material-icons-extended:$version"
-            const val constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.0.0-rc01"
+            const val constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.0.0"
             const val liveData = "androidx.compose.runtime:runtime-livedata:$version"
             const val activity = "androidx.activity:activity-compose:$activityVersion"
             const val viewModels = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
@@ -57,7 +57,7 @@ object Deps {
         }
 
         object Accompanist {
-            private const val version = "0.21.2-beta"
+            private const val version = "0.24.1-alpha"
 
             const val insets = "com.google.accompanist:accompanist-insets:$version"
             const val insetsUi = "com.google.accompanist:accompanist-insets-ui:$version"
@@ -85,7 +85,7 @@ object Deps {
         }
 
         object Room {
-            private const val roomVersion = "2.4.0-beta01"
+            private const val roomVersion = "2.4.1"
 
             const val compiler = "androidx.room:room-compiler:$roomVersion"
             const val runtime = "androidx.room:room-runtime:$roomVersion"
@@ -114,7 +114,7 @@ object Deps {
 
 
     object Dagger {
-        private const val version = "2.40"
+        private const val version = "2.40.5"
 
         const val hilt = "com.google.dagger:hilt-android:$version"
         const val hiltCompiler = "com.google.dagger:hilt-compiler:$version"

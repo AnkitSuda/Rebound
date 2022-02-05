@@ -2,6 +2,7 @@ import com.ankitsuda.rebound.buildSrc.App
 import com.ankitsuda.rebound.buildSrc.Deps
 
 plugins {
+    id 'com.github.ben-manes.versions'
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
