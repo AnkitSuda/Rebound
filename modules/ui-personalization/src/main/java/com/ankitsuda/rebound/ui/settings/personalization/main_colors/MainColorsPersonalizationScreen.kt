@@ -24,12 +24,13 @@ import com.ankitsuda.rebound.ui.settings.personalization.charts.ChartsPersonaliz
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.components.settings.ColorPickerCardItem
 import com.ankitsuda.rebound.ui.components.settings.SliderCardItem
 import com.ankitsuda.rebound.ui.components.settings.SwitchCardItem
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import me.onebone.toolbar.ScrollStrategy
 
 @Composable
 fun MainColorsPersonalizationScreen(
@@ -57,6 +58,7 @@ fun MainColorsPersonalizationScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
             TopBar(title = "Main Colors", strictLeftIconAlignToStart = true, leftIconBtn = {

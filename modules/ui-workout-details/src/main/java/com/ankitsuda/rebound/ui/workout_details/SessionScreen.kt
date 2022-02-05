@@ -19,9 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ankitsuda.rebound.ui.components.*
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import me.onebone.toolbar.ScrollStrategy
 import kotlin.random.Random
 
 @Composable
@@ -35,6 +36,7 @@ fun SessionScreen(navController: NavController) {
     }
 
     CollapsingToolbarScaffold(
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
             TopBar(title = "Session $sessionId", strictLeftIconAlignToStart = true,leftIconBtn = {

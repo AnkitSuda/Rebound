@@ -2,6 +2,7 @@ package com.ankitsuda.rebound.ui.exercise_details
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.StarBorder
@@ -15,7 +16,7 @@ import androidx.navigation.NavController
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.exercise_details.about.ExerciseDetailAboutTab
 import com.ankitsuda.rebound.ui.exercise_details.charts.ExerciseDetailChartsTab
 import com.ankitsuda.rebound.ui.exercise_details.history.ExerciseDetailHistoryTab
@@ -25,6 +26,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -57,6 +60,9 @@ fun ExerciseDetailScreen(
     val coroutineScope = rememberCoroutineScope()
 
     CollapsingToolbarScaffold(
+        modifier = Modifier.fillMaxSize(),
+        state = rememberCollapsingToolbarScaffoldState(),
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
             Surface(
                 Modifier

@@ -22,11 +22,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.rebound.ui.components.*
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import me.onebone.toolbar.*
+import me.onebone.toolbar.FabPosition
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
+@OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalAnimationApi::class,
+    ExperimentalToolbarApi::class
+)
 @Composable
 fun WorkoutScreen(
     navController: NavController,
@@ -35,12 +39,13 @@ fun WorkoutScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
 
-    CollapsingToolbarScaffold(
+    ToolbarWithFabScaffold(
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
             TopBar(title = "Workout")
         },
-        floatingActionButton = {
+        fab = {
 
             AnimatedVisibility(visible = currentWorkoutId == (-1).toLong()) {
                 ExtendedFloatingActionButton(
@@ -62,7 +67,7 @@ fun WorkoutScreen(
 
             }
         },
-        floatingActionButtonPosition = FabPosition.Center,
+        fabPosition = FabPosition.Center,
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)

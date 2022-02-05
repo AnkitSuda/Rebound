@@ -25,14 +25,15 @@ import com.ankitsuda.rebound.ui.ThemeViewModel
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.components.settings.ColorPickerCardItem
 import com.ankitsuda.rebound.ui.components.settings.RadioGroupCardItem
 import com.ankitsuda.rebound.ui.components.settings.SliderCardItem
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import me.onebone.toolbar.ScrollStrategy
 import timber.log.Timber
 
 @Composable
@@ -69,6 +70,7 @@ private fun TopBarPersonalizationScreen(
 //    val elevation by viewModel.elevation.collectAsState(0)
 //
     CollapsingToolbarScaffold(
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
             TopBar(title = "Top Bar", strictLeftIconAlignToStart = true, leftIconBtn = {

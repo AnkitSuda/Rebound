@@ -11,8 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.google.accompanist.insets.statusBarsHeight
 import timber.log.Timber
 import java.util.*
@@ -29,6 +29,7 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.history.components.HistorySessionItemCard
 import com.ankitsuda.rebound.ui.history.components.WeekDay
+import me.onebone.toolbar.ScrollStrategy
 import java.text.SimpleDateFormat
 import kotlin.random.Random
 
@@ -95,6 +96,7 @@ fun HistoryScreen(
             )
 
             CollapsingToolbarScaffold(
+                scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
                 state = collapsingState,
                 toolbar = {
                     TopBar(

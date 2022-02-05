@@ -54,6 +54,7 @@ object Deps {
 
             const val coil = "io.coil-kt:coil-compose:${Utils.coilVersion}"
 //            const val reorderable = "org.burnoutcrew.composereorderable:reorderable:0.7.0"
+            const val collapsingToolbar = "me.onebone:toolbar-compose:2.3.1"
         }
 
         object Accompanist {

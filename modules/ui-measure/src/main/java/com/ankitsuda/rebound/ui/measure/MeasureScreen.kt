@@ -15,12 +15,13 @@ import com.ankitsuda.rebound.ui.components.MoreItemCard
 import com.ankitsuda.rebound.ui.components.MoreSectionHeader
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun MeasureScreen(
-    navController: NavController,navigator: Navigator = LocalNavigator.current,
+    navController: NavController, navigator: Navigator = LocalNavigator.current,
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
@@ -45,6 +46,7 @@ fun MeasureScreen(
 
     CollapsingToolbarScaffold(
         state = collapsingState,
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
             TopBar(title = "Measure", strictLeftIconAlignToStart = true, leftIconBtn = {
                 TopBarBackIconButton {

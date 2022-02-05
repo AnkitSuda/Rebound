@@ -25,13 +25,15 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.domain.entities.ExerciseWithMuscle
 import com.ankitsuda.rebound.domain.entities.Muscle
 import com.ankitsuda.rebound.ui.components.*
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import timber.log.Timber
 import kotlin.random.Random
 
@@ -113,6 +115,9 @@ private fun ExercisesScreenContent(
 
     Column {
         CollapsingToolbarScaffold(
+            modifier = Modifier.fillMaxSize(),
+            state = rememberCollapsingToolbarScaffoldState(),
+            scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
             toolbar = {
                 Surface(
                     Modifier

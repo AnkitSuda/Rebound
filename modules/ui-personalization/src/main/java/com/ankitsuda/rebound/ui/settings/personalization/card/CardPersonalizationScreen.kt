@@ -21,12 +21,13 @@ import com.ankitsuda.rebound.ui.ThemeViewModel
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.components.settings.ColorPickerCardItem
 import com.ankitsuda.rebound.ui.components.settings.SliderCardItem
 import com.ankitsuda.rebound.ui.settings.personalization.top_bar.TopBarPersonalizationScreen
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import me.onebone.toolbar.ScrollStrategy
 import kotlin.math.roundToInt
 
 @Composable
@@ -55,6 +56,7 @@ fun CardPersonalizationScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
             TopBar(title = "Cards", strictLeftIconAlignToStart = true,leftIconBtn = {

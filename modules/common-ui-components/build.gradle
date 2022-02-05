@@ -37,6 +37,6 @@ dependencies {
     api project(":modules:common-ui-theme")
     api project(":modules:navigation")
     api project(":modules:domain")
-
+    api Deps.Android.Compose.collapsingToolbar
     kapt Deps.Dagger.hiltCompiler
 }

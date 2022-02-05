@@ -15,13 +15,14 @@ import androidx.navigation.NavController
 import com.ankitsuda.base.util.MonthItem
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.base.util.CalendarDate
 import com.ankitsuda.base.util.CalendarItem
 import com.ankitsuda.base.util.CalendarUtils
 import com.ankitsuda.rebound.ui.calendar.components.CalendarMonthItem
 import kotlinx.coroutines.launch
+import me.onebone.toolbar.ScrollStrategy
 import timber.log.Timber
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -69,6 +70,7 @@ fun CalendarScreen(
     }
 
     CollapsingToolbarScaffold(
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
             TopBar(title = "Calendar", strictLeftIconAlignToStart = true, leftIconBtn = {

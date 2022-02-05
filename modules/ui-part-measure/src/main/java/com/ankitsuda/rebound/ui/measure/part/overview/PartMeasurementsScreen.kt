@@ -18,10 +18,10 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
 import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
-import com.ankitsuda.rebound.ui.components.collapsing_toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import me.onebone.toolbar.*
 
+@OptIn(ExperimentalToolbarApi::class)
 @Composable
 fun PartMeasurementsScreen(
     navController: NavController,
@@ -48,8 +48,9 @@ fun PartMeasurementsScreen(
     val showChart = points.size > 1
 
 
-    CollapsingToolbarScaffold(
+    ToolbarWithFabScaffold(
         state = collapsingState,
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
             TopBar(title = partId.toString(), strictLeftIconAlignToStart = true, leftIconBtn = {
                 TopBarBackIconButton {
@@ -57,7 +58,7 @@ fun PartMeasurementsScreen(
                 }
             })
         },
-        floatingActionButton = {
+        fab = {
             FloatingActionButton(onClick = {
 //                bottomSheet.show {
                 partId?.let {
