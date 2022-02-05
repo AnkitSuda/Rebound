@@ -46,10 +46,12 @@ fun ExercisesScreen(
     viewModel: ExercisesScreenViewModel = hiltViewModel()
 ) {
 
-    val allExercises by viewModel.allExercises.collectAsState(initial = emptyList())
+//    val allExercises by viewModel.allExercises.collectAsState(initial = emptyList())
     val allMuscles by viewModel.allMuscles.collectAsState(initial = emptyList())
     val isSearchMode by viewModel.isSearchMode.observeAsState(false)
     val searchTerm by viewModel.searchTerm.observeAsState("")
+
+    val filteredExercises = viewModel.filteredExercises
 
     val layout: @Composable () -> Unit = {
         ExercisesScreenContent(
@@ -58,7 +60,7 @@ fun ExercisesScreen(
             isBottomSheet = isBottomSheet,
             isSearchMode = isSearchMode,
             searchTerm = searchTerm,
-            allExercises = allExercises,
+            allExercises = filteredExercises,
             allMuscles = allMuscles,
             onToggleSearchMode = {
                 viewModel.toggleSearchMode()
