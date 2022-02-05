@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -37,36 +38,12 @@ import com.ankitsuda.rebound.ui.theme.ReboundThemeWrapper
 import com.ankitsuda.rebound.ui.workout_panel.WorkoutPanel
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.BottomSheetNavigatorSheetState
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import kotlinx.coroutines.launch
 import timber.log.Timber
-
-//data class MainDialog(
-//    var dialogContent: @Composable () -> Unit = {},
-//    var showDialog: () -> Unit = {},
-//    var hideDialog: () -> Unit = {}
-//)
-
-data class MainBottomSheet @OptIn(ExperimentalMaterialNavigationApi::class) constructor(
-    var state: BottomSheetNavigatorSheetState? = null,
-    var sheetContent: @Composable () -> Unit = {},
-    var showSheet: () -> Unit = {},
-    var hideSheet: () -> Unit = {}
-) {
-    fun hide() {
-        hideSheet()
-    }
-
-    fun show(content: @Composable () -> Unit) {
-        sheetContent = content
-        showSheet()
-    }
-}
-
-//val LocalDialog = compositionLocalOf { MainDialog() }
-val LocalBottomSheet = compositionLocalOf { MainBottomSheet() }
 
 /**
  * Root screen of the app
@@ -74,26 +51,33 @@ val LocalBottomSheet = compositionLocalOf { MainBottomSheet() }
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
 @Composable
 fun MainScreen(
-    viewModel: MainScreenViewModel = hiltViewModel(),
-    themeViewModel: ThemeViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     navController.navigatorProvider += bottomSheetNavigator
+    MainLayout(
+        navController = navController,
+        bottomSheetNavigator = bottomSheetNavigator,
+    )
+}
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
+@Composable
+private fun MainLayout(
+    navController: NavHostController,
+    bottomSheetNavigator: BottomSheetNavigator,
+    themeViewModel: ThemeViewModel = hiltViewModel(),
+    viewModel: MainScreenViewModel = hiltViewModel(),
+) {
     val themeState by rememberFlowWithLifecycle(themeViewModel.themeState).collectAsState(ThemeState())
 
     val swipeableState = rememberSwipeableState(0)
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val coroutine = rememberCoroutineScope()
 
 
     val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
 
     val panelHidden = currentWorkoutId == (-1).toLong()
-
-
-    Timber.d("currentWorkoutId $currentWorkoutId panelHidden $panelHidden")
 
     BackHandler(swipeableState.currentValue != 0) {
         coroutine.launch {
@@ -102,10 +86,6 @@ fun MainScreen(
     }
 
     var dialogContent: @Composable () -> Unit by remember {
-        mutableStateOf({})
-    }
-
-    var sheetContent: @Composable () -> Unit by remember {
         mutableStateOf({})
     }
 
@@ -124,30 +104,10 @@ fun MainScreen(
         dialogVisible = false
     }
 
-    // Bottom sheet
-    val bottomSheet = MainBottomSheet()
-    bottomSheet.showSheet = {
-        sheetContent = bottomSheet.sheetContent
-        coroutine.launch {
-            sheetState.show()
-        }
-        Timber.d("show sheet")
-    }
-    bottomSheet.hideSheet = {
-        coroutine.launch {
-            sheetState.hide()
-        }
-    }
-
-    if (bottomSheet.state == null) {
-        bottomSheet.state = bottomSheetNavigator.navigatorSheetState
-    }
-
     ReboundThemeWrapper(themeState = themeState) {
         NavigatorHost {
             CompositionLocalProvider(
                 LocalDialog provides dialog,
-                LocalBottomSheet provides bottomSheet
             ) {
                 Box() {
                     /**
@@ -156,19 +116,6 @@ fun MainScreen(
                      * and auto corner radius
                      */
                     com.google.accompanist.navigation.material.ModalBottomSheetLayout(
-//                sheetState = sheetState,
-//                        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-//                sheetContent = {
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .defaultMinSize(minHeight = 100.dp)
-//                    ) {
-//
-//                        sheetContent()
-//
-//                    }
-//                },
                         sheetElevation = 0.dp,
                         sheetBackgroundColor = Color.Transparent,
                         bottomSheetNavigator = bottomSheetNavigator
@@ -204,7 +151,6 @@ fun MainScreen(
                                     onTimerBtnClicked = { },
                                     onFinishBtnClicked = {})
                             }) {
-
                             Box(Modifier.fillMaxSize()) {
                                 AppNavigation(navController)
                             }

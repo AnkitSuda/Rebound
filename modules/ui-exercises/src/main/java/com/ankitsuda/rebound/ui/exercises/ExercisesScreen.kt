@@ -32,6 +32,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import kotlin.random.Random
 
 @OptIn(
     ExperimentalPagerApi::class,
@@ -78,6 +80,14 @@ fun ExercisesScreen(
     } else {
         layout()
     }
+
+    Timber.d("Recomposed ${Random.nextInt()}")
+//    Box(modifier = Modifier.fillMaxSize()) {
+//        Text(
+//            modifier = Modifier.align(Alignment.BottomCenter),
+//            text = "Recompose ${Random.nextInt()}"
+//        )
+//    }
 }
 
 @Composable
