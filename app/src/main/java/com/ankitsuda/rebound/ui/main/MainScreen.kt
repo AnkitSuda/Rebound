@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -156,7 +157,7 @@ fun MainScreen(
                      */
                     com.google.accompanist.navigation.material.ModalBottomSheetLayout(
 //                sheetState = sheetState,
-                        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+//                        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
 //                sheetContent = {
 //                    Box(
 //                        modifier = Modifier
@@ -168,6 +169,8 @@ fun MainScreen(
 //
 //                    }
 //                },
+                        sheetElevation = 0.dp,
+                        sheetBackgroundColor = Color.Transparent,
                         bottomSheetNavigator = bottomSheetNavigator
                     ) {
                         MainScreenScaffold(
@@ -315,7 +318,11 @@ sealed class BottomNavigationScreens(val route: String, val title: String, val i
         BottomNavigationScreens(RootScreen.WorkoutTab.route, "Workout", Icons.Outlined.PlayArrow)
 
     object Exercises :
-        BottomNavigationScreens(RootScreen.ExercisesTab.route, "Exercises", Icons.Outlined.FitnessCenter)
+        BottomNavigationScreens(
+            RootScreen.ExercisesTab.route,
+            "Exercises",
+            Icons.Outlined.FitnessCenter
+        )
 
     object More :
         BottomNavigationScreens(RootScreen.MoreTab.route, "More", Icons.Outlined.Menu)

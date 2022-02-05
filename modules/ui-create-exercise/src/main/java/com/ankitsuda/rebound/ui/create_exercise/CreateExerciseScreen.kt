@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -49,140 +50,143 @@ fun CreateExerciseScreen(
 
     Timber.d("TESTING RECOMPOSITION ${Random.nextInt()}")
 
-    Column {
-        BottomSheetStatusBar()
-        TopBar(
-            statusBarEnabled = false,
-            elevationEnabled = false,
-            title = "New Exercise",
-            strictLeftIconAlignToStart = true,
-            leftIconBtn = {
-                TopBarIconButton(icon = Icons.Outlined.Close, title = "Back", onClick = {
-                    navigator.goBack()
+    BottomSheetSurface {
+        Column {
+            TopBar(
+                statusBarEnabled = false,
+                elevationEnabled = false,
+                title = "New Exercise",
+                strictLeftIconAlignToStart = true,
+                leftIconBtn = {
+                    TopBarIconButton(icon = Icons.Outlined.Close, title = "Back", onClick = {
+                        navigator.goBack()
+                    })
+                },
+                rightIconBtn = {
+                    TopBarIconButton(
+                        icon = Icons.Outlined.Done,
+                        title = "Create",
+                        enabled = isCreateBtnEnabled,
+                        customTint = MaterialTheme.colors.primary
+                    ) {
+                        viewModel.createExercise()
+                        navigator.goBack()
+                    }
                 })
-            },
-            rightIconBtn = {
-                TopBarIconButton(
-                    icon = Icons.Outlined.Done,
-                    title = "Create",
-                    enabled = isCreateBtnEnabled,
-                    customTint = MaterialTheme.colors.primary
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(16.dp)
+            ) {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
                 ) {
-                    viewModel.createExercise()
-                    navigator.goBack()
+                    Text(
+                        text = "Name",
+                        style = MaterialTheme.typography.caption,
+                        color = Color(117, 117, 117)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    AppTextField(
+                        value = nameValue,
+                        placeholderValue = "Exercise name",
+                        singleLine = true,
+                        onValueChange = {
+                            viewModel.setName(it)
+                        })
                 }
-            })
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 8.dp)
+                ) {
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(16.dp)
-        ) {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp)
-            ) {
-                Text(
-                    text = "Name",
-                    style = MaterialTheme.typography.caption,
-                    color = Color(117, 117, 117)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                AppTextField(
-                    value = nameValue,
-                    placeholderValue = "Exercise name",
-                    singleLine = true,
-                    onValueChange = {
-                        viewModel.setName(it)
-                    })
-            }
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 8.dp)
-            ) {
+                    Text(
+                        text = "Notes",
+                        style = MaterialTheme.typography.caption,
+                        color = Color(117, 117, 117)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    AppTextField(
+                        value = noteValue,
+                        placeholderValue = "Exercise notes",
+                        onValueChange = {
+                            viewModel.setNote(it)
+                        })
+                }
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 8.dp)
 
-                Text(
-                    text = "Notes",
-                    style = MaterialTheme.typography.caption,
-                    color = Color(117, 117, 117)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                AppTextField(
-                    value = noteValue,
-                    placeholderValue = "Exercise notes",
-                    onValueChange = {
-                        viewModel.setNote(it)
-                    })
-            }
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 8.dp)
+                ) {
+                    Text(
+                        text = "Category",
+                        style = MaterialTheme.typography.caption,
+                        color = Color(117, 117, 117)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-            ) {
-                Text(
-                    text = "Category",
-                    style = MaterialTheme.typography.caption,
-                    color = Color(117, 117, 117)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                FlowRow(crossAxisSpacing = 8.dp) {
-                    for (category in categoriesList) {
-                        Row(
-                            modifier = Modifier
-                                .width((LocalConfiguration.current.screenWidthDp / 2.5).dp)
-                                .clickable(onClick = {
+                    FlowRow(crossAxisSpacing = 8.dp) {
+                        for (category in categoriesList) {
+                            Row(
+                                modifier = Modifier
+                                    .width((LocalConfiguration.current.screenWidthDp / 2.5).dp)
+                                    .clickable(onClick = {
+                                        viewModel.setCategory(category)
+                                    }, indication = null,
+                                        interactionSource = remember { MutableInteractionSource() }),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                RadioButton(selected = selectedCategory == category, onClick = {
                                     viewModel.setCategory(category)
-                                }, indication = null,
-                                    interactionSource = remember { MutableInteractionSource() })
-                        ) {
-                            RadioButton(selected = selectedCategory == category, onClick = {
-                                viewModel.setCategory(category)
-                            })
-                            Spacer(modifier = Modifier.width(8.dp))
+                                })
+                                Spacer(modifier = Modifier.width(8.dp))
 
-                            Text(
-                                text = category.cName
-                            )
+                                Text(
+                                    text = category.cName
+                                )
+                            }
                         }
                     }
                 }
-            }
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 8.dp)
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 8.dp)
 
-            ) {
-                Text(
-                    text = "Primary Muscle",
-                    style = MaterialTheme.typography.caption,
-                    color = Color(117, 117, 117)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                ) {
+                    Text(
+                        text = "Primary Muscle",
+                        style = MaterialTheme.typography.caption,
+                        color = Color(117, 117, 117)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                FlowRow(crossAxisSpacing = 8.dp) {
-                    for (muscle in musclesList) {
-                        Row(
-                            modifier = Modifier
-                                .width((LocalConfiguration.current.screenWidthDp / 2.5).dp)
-                                .clickable(onClick =
-                                {
+                    FlowRow(crossAxisSpacing = 8.dp) {
+                        for (muscle in musclesList) {
+                            Row(
+                                modifier = Modifier
+                                    .width((LocalConfiguration.current.screenWidthDp / 2.5).dp)
+                                    .clickable(onClick =
+                                    {
+                                        viewModel.setPrimaryMuscle(muscle.tag)
+                                    }, indication = null,
+                                        interactionSource = remember { MutableInteractionSource() }),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                RadioButton(selected = selectedMuscle == muscle.tag, onClick = {
                                     viewModel.setPrimaryMuscle(muscle.tag)
-                                }, indication = null,
-                                    interactionSource = remember { MutableInteractionSource() })
-                        ) {
-                            RadioButton(selected = selectedMuscle == muscle.tag, onClick = {
-                                viewModel.setPrimaryMuscle(muscle.tag)
-                            })
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = muscle.name,
-                            )
+                                })
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = muscle.name,
+                                )
+                            }
                         }
                     }
                 }

@@ -99,9 +99,9 @@ fun TopBar(
                         })
                 ) {
                     if (titleAlignment == TopBarAlignment.CENTER || strictLeftIconAlignToStart) {
-                    leftIconBtn?.let {
-                        it()
-                    }
+                        leftIconBtn?.let {
+                            it()
+                        }
                     }
                 }
 
@@ -172,6 +172,7 @@ fun TopBar(
 fun TopSearchBar(
     modifier: Modifier = Modifier,
     placeholder: String,
+    statusBarEnabled: Boolean = true,
     value: String,
     onValueChange: (String) -> Unit,
     onBackClick: () -> Unit = {},
@@ -185,7 +186,9 @@ fun TopSearchBar(
     }
 
     Column(modifier = modifier.background(backgroundColor)) {
-        Box(Modifier.statusBarsHeight())
+        if (statusBarEnabled) {
+            Box(Modifier.statusBarsHeight())
+        }
         Row(
             modifier = Modifier
                 .height(60.dp)

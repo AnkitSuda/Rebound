@@ -110,7 +110,7 @@ dependencies {
 
     api Deps.Android.Compose.ui
     api Deps.Android.Compose.uiUtil
-    api Deps.Android.Compose.uiTooling
+//    api Deps.Android.Compose.uiTooling
     api Deps.Android.Compose.foundation
     api Deps.Android.Compose.materialDesign
     api Deps.Android.Compose.materialDesignIcons

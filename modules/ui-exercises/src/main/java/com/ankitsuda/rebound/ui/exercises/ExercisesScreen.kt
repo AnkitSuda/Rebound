@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
+import com.ankitsuda.rebound.domain.entities.ExerciseWithMuscle
 import com.ankitsuda.rebound.domain.entities.Muscle
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.collapsing_toolbar.CollapsingToolbarScaffold
@@ -47,25 +48,58 @@ fun ExercisesScreen(
 
     val allExercises by viewModel.allExercises.collectAsState(initial = emptyList())
     val allMuscles by viewModel.allMuscles.collectAsState(initial = emptyList())
+    val isSearchMode by viewModel.isSearchMode.observeAsState(false)
+    val searchTerm by viewModel.searchTerm.observeAsState("")
+
+    val layout: @Composable () -> Unit = {
+        ExercisesScreenContent(
+            navController = navController,
+            navigator = navigator,
+            isBottomSheet = isBottomSheet,
+            isSearchMode = isSearchMode,
+            searchTerm = searchTerm,
+            allExercises = allExercises,
+            allMuscles = allMuscles,
+            onToggleSearchMode = {
+                viewModel.toggleSearchMode()
+            },
+            onChangeSearchTerm = {
+                viewModel.setSearchTerm(it)
+            }
+        )
+    }
+
+    if (isBottomSheet) {
+        BottomSheetSurface {
+            layout()
+        }
+    } else {
+        layout()
+    }
+}
+
+@Composable
+private fun ExercisesScreenContent(
+    navController: NavController,
+    navigator: Navigator,
+    isBottomSheet: Boolean,
+    isSearchMode: Boolean,
+    searchTerm: String,
+    allExercises: List<ExerciseWithMuscle>,
+    allMuscles: List<Muscle>,
+    onToggleSearchMode: () -> Unit,
+    onChangeSearchTerm: (String) -> Unit
+) {
 
     val tabData = arrayListOf<Any>("All").apply { addAll(allMuscles) }
 
     val pagerState = rememberPagerState(
-//        pageCount = tabData.size,
-//        initialOffscreenLimit = 2,
-//        infiniteLoop = false,
         initialPage = 0,
     )
     val tabIndex = pagerState.currentPage
     val coroutineScope = rememberCoroutineScope()
 
-
-    val isSearchMode by viewModel.isSearchMode.observeAsState(false)
-    val searchTerm by viewModel.searchTerm.observeAsState("")
     Column {
-        if (isBottomSheet) {
-            BottomSheetStatusBar()
-        }
         CollapsingToolbarScaffold(
             toolbar = {
                 Surface(
@@ -86,7 +120,7 @@ fun ExercisesScreen(
                                         icon = Icons.Outlined.Search,
                                         title = "Search",
                                         onClick = {
-                                            viewModel.toggleSearchMode()
+                                            onToggleSearchMode()
                                         })
                                 },
                                 rightIconBtn = {
@@ -105,13 +139,14 @@ fun ExercisesScreen(
                             TopSearchBar(
                                 modifier = Modifier
                                     .fillMaxWidth(),
+                                statusBarEnabled = !isBottomSheet,
                                 placeholder = "Search here...",
                                 value = searchTerm,
                                 onBackClick = {
-                                    viewModel.toggleSearchMode()
+                                    onToggleSearchMode()
                                 },
                                 onValueChange = {
-                                    viewModel.setSearchTerm(it)
+                                    onChangeSearchTerm(it)
                                 },
                             )
                         }
@@ -179,11 +214,6 @@ fun ExercisesScreen(
                                     )
                                     navController.popBackStack()
                                 } else {
-//                                    navController.navigate(
-//                                        Route.ExerciseDetails.createRoute(
-//                                            exerciseId = item.exercise.exerciseId
-//                                        )
-//                                    )
                                     navigator.navigate(
                                         LeafScreen.ExerciseDetails.createRoute(
                                             exerciseId = item.exercise.exerciseId
