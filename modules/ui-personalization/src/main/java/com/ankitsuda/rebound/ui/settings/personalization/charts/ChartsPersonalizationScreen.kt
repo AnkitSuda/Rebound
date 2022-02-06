@@ -38,6 +38,7 @@ import com.ankitsuda.rebound.ui.settings.personalization.card.CardPersonalizatio
 
 
 import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import me.onebone.toolbar.CollapsingToolbarScaffold
@@ -76,15 +77,20 @@ fun ChartsPersonalizationScreen(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Charts", strictLeftIconAlignToStart = true, leftIconBtn = {
-                TopBarBackIconButton {
-                    navController.popBackStack()
-                }
-            }, rightIconBtn = {
-                TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+            TopBar2(
+                title = "Charts",
+                toolbarState = collapsingState.toolbarState,
+                navigationIcon = {
+                    TopBarBackIconButton {
+                        navController.popBackStack()
+                    }
+                },
+                actions = {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
 
+                    }
                 }
-            })
+            )
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
     ) {

@@ -113,11 +113,12 @@ fun HistoryScreen(
                 scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
                 state = collapsingState,
                 toolbar = {
-                    TopBar(
-                        elevationEnabled = false,
+                    TopBar2(
                         title = if (isToday) "Today" else dayFormatter.format(date),
-                        statusBarEnabled = false, strictLeftIconAlignToStart = false,
-                        leftIconBtn = {
+                        toolbarState = collapsingState.toolbarState,
+                        elevationEnabled = false,
+                        statusBarEnabled = false,
+                        navigationIcon = {
                             TopBarIconButton(
                                 icon = Icons.Outlined.DateRange,
                                 title = "Show calendar",
@@ -127,7 +128,7 @@ fun HistoryScreen(
                                 }
                             )
                         },
-                        rightIconBtn = {
+                        actions = {
                             TopBarIconButton(
                                 icon = Icons.Outlined.MoreVert,
                                 title = "Open menu",

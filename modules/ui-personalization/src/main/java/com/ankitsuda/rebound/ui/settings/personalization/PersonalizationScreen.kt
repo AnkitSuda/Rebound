@@ -30,32 +30,34 @@ import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.rebound.ui.components.MoreItemCard
-import com.ankitsuda.rebound.ui.components.TopBar
-import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
-import com.ankitsuda.rebound.ui.components.TopBarIconButton
+import com.ankitsuda.rebound.ui.components.*
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun PersonalizationScreen(
-    navController: NavController, navigator: Navigator = LocalNavigator.current,) {
+    navController: NavController, navigator: Navigator = LocalNavigator.current,
+) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Personalization", strictLeftIconAlignToStart = true,leftIconBtn = {
-                TopBarBackIconButton {
-                    navController.popBackStack()
-                }
-            }, rightIconBtn = {
-                TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+            TopBar2(
+                title = "Personalization",
+                toolbarState = collapsingState.toolbarState,
+                navigationIcon = {
+                    TopBarBackIconButton {
+                        navController.popBackStack()
+                    }
+                },
+                actions = {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
 
-                }
-            })
+                    }
+                })
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
     ) {
@@ -68,7 +70,8 @@ fun PersonalizationScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth().background(MaterialTheme.colors.background)
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colors.background)
                         .padding(bottom = 8.dp),
                     text = "Main Colors",
                     onClick = {

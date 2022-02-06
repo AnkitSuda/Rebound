@@ -18,6 +18,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,10 +27,7 @@ import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.rebound.ui.components.MoreItemCard
-import com.ankitsuda.rebound.ui.components.MoreSectionHeader
-import com.ankitsuda.rebound.ui.components.TopBar
-import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
+import com.ankitsuda.rebound.ui.components.*
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
@@ -62,11 +61,15 @@ fun MeasureScreen(
         state = collapsingState,
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
-            TopBar(title = "Measure", strictLeftIconAlignToStart = true, leftIconBtn = {
-                TopBarBackIconButton {
-                    navController.popBackStack()
-                }
-            })
+            TopBar2(
+                title = "Measure",
+                toolbarState = collapsingState.toolbarState,
+                navigationIcon = {
+                    TopBarBackIconButton {
+                        navController.popBackStack()
+                    }
+                },
+            )
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
     ) {

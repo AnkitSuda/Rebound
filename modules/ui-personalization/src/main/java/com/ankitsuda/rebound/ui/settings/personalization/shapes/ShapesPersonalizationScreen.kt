@@ -35,6 +35,7 @@ import com.ankitsuda.rebound.ui.ThemeViewModel
 
 
 import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import me.onebone.toolbar.CollapsingToolbarScaffold
@@ -73,15 +74,20 @@ fun ShapesPersonalizationScreen(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Shapes", strictLeftIconAlignToStart = true, leftIconBtn = {
-                TopBarBackIconButton {
-                    navController.popBackStack()
-                }
-            }, rightIconBtn = {
-                TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+            TopBar2(
+                title = "Shapes",
+                toolbarState = collapsingState.toolbarState,
+                navigationIcon = {
+                    TopBarBackIconButton {
+                        navController.popBackStack()
+                    }
+                },
+                actions = {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
 
+                    }
                 }
-            })
+            )
         },
         modifier = Modifier.background(ReboundTheme.colors.background)
     ) {

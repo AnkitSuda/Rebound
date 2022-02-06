@@ -32,17 +32,14 @@ import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.rebound.ui.components.MoreItemCard
-import com.ankitsuda.rebound.ui.components.MoreSectionHeader
-import com.ankitsuda.rebound.ui.components.TopBar
-import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
+import com.ankitsuda.rebound.ui.components.*
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun SettingsScreen(
-     navController: NavController,navigator: Navigator = LocalNavigator.current,
+    navController: NavController, navigator: Navigator = LocalNavigator.current,
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
@@ -50,11 +47,14 @@ fun SettingsScreen(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Settings", strictLeftIconAlignToStart = true, leftIconBtn = {
-                TopBarBackIconButton {
-                    navController.popBackStack()
-                }
-            })
+            TopBar2(
+                title = "Settings",
+                toolbarState = collapsingState.toolbarState,
+                navigationIcon = {
+                    TopBarBackIconButton {
+                        navController.popBackStack()
+                    }
+                })
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
     ) {

@@ -27,23 +27,25 @@ import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.rebound.ui.components.MoreItemCard
-import com.ankitsuda.rebound.ui.components.MoreSectionHeader
-import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.*
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun MoreScreen(
-      navController: NavController,navigator: Navigator = LocalNavigator.current) {
+    navController: NavController, navigator: Navigator = LocalNavigator.current
+) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(
         state = collapsingState,
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
-            TopBar(title = "More", elevationEnabled = true)
+            TopBar2(
+                title = "More",
+                toolbarState = collapsingState.toolbarState,
+            )
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
     ) {

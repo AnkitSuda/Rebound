@@ -66,11 +66,15 @@ fun PartMeasurementsScreen(
         state = collapsingState,
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
-            TopBar(title = partId.toString(), strictLeftIconAlignToStart = true, leftIconBtn = {
-                TopBarBackIconButton {
-                    navController.popBackStack()
-                }
-            })
+            TopBar2(
+                title = partId.toString(),
+                toolbarState = collapsingState.toolbarState,
+                navigationIcon = {
+                    TopBarBackIconButton {
+                        navController.popBackStack()
+                    }
+                },
+            )
         },
         fab = {
             FloatingActionButton(onClick = {

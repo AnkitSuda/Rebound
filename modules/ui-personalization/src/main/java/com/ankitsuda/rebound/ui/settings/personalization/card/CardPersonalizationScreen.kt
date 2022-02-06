@@ -33,6 +33,7 @@ import com.ankitsuda.common.compose.LocalDialog
 import com.ankitsuda.common.compose.rememberFlowWithLifecycle
 import com.ankitsuda.rebound.ui.ThemeViewModel
 import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import me.onebone.toolbar.CollapsingToolbarScaffold
@@ -73,15 +74,20 @@ fun CardPersonalizationScreen(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Cards", strictLeftIconAlignToStart = true,leftIconBtn = {
-                TopBarBackIconButton {
-                    navController.popBackStack()
-                }
-            }, rightIconBtn = {
-                TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+            TopBar2(
+                title = "Cards",
+                toolbarState = collapsingState.toolbarState,
+                navigationIcon = {
+                    TopBarBackIconButton {
+                        navController.popBackStack()
+                    }
+                },
+                actions = {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
 
+                    }
                 }
-            })
+            )
         },
         modifier = Modifier.background(ReboundTheme.colors.background)
     ) {
@@ -93,7 +99,8 @@ fun CardPersonalizationScreen(
         with(LocalDialog.current) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize().background(MaterialTheme.colors.background),
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
                 contentPadding = PaddingValues(16.dp)
             ) {
 

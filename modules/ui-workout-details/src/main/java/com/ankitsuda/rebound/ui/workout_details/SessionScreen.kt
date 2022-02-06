@@ -54,15 +54,15 @@ fun SessionScreen(
             scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
             state = collapsingState,
             toolbar = {
-                TopBar(
+                TopBar2(
                     title = workout?.name ?: "Workout",
-                    strictLeftIconAlignToStart = true,
-                    leftIconBtn = {
+                    toolbarState = collapsingState.toolbarState,
+                    navigationIcon = {
                         TopBarBackIconButton {
                             navController.popBackStack()
                         }
                     },
-                    rightIconBtn = {
+                    actions = {
                         TopBarIconButton(icon = Icons.Outlined.MoreVert, title = "Open Menu") {
 
                         }

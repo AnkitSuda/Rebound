@@ -37,6 +37,7 @@ import com.ankitsuda.common.compose.LocalDialog
 import com.ankitsuda.common.compose.rememberFlowWithLifecycle
 import com.ankitsuda.rebound.ui.ThemeViewModel
 import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import me.onebone.toolbar.CollapsingToolbarScaffold
@@ -80,15 +81,20 @@ fun BottomBarPersonalizationScreen(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Bottom Bar", strictLeftIconAlignToStart = true, leftIconBtn = {
-                TopBarBackIconButton {
-                    navController.popBackStack()
-                }
-            }, rightIconBtn = {
-                TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+            TopBar2(
+                title = "Bottom Bar",
+                toolbarState = collapsingState.toolbarState,
+                navigationIcon = {
+                    TopBarBackIconButton {
+                        navController.popBackStack()
+                    }
+                },
+                actions = {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
 
+                    }
                 }
-            })
+            )
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
     ) {

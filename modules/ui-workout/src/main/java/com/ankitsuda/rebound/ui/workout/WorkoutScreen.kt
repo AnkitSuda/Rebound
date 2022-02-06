@@ -57,7 +57,10 @@ fun WorkoutScreen(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Workout")
+            TopBar2(
+                title = "Workout",
+                toolbarState = collapsingState.toolbarState,
+            )
         },
         fab = {
 
