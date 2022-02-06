@@ -12,7 +12,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+
 //import com.ankitsuda.rebound.utils.lighterOrDarkerColor
 
 @Composable
@@ -20,17 +22,22 @@ fun SessionExerciseCardItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     exerciseName: String,
-    sets: List<Pair<Float, Int>>
+    entries: List<ExerciseLogEntry>
 ) {
     AppCard(modifier = modifier, onClick = onClick) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = exerciseName, style = ReboundTheme.typography.body1)
             RSpacer(8.dp)
-            for (i in sets.indices) {
-                val set = sets[i]
-                SessionExerciseSetItem(order = i, set = set)
-                if (i != sets.size - 1) {
-                    RSpacer(8.dp)
+            if (entries.isNotEmpty()) {
+                for (i in entries.indices) {
+                    val entry = entries[i]
+                    SessionExerciseSetItem(
+                        order = i,
+                        set = Pair(entry.weight ?: 0f, entry.reps ?: 0)
+                    )
+                    if (i != entries.size - 1) {
+                        RSpacer(8.dp)
+                    }
                 }
             }
         }
@@ -47,8 +54,7 @@ fun SessionExerciseSetItem(order: Int, set: Pair<Float, Int>) {
                 .size(28.dp)
                 .clip(CircleShape)
 //                .background(Color(224, 224, 224))
-                .background(ReboundTheme.colors.card/*.lighterOrDarkerColor(0.15f)*/)
-            ,
+                .background(ReboundTheme.colors.card/*.lighterOrDarkerColor(0.15f)*/),
             contentAlignment = Alignment.Center,
         ) {
             Text(

@@ -10,14 +10,13 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ankitsuda.navigation.WORKOUT_ID_KEY
 import com.ankitsuda.rebound.ui.components.*
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
@@ -26,20 +25,19 @@ import me.onebone.toolbar.ScrollStrategy
 import kotlin.random.Random
 
 @Composable
-fun SessionScreen(navController: NavController) {
+fun SessionScreen(
+    navController: NavController,
+    viewModel: SessionScreenViewModel = hiltViewModel()
+) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
-    val sessionId by remember {
-        mutableStateOf(
-            navController.currentBackStackEntry?.arguments?.getString("sessionId")?.toLong()
-        )
-    }
+    val logs by viewModel.logs.collectAsState(emptyList())
 
     CollapsingToolbarScaffold(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Session $sessionId", strictLeftIconAlignToStart = true,leftIconBtn = {
+            TopBar(title = "Session", strictLeftIconAlignToStart = true, leftIconBtn = {
                 TopBarBackIconButton {
                     navController.popBackStack()
                 }
@@ -76,24 +74,26 @@ fun SessionScreen(navController: NavController) {
                         )
                     }
                     IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit session", tint = ReboundTheme.colors.primary)
+                        Icon(
+                            imageVector = Icons.Outlined.Edit,
+                            contentDescription = "Edit session",
+                            tint = ReboundTheme.colors.primary
+                        )
                     }
                 }
             }
 
-            items(10) {
-                SessionExerciseCardItem(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    onClick = { },
-                    exerciseName = "Bench Press: Barbell",
-                    sets = listOf(
-                        Pair(Random.nextInt(10, 50).toFloat(), Random.nextInt(1, 8)),
-                        Pair(Random.nextInt(50, 75).toFloat(), Random.nextInt(8, 12)),
-                        Pair(Random.nextInt(75, 100).toFloat(), Random.nextInt(12, 20)),
+            for (log in logs) {
+                item() {
+                    SessionExerciseCardItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        onClick = { },
+                        exerciseName = log.exercise.name ?: "",
+                        entries = log.logEntries
                     )
-                )
+                }
             }
         }
 

@@ -187,20 +187,9 @@ fun HistoryScreen(
                                     bottom = 16.dp
                                 ),
                             onClick = {
-//                                navController.navigate(
-//                                    Route.Session.createRoute(
-//                                        Random.nextLong(
-//                                            0,
-//                                            100
-//                                        )
-//                                    )
-//                                )
                                 navigator.navigate(
                                     LeafScreen.Session.createRoute(
-                                        Random.nextLong(
-                                            0,
-                                            100
-                                        )
+                                        workoutId = workout.id
                                     )
                                 )
                             },

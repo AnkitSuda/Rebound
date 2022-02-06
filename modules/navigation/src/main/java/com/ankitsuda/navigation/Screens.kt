@@ -5,15 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-import androidx.navigation.NavDeepLink
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
 import java.util.*
@@ -24,7 +17,7 @@ const val ARTIST_ID_KEY = "artist_id"
 const val ALBUM_ID_KEY = "album_id"
 const val PLAYLIST_ID_KEY = "playlist_id"
 const val ALBUM_OWNER_ID_KEY = "album_owner_id"
-const val ALBUM_ACCESS_KEY = "album_access_key"
+const val WORKOUT_ID_KEY = "workout_id"
 
 interface Screen {
     val route: String
@@ -145,10 +138,19 @@ sealed class LeafScreen(
         }
     }
 
-    data class Session(override val route: String = "session/{sessionId}") : LeafScreen(route) {
+    data class Session(
+        override val route: String = "session/{${WORKOUT_ID_KEY}}",
+    ) : LeafScreen(
+        route = route,
+        arguments = listOf(
+            navArgument(WORKOUT_ID_KEY) {
+                type = NavType.LongType
+            }
+        ),
+    ) {
         companion object {
 
-            fun createRoute(sessionId: Long) = "session/$sessionId"
+            fun createRoute(workoutId: Long) = "session/$workoutId"
 
         }
     }
