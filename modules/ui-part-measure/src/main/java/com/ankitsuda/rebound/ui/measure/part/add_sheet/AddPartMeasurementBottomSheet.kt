@@ -63,60 +63,61 @@ fun AddPartMeasurementBottomSheet(
     }
 
 
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-    ) {
-
-        TopBar(
-            title = "$partId",
-            statusBarEnabled = false,
-            elevationEnabled = false
-        )
-
-        AppTextField(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp),
-            value = fieldValue,
-            placeholderValue = "",
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = { viewModel.setFieldValue(it) }
-        )
-
-        Row(
+    BottomSheetSurface {
+        Column(
             Modifier
-                .padding(end = 16.dp, start = 16.dp, bottom = 16.dp)
-                .align(Alignment.End)
+                .fillMaxWidth()
+                .navigationBarsPadding()
         ) {
-            if (isUpdate) {
-                BottomSheetSecondaryRButton(
-                    modifier = Modifier.padding(end = 16.dp),
-                    onClick = {
-                        viewModel.deleteMeasurementFromDb(logId!!)
-                        navigator.goBack()
-                    }) {
-                    Text("Delete")
-                }
-            }
 
-            BottomSheetRButton(
-                enabled = isCreateBtnEnabled,
-                onClick = {
-                    if (isUpdate) {
-                        viewModel.updateMeasurement()
-                    } else {
-                        partId?.let {
-                            viewModel.addMeasurementToDb(partId)
-                        }
-                    }
-                    navigator.goBack()
-                },
-                modifier = Modifier.width(88.dp)
+            TopBar(
+                title = "$partId",
+                statusBarEnabled = false,
+                elevationEnabled = false
+            )
+
+            AppTextField(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp),
+                value = fieldValue,
+                placeholderValue = "",
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                onValueChange = { viewModel.setFieldValue(it) }
+            )
+
+            Row(
+                Modifier
+                    .padding(end = 16.dp, start = 16.dp, bottom = 16.dp)
+                    .align(Alignment.End)
             ) {
-                Text(if (isUpdate) "Save" else "Add")
+                if (isUpdate) {
+                    BottomSheetSecondaryRButton(
+                        modifier = Modifier.padding(end = 16.dp),
+                        onClick = {
+                            viewModel.deleteMeasurementFromDb(logId!!)
+                            navigator.goBack()
+                        }) {
+                        Text("Delete")
+                    }
+                }
+
+                BottomSheetRButton(
+                    enabled = isCreateBtnEnabled,
+                    onClick = {
+                        if (isUpdate) {
+                            viewModel.updateMeasurement()
+                        } else {
+                            partId?.let {
+                                viewModel.addMeasurementToDb(partId)
+                            }
+                        }
+                        navigator.goBack()
+                    },
+                    modifier = Modifier.width(88.dp)
+                ) {
+                    Text(if (isUpdate) "Save" else "Add")
+                }
             }
         }
     }
-
 }
