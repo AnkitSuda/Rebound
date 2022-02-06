@@ -23,6 +23,7 @@ import com.ankitsuda.navigation.WORKOUT_ID_KEY
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.Exercise
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
+import com.ankitsuda.rebound.domain.entities.Workout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -42,4 +43,9 @@ class SessionScreenViewModel @Inject constructor(
             workoutId = workoutId
         ).distinctUntilChanged()
             .shareWhileObserved(viewModelScope)
+
+    val workout: SharedFlow<Workout?> = workoutsRepository.getWorkout(
+        workoutId = workoutId
+    ).distinctUntilChanged()
+        .shareWhileObserved(viewModelScope)
 }

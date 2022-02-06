@@ -46,70 +46,78 @@ fun SessionScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val logs by viewModel.logs.collectAsState(emptyList())
+    val workout by viewModel.workout.collectAsState(null)
 
-    CollapsingToolbarScaffold(
-        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
-        state = collapsingState,
-        toolbar = {
-            TopBar(title = "Session", strictLeftIconAlignToStart = true, leftIconBtn = {
-                TopBarBackIconButton {
-                    navController.popBackStack()
-                }
-            }, rightIconBtn = {
-                TopBarIconButton(icon = Icons.Outlined.MoreVert, title = "Open Menu") {
+    if (workout != null) {
 
-                }
-            })
-        },
-        modifier = Modifier.background(MaterialTheme.colors.background)
-    ) {
+        CollapsingToolbarScaffold(
+            scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+            state = collapsingState,
+            toolbar = {
+                TopBar(
+                    title = workout?.name ?: "Workout",
+                    strictLeftIconAlignToStart = true,
+                    leftIconBtn = {
+                        TopBarBackIconButton {
+                            navController.popBackStack()
+                        }
+                    },
+                    rightIconBtn = {
+                        TopBarIconButton(icon = Icons.Outlined.MoreVert, title = "Open Menu") {
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            contentPadding = PaddingValues(16.dp)
+                        }
+                    })
+            },
+            modifier = Modifier.background(MaterialTheme.colors.background)
         ) {
-            item {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                ) {
-                    Column() {
-                        Text(text = "7 Exercises")
-                        RSpacer(space = 4.dp)
-                        SessionCompleteQuickInfo(
-                            time = "45 m",
-                            volume = "1000 kg",
-                            prs = 2
-                        )
-                    }
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Outlined.Edit,
-                            contentDescription = "Edit session",
-                            tint = ReboundTheme.colors.primary
-                        )
-                    }
-                }
-            }
 
-            for (log in logs) {
-                item() {
-                    SessionExerciseCardItem(
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+                item {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        onClick = { },
-                        exerciseName = log.exercise.name ?: "",
-                        entries = log.logEntries
-                    )
+                            .padding(bottom = 16.dp)
+                    ) {
+                        Column() {
+                            Text(text = "${logs.size} Exercises")
+                            RSpacer(space = 4.dp)
+                            SessionCompleteQuickInfo(
+                                time = "45 m",
+                                volume = "1000 kg",
+                                prs = 2
+                            )
+                        }
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.Outlined.Edit,
+                                contentDescription = "Edit session",
+                                tint = ReboundTheme.colors.primary
+                            )
+                        }
+                    }
+                }
+
+                for (log in logs) {
+                    item() {
+                        SessionExerciseCardItem(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            onClick = { },
+                            exerciseName = log.exercise.name ?: "",
+                            entries = log.logEntries
+                        )
+                    }
                 }
             }
-        }
 
+        }
     }
 }
