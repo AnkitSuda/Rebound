@@ -97,7 +97,7 @@ fun ExercisesScreen(
         layout()
     }
 
-    Timber.d("Recomposed ${Random.nextInt()}")
+//    Timber.d("Recomposed ${Random.nextInt()}")
 //    Box(modifier = Modifier.fillMaxSize()) {
 //        Text(
 //            modifier = Modifier.align(Alignment.BottomCenter),

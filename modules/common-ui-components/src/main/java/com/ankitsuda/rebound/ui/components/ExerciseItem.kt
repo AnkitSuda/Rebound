@@ -23,10 +23,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
 fun ExerciseItem(
-    modifier: Modifier = Modifier, name: String, muscle: String, totalLogs: Int, onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    name: String,
+    muscle: String,
+    totalLogs: Int,
+    onClick: () -> Unit
 ) {
     Box(modifier = modifier) {
         Row(
@@ -38,17 +44,23 @@ fun ExerciseItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(text = name, style = MaterialTheme.typography.body1)
+                Text(
+                    text = name,
+                    style = ReboundTheme.typography.subtitle1,
+                    fontSize = 16.sp
+                )
+                RSpacer(space = 4.dp)
                 Text(
                     text = muscle,
-                    style = MaterialTheme.typography.caption,
+                    style = ReboundTheme.typography.caption,
+                    fontSize = 14.sp,
                     color = Color(158, 158, 158)
                 )
             }
             if (totalLogs > 0) {
                 Text(
                     text = totalLogs.toString(),
-                    style = MaterialTheme.typography.subtitle2,
+                    style = ReboundTheme.typography.subtitle2,
                     color = Color(158, 158, 158)
                 )
             }
