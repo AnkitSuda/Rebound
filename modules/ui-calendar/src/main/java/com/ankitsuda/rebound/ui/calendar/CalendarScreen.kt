@@ -17,6 +17,7 @@ package com.ankitsuda.rebound.ui.calendar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
@@ -106,11 +107,13 @@ fun CalendarScreen(
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
     ) {
-        LazyColumn(state = scrollState, modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)) {
-            items(calendar.size) {
-                val month = calendar[it] as MonthItem
+        LazyColumn(
+            state = scrollState, modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
+        ) {
+            items(calendar, key = { "${(it as MonthItem).date.month}_${it.date.year}" }) {
+                val month = it as MonthItem
                 CalendarMonthItem(
                     month = month,
                     days = month.days,

@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -62,31 +63,35 @@ fun CalendarMonthItem(
         }
 
 
-
-
         for (week in weeks) {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                for (day in week) {
-                    if (day is DateItem) {
-                        val isToday = day.date == CalendarDate.today
-                        val formattedDay = dayFormatter.format(day.date.date)
+            key(week) {
+                Row(modifier = Modifier
+                    .defaultMinSize(256.dp)
+                    .fillMaxWidth()) {
+                    for (day in week) {
+                        if (day is DateItem) {
+                            val isToday = day.date == CalendarDate.today
+                            val formattedDay = dayFormatter.format(day.date.date)
 
 
-                        CalendarDayItem(
-                            text = formattedDay,
-                            modifier = Modifier.weight(
-                                WEIGHT_7DAY_WEEK
-                            ),
-                            isSelected = day.date == selectedDate,
-                            isToday = isToday,
-                            dotVisible = false,
-                            onClick = {
-                                onClickOnDay(day)
+                            key("${day.date.dayOfMonth}_${day.date.month}_${day.date.year}") {
+                                CalendarDayItem(
+                                    text = formattedDay,
+                                    modifier = Modifier.weight(
+                                        WEIGHT_7DAY_WEEK
+                                    ),
+                                    isSelected = day.date == selectedDate,
+                                    isToday = isToday,
+                                    dotVisible = false,
+                                    onClick = {
+                                        onClickOnDay(day)
+                                    }
+                                )
                             }
-                        )
 
-                    } else {
-                        Spacer(modifier = Modifier.weight(WEIGHT_7DAY_WEEK))
+                        } else {
+                            Spacer(modifier = Modifier.weight(WEIGHT_7DAY_WEEK))
+                        }
                     }
                 }
             }
