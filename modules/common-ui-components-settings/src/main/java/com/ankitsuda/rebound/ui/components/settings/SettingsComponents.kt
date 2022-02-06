@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -120,8 +121,17 @@ fun SwitchCardItem(
     checked: Boolean = false,
     onChange: (Boolean) -> Unit = {}
 ) {
+    var mChecked by rememberSaveable {
+        mutableStateOf(checked)
+    }
+
+    val handleOnChange: (Boolean) -> Unit = {
+        mChecked = it
+        onChange(it)
+    }
+
     AppCard(modifier = modifier, onClick = {
-        onChange(!checked)
+        handleOnChange(!checked)
     }) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             if (icon != null) {
@@ -141,7 +151,7 @@ fun SwitchCardItem(
                     )
                 }
             }
-            Switch(checked = checked, onCheckedChange = onChange)
+            Switch(checked = mChecked, onCheckedChange = handleOnChange)
         }
     }
 }
