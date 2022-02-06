@@ -31,6 +31,8 @@ android {
     }
 
     compileOptions {
+        // Flag to enable support for the new language APIs
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -55,6 +57,7 @@ dependencies {
     api project(":modules:core-data")
     api project(":modules:navigation")
 
+    coreLibraryDesugaring Deps.Android.desugaring
     implementation Deps.Dagger.hilt
     kapt Deps.Dagger.hiltCompiler
 }

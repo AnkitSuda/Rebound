@@ -28,8 +28,10 @@ object Deps {
         const val serializationRuntime = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
 
         const val coroutinesVersion = "1.6.0"
-        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-        const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+        const val coroutinesCore =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+        const val coroutinesAndroid =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     }
 
     object Android {
@@ -37,11 +39,14 @@ object Deps {
 
         const val gradle = "com.android.tools.build:gradle:$gradleVersion"
 
+        const val desugaring = "com.android.tools:desugar_jdk_libs:1.1.5"
+
         const val activityVersion = "1.4.0"
         const val activityCompose = "androidx.activity:activity-compose:$activityVersion"
 
         private const val navigationVersion = "2.5.0-alpha01"
-//        const val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-beta01"
+
+        //        const val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-beta01"
         const val navigationCompose = "androidx.navigation:navigation-compose:$navigationVersion"
         const val navigationHiltCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
 
@@ -56,7 +61,8 @@ object Deps {
             const val foundation = "androidx.compose.foundation:foundation:$version"
             const val materialDesign = "androidx.compose.material:material:$version"
             const val materialDesignIcons = "androidx.compose.material:material-icons-core:$version"
-            const val materialDesignIconsExtended = "androidx.compose.material:material-icons-extended:$version"
+            const val materialDesignIconsExtended =
+                "androidx.compose.material:material-icons-extended:$version"
             const val constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.0.0"
             const val liveData = "androidx.compose.runtime:runtime-livedata:$version"
             const val activity = "androidx.activity:activity-compose:$activityVersion"
@@ -67,7 +73,8 @@ object Deps {
 //            const val lottie = "com.airbnb.android:lottie-compose:$lottieVersion"
 
             const val coil = "io.coil-kt:coil-compose:${Utils.coilVersion}"
-//            const val reorderable = "org.burnoutcrew.composereorderable:reorderable:0.7.0"
+
+            //            const val reorderable = "org.burnoutcrew.composereorderable:reorderable:0.7.0"
             const val collapsingToolbar = "me.onebone:toolbar-compose:2.3.1"
         }
 
@@ -77,14 +84,20 @@ object Deps {
             const val insets = "com.google.accompanist:accompanist-insets:$version"
             const val insetsUi = "com.google.accompanist:accompanist-insets-ui:$version"
             const val pager = "com.google.accompanist:accompanist-pager:$version"
-            const val pagerIndicators = "com.google.accompanist:accompanist-pager-indicators:$version"
+            const val pagerIndicators =
+                "com.google.accompanist:accompanist-pager-indicators:$version"
 
             //            const val permissions = "com.google.accompanist:accompanist-permissions:$version"
-            const val placeholder = "com.google.accompanist:accompanist-placeholder-material:$version"
-//            const val swiperefresh = "com.google.accompanist:accompanist-swiperefresh:$version"
-            const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:$version"
-            const val navigationMaterial = "com.google.accompanist:accompanist-navigation-material:$version"
-            const val navigationFlowlayout = "com.google.accompanist:accompanist-flowlayout:$version"
+            const val placeholder =
+                "com.google.accompanist:accompanist-placeholder-material:$version"
+
+            //            const val swiperefresh = "com.google.accompanist:accompanist-swiperefresh:$version"
+            const val systemUiController =
+                "com.google.accompanist:accompanist-systemuicontroller:$version"
+            const val navigationMaterial =
+                "com.google.accompanist:accompanist-navigation-material:$version"
+            const val navigationFlowlayout =
+                "com.google.accompanist:accompanist-flowlayout:$version"
         }
 
         object Lifecycle {
@@ -95,7 +108,8 @@ object Deps {
             const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version"
             const val compiler = "androidx.lifecycle:lifecycle-compiler:$version"
             const val vmKotlin = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
-            const val vmSavedState = "androidx.lifecycle:lifecycle-viewmodel-savedstate:$vmSavedStateVersion"
+            const val vmSavedState =
+                "androidx.lifecycle:lifecycle-viewmodel-savedstate:$vmSavedStateVersion"
             const val extensions = "androidx.lifecycle:lifecycle-extensions:2.2.0"
         }
 

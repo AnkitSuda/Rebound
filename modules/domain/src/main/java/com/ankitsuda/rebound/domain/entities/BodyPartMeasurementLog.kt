@@ -17,6 +17,7 @@ package com.ankitsuda.rebound.domain.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.ColumnInfo
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -37,7 +38,7 @@ data class BodyPartMeasurementLog(
     @ColumnInfo(name = "measurement_type")
     var measurementType: String? = null,
     @ColumnInfo(name = "created_at")
-    var createdAt: Date? = null,
+    var createdAt: LocalDateTime? = null,
     @ColumnInfo(name = "update_at")
-    var updatedAt: Date? = null,
+    var updatedAt: LocalDateTime? = null,
 )

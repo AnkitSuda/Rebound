@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.data.repositories
 
 import com.ankitsuda.rebound.data.db.daos.MeasurementsDao
 import com.ankitsuda.rebound.domain.entities.BodyPartMeasurementLog
+import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -35,7 +36,7 @@ class MeasurementsRepository @Inject constructor(
             BodyPartMeasurementLog(
                 bodyPartId = partId,
                 measurement = measurement,
-                createdAt = Date()
+                createdAt = LocalDateTime.now()
             )
         )
     }

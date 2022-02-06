@@ -21,6 +21,7 @@ import com.ankitsuda.rebound.data.repositories.MeasurementsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -59,7 +60,7 @@ class AddPartMeasurementBottomSheetViewModel @Inject constructor(private val mea
             viewModelScope.launch {
                 val mLog = log.value!!
                 mLog.measurement = fieldValue.value.toFloat()
-                mLog.updatedAt = Date()
+                mLog.updatedAt = LocalDateTime.now()
                 measurementsRepository.updateMeasurement(
                     mLog
                 )

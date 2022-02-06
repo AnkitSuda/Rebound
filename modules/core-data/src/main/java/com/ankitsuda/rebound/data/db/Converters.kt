@@ -16,33 +16,17 @@ package com.ankitsuda.rebound.data.db
 
 import androidx.room.TypeConverter
 import com.ankitsuda.base.util.C
+import com.ankitsuda.base.utils.toEpochMillis
+import com.ankitsuda.base.utils.toLocalDateTime
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.parseToExerciseCategory
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 
 object Converters {
-//    private val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-
-    // Set timezone value as GMT ... to make time as reasonable
-    var df: DateFormat = SimpleDateFormat(C.DB_DATE_FORMAT, Locale.getDefault())
-
-
-//    @TypeConverter
-//    @JvmStatic
-//    fun toOffsetDateTime(value: String?): OffsetDateTime? {
-//        return value?.let {
-//            return formatter.parse(value, OffsetDateTime::from)
-//        }
-//    }
-//
-//    @TypeConverter
-//    @JvmStatic
-//    fun fromOffsetDateTime(date: OffsetDateTime?): String? {
-//        return date?.format(formatter)
-//    }
 
     @TypeConverter
     @JvmStatic
@@ -59,12 +43,10 @@ object Converters {
 
 
     @TypeConverter
-    fun toDate(value: String?): Date? {
-//        df.timeZone = TimeZone.getTimeZone("GMT")
-
+    fun toDate(value: Long?): Date? {
         return if (value != null) {
             try {
-                return df.parse(value)
+                return Date(value)
             } catch (e: ParseException) {
                 e.printStackTrace()
             }
@@ -75,13 +57,26 @@ object Converters {
     }
 
     @TypeConverter
-    fun fromDate(value: Date?): String? {
-//        df.timeZone = TimeZone.getTimeZone("GMT")
+    fun fromDate(value: Date?): Long? {
+        return value?.time
+    }
 
+    @TypeConverter
+    fun toLocalDateTime(value: Long?): LocalDateTime? {
         return if (value != null) {
-            df.format(value)
+            try {
+                return value.toLocalDateTime()
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+            null
         } else {
             null
         }
+    }
+
+    @TypeConverter
+    fun fromLocalDateTime(value: LocalDateTime?): Long? {
+        return value?.toEpochMillis()
     }
 }

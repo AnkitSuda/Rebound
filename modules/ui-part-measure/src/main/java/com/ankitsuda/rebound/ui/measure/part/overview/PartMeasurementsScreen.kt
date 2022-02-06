@@ -18,6 +18,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -34,6 +35,8 @@ import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
 import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.*
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @OptIn(ExperimentalToolbarApi::class)
 @Composable
@@ -124,47 +127,37 @@ fun PartMeasurementsScreen(
                 )
             }
 
-            items(logs.size) {
-                val log = logs[it]
+            items(logs, key = { it.id }) { log ->
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .clickable {
-//                            bottomSheet.show {
-//                            navController.navigate(
-//                                Route.AddPartMeasurement.createRoute(
-//                                    partId = partId!!,
-//                                    logId = log.id
-//                                )
-//                            )
                             navigator.navigate(
                                 LeafScreen.AddPartMeasurement.createRoute(
                                     partId = partId!!,
                                     logId = log.id
                                 )
                             )
-//                            AddPartMeasurementBottomSheet(partId = partId!!, logId = log.id)
-//                            }
                         }
                         .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
+                        text = log.createdAt!!.format(
+                            DateTimeFormatter.ofLocalizedDateTime(
+                                FormatStyle.MEDIUM,
+                                FormatStyle.SHORT
+                            )
+                        ),
+                        style = ReboundTheme.typography.caption,
+                        color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+                        modifier = Modifier
+                    )
+                    Text(
                         text = log.measurement.toString(),
                         style = ReboundTheme.typography.body2,
                         modifier = Modifier
                     )
-//                    Text(
-//                        text = log.createdAt!!.format(
-//                            DateTimeFormatter.ofLocalizedDateTime(
-//                                FormatStyle.MEDIUM,
-//                                FormatStyle.SHORT
-//                            )
-//                        ),
-//                        style = ReboundTheme.typography.caption,
-//                        color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-//                        modifier = Modifier
-//                    )
                 }
             }
 
