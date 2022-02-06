@@ -40,6 +40,10 @@ android {
         }
     }
     buildTypes {
+        lintOptions {
+            checkReleaseBuilds false
+            abortOnError false
+        }
         release {
             // Using debug signing configs as of now
             signingConfig signingConfigs.debug
@@ -47,6 +51,9 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".debug"
         }
     }
     compileOptions {
