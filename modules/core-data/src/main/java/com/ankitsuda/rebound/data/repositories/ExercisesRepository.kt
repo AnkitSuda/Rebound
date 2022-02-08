@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.data.repositories
 
 import com.ankitsuda.rebound.data.db.daos.ExercisesDao
 import com.ankitsuda.rebound.domain.entities.Exercise
+import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -31,8 +32,8 @@ class ExercisesRepository @Inject constructor(private val exercisesDao: Exercise
     suspend fun createExercise(exercise: Exercise) {
         exercisesDao.insertExercise(
             exercise.copy(
-                createdAt = Date(),
-                updatedAt = Date()
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now()
             )
         )
     }

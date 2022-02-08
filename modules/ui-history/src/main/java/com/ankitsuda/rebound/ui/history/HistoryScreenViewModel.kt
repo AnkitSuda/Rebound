@@ -18,40 +18,53 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.ankitsuda.base.util.CalendarDate
-import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
+import com.ankitsuda.rebound.domain.entities.Workout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
+import java.time.DayOfWeek.MONDAY
+import java.time.DayOfWeek.SUNDAY
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalAdjusters.nextOrSame
+import java.time.temporal.TemporalAdjusters.previousOrSame
 import java.util.*
+import java.util.stream.Collectors
+import java.util.stream.IntStream
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryScreenViewModel @Inject constructor(private val workoutsRepository: WorkoutsRepository) :
     ViewModel() {
-    private var _week: SnapshotStateList<Date> = mutableStateListOf()
+    private var _week: SnapshotStateList<LocalDate> = mutableStateListOf()
     val week = _week
 
     val today = CalendarDate.today.date
 
     fun getCurrentWeek() {
-        val c = Calendar.getInstance().apply {
-            this.set(Calendar.HOUR_OF_DAY, 0)
-            this.set(Calendar.MINUTE, 0)
-            this.set(Calendar.SECOND, 0)
-            this.set(Calendar.MILLISECOND, 0)
-        }
-        val tempList = arrayListOf<Date>()
-        c[Calendar.DAY_OF_WEEK] = Calendar.SUNDAY
-        for (i in 0..6) {
-            tempList.add(c.time)
-            c.add(Calendar.DATE, 1)
-        }
-//        tempList.removeAt(0)
+        val today = LocalDate.now();
+
+        val tempList = arrayListOf<LocalDate>()
+
+        val monday = today.with(previousOrSame(MONDAY));
+        val sunday = today.with(nextOrSame(SUNDAY));
+
+        val numOfDaysBetween: Long = ChronoUnit.DAYS.between(monday, sunday)
+        val daysBetween = IntStream.iterate(0) { i -> i + 1 }
+            .limit(numOfDaysBetween)
+            .mapToObj { i -> monday.plusDays(i.toLong()) }
+            .collect(Collectors.toList())
+
+        tempList.addAll(daysBetween)
+        tempList.add(sunday)
         week.clear()
         week.addAll(tempList)
+
+        Timber.d("Week days $tempList")
     }
 
-    fun getWorkoutsOnDate(date: Date): Flow<List<Workout>> =
+    fun getWorkoutsOnDate(date: LocalDate): Flow<List<Workout>> =
         workoutsRepository.getAllWorkoutsOnDate(date)
 
 }

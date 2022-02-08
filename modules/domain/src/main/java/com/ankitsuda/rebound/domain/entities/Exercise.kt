@@ -18,6 +18,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ankitsuda.rebound.domain.ExerciseCategory
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity(tableName = "exercises")
@@ -40,7 +41,7 @@ data class Exercise(
     var category: ExerciseCategory = ExerciseCategory.UNKNOWN,
 
     @ColumnInfo(name = "created_at")
-    var createdAt: Date? = null,
+    var createdAt: LocalDateTime? = null,
     @ColumnInfo(name = "update_at")
-    var updatedAt: Date? = null,
+    var updatedAt: LocalDateTime? = null,
 )

@@ -37,6 +37,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.util.CalendarDate
+import com.ankitsuda.navigation.DATE_KEY
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
@@ -45,6 +46,8 @@ import com.ankitsuda.rebound.ui.history.components.HistorySessionItemCard
 import com.ankitsuda.rebound.ui.history.components.WeekDay
 import me.onebone.toolbar.ScrollStrategy
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
@@ -56,33 +59,29 @@ fun HistoryScreen(
 ) {
     val argumentsDate = navController.currentBackStackEntry
         ?.savedStateHandle
-        ?.getLiveData<Long>("date")?.observeAsState()
+        ?.getLiveData<String>(DATE_KEY)?.observeAsState()
 
-    var date = CalendarDate.today.date
+    val localDate = LocalDate.now()
+    var date = LocalDate.now()
 
     argumentsDate?.value?.let {
-        date = Date(it)
+        date = LocalDate.parse(it)
     }
 
-    val calendar = Calendar.getInstance().apply {
-        this.time = date
-        this.set(Calendar.HOUR_OF_DAY, 0)
-        this.set(Calendar.MINUTE, 0)
-        this.set(Calendar.SECOND, 0)
-        this.set(Calendar.MILLISECOND, 0)
-    }
+    val isSameYear = localDate.year == date.year
+    val isToday = localDate == date
 
-    val isSameYear = calendar.get(Calendar.YEAR) == CalendarDate.today.year
-    val isToday = calendar.time == CalendarDate.today.date
     Timber.d(date.toString())
 
-    val dayFormatter =
-        SimpleDateFormat(if (isSameYear) "EEE, MMM d" else "MMM d, yyyy", Locale.getDefault())
+//    val dayFormatter =
+//        SimpleDateFormat(if (isSameYear) "EEE, MMM d" else "MMM d, yyyy", Locale.getDefault())
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val week = viewModel.week
     var today = viewModel.today
+
+    val dateFormatter = DateTimeFormatter.ofPattern(if (isSameYear) "EEE, MMM d" else "MMM d, yyyy")
 
     LaunchedEffect(key1 = Unit) {
         if (week.isEmpty()) {
@@ -114,7 +113,7 @@ fun HistoryScreen(
                 state = collapsingState,
                 toolbar = {
                     TopBar2(
-                        title = if (isToday) "Today" else dayFormatter.format(date),
+                        title = if (isToday) "Today" else date.format(dateFormatter),
                         toolbarState = collapsingState.toolbarState,
                         elevationEnabled = false,
                         statusBarEnabled = false,
@@ -123,7 +122,6 @@ fun HistoryScreen(
                                 icon = Icons.Outlined.DateRange,
                                 title = "Show calendar",
                                 onClick = {
-//                                    navController.navigate(Route.Calendar.createRoute(selectedDate = date))
                                     navigator.navigate(LeafScreen.Calendar.createRoute(selectedDate = date))
                                 }
                             )
@@ -175,8 +173,8 @@ fun HistoryScreen(
                                             isSelected = day == date,
                                             onClick = {
                                                 navController.currentBackStackEntry?.savedStateHandle?.set(
-                                                    "date",
-                                                    day.time
+                                                    DATE_KEY,
+                                                    day.toString()
                                                 )
                                             }
                                         )

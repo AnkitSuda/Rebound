@@ -14,11 +14,17 @@
 
 package com.ankitsuda.rebound.data.repositories
 
+import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
@@ -31,10 +37,14 @@ class WorkoutsRepository @Inject constructor(
 
     fun getWorkout(workoutId: Long) = workoutsDao.getWorkout(workoutId)
 
-    fun getAllWorkoutsOnDate(date: Date): Flow<List<Workout>> {
-        val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val str = df.format(date)
-        return workoutsDao.getAllWorkoutsOnDate(str)
+    fun getAllWorkoutsOnDate(date: LocalDate): Flow<List<Workout>> {
+        val epoch = date.toEpochMillis()
+        Timber.d("epoch $epoch")
+        Timber.d("date $date")
+        return workoutsDao.getAllWorkoutsOnDate(epoch).map {
+            Timber.d("list $it")
+            it
+        }
     }
 
     fun getExerciseWorkoutJunctions(workoutId: Long) =
@@ -44,11 +54,11 @@ class WorkoutsRepository @Inject constructor(
         workoutsDao.getLogEntriesWithExerciseJunction(workoutId)
 
     suspend fun updateWorkout(workout: Workout) {
-        workoutsDao.updateWorkout(workout.copy(updatedAt = Date()))
+        workoutsDao.updateWorkout(workout.copy(updatedAt = LocalDateTime.now()))
     }
 
     suspend fun createWorkout(workout: Workout): Long {
-        return workoutsDao.insertWorkout(workout.copy(createdAt = Date()))
+        return workoutsDao.insertWorkout(workout.copy(createdAt = LocalDateTime.now()))
     }
 
     suspend fun setCurrentWorkoutId(value: Long) {
@@ -87,8 +97,8 @@ class WorkoutsRepository @Inject constructor(
         val logId = workoutsDao.insertExerciseLog(
             ExerciseLog(
                 workoutId = exerciseWorkoutJunction.workoutId,
-                createdAt = Date(),
-                updatedAt = Date(),
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now(),
             )
         )
 
@@ -96,8 +106,8 @@ class WorkoutsRepository @Inject constructor(
             logId = logId,
             junctionId = exerciseWorkoutJunction.id,
             setNumber = setNumber,
-            createdAt = Date(),
-            updatedAt = Date()
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
         )
 
         val entryId = workoutsDao.insertExerciseLogEntry(entry)
@@ -106,7 +116,7 @@ class WorkoutsRepository @Inject constructor(
     }
 
     suspend fun updateExerciseLogEntry(entry: ExerciseLogEntry) {
-        workoutsDao.updateExerciseLogEntry(entry.copy(updatedAt = Date()))
+        workoutsDao.updateExerciseLogEntry(entry.copy(updatedAt = LocalDateTime.now()))
     }
 
     suspend fun deleteExerciseLogEntry(entry: ExerciseLogEntry) {

@@ -26,10 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Composable
-fun WeekDay(modifier: Modifier, day: Date, isSelected: Boolean, onClick: () -> Unit) {
+fun WeekDay(modifier: Modifier, day: LocalDate, isSelected: Boolean, onClick: () -> Unit) {
     Box(modifier = modifier.clickable(onClick = onClick)) {
         Column(
             modifier = Modifier
@@ -37,8 +39,9 @@ fun WeekDay(modifier: Modifier, day: Date, isSelected: Boolean, onClick: () -> U
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            val dayDate = SimpleDateFormat("d").format(day)
-            val dayD = SimpleDateFormat("EEE").format(day).uppercase()
+
+            val dayDate = day.format(DateTimeFormatter.ofPattern("d"))
+            val dayD = day.format(DateTimeFormatter.ofPattern("EEE")).uppercase()
 
             Text(
                 text = dayD,

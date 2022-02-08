@@ -35,12 +35,17 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.base.util.CalendarDate
 import com.ankitsuda.base.util.CalendarItem
 import com.ankitsuda.base.util.CalendarUtils
+import com.ankitsuda.base.utils.toLocalDate
+import com.ankitsuda.navigation.DATE_KEY
+import com.ankitsuda.navigation.SELECTED_DATE_KEY
 import com.ankitsuda.rebound.ui.calendar.components.CalendarMonthItem
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.ScrollStrategy
 import timber.log.Timber
 import java.lang.Exception
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 
 @Composable
@@ -49,7 +54,7 @@ fun CalendarScreen(
     viewModel: CalendarScreenViewModel = hiltViewModel()
 ) {
     val selectedDate =
-        navController.currentBackStackEntry?.arguments?.getString("selectedDate")?.let {
+        navController.currentBackStackEntry?.arguments?.getString(SELECTED_DATE_KEY)?.let {
             CalendarDate(Date(it.toLong()))
         } ?: CalendarDate.today
 
@@ -120,8 +125,10 @@ fun CalendarScreen(
                     selectedDate = selectedDate,
                     onClickOnDay = { dateItem ->
                         navController.previousBackStackEntry?.savedStateHandle?.set(
-                            "date",
-                            dateItem.date.date.time
+                            DATE_KEY,
+//                            dateItem.date.date.time
+                            dateItem.date.date.time.toLocalDate().toString()
+
                         )
                         navController.popBackStack()
                     })

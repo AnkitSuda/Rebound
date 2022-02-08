@@ -21,8 +21,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.*
 import androidx.navigation.compose.composable
+import com.ankitsuda.base.utils.toEpochMillis
+import com.ankitsuda.base.utils.toLocalDateTime
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
 import java.util.*
 
 const val QUERY_KEY = "query"
@@ -30,7 +36,8 @@ const val SEARCH_BACKENDS_KEY = "backends"
 const val ARTIST_ID_KEY = "artist_id"
 const val ALBUM_ID_KEY = "album_id"
 const val PLAYLIST_ID_KEY = "playlist_id"
-const val ALBUM_OWNER_ID_KEY = "album_owner_id"
+const val DATE_KEY = "date"
+const val SELECTED_DATE_KEY = "selected_date"
 const val WORKOUT_ID_KEY = "workout_id"
 const val WORKOUT_TEMPLATE_ID_KEY = "workout_template_id"
 
@@ -90,9 +97,16 @@ sealed class LeafScreen(
 
 
     data class Home(override val route: String = "home") : LeafScreen(route)
-    data class History(override val route: String = "history/{date}") : LeafScreen(route) {
+    data class History(override val route: String = "history?$DATE_KEY={$DATE_KEY}") :
+        LeafScreen(route = route,
+            arguments = listOf(
+                navArgument(DATE_KEY) {
+                    nullable = true
+                    type = NavType.StringType
+                }
+            )) {
         fun createRoute(date: Date) =
-            "history/${date.time}"
+            "history?$DATE_KEY=${date.time}"
     }
 
     data class Workout(override val route: String = "workout") : LeafScreen(route)
@@ -144,10 +158,11 @@ sealed class LeafScreen(
         }
     }
 
-    data class Calendar(override val route: String = "calendar/{selectedDate}") :
+    data class Calendar(override val route: String = "calendar/{$SELECTED_DATE_KEY}") :
         LeafScreen(route) {
         companion object {
 
+            fun createRoute(selectedDate: LocalDate) = "calendar/${selectedDate.toEpochMillis()}"
             fun createRoute(selectedDate: Date) = "calendar/${selectedDate.time}"
             fun createRoute(selectedDate: Long) = "calendar/${selectedDate}"
         }

@@ -14,12 +14,15 @@
 
 package com.ankitsuda.base.utils
 
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneId
+import java.time.*
 
 
 fun LocalDateTime.toEpochMillis() = this.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-fun Long.toLocalDateTime() =
+fun Long.toLocalDateTime(): LocalDateTime? =
     LocalDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault());
+
+fun Long.toLocalDate(): LocalDate? = Instant.ofEpochMilli(this)
+    .atZone(ZoneId.systemDefault()).toLocalDate()
+
+fun LocalDate.toEpochMillis() =
+    this.atTime(LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
