@@ -45,6 +45,7 @@ import com.ankitsuda.rebound.ui.measure.part.overview.PartMeasurementsScreen
 import com.ankitsuda.rebound.ui.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.workout.WorkoutScreen
 import com.ankitsuda.rebound.ui.workout_details.SessionScreen
+import com.ankitsuda.rebound.ui.workouttemplate.preview.WorkoutTemplatePreviewScreen
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -115,6 +116,7 @@ private fun NavGraphBuilder.addWorkoutRoot(navController: NavController) {
         startDestination = LeafScreen.Workout().createRoute()
     ) {
         addWorkout(navController)
+        addWorkoutTemplatePreview(navController)
     }
 }
 
@@ -192,6 +194,12 @@ private fun NavGraphBuilder.addExercises(navController: NavController) {
 private fun NavGraphBuilder.addExerciseDetail(navController: NavController) {
     composableScreen(LeafScreen.ExerciseDetails()) {
         ExerciseDetailScreen(navController)
+    }
+}
+
+private fun NavGraphBuilder.addWorkoutTemplatePreview(navController: NavController) {
+    composableScreen(LeafScreen.WorkoutTemplatePreview()) {
+        WorkoutTemplatePreviewScreen()
     }
 }
 

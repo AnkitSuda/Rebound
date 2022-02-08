@@ -35,6 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
+import com.ankitsuda.navigation.LeafScreen
+import com.ankitsuda.navigation.LocalNavigator
+import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.*
@@ -48,6 +51,7 @@ import me.onebone.toolbar.FabPosition
 @Composable
 fun WorkoutScreen(
     navController: NavController,
+    navigator: Navigator = LocalNavigator.current,
     viewModel: WorkoutScreenViewModel = hiltViewModel()
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
@@ -214,14 +218,15 @@ fun WorkoutScreen(
 
             items(5) {
                 TemplateItemCard(
-                    name = "Push",
-                    totalExercises = 7,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                ) {
-
-                }
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    name = "Push",
+                    totalExercises = 7,
+                    onClick = {
+                        navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(0))
+                    }
+                )
             }
 
         }

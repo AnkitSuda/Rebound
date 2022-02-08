@@ -32,6 +32,7 @@ const val ALBUM_ID_KEY = "album_id"
 const val PLAYLIST_ID_KEY = "playlist_id"
 const val ALBUM_OWNER_ID_KEY = "album_owner_id"
 const val WORKOUT_ID_KEY = "workout_id"
+const val WORKOUT_TEMPLATE_ID_KEY = "workout_template_id"
 
 interface Screen {
     val route: String
@@ -173,6 +174,13 @@ sealed class LeafScreen(
         LeafScreen(route) {
         companion object {
             fun createRoute(exerciseId: Long) = "exercises/$exerciseId"
+        }
+    }
+
+    data class WorkoutTemplatePreview(override val route: String = "workout_template/{${WORKOUT_TEMPLATE_ID_KEY}}/preview") :
+        LeafScreen(route) {
+        companion object {
+            fun createRoute(templateId: Long) = "workout_template/$templateId/preview"
         }
     }
 }
