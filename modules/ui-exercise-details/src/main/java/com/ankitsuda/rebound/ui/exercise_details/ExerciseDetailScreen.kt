@@ -109,13 +109,17 @@ fun ExerciseDetailScreen(
                         divider = { Divider(thickness = 0.dp) },
                         indicator = { tabPositions ->
                             TabRowDefaults.Indicator(
-                                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                                modifier = Modifier.pagerTabIndicatorOffset(
+                                    pagerState,
+                                    tabPositions
+                                ),
+                                color = ReboundTheme.colors.primary
                             )
                         }
                     ) {
                         tabData.forEachIndexed { index, pair ->
                             Tab(
-                                selectedContentColor = ReboundTheme.colors.topBarTitle,
+                                selectedContentColor = ReboundTheme.colors.primary,
                                 unselectedContentColor = ReboundTheme.colors.topBarTitle.copy(
                                     0.5f
                                 ),
