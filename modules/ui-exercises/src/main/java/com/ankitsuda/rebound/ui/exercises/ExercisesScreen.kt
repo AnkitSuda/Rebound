@@ -185,7 +185,7 @@ private fun ExercisesScreenContent(
                         ScrollableTabRow(
                             selectedTabIndex = tabIndex,
                             edgePadding = 0.dp,
-                            backgroundColor = ReboundTheme.colors.background,
+                            backgroundColor = ReboundTheme.colors.topBar,
                             divider = { Divider(thickness = 0.dp) },
                             indicator = { tabPositions ->
                                 TabRowDefaults.Indicator(
@@ -195,6 +195,10 @@ private fun ExercisesScreenContent(
                         ) {
                             tabData.forEachIndexed { index, item ->
                                 Tab(
+                                    selectedContentColor = ReboundTheme.colors.topBarTitle,
+                                    unselectedContentColor = ReboundTheme.colors.topBarTitle.copy(
+                                        0.5f
+                                    ),
                                     selected = tabIndex == index,
                                     onClick = {
                                         coroutineScope.launch {

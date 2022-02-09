@@ -56,7 +56,8 @@ fun ExerciseDetailScreen(
     }
 
     val exercise by viewModel.getExercise(exerciseId).collectAsState(initial = null)
-    val logEntriesWithWorkoutList by viewModel.getHistory(exerciseId).collectAsState(initial = emptyList())
+    val logEntriesWithWorkoutList by viewModel.getHistory(exerciseId)
+        .collectAsState(initial = emptyList())
 
     val tabData = listOf(
         "Statistics",
@@ -104,7 +105,7 @@ fun ExerciseDetailScreen(
 
                     TabRow(
                         selectedTabIndex = tabIndex,
-                        backgroundColor = ReboundTheme.colors.background,
+                        backgroundColor = ReboundTheme.colors.topBar,
                         divider = { Divider(thickness = 0.dp) },
                         indicator = { tabPositions ->
                             TabRowDefaults.Indicator(
@@ -113,14 +114,21 @@ fun ExerciseDetailScreen(
                         }
                     ) {
                         tabData.forEachIndexed { index, pair ->
-                            Tab(selected = tabIndex == index, onClick = {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            }, text = {
-                                Text(text = pair)
+                            Tab(
+                                selectedContentColor = ReboundTheme.colors.topBarTitle,
+                                unselectedContentColor = ReboundTheme.colors.topBarTitle.copy(
+                                    0.5f
+                                ),
+                                selected = tabIndex == index,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                                text = {
+                                    Text(text = pair)
 
-                            }
+                                }
                             )
                         }
                     }
