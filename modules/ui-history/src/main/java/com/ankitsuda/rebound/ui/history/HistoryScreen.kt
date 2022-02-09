@@ -36,7 +36,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.ankitsuda.base.util.CalendarDate
+import com.ankitsuda.base.utils.toEpochMillis
+import com.ankitsuda.base.utils.toLocalDate
 import com.ankitsuda.navigation.DATE_KEY
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
@@ -44,6 +45,7 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.history.components.HistorySessionItemCard
 import com.ankitsuda.rebound.ui.history.components.WeekDay
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.ScrollStrategy
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -59,13 +61,13 @@ fun HistoryScreen(
 ) {
     val argumentsDate = navController.currentBackStackEntry
         ?.savedStateHandle
-        ?.getLiveData<String>(DATE_KEY)?.observeAsState()
+        ?.getLiveData<Long>(DATE_KEY)?.observeAsState()
 
     val localDate = LocalDate.now()
     var date = LocalDate.now()
 
     argumentsDate?.value?.let {
-        date = LocalDate.parse(it)
+        date = it.toLocalDate()
     }
 
     val isSameYear = localDate.year == date.year
@@ -79,7 +81,6 @@ fun HistoryScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val week = viewModel.week
-    var today = viewModel.today
 
     val dateFormatter = DateTimeFormatter.ofPattern(if (isSameYear) "EEE, MMM d" else "MMM d, yyyy")
 
@@ -105,7 +106,7 @@ fun HistoryScreen(
                     .statusBarsHeight()
                     .fillMaxWidth()
                     .zIndex(2f)
-                    .background(MaterialTheme.colors.background)
+                    .background(ReboundTheme.colors.topBar)
             )
 
             CollapsingToolbarScaffold(
@@ -139,7 +140,7 @@ fun HistoryScreen(
                 },
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
+                    .background(ReboundTheme.colors.topBar)
             ) {
 
 
@@ -163,7 +164,7 @@ fun HistoryScreen(
 
                                 Row(
                                     modifier = Modifier
-                                        .background(MaterialTheme.colors.background)
+                                        .background(ReboundTheme.colors.topBar)
 //                                        .padding(start = 8.dp, end = 8.dp)
                                 ) {
                                     for (day in week) {
@@ -174,7 +175,7 @@ fun HistoryScreen(
                                             onClick = {
                                                 navController.currentBackStackEntry?.savedStateHandle?.set(
                                                     DATE_KEY,
-                                                    day.toString()
+                                                    day.toEpochMillis()
                                                 )
                                             }
                                         )

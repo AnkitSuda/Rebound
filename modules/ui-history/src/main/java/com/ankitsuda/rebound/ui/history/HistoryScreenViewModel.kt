@@ -17,7 +17,6 @@ package com.ankitsuda.rebound.ui.history
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.ankitsuda.base.util.CalendarDate
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.Workout
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,8 +38,6 @@ class HistoryScreenViewModel @Inject constructor(private val workoutsRepository:
     ViewModel() {
     private var _week: SnapshotStateList<LocalDate> = mutableStateListOf()
     val week = _week
-
-    val today = CalendarDate.today.date
 
     fun getCurrentWeek() {
         val today = LocalDate.now();

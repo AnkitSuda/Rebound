@@ -25,4 +25,13 @@ fun Long.toLocalDate(): LocalDate? = Instant.ofEpochMilli(this)
     .atZone(ZoneId.systemDefault()).toLocalDate()
 
 fun LocalDate.toEpochMillis() =
-    this.atTime(LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    this.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
+
+val LocalDate.yearMonth: YearMonth
+    get() = YearMonth.of(year, month)
+
+val YearMonth.next: YearMonth
+    get() = this.plusMonths(1)
+
+val YearMonth.previous: YearMonth
+    get() = this.minusMonths(1)

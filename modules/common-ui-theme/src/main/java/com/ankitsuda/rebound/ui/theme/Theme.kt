@@ -58,6 +58,8 @@ fun ReboundThemeWrapper(
         background = animatedBackgroundColor,
         card = themeState.cardColor,
         cardBorder = themeState.cardBorderColor,
+        topBar = themeState.topBarBackgroundColor,
+        topBarTitle = themeState.topBarContentColor
     )
 
     val dimens = defaultDimens(

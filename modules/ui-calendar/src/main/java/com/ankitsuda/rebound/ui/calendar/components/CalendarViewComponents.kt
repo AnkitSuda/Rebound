@@ -31,22 +31,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.*
+import com.ankitsuda.rebound.ui.calendar.models.CalendarDay
+import com.ankitsuda.rebound.ui.calendar.models.CalendarMonth
+import com.ankitsuda.rebound.ui.calendar.models.DayOwner
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 const val WEIGHT_7DAY_WEEK = 1f / 7f
 
 @Composable
 fun CalendarMonthItem(
-    month: MonthItem,
-    days: List<CalendarItem>,
-    selectedDate: CalendarDate,
-    onClickOnDay: (DateItem) -> Unit
+    month: CalendarMonth,
+    selectedDate: LocalDate,
+    onClickOnDay: (CalendarDay) -> Unit
 ) {
-    val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
-    val weeks = days.chunked(7)
-    val monthFormatter = SimpleDateFormat(CalendarUtils.MONTH_FORMAT, Locale.getDefault())
-    val dayFormatter = SimpleDateFormat(CalendarUtils.DAY_FORMAT, Locale.getDefault())
+    val dayNames = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+    val monthFormatter = DateTimeFormatter.ofPattern("LLLL yyyy")
+    val dayFormatter = DateTimeFormatter.ofPattern("d")
 
     Column(
         modifier = Modifier
@@ -54,7 +58,7 @@ fun CalendarMonthItem(
             .padding(start = 8.dp, end = 8.dp)
     ) {
 
-        CalendarMonthHeader(monthFormatter.format(month.date.date))
+        CalendarMonthHeader(month.yearMonth.format(monthFormatter))
 
         Row(modifier = Modifier.fillMaxWidth()) {
             for (name in dayNames) {
@@ -63,15 +67,20 @@ fun CalendarMonthItem(
         }
 
 
-        for (week in weeks) {
+        for (week in month.weekDays) {
             key(week) {
-                Row(modifier = Modifier
-                    .defaultMinSize(256.dp)
-                    .fillMaxWidth()) {
-                    for (day in week) {
-                        if (day is DateItem) {
-                            val isToday = day.date == CalendarDate.today
-                            val formattedDay = dayFormatter.format(day.date.date)
+                Row(
+                    modifier = Modifier
+                        .defaultMinSize(256.dp)
+                        .fillMaxWidth()
+                ) {
+                    for (i in 0..6) {
+
+                        val day = if (i in week.indices) week[i] else null
+
+                        if (day != null && day.owner == DayOwner.THIS_MONTH) {
+                            val isToday = day.date == LocalDate.now()
+                            val formattedDay = day.date.format(dayFormatter)
 
 
                             key("${day.date.dayOfMonth}_${day.date.month}_${day.date.year}") {

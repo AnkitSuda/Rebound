@@ -27,14 +27,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.ankitsuda.base.util.MonthItem
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
-import com.ankitsuda.base.util.CalendarDate
-import com.ankitsuda.base.util.CalendarItem
-import com.ankitsuda.base.util.CalendarUtils
+import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toLocalDate
 import com.ankitsuda.navigation.DATE_KEY
 import com.ankitsuda.navigation.SELECTED_DATE_KEY
@@ -45,6 +42,7 @@ import timber.log.Timber
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
 
@@ -55,22 +53,16 @@ fun CalendarScreen(
 ) {
     val selectedDate =
         navController.currentBackStackEntry?.arguments?.getString(SELECTED_DATE_KEY)?.let {
-            CalendarDate(Date(it.toLong()))
-        } ?: CalendarDate.today
-
-    Timber.d("Pre selected date  ${selectedDate.date.toString()}")
+            it.toLong().toLocalDate()
+        } ?: LocalDate.now()
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberLazyListState()
 
-    val monthFormatter = SimpleDateFormat(CalendarUtils.MONTH_FORMAT, Locale.getDefault())
-    val dayFormatter = SimpleDateFormat(CalendarUtils.DAY_FORMAT, Locale.getDefault())
-
     val calendar = viewModel.calendar
-    val today = CalendarDate.today
+    val today = LocalDate.now()
 
     val coroutine = rememberCoroutineScope()
-
 
     LaunchedEffect(key1 = Unit) {
         if (calendar.isEmpty()) {
@@ -78,9 +70,9 @@ fun CalendarScreen(
             try {
                 scrollState.scrollToItem(calendar.indexOf((calendar.filter {
                     try {
-                        (it as MonthItem).date.month == selectedDate.month && (it as MonthItem).date.year == selectedDate.year
+                        it.month == selectedDate.month.value && it.year == selectedDate.year
                     } catch (e1: Exception) {
-                        (it as MonthItem).date.month == today.month && (it as MonthItem).date.year == today.year
+                        it.month == today.month.value && today.year == today.year
                     }
                 }[0])))
             } catch (e: Exception) {
@@ -104,8 +96,8 @@ fun CalendarScreen(
                     onClick = {
                         coroutine.launch {
                             scrollState.animateScrollToItem(calendar.indexOf((calendar.filter {
-                                (it as MonthItem).date.month == today.month && (it as MonthItem).date.year == today.year
-                            }[0]) as CalendarItem))
+                                it.month == today.month.value && it.year == today.year
+                            }[0])))
                         }
                     })
             })
@@ -117,17 +109,16 @@ fun CalendarScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
         ) {
-            items(calendar, key = { "${(it as MonthItem).date.month}_${it.date.year}" }) {
-                val month = it as MonthItem
+            items(calendar, key = { "${it.month}_${it.year}" }) {
+                val month = it
                 CalendarMonthItem(
                     month = month,
-                    days = month.days,
                     selectedDate = selectedDate,
                     onClickOnDay = { dateItem ->
                         navController.previousBackStackEntry?.savedStateHandle?.set(
                             DATE_KEY,
 //                            dateItem.date.date.time
-                            dateItem.date.date.time.toLocalDate().toString()
+                            dateItem.date.toEpochMillis()
 
                         )
                         navController.popBackStack()

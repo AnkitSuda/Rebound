@@ -25,13 +25,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Composable
-fun WeekDay(modifier: Modifier, day: LocalDate, isSelected: Boolean, onClick: () -> Unit) {
+fun WeekDay(
+    modifier: Modifier,
+    day: LocalDate,
+    selectedColor: Color = ReboundTheme.colors.primary,
+    defaultColor: Color = ReboundTheme.colors.topBarTitle,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
     Box(modifier = modifier.clickable(onClick = onClick)) {
         Column(
             modifier = Modifier
@@ -46,12 +54,12 @@ fun WeekDay(modifier: Modifier, day: LocalDate, isSelected: Boolean, onClick: ()
             Text(
                 text = dayD,
                 style = MaterialTheme.typography.body2,
-                color = if (isSelected) MaterialTheme.colors.primary else Color(117, 117, 117)
+                color = if (isSelected) selectedColor else defaultColor.copy(alpha = 0.7f)
             )
             Text(
                 text = dayDate,
                 style = MaterialTheme.typography.body1,
-                color = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                color = if (isSelected) selectedColor else defaultColor,
                 modifier = Modifier.padding(top = 4.dp)
             )
         }

@@ -17,102 +17,44 @@ package com.ankitsuda.rebound.ui.calendar
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.ankitsuda.base.util.*
+import androidx.lifecycle.viewModelScope
+import com.ankitsuda.rebound.ui.calendar.models.CalendarMonth
+import com.ankitsuda.rebound.ui.calendar.models.InDateStyle
+import com.ankitsuda.rebound.ui.calendar.models.MonthConfig
+import com.ankitsuda.rebound.ui.calendar.models.OutDateStyle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import timber.log.Timber
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.time.DayOfWeek
+import java.time.Month
+import java.time.Year
+import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
 class CalendarScreenViewModel @Inject constructor() : ViewModel() {
-    private var _calendar: SnapshotStateList<CalendarItem> = mutableStateListOf()
+    private var _calendar: SnapshotStateList<CalendarMonth> = mutableStateListOf()
     val calendar = _calendar
-    private var displayedDatesRange = DatesRange.emptyRange()
-    private var minMaxDatesRange = NullableDatesRange()
 
-    fun getMonth(year: Int, month: Int): List<CalendarItem> {
-        Timber.d("Getting month $month year $year")
-        return CalendarUtils(1).generateCalendarItemsForMonth(year, month)
-    }
+    private var calendarJob: Job? = null
 
     fun getCalendar(
     ) {
+        calendarJob?.cancel()
+        calendarJob = viewModelScope.launch {
+            val monthConfig = MonthConfig(
+                outDateStyle = OutDateStyle.NONE,
+                inDateStyle = InDateStyle.ALL_MONTHS,
+                startMonth = YearMonth.of(Year.now().value, Month.JANUARY),
+                endMonth = YearMonth.of(Year.now().value, Month.DECEMBER),
+                hasBoundaries = true,
+                maxRowCount = Int.MAX_VALUE,
+                firstDayOfWeek = DayOfWeek.MONDAY,
+                job = Job()
+            )
 
-        displayedDatesRange = DisplayedDatesRangeFactory.getDisplayedDatesRange(
-            initialDate = CalendarDate.today,
-            minDate = null,
-            maxDate = null
-        )
-
-        val calendarItems = CalendarUtils(1).generateCalendarItems(
-            dateFrom = displayedDatesRange.dateFrom,
-            dateTo = displayedDatesRange.dateTo
-        )
-
-
-        _calendar.addAll(calendarItems)
-
+            _calendar.addAll(monthConfig.months)
+        }
     }
 
-    fun generateNextCalendarItems() {
-        Timber.d("generateNextCalendarItems")
-        val maxDate = minMaxDatesRange.dateTo
-        if (maxDate != null && displayedDatesRange.dateTo.monthsBetween(maxDate) == 0) {
-            return
-        }
-
-        val generateDatesFrom = displayedDatesRange.dateTo.plusMonths(1)
-        val generateDatesTo: CalendarDate
-
-        generateDatesTo = if (maxDate != null) {
-            val monthBetween = generateDatesFrom.monthsBetween(maxDate)
-
-            if (monthBetween > CalendarUtils.MONTHS_PER_PAGE) {
-                generateDatesFrom.plusMonths(CalendarUtils.MONTHS_PER_PAGE)
-            } else {
-                generateDatesFrom.plusMonths(monthBetween)
-            }
-        } else {
-            generateDatesFrom.plusMonths(CalendarUtils.MONTHS_PER_PAGE)
-        }
-
-        val calendarItems = CalendarUtils(1).generateCalendarItems(
-            dateFrom = generateDatesFrom,
-            dateTo = generateDatesTo
-        )
-
-        _calendar.addAll(calendarItems)
-        displayedDatesRange = displayedDatesRange.copy(dateTo = generateDatesTo)
-    }
-
-    fun generatePrevCalendarItems() {
-        Timber.d("generatePrevCalendarItems")
-        val minDate = minMaxDatesRange.dateFrom
-        if (minDate != null && minDate.monthsBetween(displayedDatesRange.dateFrom) == 0) {
-            return
-        }
-
-        val generateDatesFrom: CalendarDate
-        val generateDatesTo = displayedDatesRange.dateFrom.minusMonths(1)
-
-        generateDatesFrom = if (minDate != null) {
-            val monthBetween = minDate.monthsBetween(generateDatesTo)
-
-            if (monthBetween > CalendarUtils.MONTHS_PER_PAGE) {
-                generateDatesTo.minusMonths(CalendarUtils.MONTHS_PER_PAGE)
-            } else {
-                generateDatesTo.minusMonths(monthBetween)
-            }
-
-        } else {
-            generateDatesTo.minusMonths(CalendarUtils.MONTHS_PER_PAGE)
-        }
-
-        val calendarItems = CalendarUtils(1).generateCalendarItems(
-            dateFrom = generateDatesFrom,
-            dateTo = generateDatesTo
-        )
-
-        _calendar.addAll(0, calendarItems)
-        displayedDatesRange = displayedDatesRange.copy(dateFrom = generateDatesFrom)
-    }
 }
