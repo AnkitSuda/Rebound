@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.ankitsuda.navigation.LeafScreen
-import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
+import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.workout_panel.common.components.workoutExerciseItemAlt
@@ -40,32 +40,23 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 import timber.log.Timber
+import java.time.LocalDateTime
+import kotlin.random.Random
 
 @Composable
-fun WorkoutPanel(
-    navController: NavHostController,
-    navigator: Navigator = LocalNavigator.current,
-) {
-    WorkoutPanel2(navController, navigator)
-}
-
-@Composable
-fun WorkoutPanel1(
+fun WorkoutPanel2(
     navController: NavHostController,
     navigator: Navigator,
-    viewModel: WorkoutPanelViewModel = hiltViewModel()
+    viewModel: WorkoutPanelViewModel2 = hiltViewModel()
 ) {
-    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
-    val workout by viewModel.getWorkout(currentWorkoutId).collectAsState(null)
-    val logEntriesWithJunction by viewModel.getLogEntriesWithExerciseJunction()
-        .collectAsState(emptyList())
-
-    Timber.d("logEntriesWithJunction $logEntriesWithJunction")
-
-    if (viewModel.mWorkout == null || viewModel.mWorkout != workout) {
-        Timber.d("Updating viewModel mWorkout to currentWorkout")
-        viewModel.mWorkout = workout
-    }
+    val workout by viewModel.workout.collectAsState(
+        Workout(
+            id = Random.nextLong(),
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        )
+    )
+    val logEntriesWithJunction = viewModel.logEntriesWithExerciseJunction
 
     val workoutName = workout?.name ?: ""
     val workoutNote = workout?.note ?: ""
@@ -96,9 +87,6 @@ fun WorkoutPanel1(
                 WorkoutQuickInfo()
                 Divider()
             }
-        }
-        item {
-            Text(text = "TEST: current workout id $currentWorkoutId")
         }
         item {
             Column(modifier = Modifier.padding(16.dp)) {

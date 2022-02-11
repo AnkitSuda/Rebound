@@ -14,12 +14,16 @@
 
 package com.ankitsuda.rebound.ui.workout_panel.common.components
 
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.*
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -46,8 +50,14 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-fun LazyListScope.WorkoutExerciseItemAlt(
+private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, right ->
+    left.setNumber?.compareTo(right.setNumber ?: 0) ?: 0
+}
+
+fun LazyListScope.workoutExerciseItemAlt(
     logEntriesWithJunction: LogEntriesWithExerciseJunction,
     onValuesUpdated: (updatedEntry: ExerciseLogEntry) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
@@ -60,7 +70,7 @@ fun LazyListScope.WorkoutExerciseItemAlt(
 
 
     // Exercise info
-    item {
+    item() {
         val contentColor = ReboundTheme.colors.primary
         var popupMenuExpanded by remember {
             mutableStateOf(false)
@@ -160,7 +170,10 @@ fun LazyListScope.WorkoutExerciseItemAlt(
     }
 
     // Sets
-    items(items = logEntries, key = { it.entryId }) { entry ->
+    val sortedEntries = logEntries.sortedWith(ExerciseLogEntryComparator)
+
+    items(items = sortedEntries, key = { "${it.entryId}_${it.updatedAt}" }) { entry ->
+
         SetItem(
             exercise = exercise,
             exerciseLogEntry = entry,
@@ -208,9 +221,10 @@ fun LazyListScope.WorkoutExerciseItemAlt(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+
+@OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
-private fun SetItem(
+private fun LazyItemScope.SetItem(
     exercise: Exercise,
     exerciseLogEntry: ExerciseLogEntry,
     onWeightChange: (ExerciseLogEntry, Float?) -> Unit,
@@ -223,18 +237,28 @@ private fun SetItem(
     val bgColor by animateColorAsState(targetValue = if (exerciseLogEntry.completed) ReboundTheme.colors.primary else ReboundTheme.colors.background)
     val contentColor by animateColorAsState(targetValue = if (exerciseLogEntry.completed) ReboundTheme.colors.onPrimary else ReboundTheme.colors.onBackground)
 
+    val coroutine = rememberCoroutineScope()
+
+    fun handleOnSwiped() {
+        coroutine.launch {
+            delay(150)
+            onSwipeDelete(exerciseLogEntry)
+        }
+    }
+
+
     val dismissState = rememberDismissState(
         confirmStateChange = {
             if (it != DismissValue.Default) {
-                onSwipeDelete(exerciseLogEntry)
-                false
-            } else {
+                handleOnSwiped()
                 true
+            } else {
+                false
             }
         }
     )
-
     SwipeToDismiss(
+        modifier = Modifier,/*.animateItemPlacement()*/
         state = dismissState,
         directions = setOf(
 //            DismissDirection.StartToEnd,
@@ -381,6 +405,7 @@ private fun SetItem(
 
     }
 }
+
 
 @Composable
 fun RowScope.SetTextField(

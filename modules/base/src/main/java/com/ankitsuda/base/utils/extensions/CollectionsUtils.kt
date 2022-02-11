@@ -12,22 +12,10 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.rebound.domain.entities
+package com.ankitsuda.base.utils.extensions
 
-import androidx.room.Embedded
-import androidx.room.Junction
-import androidx.room.Relation
-
-data class LogEntriesWithExerciseJunction(
-    @Embedded val junction: ExerciseWorkoutJunction,
-    @Relation(
-        parentColumn = "exercise_id",
-        entityColumn = "exercise_id"
-    )
-    val exercise: Exercise,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "junction_id",
-    )
-    var logEntries: List<ExerciseLogEntry>
-)
+fun <T> List<T>.toArrayList(): ArrayList<T> {
+    val tempList = arrayListOf<T>()
+    tempList.addAll(this)
+    return tempList
+}
