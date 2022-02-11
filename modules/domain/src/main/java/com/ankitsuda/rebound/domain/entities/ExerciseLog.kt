@@ -22,11 +22,12 @@ import java.util.*
 
 @Entity(tableName = "exercise_logs")
 data class ExerciseLog(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    val id: String,
 
     @ColumnInfo(name = "workout_id")
-    var workoutId: Long? = null,
+    var workoutId: String? = null,
 
     @ColumnInfo(name = "created_at")
     var createdAt: LocalDateTime? = null,

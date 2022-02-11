@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.Flow
 interface WorkoutsDao {
 
     @Query("SELECT * FROM workouts WHERE id = :workoutId")
-    fun getWorkout(workoutId: Long): Flow<Workout?>
+    fun getWorkout(workoutId: String): Flow<Workout?>
 
     @Query("SELECT * FROM workouts")
     fun getAllWorkouts(): Flow<List<Workout>>
@@ -32,65 +32,64 @@ interface WorkoutsDao {
     fun getAllWorkoutsOnDate(date: Long): Flow<List<Workout>>
 
     @Query("SELECT * FROM exercise_workout_junctions WHERE workout_id = :workoutId")
-    fun getExerciseWorkoutJunction(workoutId: Long): Flow<List<ExerciseWorkoutJunction>>
+    fun getExerciseWorkoutJunction(workoutId: String): Flow<List<ExerciseWorkoutJunction>>
 
     @Query("SELECT * FROM exercise_workout_junctions WHERE workout_id = :workoutId")
-    suspend fun getExerciseWorkoutJunctionsNonFlow(workoutId: Long): List<ExerciseWorkoutJunction>
+    suspend fun getExerciseWorkoutJunctionsNonFlow(workoutId: String): List<ExerciseWorkoutJunction>
 
     @Query("SELECT * FROM exercise_log_entries WHERE junction_id = :junctionId")
-    suspend fun getExerciseLogEntriesNonFlow(junctionId: Long): List<ExerciseLogEntry>
+    suspend fun getExerciseLogEntriesNonFlow(junctionId: String): List<ExerciseLogEntry>
 
     @Query("DELETE FROM exercise_log_entries WHERE junction_id IN (:junctionIds)")
-    suspend fun deleteAllLogEntriesForJunctionIds(junctionIds: List<Long>)
+    suspend fun deleteAllLogEntriesForJunctionIds(junctionIds: List<String>)
 
     @Query("DELETE FROM exercise_logs WHERE workout_id = :workoutId")
-    suspend fun deleteAllLogsForWorkoutId(workoutId: Long)
+    suspend fun deleteAllLogsForWorkoutId(workoutId: String)
 
     @Transaction
     @Query("SELECT * FROM exercise_workout_junctions WHERE workout_id = :workoutId")
-    fun getLogEntriesWithExerciseJunction(workoutId: Long): Flow<List<LogEntriesWithExerciseJunction>>
+    fun getLogEntriesWithExerciseJunction(workoutId: String): Flow<List<LogEntriesWithExerciseJunction>>
 
     @Delete
     suspend fun deleteExerciseLogEntry(exerciseLogEntry: ExerciseLogEntry)
 
     @Query("DELETE FROM exercise_log_entries WHERE entry_id IN (:ids)")
-    suspend fun deleteExerciseLogEntries(ids: List<Long>)
+    suspend fun deleteExerciseLogEntries(ids: List<String>)
 
     @Delete
     suspend fun deleteExerciseLog(exerciseLog: ExerciseLog)
 
 
     @Query("DELETE FROM exercise_logs WHERE id IN (:ids)")
-    suspend fun deleteExerciseLogs(ids: List<Long>)
+    suspend fun deleteExerciseLogs(ids: List<String>)
 
     @Delete
     suspend fun deleteExerciseWorkoutJunction(exerciseWorkoutJunction: ExerciseWorkoutJunction)
 
     @Query("DELETE FROM exercise_workout_junctions WHERE id IN (:ids)")
-    suspend fun deleteExerciseWorkoutJunctions(ids: List<Long>)
-
+    suspend fun deleteExerciseWorkoutJunctions(ids: List<String>)
 
     @Delete
     suspend fun deleteWorkout(workout: Workout)
 
     @Query("DELETE FROM workouts WHERE id = :workoutId")
-    suspend fun deleteWorkoutById(workoutId: Long)
+    suspend fun deleteWorkoutById(workoutId: String)
 
     @Update
     suspend fun updateExerciseLogEntry(exerciseLogEntry: ExerciseLogEntry)
 
     @Insert
-    suspend fun insertWorkout(workout: Workout): Long
+    suspend fun insertWorkout(workout: Workout)
 
     @Update
     suspend fun updateWorkout(workout: Workout)
 
     @Insert
-    suspend fun insertExerciseWorkoutJunction(exerciseWorkoutJunction: ExerciseWorkoutJunction): Long
+    suspend fun insertExerciseWorkoutJunction(exerciseWorkoutJunction: ExerciseWorkoutJunction)
 
     @Insert
-    suspend fun insertExerciseLog(log: ExerciseLog): Long
+    suspend fun insertExerciseLog(log: ExerciseLog)
 
     @Insert
-    suspend fun insertExerciseLogEntry(logEntry: ExerciseLogEntry): Long
+    suspend fun insertExerciseLogEntry(logEntry: ExerciseLogEntry)
 }

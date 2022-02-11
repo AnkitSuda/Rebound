@@ -12,19 +12,8 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.rebound.domain.entities
+package com.ankitsuda.base.utils
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import java.util.*
 
-@Entity(tableName = "muscles")
-data class Muscle(
-    @PrimaryKey
-    @ColumnInfo(name = "tag")
-    val tag: String = "",
-    @ColumnInfo(name = "name")
-    var name: String,
-    @ColumnInfo(name = "type")
-    var type: String? = null
-)
+fun generateId() = UUID.randomUUID().toString()

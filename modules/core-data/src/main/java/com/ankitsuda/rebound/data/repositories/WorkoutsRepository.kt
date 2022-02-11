@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.data.repositories
 
+import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
@@ -35,7 +36,7 @@ class WorkoutsRepository @Inject constructor(
     fun getCurrentWorkoutId() = prefStorage.currentWorkoutId
 
 
-    fun getWorkout(workoutId: Long) = workoutsDao.getWorkout(workoutId)
+    fun getWorkout(workoutId: String) = workoutsDao.getWorkout(workoutId)
 
     fun getAllWorkoutsOnDate(date: LocalDate): Flow<List<Workout>> {
         val epoch = date.toEpochMillis()
@@ -47,21 +48,28 @@ class WorkoutsRepository @Inject constructor(
         }
     }
 
-    fun getExerciseWorkoutJunctions(workoutId: Long) =
+    fun getExerciseWorkoutJunctions(workoutId: String) =
         workoutsDao.getExerciseWorkoutJunction(workoutId)
 
-    fun getLogEntriesWithExerciseJunction(workoutId: Long) =
+    fun getLogEntriesWithExerciseJunction(workoutId: String) =
         workoutsDao.getLogEntriesWithExerciseJunction(workoutId)
 
     suspend fun updateWorkout(workout: Workout) {
         workoutsDao.updateWorkout(workout.copy(updatedAt = LocalDateTime.now()))
     }
 
-    suspend fun createWorkout(workout: Workout): Long {
-        return workoutsDao.insertWorkout(workout.copy(createdAt = LocalDateTime.now()))
+    suspend fun createWorkout(workout: Workout): String {
+        val newId = generateId()
+        workoutsDao.insertWorkout(
+            workout.copy(
+                id = newId,
+                createdAt = LocalDateTime.now()
+            )
+        )
+        return newId
     }
 
-    suspend fun setCurrentWorkoutId(value: Long) {
+    suspend fun setCurrentWorkoutId(value: String) {
         prefStorage.setCurrentWorkoutId(value)
     }
 
@@ -70,20 +78,21 @@ class WorkoutsRepository @Inject constructor(
      */
     suspend fun deleteWorkoutWithEverything(workout: Workout) {
         // Get all ExerciseWorkoutJunctions related to workout
-        val junctions = workoutsDao.getExerciseWorkoutJunctionsNonFlow(workout.id)
+        val junctions = workoutsDao.getExerciseWorkoutJunctionsNonFlow(workout.id!!)
         // Delete all ExerciseLogEntries for workout using junction ids
         workoutsDao.deleteAllLogEntriesForJunctionIds(junctionIds = junctions.map { it.id })
         // Delete all ExerciseLogs for workout
-        workoutsDao.deleteAllLogsForWorkoutId(workoutId = workout.id)
+        workoutsDao.deleteAllLogsForWorkoutId(workoutId = workout.id!!)
         // Delete all junctions related to workout
         workoutsDao.deleteExerciseWorkoutJunctions(junctions.map { it.id })
         // Delete workout
         workoutsDao.deleteWorkout(workout)
     }
 
-    suspend fun addExerciseToWorkout(workoutId: Long, exerciseId: Long) {
+    suspend fun addExerciseToWorkout(workoutId: String, exerciseId: String) {
         workoutsDao.insertExerciseWorkoutJunction(
             ExerciseWorkoutJunction(
+                id = generateId(),
                 workoutId = workoutId,
                 exerciseId = exerciseId
             )
@@ -94,8 +103,10 @@ class WorkoutsRepository @Inject constructor(
         setNumber: Int,
         exerciseWorkoutJunction: ExerciseWorkoutJunction
     ): ExerciseLogEntry {
-        val logId = workoutsDao.insertExerciseLog(
+        val logId = generateId()
+        workoutsDao.insertExerciseLog(
             ExerciseLog(
+                id = logId,
                 workoutId = exerciseWorkoutJunction.workoutId,
                 createdAt = LocalDateTime.now(),
                 updatedAt = LocalDateTime.now(),
@@ -103,6 +114,7 @@ class WorkoutsRepository @Inject constructor(
         )
 
         val entry = ExerciseLogEntry(
+            entryId = generateId(),
             logId = logId,
             junctionId = exerciseWorkoutJunction.id,
             setNumber = setNumber,
@@ -110,9 +122,9 @@ class WorkoutsRepository @Inject constructor(
             updatedAt = LocalDateTime.now()
         )
 
-        val entryId = workoutsDao.insertExerciseLogEntry(entry)
+        workoutsDao.insertExerciseLogEntry(entry)
 
-        return entry.copy(entryId = entryId)
+        return entry
     }
 
     suspend fun updateExerciseLogEntry(entry: ExerciseLogEntry) {

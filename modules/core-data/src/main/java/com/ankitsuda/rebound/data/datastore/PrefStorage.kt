@@ -22,8 +22,8 @@ interface PrefStorage {
     val themeState: Flow<ThemeState>
     suspend fun setThemeState(value: ThemeState)
 
-    val currentWorkoutId: Flow<Long>
-    suspend fun setCurrentWorkoutId(value: Long)
+    val currentWorkoutId: Flow<String>
+    suspend fun setCurrentWorkoutId(value: String)
 
 
     /***

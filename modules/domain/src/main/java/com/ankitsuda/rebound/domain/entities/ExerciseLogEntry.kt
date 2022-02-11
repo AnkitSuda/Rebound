@@ -22,14 +22,14 @@ import java.util.*
 
 @Entity(tableName = "exercise_log_entries")
 data class ExerciseLogEntry(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "entry_id")
-    val entryId: Long = 0,
+    val entryId: String,
 
     @ColumnInfo(name = "log_id")
-    var logId: Long? = null,
+    var logId: String? = null,
     @ColumnInfo(name = "junction_id")
-    var junctionId: Long? = null,
+    var junctionId: String? = null,
 
     // Number of set
     @ColumnInfo(name = "set_number")

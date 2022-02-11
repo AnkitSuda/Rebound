@@ -17,6 +17,7 @@ package com.ankitsuda.rebound.data.datastore
 import android.content.Context
 import androidx.datastore.preferences.core.*
 import com.ankitsuda.base.ui.ThemeState
+import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.domain.models.Optional
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -41,7 +42,7 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
 
         // Current workout id
-        val CURRENT_WORKOUT_ID_KEY = longPreferencesKey(name = "current_workout_id")
+        val CURRENT_WORKOUT_ID_KEY = stringPreferencesKey(name = "current_workout_id")
     }
 
     override val themeState: Flow<ThemeState>
@@ -54,10 +55,10 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
     }
 
 
-    override val currentWorkoutId: Flow<Long>
-        get() = getValue(CURRENT_WORKOUT_ID_KEY, -1)
+    override val currentWorkoutId: Flow<String>
+        get() = getValue(CURRENT_WORKOUT_ID_KEY, NONE_WORKOUT_ID)
 
-    override suspend fun setCurrentWorkoutId(value: Long) {
+    override suspend fun setCurrentWorkoutId(value: String) {
         setValue(CURRENT_WORKOUT_ID_KEY, value)
     }
     // SMALL SHAPE ENDS
@@ -74,7 +75,11 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
         datastoreUtils.setValue(key, value)
     }
 
-    private suspend fun <T> setValue(key: Preferences.Key<String>, value: T, serializer: KSerializer<T>) =
+    private suspend fun <T> setValue(
+        key: Preferences.Key<String>,
+        value: T,
+        serializer: KSerializer<T>
+    ) =
         datastoreUtils.setValue(key, value, serializer)
 
     private fun <T> getValue(

@@ -14,13 +14,17 @@
 
 package com.ankitsuda.rebound.domain.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "body_parts")
 data class BodyPart(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    val id: String,
+    @ColumnInfo(name = "name")
     var name: String? = null,
+    @ColumnInfo(name = "image")
     var image: String? = null,
 )

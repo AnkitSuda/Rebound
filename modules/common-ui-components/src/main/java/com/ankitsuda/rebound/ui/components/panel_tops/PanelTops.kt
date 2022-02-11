@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.rebound.domain.entities.Workout
 
 @Composable
@@ -52,7 +53,7 @@ fun PanelTopDragHandle(modifier: Modifier = Modifier) {
 
 @Composable
 fun PanelTopCollapsed(viewModel: PanelTopsViewModel = hiltViewModel()) {
-    val workoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+    val workoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
     val workout by viewModel.getWorkout(workoutId).collectAsState(initial = null)
     Column(
         modifier = Modifier

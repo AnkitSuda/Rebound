@@ -22,9 +22,9 @@ import javax.inject.Inject
 
 class ExercisesRepository @Inject constructor(private val exercisesDao: ExercisesDao) {
 
-    fun getExercise(exerciseId: Long) = exercisesDao.getSingleExercise(exerciseId)
+    fun getExercise(exerciseId: String) = exercisesDao.getSingleExercise(exerciseId)
 
-    fun getAllLogEntries(exerciseId: Long) = exercisesDao.getAllLogEntries(exerciseId)
+    fun getAllLogEntries(exerciseId: String) = exercisesDao.getAllLogEntries(exerciseId)
 
     fun getAllExercises() = exercisesDao.getAllExercises()
     fun getAllExercisesWithMuscles() = exercisesDao.getAllExercisesWithMuscles()

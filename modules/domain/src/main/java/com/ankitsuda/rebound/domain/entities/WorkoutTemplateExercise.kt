@@ -22,13 +22,14 @@ import java.util.*
 
 @Entity(tableName = "workout_template_exercises")
 data class WorkoutTemplateExercise(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    val id: String,
 
     @ColumnInfo(name = "template_id")
-    var templateId: Long,
+    var templateId: String,
     @ColumnInfo(name = "exercise_id")
-    var exerciseId: Long,
+    var exerciseId: String,
 
     @ColumnInfo(name = "sets")
     var sets: Int? = null,

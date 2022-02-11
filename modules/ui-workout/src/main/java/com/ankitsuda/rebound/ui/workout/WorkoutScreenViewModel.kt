@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.ui.workout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,14 +31,14 @@ class WorkoutScreenViewModel @Inject constructor(private val workoutsRepository:
 
     fun startEmptyWorkout() {
         viewModelScope.launch {
-            val newWorkoutId = workoutsRepository.createWorkout(Workout())
+            val newWorkoutId = workoutsRepository.createWorkout(Workout(id = ""))
             workoutsRepository.setCurrentWorkoutId(newWorkoutId)
         }
     }
 
     fun cancelCurrentWorkout() {
         viewModelScope.launch {
-            workoutsRepository.setCurrentWorkoutId(-1)
+            workoutsRepository.setCurrentWorkoutId(NONE_WORKOUT_ID)
         }
     }
 }

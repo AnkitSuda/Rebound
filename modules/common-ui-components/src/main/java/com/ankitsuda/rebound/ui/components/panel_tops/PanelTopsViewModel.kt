@@ -25,5 +25,5 @@ class PanelTopsViewModel @Inject constructor(private val workoutsRepository: Wor
     ViewModel() {
 
     val currentWorkoutId = workoutsRepository.getCurrentWorkoutId()
-    fun getWorkout(workoutId: Long) = workoutsRepository.getWorkout(workoutId)
+    fun getWorkout(workoutId: String) = workoutsRepository.getWorkout(workoutId)
 }

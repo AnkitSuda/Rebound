@@ -22,18 +22,18 @@ import kotlinx.coroutines.flow.Flow
 interface MeasurementsDao {
 
     @Query("SELECT * FROM body_part_measurement_logs WHERE body_part_id = :partId")
-    fun getLogsForPart(partId: Long) : Flow<List<BodyPartMeasurementLog>>
+    fun getLogsForPart(partId: String) : Flow<List<BodyPartMeasurementLog>>
 
     @Query("SELECT * FROM body_part_measurement_logs WHERE id = :logId")
-    suspend fun getLog(logId: Long) : BodyPartMeasurementLog
+    suspend fun getLog(logId: String) : BodyPartMeasurementLog
 
     @Insert
-    suspend fun insertMeasurementLog(log: BodyPartMeasurementLog) : Long
+    suspend fun insertMeasurementLog(log: BodyPartMeasurementLog)
 
     @Update
     suspend fun updateMeasurementLog(log: BodyPartMeasurementLog)
 
     @Query("DELETE FROM body_part_measurement_logs WHERE id = :logId")
-    suspend fun deleteMeasurementLogById(logId: Long)
+    suspend fun deleteMeasurementLogById(logId: String)
 
 }

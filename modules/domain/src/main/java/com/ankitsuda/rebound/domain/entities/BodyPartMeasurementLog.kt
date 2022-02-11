@@ -23,10 +23,11 @@ import java.util.*
 
 @Entity(tableName = "body_part_measurement_logs")
 data class BodyPartMeasurementLog(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    val id: String,
     @ColumnInfo(name = "body_part_id")
-    var bodyPartId: Long? = null,
+    var bodyPartId: String? = null,
     @ColumnInfo(name = "note")
     var note: String? = null,
     @ColumnInfo(name = "image")

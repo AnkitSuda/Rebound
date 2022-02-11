@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.Flow
 interface ExercisesDao {
 
     @Query("SELECT * FROM exercises WHERE exercise_id = :exerciseId")
-    fun getSingleExercise(exerciseId: Long): Flow<Exercise>
+    fun getSingleExercise(exerciseId: String): Flow<Exercise>
 
     @Query("SELECT * FROM exercises ORDER BY name")
     fun getAllExercises(): Flow<List<Exercise>>
@@ -37,8 +37,8 @@ interface ExercisesDao {
 
     @Transaction
     @Query("SELECT * FROM exercise_workout_junctions WHERE exercise_id = :exerciseId")
-    fun getAllLogEntries(exerciseId: Long): Flow<List<LogEntriesWithWorkout>>
+    fun getAllLogEntries(exerciseId: String): Flow<List<LogEntriesWithWorkout>>
 
     @Insert
-    suspend fun insertExercise(exercise: Exercise): Long
+    suspend fun insertExercise(exercise: Exercise)
 }

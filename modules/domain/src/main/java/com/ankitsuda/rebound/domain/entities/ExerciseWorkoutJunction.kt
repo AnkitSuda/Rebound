@@ -20,11 +20,12 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "exercise_workout_junctions")
 data class ExerciseWorkoutJunction(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    val id: String,
     @ColumnInfo(name = "exercise_id")
-    var exerciseId: Long? = null,
+    var exerciseId: String? = null,
     @ColumnInfo(name = "workout_id")
-    var workoutId: Long? = null,
+    var workoutId: String? = null,
 )
 

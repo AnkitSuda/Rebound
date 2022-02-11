@@ -22,8 +22,9 @@ import java.util.*
 
 @Entity(tableName = "workouts")
 data class Workout(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    val id: String,
 
     @ColumnInfo(name = "name")
     var name: String? = null,
