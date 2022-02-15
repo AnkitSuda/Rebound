@@ -121,7 +121,7 @@ sealed class LeafScreen(
     data class PartMeasurements(override val route: String = "part_measurements/{partId}") :
         LeafScreen(route) {
         companion object {
-            fun createRoute(partId: Long) = "part_measurements/$partId"
+            fun createRoute(partId: String) = "part_measurements/$partId"
         }
     }
 
@@ -153,7 +153,7 @@ sealed class LeafScreen(
         LeafScreen(route) {
         companion object {
 
-            fun createRoute(partId: Long? = null, logId: Long? = null) =
+            fun createRoute(partId: String? = null, logId: String? = null) =
                 "add_part_measurement?partId=$partId&logId=$logId"
         }
     }
@@ -174,13 +174,13 @@ sealed class LeafScreen(
         route = route,
         arguments = listOf(
             navArgument(WORKOUT_ID_KEY) {
-                type = NavType.LongType
+                type = NavType.StringType
             }
         ),
     ) {
         companion object {
 
-            fun createRoute(workoutId: Long) = "session/$workoutId"
+            fun createRoute(workoutId: String) = "session/$workoutId"
 
         }
     }
@@ -188,14 +188,14 @@ sealed class LeafScreen(
     data class ExerciseDetails(override val route: String = "exercises/{exerciseId}") :
         LeafScreen(route) {
         companion object {
-            fun createRoute(exerciseId: Long) = "exercises/$exerciseId"
+            fun createRoute(exerciseId: String) = "exercises/$exerciseId"
         }
     }
 
     data class WorkoutTemplatePreview(override val route: String = "workout_template/{${WORKOUT_TEMPLATE_ID_KEY}}/preview") :
         LeafScreen(route) {
         companion object {
-            fun createRoute(templateId: Long) = "workout_template/$templateId/preview"
+            fun createRoute(templateId: String) = "workout_template/$templateId/preview"
         }
     }
 }

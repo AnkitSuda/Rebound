@@ -38,7 +38,7 @@ class AddPartMeasurementBottomSheetViewModel @Inject constructor(private val mea
         _fieldValue.value = value
     }
 
-    suspend fun setLogId(logId: Long)/*: BodyPartMeasurementLog? */ {
+    suspend fun setLogId(logId: String)/*: BodyPartMeasurementLog? */ {
         viewModelScope.launch {
             val log = measurementsRepository.getLog(logId)
             _log.value = log
@@ -47,7 +47,7 @@ class AddPartMeasurementBottomSheetViewModel @Inject constructor(private val mea
         }
     }
 
-    fun addMeasurementToDb(partId: Long) {
+    fun addMeasurementToDb(partId: String) {
         viewModelScope.launch {
             measurementsRepository.addMeasurementToDb(fieldValue.value.toFloat(), partId)
             _fieldValue.value = ""
@@ -71,7 +71,7 @@ class AddPartMeasurementBottomSheetViewModel @Inject constructor(private val mea
     }
 
 
-    fun deleteMeasurementFromDb(logId: Long) {
+    fun deleteMeasurementFromDb(logId: String) {
         viewModelScope.launch {
             measurementsRepository.deleteMeasurementFromDb(logId)
             _fieldValue.value = ""

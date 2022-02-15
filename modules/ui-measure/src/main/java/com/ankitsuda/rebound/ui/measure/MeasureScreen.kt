@@ -92,7 +92,7 @@ fun MeasureScreen(
                     text = part,
                     onClick = {
 //                        navController.navigate(Route.PartMeasurements.createRoute(it.toLong()))
-                        navigator.navigate(LeafScreen.PartMeasurements.createRoute(it.toLong()))
+                        navigator.navigate(LeafScreen.PartMeasurements.createRoute(it.toString()))
                     })
             }
 
@@ -108,7 +108,7 @@ fun MeasureScreen(
                     text = part,
                     onClick = {
 //                        navController.navigate(Route.PartMeasurements.createRoute((it + core.size).toLong()))
-                        navigator.navigate(LeafScreen.PartMeasurements.createRoute((it + core.size).toLong()))
+                        navigator.navigate(LeafScreen.PartMeasurements.createRoute((it + core.size).toString()))
                     })
             }
 

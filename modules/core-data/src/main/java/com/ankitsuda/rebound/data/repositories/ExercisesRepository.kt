@@ -14,7 +14,9 @@
 
 package com.ankitsuda.rebound.data.repositories
 
+import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.rebound.data.db.daos.ExercisesDao
+import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.entities.Exercise
 import java.time.LocalDateTime
 import java.util.*
@@ -29,9 +31,21 @@ class ExercisesRepository @Inject constructor(private val exercisesDao: Exercise
     fun getAllExercises() = exercisesDao.getAllExercises()
     fun getAllExercisesWithMuscles() = exercisesDao.getAllExercisesWithMuscles()
 
-    suspend fun createExercise(exercise: Exercise) {
+    suspend fun createExercise(
+        name: String? = null,
+        notes: String? = null,
+        primaryMuscleTag: String? = null,
+        secondaryMuscleTag: String? = null,
+        category: ExerciseCategory = ExerciseCategory.UNKNOWN,
+    ) {
         exercisesDao.insertExercise(
-            exercise.copy(
+            Exercise(
+                exerciseId = generateId(),
+                name = name,
+                notes = notes,
+                primaryMuscleTag = primaryMuscleTag,
+                secondaryMuscleTag = secondaryMuscleTag,
+                category = category,
                 createdAt = LocalDateTime.now(),
                 updatedAt = LocalDateTime.now()
             )

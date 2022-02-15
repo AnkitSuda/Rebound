@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
@@ -55,7 +56,7 @@ fun WorkoutPanel1(
     navigator: Navigator,
     viewModel: WorkoutPanelViewModel = hiltViewModel()
 ) {
-    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
     val workout by viewModel.getWorkout(currentWorkoutId).collectAsState(null)
     val logEntriesWithJunction by viewModel.getLogEntriesWithExerciseJunction()
         .collectAsState(emptyList())
@@ -73,7 +74,7 @@ fun WorkoutPanel1(
     // Observes results when ExercisesScreen changes value of arg
     val exercisesScreenResult = navController.currentBackStackEntry
         ?.savedStateHandle
-        ?.getLiveData<Long?>("result_exercises_screen_exercise_id")?.observeAsState()
+        ?.getLiveData<String?>("result_exercises_screen_exercise_id")?.observeAsState()
     exercisesScreenResult?.value?.let { resultId ->
 
         viewModel.addExerciseToWorkout(resultId)

@@ -25,9 +25,9 @@ import javax.inject.Inject
 class PartMeasurementsScreenViewModel @Inject constructor(private val measurementsRepository: MeasurementsRepository) :
     ViewModel() {
 
-    fun getLogsForPart(partId: Long) = measurementsRepository.getLogsForPart(partId)
+    fun getLogsForPart(partId: String) = measurementsRepository.getLogsForPart(partId)
 
-    fun deleteMeasurementFromDb(logId: Long) {
+    fun deleteMeasurementFromDb(logId: String) {
         viewModelScope.launch {
             measurementsRepository.deleteMeasurementFromDb(logId)
         }

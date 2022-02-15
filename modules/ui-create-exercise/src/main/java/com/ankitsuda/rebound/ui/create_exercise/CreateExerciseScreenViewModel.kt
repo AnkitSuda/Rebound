@@ -68,14 +68,12 @@ class CreateExerciseScreenViewModel @Inject constructor(
 
     fun createExercise() {
         viewModelScope.launch {
-            val exercise = Exercise(
+            exercisesRepository.createExercise(
                 name = _name.value,
                 notes = _note.value,
                 primaryMuscleTag = _selectedMuscle.value,
                 category = _selectedCategory.value ?: ExerciseCategory.UNKNOWN
             )
-
-            exercisesRepository.createExercise(exercise)
         }
     }
 }

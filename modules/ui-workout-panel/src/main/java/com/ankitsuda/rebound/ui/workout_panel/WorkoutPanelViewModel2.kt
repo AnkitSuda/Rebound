@@ -18,6 +18,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.utils.extensions.toArrayList
+import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.*
@@ -36,7 +37,7 @@ class WorkoutPanelViewModel2 @Inject constructor(
     ViewModel() {
     private val _workout: MutableStateFlow<Workout?> = MutableStateFlow(
         Workout(
-            id = Random.nextLong(),
+            id = generateId(),
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now()
         )
@@ -69,12 +70,12 @@ class WorkoutPanelViewModel2 @Inject constructor(
         }
     }
 
-    fun addExerciseToWorkout(exerciseId: Long) {
+    fun addExerciseToWorkout(exerciseId: String) {
         viewModelScope.launch {
             val exercise = exercisesRepository.getExercise(exerciseId).first()
             val junction = LogEntriesWithExerciseJunction(
                 junction = ExerciseWorkoutJunction(
-                    id = Random.nextLong(),
+                    id = generateId(),
                     exerciseId = exercise.exerciseId
                 ),
                 exercise = exercise,
@@ -93,7 +94,7 @@ class WorkoutPanelViewModel2 @Inject constructor(
                 task = {
                     it.add(
                         ExerciseLogEntry(
-                            entryId = Random.nextLong(),
+                            entryId = generateId(),
                             setNumber = setNumber,
                             createdAt = LocalDateTime.now(),
                             updatedAt = LocalDateTime.now()
@@ -135,7 +136,7 @@ class WorkoutPanelViewModel2 @Inject constructor(
     }
 
     private fun updateLog(
-        entryId: Long? = null,
+        entryId: String? = null,
         junction: LogEntriesWithExerciseJunction? = null,
         task: (ArrayList<ExerciseLogEntry>)
         -> Unit

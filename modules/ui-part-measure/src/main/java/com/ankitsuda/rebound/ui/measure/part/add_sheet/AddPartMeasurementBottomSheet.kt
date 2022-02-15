@@ -38,12 +38,12 @@ fun AddPartMeasurementBottomSheet(
     viewModel: AddPartMeasurementBottomSheetViewModel = hiltViewModel()
 ) {
     val partId = try {
-        navController.currentBackStackEntry?.arguments?.getString("partId")?.toLong()
+        navController.currentBackStackEntry?.arguments?.getString("partId")
     } catch (e: Exception) {
         null
     }
     val logId = try {
-        navController.currentBackStackEntry?.arguments?.getString("logId")?.toLong()
+        navController.currentBackStackEntry?.arguments?.getString("logId")
     } catch (e: Exception) {
         null
     }

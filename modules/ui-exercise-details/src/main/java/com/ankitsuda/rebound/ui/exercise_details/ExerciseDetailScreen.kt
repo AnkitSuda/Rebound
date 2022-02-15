@@ -51,7 +51,7 @@ fun ExerciseDetailScreen(
 ) {
     val exerciseId by remember {
         mutableStateOf(
-            navController.currentBackStackEntry?.arguments?.getString("exerciseId")?.toLong()!!
+            navController.currentBackStackEntry?.arguments?.getString("exerciseId")!!
         )
     }
 

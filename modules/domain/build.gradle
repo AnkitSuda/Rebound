@@ -42,9 +42,7 @@ repositories {
 
 dependencies {
     api Deps.Android.Room.runtime
-
-    testImplementation Deps.Utils.junit
-    testImplementation Deps.Utils.threeTen
+    api Deps.Kotlin.stdlib
 
     implementation project(":modules:base")
 }

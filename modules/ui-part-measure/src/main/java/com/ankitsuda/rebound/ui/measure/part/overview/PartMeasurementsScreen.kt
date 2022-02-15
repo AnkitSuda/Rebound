@@ -49,7 +49,7 @@ fun PartMeasurementsScreen(
         mutableStateOf(
             navController.currentBackStackEntry?.arguments?.getString(
                 "partId"
-            )?.toLong()
+            )
         )
     }
 

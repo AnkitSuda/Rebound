@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.ui.workout_panel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
@@ -29,18 +30,18 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: WorkoutsRepository) :
     ViewModel() {
-    val currentWorkoutId: Flow<Long> = workoutsRepository.getCurrentWorkoutId()
+    val currentWorkoutId: Flow<String> = workoutsRepository.getCurrentWorkoutId()
     var mWorkoutId: Long = -1
     var mWorkout: Workout? = null
 
-    fun getWorkout(workoutId: Long): Flow<Workout?> =
+    fun getWorkout(workoutId: String): Flow<Workout?> =
         workoutsRepository.getWorkout(workoutId)
 
     fun getExerciseWorkoutJunctions() =
-        workoutsRepository.getExerciseWorkoutJunctions(mWorkout?.id ?: -1)
+        workoutsRepository.getExerciseWorkoutJunctions(mWorkout?.id ?: NONE_WORKOUT_ID)
 
     fun getLogEntriesWithExerciseJunction() =
-        workoutsRepository.getLogEntriesWithExerciseJunction(mWorkout?.id ?: -1)
+        workoutsRepository.getLogEntriesWithExerciseJunction(mWorkout?.id ?: NONE_WORKOUT_ID)
 
     fun updateWorkoutName(name: String) {
         viewModelScope.launch {
@@ -60,7 +61,7 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
 
     fun cancelCurrentWorkout() {
         viewModelScope.launch {
-            workoutsRepository.setCurrentWorkoutId(-1)
+            workoutsRepository.setCurrentWorkoutId(NONE_WORKOUT_ID)
 
             mWorkout?.let {
                 workoutsRepository.deleteWorkoutWithEverything(it)
@@ -68,7 +69,7 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
         }
     }
 
-    fun addExerciseToWorkout(exerciseId: Long) {
+    fun addExerciseToWorkout(exerciseId: String) {
         viewModelScope.launch {
             if (mWorkout != null) {
                 workoutsRepository.addExerciseToWorkout(

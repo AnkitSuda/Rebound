@@ -36,7 +36,7 @@ class SessionScreenViewModel @Inject constructor(
     private val handle: SavedStateHandle,
     private val workoutsRepository: WorkoutsRepository
 ) : ViewModel() {
-    private val workoutId = requireNotNull(handle.get<Long>(WORKOUT_ID_KEY))
+    private val workoutId = requireNotNull(handle.get<String>(WORKOUT_ID_KEY))
 
     val logs: SharedFlow<List<LogEntriesWithExerciseJunction>> =
         workoutsRepository.getLogEntriesWithExerciseJunction(

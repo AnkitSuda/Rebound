@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
+import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
@@ -224,7 +225,7 @@ fun WorkoutScreen(
                     name = "Push",
                     totalExercises = 7,
                     onClick = {
-                        navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(0))
+                        navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(generateId()))
                     }
                 )
             }
