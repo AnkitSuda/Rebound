@@ -56,7 +56,7 @@ object ColorSerializer : KSerializer<Color> {
 @Serializable
 data class ThemeState(
     @SerialName("isLightTheme")
-    var isLightTheme: Boolean = false,
+    var isLightTheme: Boolean = true,
     @SerialName("isDarkStatusBarIcons")
     var isDarkStatusBarIcons: Boolean = true,
     @SerialName("isDarkNavigationBarIcons")

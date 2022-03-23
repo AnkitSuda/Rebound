@@ -56,7 +56,7 @@ fun WorkoutScreen(
     viewModel: WorkoutScreenViewModel = hiltViewModel()
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
-    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
 
     ToolbarWithFabScaffold(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
@@ -69,7 +69,7 @@ fun WorkoutScreen(
         },
         fab = {
 
-            AnimatedVisibility(visible = currentWorkoutId == (-1).toLong()) {
+            AnimatedVisibility(visible = currentWorkoutId == NONE_WORKOUT_ID) {
                 ExtendedFloatingActionButton(
                     modifier = Modifier,
                     elevation = FloatingActionButtonDefaults.elevation(

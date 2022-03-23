@@ -36,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
 import com.ankitsuda.base.ui.ThemeState
 import com.ankitsuda.base.util.LabelVisible
+import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.common.compose.LocalDialog
 import com.ankitsuda.common.compose.MainDialog
 import com.ankitsuda.common.compose.rememberFlowWithLifecycle
@@ -89,9 +90,9 @@ private fun MainLayout(
     val coroutine = rememberCoroutineScope()
 
 
-    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = -1)
+    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
 
-    val panelHidden = currentWorkoutId == (-1).toLong()
+    val panelHidden = currentWorkoutId == NONE_WORKOUT_ID
 
     BackHandler(swipeableState.currentValue != 0) {
         coroutine.launch {

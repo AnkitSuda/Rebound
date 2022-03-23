@@ -14,16 +14,19 @@
 
 package com.ankitsuda.rebound.ui.workout_panel
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
+import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.domain.entities.Workout
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,14 +37,54 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     var mWorkoutId: Long = -1
     var mWorkout: Workout? = null
 
-    fun getWorkout(workoutId: String): Flow<Workout?> =
-        workoutsRepository.getWorkout(workoutId)
+    private var workoutFlowJob: Job? = null
+    private var entriesFlowJob: Job? = null
+
+    private var _workout: MutableStateFlow<Workout?> =
+        MutableStateFlow(null)
+    val workout = _workout.asStateFlow()
+
+    private var _logEntriesWithExerciseJunction: MutableStateFlow<List<LogEntriesWithExerciseJunction>> =
+        MutableStateFlow(emptyList())
+    val logEntriesWithExerciseJunction = _logEntriesWithExerciseJunction.asStateFlow()
+//    private var _logEntriesWithExerciseJunction: SnapshotStateList<LogEntriesWithExerciseJunction> =
+//        SnapshotStateList()
+//    val logEntriesWithExerciseJunction = _logEntriesWithExerciseJunction
+
+    init {
+        viewModelScope.launch {
+            currentWorkoutId.collectLatest {
+                if (it != NONE_WORKOUT_ID) {
+                    refresh(it)
+                }
+            }
+        }
+    }
+
+    private fun refresh(newWorkoutId: String) {
+        workoutFlowJob?.cancel()
+        workoutFlowJob = viewModelScope.launch {
+            workoutsRepository.getLogEntriesWithExerciseJunction(
+                newWorkoutId
+            ).collectLatest {
+//                _logEntriesWithExerciseJunction.clear()
+//                _logEntriesWithExerciseJunction.addAll(it)
+                _logEntriesWithExerciseJunction.emit(it)
+            }
+        }
+
+        entriesFlowJob?.cancel()
+        entriesFlowJob = viewModelScope.launch {
+            workoutsRepository.getWorkout(newWorkoutId)
+                .collectLatest {
+                    _workout.value = it
+                }
+        }
+    }
 
     fun getExerciseWorkoutJunctions() =
         workoutsRepository.getExerciseWorkoutJunctions(mWorkout?.id ?: NONE_WORKOUT_ID)
 
-    fun getLogEntriesWithExerciseJunction() =
-        workoutsRepository.getLogEntriesWithExerciseJunction(mWorkout?.id ?: NONE_WORKOUT_ID)
 
     fun updateWorkoutName(name: String) {
         viewModelScope.launch {
@@ -94,7 +137,24 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
 
     fun deleteLogEntry(entry: ExerciseLogEntry) {
         viewModelScope.launch {
-            workoutsRepository.deleteExerciseLogEntry(entry)
+            workoutsRepository.reorderEntriesGroupByDelete(
+                entriesGroup = _logEntriesWithExerciseJunction.value.filter { a -> a.logEntries.any { b -> b.entryId == entry.entryId } }[0].logEntries.sortedBy { it.setNumber }
+                    .toArrayList(),
+                entryToDelete = entry
+            )
+//            val entriesGroup =
+//                _logEntriesWithExerciseJunction.value.filter { a -> a.logEntries.any { b -> b.entryId == entry.entryId } }[0].logEntries.sortedBy { it.setNumber }
+//                    .toArrayList()
+//
+//            workoutsRepository.deleteExerciseLogEntry(entry)
+//
+//            entriesGroup.removeAt(entriesGroup.indexOf(entry))
+//
+//            for (groupEntry in entriesGroup) {
+//                val index = entriesGroup.indexOf(groupEntry)
+//                workoutsRepository.updateExerciseLogEntry(groupEntry.copy(setNumber = index + 1))
+//            }
+
         }
     }
 

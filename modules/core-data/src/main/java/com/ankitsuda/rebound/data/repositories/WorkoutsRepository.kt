@@ -131,6 +131,16 @@ class WorkoutsRepository @Inject constructor(
         workoutsDao.updateExerciseLogEntry(entry.copy(updatedAt = LocalDateTime.now()))
     }
 
+    suspend fun reorderEntriesGroupByDelete(
+        entriesGroup: ArrayList<ExerciseLogEntry>,
+        entryToDelete: ExerciseLogEntry
+    ) {
+        workoutsDao.reorderEntriesGroupByDelete(
+            entriesGroup = entriesGroup,
+            entryToDelete = entryToDelete
+        )
+    }
+
     suspend fun deleteExerciseLogEntry(entry: ExerciseLogEntry) {
         workoutsDao.deleteExerciseLogEntry(entry)
     }

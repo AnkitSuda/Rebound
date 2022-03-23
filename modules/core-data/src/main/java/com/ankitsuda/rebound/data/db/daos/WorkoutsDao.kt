@@ -17,6 +17,8 @@ package com.ankitsuda.rebound.data.db.daos
 import androidx.room.*
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
+import java.time.LocalDateTime
 
 @Dao
 interface WorkoutsDao {
@@ -52,6 +54,9 @@ interface WorkoutsDao {
 
     @Delete
     suspend fun deleteExerciseLogEntry(exerciseLogEntry: ExerciseLogEntry)
+
+    @Query("DELETE FROM exercise_log_entries WHERE entry_id = :entryId")
+    suspend fun deleteExerciseLogEntryById(entryId: String)
 
     @Query("DELETE FROM exercise_log_entries WHERE entry_id IN (:ids)")
     suspend fun deleteExerciseLogEntries(ids: List<String>)
@@ -92,4 +97,24 @@ interface WorkoutsDao {
 
     @Insert
     suspend fun insertExerciseLogEntry(logEntry: ExerciseLogEntry)
+
+    @Transaction
+    suspend fun reorderEntriesGroupByDelete(
+        entriesGroup: ArrayList<ExerciseLogEntry>,
+        entryToDelete: ExerciseLogEntry
+    ) {
+        deleteExerciseLogEntryById(entryToDelete.entryId)
+
+        entriesGroup.remove(entriesGroup.find { it.entryId == entryToDelete.entryId })
+
+        for (groupEntry in entriesGroup) {
+            val index = entriesGroup.indexOf(groupEntry)
+            updateExerciseLogEntry(
+                groupEntry.copy(
+                    setNumber = index + 1,
+                    updatedAt = LocalDateTime.now()
+                )
+            )
+        }
+    }
 }

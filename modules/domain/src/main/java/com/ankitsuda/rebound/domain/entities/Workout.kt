@@ -31,6 +31,11 @@ data class Workout(
     @ColumnInfo(name = "note")
     var note: String? = null,
 
+    @ColumnInfo(name = "in_progress")
+    var inProgress: Boolean? = false,
+    @ColumnInfo(name = "is_hidden")
+    var isHidden: Boolean? = false,
+
     @ColumnInfo(name = "created_at")
     var createdAt: LocalDateTime? = null,
     @ColumnInfo(name = "update_at")

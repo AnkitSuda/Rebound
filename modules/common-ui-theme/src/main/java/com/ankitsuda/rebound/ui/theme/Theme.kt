@@ -330,7 +330,7 @@ fun defaultDimens(cardElevation: Dp = 0.dp, cardBorderWidth: Dp = 0.dp): Rebound
     )
 
 fun lightReboundColors(
-    isLight: Boolean = false,
+    isLight: Boolean = true,
     isDarkStatusBarIcons: Boolean = true,
     isDarkNavigationBarIcons: Boolean = true,
     primary: Color = Color(0xFF6200EE),

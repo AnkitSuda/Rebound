@@ -14,12 +14,15 @@
 
 package com.ankitsuda.rebound.domain.entities
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 import java.util.*
 
+@Parcelize
 @Entity(tableName = "exercise_log_entries")
 data class ExerciseLogEntry(
     @PrimaryKey(autoGenerate = false)
@@ -60,4 +63,4 @@ data class ExerciseLogEntry(
     var createdAt: LocalDateTime? = null,
     @ColumnInfo(name = "update_at")
     var updatedAt: LocalDateTime? = null,
-)
+) : Parcelable

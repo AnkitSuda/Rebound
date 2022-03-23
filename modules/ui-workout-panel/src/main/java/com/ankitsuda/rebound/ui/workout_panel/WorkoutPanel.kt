@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.workout_panel
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,6 +41,7 @@ import com.ankitsuda.rebound.ui.workout_panel.common.components.workoutExerciseI
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
+import kotlinx.coroutines.flow.last
 import timber.log.Timber
 
 @Composable
@@ -47,9 +49,10 @@ fun WorkoutPanel(
     navController: NavHostController,
     navigator: Navigator = LocalNavigator.current,
 ) {
-    WorkoutPanel2(navController, navigator)
+    WorkoutPanel1(navController, navigator)
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WorkoutPanel1(
     navController: NavHostController,
@@ -57,9 +60,8 @@ fun WorkoutPanel1(
     viewModel: WorkoutPanelViewModel = hiltViewModel()
 ) {
     val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
-    val workout by viewModel.getWorkout(currentWorkoutId).collectAsState(null)
-    val logEntriesWithJunction by viewModel.getLogEntriesWithExerciseJunction()
-        .collectAsState(emptyList())
+    val workout by viewModel.workout.collectAsState(null)
+    val logEntriesWithJunction by viewModel.logEntriesWithExerciseJunction.collectAsState()
 
     Timber.d("logEntriesWithJunction $logEntriesWithJunction")
 
@@ -68,126 +70,128 @@ fun WorkoutPanel1(
         viewModel.mWorkout = workout
     }
 
-    val workoutName = workout?.name ?: ""
-    val workoutNote = workout?.note ?: ""
+    if (currentWorkoutId != NONE_WORKOUT_ID) {
 
-    // Observes results when ExercisesScreen changes value of arg
-    val exercisesScreenResult = navController.currentBackStackEntry
-        ?.savedStateHandle
-        ?.getLiveData<String?>("result_exercises_screen_exercise_id")?.observeAsState()
-    exercisesScreenResult?.value?.let { resultId ->
+        val workoutName = workout?.name ?: ""
+        val workoutNote = workout?.note ?: ""
 
-        viewModel.addExerciseToWorkout(resultId)
+        // Observes results when ExercisesScreen changes value of arg
+        val exercisesScreenResult = navController.currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<String?>("result_exercises_screen_exercise_id")?.observeAsState()
 
-        navController.currentBackStackEntry?.savedStateHandle?.set(
-            "result_exercises_screen_exercise_id",
-            null
-        )
+        LaunchedEffect(key1 = exercisesScreenResult?.value) {
+            exercisesScreenResult?.value?.let { resultId ->
+                viewModel.addExerciseToWorkout(resultId)
 
-    }
-
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(ReboundTheme.colors.background)
-    ) {
-        item {
-            Column() {
-                WorkoutQuickInfo()
-                Divider()
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    "result_exercises_screen_exercise_id",
+                    null
+                )
             }
         }
-        item {
-            Text(text = "TEST: current workout id $currentWorkoutId")
-        }
-        item {
-            Column(modifier = Modifier.padding(16.dp)) {
-                AppTextField(
-                    value = workoutName,
-                    onValueChange = { viewModel.updateWorkoutName(it) },
-                    placeholderValue = "Workout name",
-                    modifier = Modifier.fillMaxWidth()
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(ReboundTheme.colors.background)
+        ) {
+            item {
+                Column() {
+                    WorkoutQuickInfo()
+                    Divider()
+                }
+            }
+            item {
+                Text(text = "TEST: current workout id $currentWorkoutId")
+            }
+            item {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    AppTextField(
+                        value = workoutName,
+                        onValueChange = { viewModel.updateWorkoutName(it) },
+                        placeholderValue = "Workout name",
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    AppTextField(
+                        value = workoutNote,
+                        onValueChange = { viewModel.updateWorkoutNote(it) },
+                        placeholderValue = "Workout note",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                    )
+                }
+            }
+
+            for (logEntriesWithJunctionItem in logEntriesWithJunction) {
+                workoutExerciseItemAlt(
+                    logEntriesWithJunction = logEntriesWithJunctionItem,
+                    onValuesUpdated = { updatedEntry ->
+                        viewModel.updateLogEntry(updatedEntry)
+                    },
+                    onSwipeDelete = { entryToDelete ->
+                        viewModel.deleteLogEntry(entryToDelete)
+                    },
+                    onAddSet = {
+                        viewModel.addEmptySetToExercise(
+                            try {
+                                logEntriesWithJunctionItem.logEntries[logEntriesWithJunctionItem.logEntries.size - 1].setNumber!! + 1
+                            } catch (e: Exception) {
+                                1
+                            },
+                            logEntriesWithJunctionItem.junction
+                        )
+                    },
+                    onDeleteExercise = {
+                        viewModel.deleteExerciseFromWorkout(logEntriesWithJunctionItem)
+                    }
                 )
-                AppTextField(
-                    value = workoutNote,
-                    onValueChange = { viewModel.updateWorkoutNote(it) },
-                    placeholderValue = "Workout note",
+            }
+
+            item {
+                Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
-                )
-            }
-        }
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    onClick = {
 
-        for (logEntriesWithJunctionItem in logEntriesWithJunction) {
-            workoutExerciseItemAlt(
-                logEntriesWithJunction = logEntriesWithJunctionItem,
-                onValuesUpdated = { updatedEntry ->
-                    viewModel.updateLogEntry(updatedEntry)
-                },
-                onSwipeDelete = { entryToDelete ->
-                    Timber.d("Swiped entry $entryToDelete")
-                    viewModel.deleteLogEntry(entryToDelete)
-                },
-                onAddSet = {
-                    viewModel.addEmptySetToExercise(
-                        try {
-                            logEntriesWithJunctionItem.logEntries[logEntriesWithJunctionItem.logEntries.size - 1].setNumber!! + 1
-                        } catch (e: Exception) {
-                            1
-                        },
-                        logEntriesWithJunctionItem.junction
-                    )
-                },
-                onDeleteExercise = {
-                    viewModel.deleteExerciseFromWorkout(logEntriesWithJunctionItem)
-                }
-            )
-        }
-
-        item {
-            Button(
-                onClick = {
-
-                    navigator.navigate(LeafScreen.ExercisesBottomSheet().route)
+                        navigator.navigate(LeafScreen.ExercisesBottomSheet().route)
 //                    navController.navigate(Route.ExercisesBottomSheet.route)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp),
-                    tint = MaterialTheme.colors.onPrimary
-                )
-                Text(text = "Add Exercise", style = MaterialTheme.typography.button)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Add,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp),
+                        tint = MaterialTheme.colors.onPrimary
+                    )
+                    Text(text = "Add Exercise", style = MaterialTheme.typography.button)
+                }
             }
-        }
 
-        item {
-            TextButton(
-                onClick = {
-                    viewModel.cancelCurrentWorkout()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Close,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp),
-                    tint = Color.Red
-                )
-                Text(
-                    text = "Cancel Workout",
-                    style = MaterialTheme.typography.button,
-                    color = Color.Red
-                )
+            item {
+                TextButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    onClick = {
+                        viewModel.cancelCurrentWorkout()
+                    },
+                    colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp),
+                        tint = Color.Red
+                    )
+                    Text(
+                        text = "Cancel Workout",
+                        style = MaterialTheme.typography.button,
+                        color = Color.Red
+                    )
+                }
             }
         }
     }
