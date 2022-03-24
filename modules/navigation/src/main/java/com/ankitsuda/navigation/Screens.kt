@@ -40,6 +40,8 @@ const val DATE_KEY = "date"
 const val SELECTED_DATE_KEY = "selected_date"
 const val WORKOUT_ID_KEY = "workout_id"
 const val WORKOUT_TEMPLATE_ID_KEY = "workout_template_id"
+const val PART_ID_KEY = "part_id"
+const val LOG_ID_KEY = "log_id"
 
 interface Screen {
     val route: String
@@ -149,12 +151,31 @@ sealed class LeafScreen(
         LeafScreen(route)
 
     data class CreateExercise(override val route: String = "create_exercise") : LeafScreen(route)
-    data class AddPartMeasurement(override val route: String = "add_part_measurement?partId={partId}&logId={logId}") :
-        LeafScreen(route) {
+    data class AddPartMeasurement(override val route: String = "add_part_measurement?${PART_ID_KEY}={${PART_ID_KEY}}&${LOG_ID_KEY}={${LOG_ID_KEY}}") :
+        LeafScreen(
+            route = route,
+            arguments = listOf(
+                navArgument(PART_ID_KEY) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument(LOG_ID_KEY) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+            ),
+        ) {
         companion object {
-
-            fun createRoute(partId: String? = null, logId: String? = null) =
-                "add_part_measurement?partId=$partId&logId=$logId"
+            fun createRoute(partId: String? = null, logId: String? = null): String {
+                var str = "add_part_measurement?"
+                partId?.let {
+                    str = "$str${PART_ID_KEY}=$it&"
+                }
+                logId?.let {
+                    str = "$str${LOG_ID_KEY}=$it"
+                }
+                return str;
+            }
         }
     }
 

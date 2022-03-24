@@ -31,37 +31,13 @@ import com.google.accompanist.insets.navigationBarsPadding
 
 @Composable
 fun AddPartMeasurementBottomSheet(
-//    partId: Long? = null,
-//    logId: Long? = null,
     navController: NavController,
     navigator: Navigator = LocalNavigator.current,
     viewModel: AddPartMeasurementBottomSheetViewModel = hiltViewModel()
 ) {
-    val partId = try {
-        navController.currentBackStackEntry?.arguments?.getString("partId")
-    } catch (e: Exception) {
-        null
-    }
-    val logId = try {
-        navController.currentBackStackEntry?.arguments?.getString("logId")
-    } catch (e: Exception) {
-        null
-    }
-
-    val isUpdate = logId != null
+    val isUpdate by viewModel.isUpdate.collectAsState(false)
     val fieldValue by viewModel.fieldValue.collectAsState("")
     val isCreateBtnEnabled = fieldValue.isNotBlank()
-
-    LaunchedEffect(key1 = partId, key2 = logId) {
-        viewModel.setFieldValue("")
-    }
-
-    if (isUpdate) {
-        LaunchedEffect(key1 = logId) {
-            viewModel.setLogId(logId!!)
-        }
-    }
-
 
     BottomSheetSurface {
         Column(
@@ -71,7 +47,7 @@ fun AddPartMeasurementBottomSheet(
         ) {
 
             TopBar(
-                title = "$partId",
+                title = "Measurement",
                 statusBarEnabled = false,
                 elevationEnabled = false
             )
@@ -94,7 +70,7 @@ fun AddPartMeasurementBottomSheet(
                     BottomSheetSecondaryRButton(
                         modifier = Modifier.padding(end = 16.dp),
                         onClick = {
-                            viewModel.deleteMeasurementFromDb(logId!!)
+                            viewModel.deleteMeasurementFromDb()
                             navigator.goBack()
                         }) {
                         Text("Delete")
@@ -104,13 +80,7 @@ fun AddPartMeasurementBottomSheet(
                 BottomSheetRButton(
                     enabled = isCreateBtnEnabled,
                     onClick = {
-                        if (isUpdate) {
-                            viewModel.updateMeasurement()
-                        } else {
-                            partId?.let {
-                                viewModel.addMeasurementToDb(partId)
-                            }
-                        }
+                        viewModel.saveMeasurement()
                         navigator.goBack()
                     },
                     modifier = Modifier.width(88.dp)
