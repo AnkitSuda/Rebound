@@ -14,13 +14,20 @@
 
 package com.ankitsuda.rebound
 
+import android.annotation.TargetApi
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Build
+import android.preference.PreferenceManager
 import com.ankitsuda.base.BaseApp
 import com.ankitsuda.base.initializers.AppInitializers
+import com.ankitsuda.rebound.data.stopwatch.Controller
+import com.ankitsuda.rebound.data.stopwatch.DataModel
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class ReboundApplication: BaseApp() {
+class ReboundApplication : BaseApp() {
 
     @Inject
     lateinit var initializers: AppInitializers
@@ -28,6 +35,30 @@ class ReboundApplication: BaseApp() {
     override fun onCreate() {
         super.onCreate()
         initializers.init(this)
+
+        val applicationContext = applicationContext
+        val prefs = getDefaultSharedPreferences(applicationContext)
+
+        DataModel.dataModel.init(applicationContext, prefs)
+        Controller.getController().setContext(applicationContext)
     }
 
+    companion object {
+        /**
+         * Returns the default [SharedPreferences] instance from the underlying storage context.
+         */
+        @TargetApi(Build.VERSION_CODES.N)
+        private fun getDefaultSharedPreferences(context: Context): SharedPreferences {
+            val storageContext: Context
+//            if (Utils.isNOrLater) {
+            // All N devices have split storage areas. Migrate the existing preferences
+            // into the new device encrypted storage area if that has not yet occurred.
+            val name = PreferenceManager.getDefaultSharedPreferencesName(context)
+            storageContext = context.createDeviceProtectedStorageContext()
+//            } else {
+//                storageContext = context
+//            }
+            return PreferenceManager.getDefaultSharedPreferences(storageContext)
+        }
+    }
 }

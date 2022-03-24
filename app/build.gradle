@@ -102,6 +102,7 @@ dependencies {
     implementation project(":modules:ui-personalization")
     implementation project(":modules:ui-exercise-details")
     implementation project(":modules:ui-workout-template-preview")
+    implementation project(":modules:stopwatch")
 
     implementation Deps.Kotlin.coroutinesAndroid
     kapt Deps.Android.Lifecycle.compiler

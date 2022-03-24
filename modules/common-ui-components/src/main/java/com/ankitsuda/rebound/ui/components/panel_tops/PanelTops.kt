@@ -19,8 +19,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,7 +51,13 @@ fun PanelTopDragHandle(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PanelTopCollapsed(viewModel: PanelTopsViewModel = hiltViewModel()) {
+fun PanelTopCollapsed(
+    currentTimeStr: String,
+    onTimePlay: () -> Unit,
+    onTimePause: () -> Unit,
+    onTimeReset: () -> Unit,
+    viewModel: PanelTopsViewModel = hiltViewModel()
+) {
     val workoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
     val workout by viewModel.getWorkout(workoutId).collectAsState(initial = null)
     Column(
@@ -65,7 +70,18 @@ fun PanelTopCollapsed(viewModel: PanelTopsViewModel = hiltViewModel()) {
         workout?.name?.let {
             Text(text = it, style = MaterialTheme.typography.h6)
         }
-        Text(text = "32:12m", style = MaterialTheme.typography.caption)
+        Text(text = currentTimeStr, style = MaterialTheme.typography.caption)
+        Row() {
+            IconButton(onClick = onTimePause) {
+                Icon(imageVector = Icons.Outlined.Pause, contentDescription = null)
+            }
+            IconButton(onClick = onTimePlay) {
+                Icon(imageVector = Icons.Outlined.PlayArrow, contentDescription = null)
+            }
+            IconButton(onClick = onTimeReset) {
+                Icon(imageVector = Icons.Outlined.ResetTv, contentDescription = null)
+            }
+        }
     }
 }
 

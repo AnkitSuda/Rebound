@@ -152,9 +152,13 @@ private fun MainLayout(
                                 PanelTopDragHandle()
                             },
                             panelTopCollapsed = {
-
-                                PanelTopCollapsed()
-
+                                val currentTimeStr by viewModel.currentTimeStr.collectAsState()
+                                PanelTopCollapsed(
+                                    currentTimeStr = currentTimeStr,
+                                    onTimePause = { viewModel.pauseTime() },
+                                    onTimePlay = { viewModel.playTime() },
+                                    onTimeReset = { viewModel.resetTime() }
+                                )
                             },
                             panelTopExpanded = {
                                 PanelTopExpanded(
