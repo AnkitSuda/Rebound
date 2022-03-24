@@ -229,11 +229,11 @@ private fun LazyItemScope.SetItem(
 
     val bgColor by animateColorAsState(
         targetValue = if (mLogEntry.completed) ReboundTheme.colors.primary else ReboundTheme.colors.background,
-        animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
     )
     val contentColor by animateColorAsState(
         targetValue = if (mLogEntry.completed) ReboundTheme.colors.onPrimary else ReboundTheme.colors.onBackground,
-        animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
     )
 
     var isScaleAnimRunning by rememberSaveable {
@@ -242,7 +242,7 @@ private fun LazyItemScope.SetItem(
 
     val scale by animateFloatAsState(
         targetValue = if (isScaleAnimRunning) 1.05f else 1f,
-        animationSpec = tween(durationMillis = 300),
+//        animationSpec = tween(durationMillis = 300),
         finishedListener = {
             isScaleAnimRunning = false
         }
@@ -269,6 +269,47 @@ private fun LazyItemScope.SetItem(
     )
 
     fun handleOnChange(updatedEntry: ExerciseLogEntry) {
+        if (updatedEntry.completed) {
+            isScaleAnimRunning = false
+        }
+        updatedEntry.completed = false
+        mLogEntry = updatedEntry
+        onChange(updatedEntry)
+    }
+
+    fun handleOnCompleteChange(isComplete: Boolean) {
+        val isCompletable = when (exercise.category) {
+            ExerciseCategory.DISTANCE_AND_TIME -> {
+                mLogEntry.distance != null && mLogEntry.timeRecorded != null
+            }
+            ExerciseCategory.WEIGHTS_AND_REPS -> {
+                mLogEntry.weight != null && mLogEntry.reps != null
+            }
+            ExerciseCategory.REPS -> {
+                mLogEntry.reps != null
+            }
+            ExerciseCategory.TIME -> {
+                mLogEntry.timeRecorded != null
+            }
+            ExerciseCategory.UNKNOWN -> {
+                true
+            }
+        }
+
+        if (isComplete && isCompletable) {
+            isScaleAnimRunning = true
+        }
+
+        val updatedEntry =
+            mLogEntry.copy(
+                completed = if (isComplete && isCompletable) {
+                    true
+                } else if (!isComplete) {
+                    isComplete
+                } else {
+                    false
+                }
+            )
         mLogEntry = updatedEntry
         onChange(updatedEntry)
     }
@@ -309,10 +350,7 @@ private fun LazyItemScope.SetItem(
                 handleOnChange(mLogEntry.copy(timeRecorded = value))
             },
             onCompleteChange = { _, value ->
-                if (value) {
-                    isScaleAnimRunning = true
-                }
-                handleOnChange(mLogEntry.copy(completed = value))
+                handleOnCompleteChange(value)
             },
         )
     }
