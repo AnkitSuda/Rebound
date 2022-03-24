@@ -36,6 +36,11 @@ data class Workout(
     @ColumnInfo(name = "is_hidden")
     var isHidden: Boolean? = false,
 
+    @ColumnInfo(name = "start_at")
+    var startAt: LocalDateTime? = null,
+    @ColumnInfo(name = "completed_at")
+    var completedAt: LocalDateTime? = null,
+
     @ColumnInfo(name = "created_at")
     var createdAt: LocalDateTime? = null,
     @ColumnInfo(name = "update_at")

@@ -61,6 +61,7 @@ fun WorkoutPanel1(
 ) {
     val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
     val workout by viewModel.workout.collectAsState(null)
+    val currentDurationStr by viewModel.currentDurationStr.collectAsState("")
     val logEntriesWithJunction by viewModel.logEntriesWithExerciseJunction.collectAsState()
 
     Timber.d("logEntriesWithJunction $logEntriesWithJunction")
@@ -98,7 +99,7 @@ fun WorkoutPanel1(
         ) {
             item {
                 Column() {
-                    WorkoutQuickInfo()
+                    WorkoutQuickInfo(currentDurationStr = currentDurationStr)
                     Divider()
                 }
             }
@@ -198,7 +199,7 @@ fun WorkoutPanel1(
 }
 
 @Composable
-private fun WorkoutQuickInfo() {
+private fun WorkoutQuickInfo(currentDurationStr: String) {
 
     FlowRow(
         mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
@@ -206,23 +207,23 @@ private fun WorkoutQuickInfo() {
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
     ) {
-        repeat(3) {
+//        repeat(3) {
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "15 min",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onSurface
-                )
-                Text(
-                    text = "Duration",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.body2,
-                    color = Color(117, 117, 117),
-                    modifier = Modifier.padding(top = 2.dp)
-                )
-            }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = currentDurationStr,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.onSurface
+            )
+            Text(
+                text = "Duration",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.body2,
+                color = Color(117, 117, 117),
+                modifier = Modifier.padding(top = 2.dp)
+            )
         }
+//        }
     }
 }

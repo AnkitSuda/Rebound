@@ -20,6 +20,7 @@ import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -63,7 +64,8 @@ class WorkoutsRepository @Inject constructor(
         workoutsDao.insertWorkout(
             workout.copy(
                 id = newId,
-                createdAt = LocalDateTime.now()
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now()
             )
         )
         return newId
@@ -150,6 +152,20 @@ class WorkoutsRepository @Inject constructor(
             workoutsDao.deleteExerciseWorkoutJunction(junction)
             workoutsDao.deleteExerciseLogEntries(logEntries.map { it.entryId })
             workoutsDao.deleteExerciseLogs(logEntries.map { it.logId!! })
+        }
+    }
+
+    suspend fun finishWorkout(workoutId: String) {
+        val workout = getWorkout(workoutId).first()
+        val updatedWorkout = workout?.copy(
+            inProgress = false,
+            isHidden = false,
+            completedAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        )
+
+        if (updatedWorkout != null) {
+            updateWorkout(updatedWorkout)
         }
     }
 }

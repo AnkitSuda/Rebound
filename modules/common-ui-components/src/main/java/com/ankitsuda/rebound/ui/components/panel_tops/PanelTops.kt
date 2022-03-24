@@ -53,9 +53,6 @@ fun PanelTopDragHandle(modifier: Modifier = Modifier) {
 @Composable
 fun PanelTopCollapsed(
     currentTimeStr: String,
-    onTimePlay: () -> Unit,
-    onTimePause: () -> Unit,
-    onTimeReset: () -> Unit,
     viewModel: PanelTopsViewModel = hiltViewModel()
 ) {
     val workoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
@@ -71,17 +68,6 @@ fun PanelTopCollapsed(
             Text(text = it, style = MaterialTheme.typography.h6)
         }
         Text(text = currentTimeStr, style = MaterialTheme.typography.caption)
-        Row() {
-            IconButton(onClick = onTimePause) {
-                Icon(imageVector = Icons.Outlined.Pause, contentDescription = null)
-            }
-            IconButton(onClick = onTimePlay) {
-                Icon(imageVector = Icons.Outlined.PlayArrow, contentDescription = null)
-            }
-            IconButton(onClick = onTimeReset) {
-                Icon(imageVector = Icons.Outlined.ResetTv, contentDescription = null)
-            }
-        }
     }
 }
 

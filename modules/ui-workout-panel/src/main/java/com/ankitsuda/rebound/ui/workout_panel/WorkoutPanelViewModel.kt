@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.utils.extensions.toArrayList
+import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
@@ -26,8 +27,11 @@ import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.domain.entities.Workout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,8 +41,12 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     var mWorkoutId: Long = -1
     var mWorkout: Workout? = null
 
+    private var _currentDurationStr = MutableStateFlow<String>("")
+    val currentDurationStr = _currentDurationStr.asStateFlow()
+
     private var workoutFlowJob: Job? = null
     private var entriesFlowJob: Job? = null
+    private var durationJob: Job? = null
 
     private var _workout: MutableStateFlow<Workout?> =
         MutableStateFlow(null)
@@ -52,6 +60,7 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
 //    val logEntriesWithExerciseJunction = _logEntriesWithExerciseJunction
 
     init {
+        Timber.d("WorkoutPanelViewModel instance $this")
         viewModelScope.launch {
             currentWorkoutId.collectLatest {
                 if (it != NONE_WORKOUT_ID) {
@@ -62,8 +71,8 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     }
 
     private fun refresh(newWorkoutId: String) {
-        workoutFlowJob?.cancel()
-        workoutFlowJob = viewModelScope.launch {
+        entriesFlowJob?.cancel()
+        entriesFlowJob = viewModelScope.launch {
             workoutsRepository.getLogEntriesWithExerciseJunction(
                 newWorkoutId
             ).collectLatest {
@@ -73,14 +82,49 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
             }
         }
 
-        entriesFlowJob?.cancel()
-        entriesFlowJob = viewModelScope.launch {
+        workoutFlowJob?.cancel()
+        workoutFlowJob = viewModelScope.launch {
             workoutsRepository.getWorkout(newWorkoutId)
                 .collectLatest {
                     _workout.value = it
+                    setupDurationUpdater(it?.inProgress == true, it?.startAt)
                 }
         }
     }
+
+    private fun setupDurationUpdater(inProgress: Boolean, startAt: LocalDateTime?) {
+        durationJob?.cancel()
+        durationJob = viewModelScope.launch {
+            while (inProgress && startAt != null) {
+                updateDurationStr(startAt = startAt)
+                delay(25)
+            }
+        }
+    }
+
+    private suspend fun updateDurationStr(startAt: LocalDateTime) {
+        val totalTime =
+            LocalDateTime.now().toEpochMillis() - startAt.toEpochMillis()
+
+        val totalSeconds = totalTime / 1000
+        val seconds = totalSeconds % 60
+        val minutes = totalSeconds / 60 % 60
+        val hours = totalSeconds / 3600
+        val readableStr = when {
+            hours > 0 -> {
+                "$hours hour $minutes min $seconds sec"
+            }
+            minutes > 0 -> {
+                "$minutes min $seconds sec"
+            }
+            else -> {
+                "$seconds sec"
+            }
+        }
+
+        _currentDurationStr.value = readableStr
+    }
+
 
     fun getExerciseWorkoutJunctions() =
         workoutsRepository.getExerciseWorkoutJunctions(mWorkout?.id ?: NONE_WORKOUT_ID)
@@ -161,6 +205,16 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     fun deleteExerciseFromWorkout(logEntriesWithJunctionItem: LogEntriesWithExerciseJunction) {
         viewModelScope.launch {
             workoutsRepository.deleteExerciseFromWorkout(logEntriesWithJunctionItem)
+        }
+    }
+
+    fun finishWorkout() {
+        Timber.d("Finish workout")
+        viewModelScope.launch {
+            val workoutId = mWorkout?.id ?: return@launch
+            workoutsRepository.finishWorkout(workoutId)
+            durationJob?.cancel()
+            workoutsRepository.setCurrentWorkoutId(NONE_WORKOUT_ID)
         }
     }
 }

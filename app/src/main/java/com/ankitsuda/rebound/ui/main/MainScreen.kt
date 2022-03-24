@@ -51,6 +51,7 @@ import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.theme.ReboundThemeWrapper
 import com.ankitsuda.rebound.ui.workout_panel.WorkoutPanel
+import com.ankitsuda.rebound.ui.workout_panel.WorkoutPanelViewModel
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.navigation.material.BottomSheetNavigator
@@ -81,6 +82,7 @@ fun MainScreen(
 private fun MainLayout(
     navController: NavHostController,
     bottomSheetNavigator: BottomSheetNavigator,
+    workoutPanelViewModel: WorkoutPanelViewModel = hiltViewModel(),
     themeViewModel: ThemeViewModel = hiltViewModel(),
     viewModel: MainScreenViewModel = hiltViewModel(),
 ) {
@@ -152,12 +154,9 @@ private fun MainLayout(
                                 PanelTopDragHandle()
                             },
                             panelTopCollapsed = {
-                                val currentTimeStr by viewModel.currentTimeStr.collectAsState()
+                                val currentTimeStr by workoutPanelViewModel.currentDurationStr.collectAsState()
                                 PanelTopCollapsed(
                                     currentTimeStr = currentTimeStr,
-                                    onTimePause = { viewModel.pauseTime() },
-                                    onTimePlay = { viewModel.playTime() },
-                                    onTimeReset = { viewModel.resetTime() }
                                 )
                             },
                             panelTopExpanded = {
@@ -168,7 +167,9 @@ private fun MainLayout(
                                         }
                                     },
                                     onTimerBtnClicked = { },
-                                    onFinishBtnClicked = {})
+                                    onFinishBtnClicked = {
+                                        workoutPanelViewModel.finishWorkout()
+                                    })
                             }) {
                             Box(Modifier.fillMaxSize()) {
                                 AppNavigation(navController)

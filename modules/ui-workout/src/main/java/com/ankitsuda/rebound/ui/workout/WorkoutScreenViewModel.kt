@@ -21,6 +21,7 @@ import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +32,14 @@ class WorkoutScreenViewModel @Inject constructor(private val workoutsRepository:
 
     fun startEmptyWorkout() {
         viewModelScope.launch {
-            val newWorkoutId = workoutsRepository.createWorkout(Workout(id = ""))
+            val newWorkoutId = workoutsRepository.createWorkout(
+                Workout(
+                    id = "",
+                    startAt = LocalDateTime.now(),
+                    completedAt = null,
+                    inProgress = true
+                )
+            )
             workoutsRepository.setCurrentWorkoutId(newWorkoutId)
         }
     }

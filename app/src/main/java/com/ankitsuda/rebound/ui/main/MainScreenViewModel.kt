@@ -84,9 +84,22 @@ class MainScreenViewModel @Inject constructor(val prefStorage: PrefStorage) : Vi
         val stopwatch = stopwatch
         val totalTime = stopwatch.totalTime
 
-        Timber.d("updateTime totalTime $totalTime")
-
-        _currentTimeStr.value = totalTime.toString()
+        val totalSeconds = totalTime / 1000
+        val seconds = totalSeconds % 60
+        val minutes = totalSeconds / 60 % 60
+        val hours = totalSeconds / 3600
+        val readableStr = when {
+            hours > 0 -> {
+                "$hours hour $minutes min $seconds sec"
+            }
+            minutes > 0 -> {
+                "$minutes min $seconds sec"
+            }
+            else -> {
+                "$seconds sec"
+            }
+        }
+        _currentTimeStr.value = readableStr
     }
 
     private fun updateUI() {
