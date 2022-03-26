@@ -30,7 +30,7 @@ interface WorkoutsDao {
     fun getAllWorkouts(): Flow<List<Workout>>
 
     //    @Query("SELECT * FROM workouts WHERE date(created_at) = date(:date)")
-    @Query("SELECT * FROM workouts WHERE date(created_at / 1000,'unixepoch') = date(:date / 1000,'unixepoch')")
+    @Query("SELECT * FROM workouts WHERE date(created_at / 1000,'unixepoch') = date(:date / 1000,'unixepoch') AND is_hidden = 0 AND in_progress = 0")
     fun getAllWorkoutsOnDate(date: Long): Flow<List<Workout>>
 
     @Query("SELECT * FROM exercise_workout_junctions WHERE workout_id = :workoutId")

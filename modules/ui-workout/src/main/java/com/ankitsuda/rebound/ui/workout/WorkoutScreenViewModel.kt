@@ -37,7 +37,8 @@ class WorkoutScreenViewModel @Inject constructor(private val workoutsRepository:
                     id = "",
                     startAt = LocalDateTime.now(),
                     completedAt = null,
-                    inProgress = true
+                    inProgress = true,
+                    isHidden = true
                 )
             )
             workoutsRepository.setCurrentWorkoutId(newWorkoutId)
