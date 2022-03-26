@@ -33,6 +33,7 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
 import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.*
 import java.time.format.DateTimeFormatter
@@ -156,6 +157,7 @@ fun PartMeasurementsScreen(
                     Text(
                         text = log.measurement.toString(),
                         style = ReboundTheme.typography.body2,
+                        color = LocalThemeState.current.backgroundColor,
                         modifier = Modifier
                     )
                 }
