@@ -34,6 +34,7 @@ import me.onebone.toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.exercise_details.about.ExerciseDetailAboutTab
 import com.ankitsuda.rebound.ui.exercise_details.charts.ExerciseDetailChartsTab
 import com.ankitsuda.rebound.ui.exercise_details.history.ExerciseDetailHistoryTab
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -82,7 +83,9 @@ fun ExerciseDetailScreen(
             Surface(
                 Modifier
                     .background(ReboundTheme.colors.background)
-                    .zIndex(2f), elevation = 2.dp
+                    .zIndex(2f),
+                elevation = 2.dp,
+                color = LocalThemeState.current.backgroundColor,
             ) {
                 Column() {
                     TopBar(

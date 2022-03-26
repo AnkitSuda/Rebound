@@ -175,7 +175,9 @@ private fun MainLayout(
                             Box(
                                 Modifier
                                     .fillMaxSize()
-                                    .background(ReboundTheme.colors.background)
+                                    .background(
+                                        color = LocalThemeState.current.backgroundColor
+                                    )
                             ) {
                                 AppNavigation(navController)
                             }

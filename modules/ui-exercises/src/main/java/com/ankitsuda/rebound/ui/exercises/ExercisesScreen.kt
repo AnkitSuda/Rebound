@@ -39,6 +39,7 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.domain.entities.ExerciseWithMuscle
 import com.ankitsuda.rebound.domain.entities.Muscle
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -135,7 +136,9 @@ private fun ExercisesScreenContent(
             toolbar = {
                 Surface(
                     Modifier
-                        .background(ReboundTheme.colors.background), elevation = 2.dp
+                        .background(ReboundTheme.colors.background),
+                    color = LocalThemeState.current.backgroundColor,
+                    elevation = 2.dp
                 ) {
 
                     Column() {

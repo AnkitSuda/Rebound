@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 //import com.ankitsuda.rebound.ui.screens.main_screen.LocalBottomSheet
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.insets.statusBarsPadding
@@ -38,6 +39,7 @@ fun BottomSheetSurface(content: @Composable () -> Unit) {
             .fillMaxWidth()
             .statusBarsPadding(),
         elevation = 16.dp,
+        color = LocalThemeState.current.backgroundColor,
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         content = content
     )

@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.Workout
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
@@ -35,24 +36,25 @@ fun ExerciseHistoryCardItem(
         Column(modifier = Modifier.padding(16.dp)) {
             workout.name?.let {
                 Text(
-                    text = it, style = ReboundTheme.typography.body1
+                    text = it, style = ReboundTheme.typography.body1,
+                    color = LocalThemeState.current.onBackgroundColor
                 )
                 RSpacer(4.dp)
             }
 
-           /* workout.createdAt?.let {
-                Text(
-                    text = it.format(
-                        DateTimeFormatter.ofLocalizedDateTime(
-                            FormatStyle.MEDIUM,
-                            FormatStyle.SHORT
-                        )
-                    ), style = ReboundTheme.typography.body1,
-                    color = ReboundTheme.colors.onBackground.copy(alpha = 0.50f)
-                )
-                if (entries.isNotEmpty())
-                    RSpacer(8.dp)
-            }*/
+            /* workout.createdAt?.let {
+                 Text(
+                     text = it.format(
+                         DateTimeFormatter.ofLocalizedDateTime(
+                             FormatStyle.MEDIUM,
+                             FormatStyle.SHORT
+                         )
+                     ), style = ReboundTheme.typography.body1,
+                     color = ReboundTheme.colors.onBackground.copy(alpha = 0.50f)
+                 )
+                 if (entries.isNotEmpty())
+                     RSpacer(8.dp)
+             }*/
 
             if ((workout.name != null || workout.createdAt != null) && entries.isNotEmpty()) RSpacer(
                 space = 6.dp

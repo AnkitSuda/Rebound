@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.navigation.WORKOUT_ID_KEY
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -86,7 +87,10 @@ fun SessionScreen(
                             .padding(bottom = 16.dp)
                     ) {
                         Column() {
-                            Text(text = "${logs.size} Exercises")
+                            Text(
+                                text = "${logs.size} Exercises",
+                                color = LocalThemeState.current.onBackgroundColor
+                            )
                             RSpacer(space = 4.dp)
                             SessionCompleteQuickInfo(
                                 time = "45 m",

@@ -25,7 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.ankitsuda.base.util.lighterOrDarkerColor
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+
 @Composable
 fun AppTextField(
     modifier: Modifier = Modifier,
@@ -44,7 +46,7 @@ fun AppTextField(
         singleLine = singleLine,
         maxLines = if (singleLine) 1 else Int.MAX_VALUE,
         colors = TextFieldDefaults.textFieldColors(
-            textColor = /*if (backgroundColor.isDark()) Color.White else*/ Color.Black,
+            textColor = LocalThemeState.current.onBackgroundColor,
             disabledTextColor = Color.Transparent,
             backgroundColor = backgroundColor,
             focusedIndicatorColor = Color.Transparent,

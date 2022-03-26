@@ -22,12 +22,22 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 
 @Composable
 fun HomeScreen() {
 
-    Surface(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
-        Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                color = LocalThemeState.current.backgroundColor
+            )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
             TopBar(title = "Home")
         }
     }

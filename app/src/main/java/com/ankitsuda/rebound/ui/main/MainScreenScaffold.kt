@@ -129,174 +129,178 @@ fun MainScreenScaffold(
 
 //    lastPanelHiddenValue = panelHidden
 
-    Layout(content = {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsHeight()
-                .background(ReboundTheme.colors.background)
-        )
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .background(
-                    color = LocalThemeState.current.backgroundColor
-                )
-                .alpha((1f - outOf1).coerceIn(0.7f, 1f))
-        ) {
-            bottomBar()
-        }
-        val cornerRadius = (12 - (12 * (1f - (2f - (outOf1 * 2)).coerceIn(0f, 1f))))
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .swipeable(
-                    state = swipeableState,
-                    anchors = anchors,
-                    thresholds = { _, _ ->
-                        // Automaticly toggle the state when user lifts the finger
-                        // when drag is reached 0.1f FractionalThreshold
-                        FractionalThreshold(0.1f)
-                    },
-                    resistance = null, // passing null so the panel doesn't go beyond the specified height
-                    orientation = Orientation.Vertical
-                )
-                .nestedScroll(
-                    // We are using NestedScrollConnection to make panel swipeable when
-                    // user scrolls inside the panel
-                    object : NestedScrollConnection {
-                        override fun onPreScroll(
-                            available: Offset,
-                            source: NestedScrollSource
-                        ): Offset {
-                            val delta = available.y
-                            return if (delta < 0) {
-                                // User is moving the finger upwards. If the gesture goes in that direction,
-                                // we’re scrolling either the draggable composable or the scrollable inner content.
-                                Offset(0f, swipeableState.performDrag(delta))
-                            } else {
-                                // User is scrolling down. We can ignore this and pass all
-                                // the consumable space down to the child
-                                Offset.Zero
-                            }
-                        }
-
-                        override fun onPostScroll(
-                            consumed: Offset,
-                            available: Offset,
-                            source: NestedScrollSource
-                        ): Offset {
-                            val delta = available.y
-                            // if the list has finished scrolling, we will pass all the leftover space
-                            // to performDrag that will drag if necessary.
-                            return Offset(0f, swipeableState.performDrag(delta))
-                        }
-
-                        // Same as preScroll but this time we handle the fling
-                        override suspend fun onPreFling(available: Velocity): Velocity {
-                            return if (available.y < 0 && swipeableState.currentValue == 0) {
-                                swipeableState.performFling(available.y)
-                                available
-                            } else {
-                                Velocity.Zero
-                            }
-                        }
-
-                        // Same as postScroll but this time we handle the fling
-                        override suspend fun onPostFling(
-                            consumed: Velocity,
-                            available: Velocity
-                        ): Velocity {
-                            swipeableState.performFling(velocity = available.y)
-                            return super.onPostFling(consumed, available)
-                        }
-                    }),
-            elevation = 8.dp,
-            color = LocalThemeState.current.backgroundColor,
-            shape = RoundedCornerShape(
-                topStart = cornerRadius.dp,
-                topEnd = cornerRadius.dp
+    Layout(
+        modifier = Modifier.background(
+            color = LocalThemeState.current.backgroundColor
+        ),
+        content = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsHeight()
+                    .background(ReboundTheme.colors.background)
             )
-        ) {
-
-            Column(
+            Box(
                 Modifier
                     .fillMaxWidth()
+                    .background(
+                        color = LocalThemeState.current.backgroundColor
+                    )
+                    .alpha((1f - outOf1).coerceIn(0.7f, 1f))
             ) {
-
-
-                Box(
-                    modifier = Modifier
-                        .onGloballyPositioned { constraints ->
-                            panelTopHeight =
-                                constraints.size.height
-                        }
-                        .clickable(
-                            indication = null, // passing null in indication so there won't be any ripple effect
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            coroutine.launch {
-                                swipeableState.animateTo(if (swipeableState.currentValue == 0) 1 else 0)
+                bottomBar()
+            }
+            val cornerRadius = (12 - (12 * (1f - (2f - (outOf1 * 2)).coerceIn(0f, 1f))))
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .swipeable(
+                        state = swipeableState,
+                        anchors = anchors,
+                        thresholds = { _, _ ->
+                            // Automaticly toggle the state when user lifts the finger
+                            // when drag is reached 0.1f FractionalThreshold
+                            FractionalThreshold(0.1f)
+                        },
+                        resistance = null, // passing null so the panel doesn't go beyond the specified height
+                        orientation = Orientation.Vertical
+                    )
+                    .nestedScroll(
+                        // We are using NestedScrollConnection to make panel swipeable when
+                        // user scrolls inside the panel
+                        object : NestedScrollConnection {
+                            override fun onPreScroll(
+                                available: Offset,
+                                source: NestedScrollSource
+                            ): Offset {
+                                val delta = available.y
+                                return if (delta < 0) {
+                                    // User is moving the finger upwards. If the gesture goes in that direction,
+                                    // we’re scrolling either the draggable composable or the scrollable inner content.
+                                    Offset(0f, swipeableState.performDrag(delta))
+                                } else {
+                                    // User is scrolling down. We can ignore this and pass all
+                                    // the consumable space down to the child
+                                    Offset.Zero
+                                }
                             }
 
-                        }
-                        .background(
-                            color = LocalThemeState.current.backgroundColor
-                        ),
+                            override fun onPostScroll(
+                                consumed: Offset,
+                                available: Offset,
+                                source: NestedScrollSource
+                            ): Offset {
+                                val delta = available.y
+                                // if the list has finished scrolling, we will pass all the leftover space
+                                // to performDrag that will drag if necessary.
+                                return Offset(0f, swipeableState.performDrag(delta))
+                            }
+
+                            // Same as preScroll but this time we handle the fling
+                            override suspend fun onPreFling(available: Velocity): Velocity {
+                                return if (available.y < 0 && swipeableState.currentValue == 0) {
+                                    swipeableState.performFling(available.y)
+                                    available
+                                } else {
+                                    Velocity.Zero
+                                }
+                            }
+
+                            // Same as postScroll but this time we handle the fling
+                            override suspend fun onPostFling(
+                                consumed: Velocity,
+                                available: Velocity
+                            ): Velocity {
+                                swipeableState.performFling(velocity = available.y)
+                                return super.onPostFling(consumed, available)
+                            }
+                        }),
+                elevation = 8.dp,
+                color = LocalThemeState.current.backgroundColor,
+                shape = RoundedCornerShape(
+                    topStart = cornerRadius.dp,
+                    topEnd = cornerRadius.dp
+                )
+            ) {
+
+                Column(
+                    Modifier
+                        .fillMaxWidth()
                 ) {
 
-                    // Using additional Box so we can set alpha without recomposing the panelTopExpanded
-                    (1f - (2f - (outOf1 * 2)).coerceIn(0f, 1f)).let { alpha ->
-//                            if (alpha > 0f) {
-                        Box(modifier = Modifier.alpha(alpha)) {
-                            panelTopExpanded()
-                        }
-//                            }
-                    }
 
-                    // Using additional Box so we can set alpha without recomposing the panelTopCollapsed
-                    (1f - (outOf1 * 2).coerceIn(0f, 1f)).let { alpha ->
-//                            if (alpha > 0f) {
-                        Box(modifier = Modifier.alpha(alpha)) {
-                            panelTopCollapsed()
-                        }
-//                            }
-                    }
-
-                    // This panelTopCommon is always visible regard less of panel state
-                    panelTopCommon()
-
-                }
-
-                // Main panel contents
-                panel()
-            }
-        }
-        Box() {
-            mainBody()
-        }
-
-        Box() {
-            if (outOf1 > 0f) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .alpha(outOf1)
-                        .background(color = Color.Black.copy(alpha = 0.32f))
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onTap = {
-                                    coroutine.launch {
-                                        swipeableState.animateTo(0)
-                                    }
+                    Box(
+                        modifier = Modifier
+                            .onGloballyPositioned { constraints ->
+                                panelTopHeight =
+                                    constraints.size.height
+                            }
+                            .clickable(
+                                indication = null, // passing null in indication so there won't be any ripple effect
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) {
+                                coroutine.launch {
+                                    swipeableState.animateTo(if (swipeableState.currentValue == 0) 1 else 0)
                                 }
-                            )
-                        },
-                )
+
+                            }
+                            .background(
+                                color = LocalThemeState.current.backgroundColor
+                            ),
+                    ) {
+
+                        // Using additional Box so we can set alpha without recomposing the panelTopExpanded
+                        (1f - (2f - (outOf1 * 2)).coerceIn(0f, 1f)).let { alpha ->
+//                            if (alpha > 0f) {
+                            Box(modifier = Modifier.alpha(alpha)) {
+                                panelTopExpanded()
+                            }
+//                            }
+                        }
+
+                        // Using additional Box so we can set alpha without recomposing the panelTopCollapsed
+                        (1f - (outOf1 * 2).coerceIn(0f, 1f)).let { alpha ->
+//                            if (alpha > 0f) {
+                            Box(modifier = Modifier.alpha(alpha)) {
+                                panelTopCollapsed()
+                            }
+//                            }
+                        }
+
+                        // This panelTopCommon is always visible regard less of panel state
+                        panelTopCommon()
+
+                    }
+
+                    // Main panel contents
+                    panel()
+                }
             }
-        }
-    }) { measurables, constraints ->
+            Box() {
+                mainBody()
+            }
+
+            Box() {
+                if (outOf1 > 0f) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .alpha(outOf1)
+                            .background(color = Color.Black.copy(alpha = 0.32f))
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onTap = {
+                                        coroutine.launch {
+                                            swipeableState.animateTo(0)
+                                        }
+                                    }
+                                )
+                            },
+                    )
+                }
+            }
+        }) { measurables, constraints ->
 
         // ------------------ StatusBar STARTS
         val statusBarConstraints = constraints.copy(
