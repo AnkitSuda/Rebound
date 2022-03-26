@@ -31,6 +31,7 @@ import com.ankitsuda.common.compose.LocalDialog
 import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.settings.color_pickers.ColorPickerDialog
 import com.ankitsuda.rebound.ui.components.settings.color_pickers.ColorPickerDialog1
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 //import com.ankitsuda.rebound.ui.dialogs.ColorPickerAltDialog
 //import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog
 //import com.ankitsuda.rebound.ui.dialogs.ColorPickerDialog1
@@ -86,12 +87,15 @@ fun ColorPickerCardItem(
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = text)
+                    Text(
+                        text = text,
+                        color = LocalThemeState.current.onBackgroundColor
+                    )
                     if (description.isNotEmpty()) {
                         Text(
                             text = description,
                             style = ReboundTheme.typography.caption,
-                            color = Color(117, 117, 117)
+                            color = ReboundTheme.colors.onBackground
                         )
                     }
                 }
@@ -142,12 +146,15 @@ fun SwitchCardItem(
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = text)
+                Text(
+                    text = text,
+                    color = LocalThemeState.current.onBackgroundColor
+                )
                 if (description.isNotEmpty()) {
                     Text(
                         text = description,
                         style = ReboundTheme.typography.caption,
-                        color = Color(117, 117, 117)
+                        color = LocalThemeState.current.onBackgroundColor
                     )
                 }
             }
@@ -220,14 +227,21 @@ fun SliderCardItem(
             Column(modifier = Modifier.weight(1f)) {
 
                 Row {
-                    Text(text = text, modifier = Modifier.weight(1f))
-                    Text(text = mValue.toString())
+                    Text(
+                        text = text,
+                        modifier = Modifier.weight(1f),
+                        color = LocalThemeState.current.onBackgroundColor
+                    )
+                    Text(
+                        text = mValue.toString(),
+                        color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.7f),
+                    )
                 }
                 if (description.isNotEmpty()) {
                     Text(
                         text = description,
                         style = ReboundTheme.typography.caption,
-                        color = Color(117, 117, 117)
+                        color = ReboundTheme.colors.onBackground
                     )
                 }
                 Slider(
@@ -290,13 +304,15 @@ fun ShapesEditorCardItem(
                     )
                 }
                 Column(modifier = Modifier.fillMaxWidth()) {
-
-                    Text(text = text)
+                    Text(
+                        text = text,
+                        color = LocalThemeState.current.onBackgroundColor
+                    )
                     if (description.isNotEmpty()) {
                         Text(
                             text = description,
                             style = ReboundTheme.typography.caption,
-                            color = Color(117, 117, 117)
+                            color = ReboundTheme.colors.onBackground
                         )
                     }
                 }
@@ -309,7 +325,9 @@ fun ShapesEditorCardItem(
             ) {
                 Box() {
                     Button(onClick = { isTopLeftExpanded = !isTopLeftExpanded }) {
-                        Text(text = currentShapeValues.topStart.toString())
+                        Text(
+                            text = currentShapeValues.topStart.toString(),
+                        )
                     }
                     DropdownMenu(
                         modifier = Modifier.align(Alignment.TopStart),
@@ -321,7 +339,9 @@ fun ShapesEditorCardItem(
                                 currentShapeValues.topStart = it
                                 onValueChange(currentShapeValues)
                             }) {
-                                Text(text = it.toString())
+                                Text(
+                                    text = it.toString(),
+                                )
                             }
                         }
                     }

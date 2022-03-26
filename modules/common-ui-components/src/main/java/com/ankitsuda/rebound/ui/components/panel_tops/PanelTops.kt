@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.rebound.domain.entities.Workout
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 
 @Composable
 fun PanelTopDragHandle(modifier: Modifier = Modifier) {
@@ -60,14 +61,23 @@ fun PanelTopCollapsed(
     Column(
         modifier = Modifier
             .padding(6.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(
+                color = LocalThemeState.current.backgroundColor
+            ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         workout?.name?.let {
-            Text(text = it, style = MaterialTheme.typography.h6)
+            Text(
+                text = it, style = MaterialTheme.typography.h6,
+                color = LocalThemeState.current.onBackgroundColor
+            )
         }
-        Text(text = currentTimeStr, style = MaterialTheme.typography.caption)
+        Text(
+            text = currentTimeStr, style = MaterialTheme.typography.caption,
+            color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.7f)
+        )
     }
 }
 
@@ -80,7 +90,10 @@ fun PanelTopExpanded(
     Column(
         modifier = Modifier
             .padding(6.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(
+                color = LocalThemeState.current.backgroundColor
+            ),
     ) {
 
         Row(

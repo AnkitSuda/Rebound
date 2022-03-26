@@ -40,6 +40,7 @@ import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
@@ -157,7 +158,10 @@ fun WorkoutScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Plans", style = MaterialTheme.typography.body1)
+                        Text(
+                            text = "Plans", style = MaterialTheme.typography.body1,
+                            color = LocalThemeState.current.onBackgroundColor
+                        )
                         TextButton(onClick = {
 
                         }) {
@@ -201,7 +205,10 @@ fun WorkoutScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Templates", style = MaterialTheme.typography.body1)
+                        Text(
+                            text = "Templates", style = MaterialTheme.typography.body1,
+                            color = LocalThemeState.current.onBackgroundColor
+                        )
                         TextButton(onClick = {
 
                         }) {

@@ -24,6 +24,7 @@ import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.charts.line.LineChartData
 import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import kotlin.random.Random
 
@@ -49,7 +50,8 @@ fun ExerciseDetailChartsTab() {
                     Text(
                         text = "Stat",
                         style = ReboundTheme.typography.body1,
-                        )
+                        color = LocalThemeState.current.onBackgroundColor
+                    )
 
                     RSpacer(space = 16.dp)
 

@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
 fun MoreItemCard(
@@ -36,15 +38,23 @@ fun MoreItemCard(
     AppCard(modifier = modifier, onClick = onClick) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             if (icon != null) {
-                Icon(imageVector = icon, contentDescription = text,modifier = Modifier.padding(end = 16.dp))
+                Icon(
+                    imageVector = icon,
+                    contentDescription = text,
+                    tint = LocalThemeState.current.onBackgroundColor,
+                    modifier = Modifier.padding(end = 16.dp)
+                )
             }
             Column() {
-                Text(text = text)
+                Text(
+                    text = text,
+                    color = LocalThemeState.current.onBackgroundColor
+                )
                 if (description.isNotEmpty()) {
                     Text(
                         text = description,
-                        style = MaterialTheme.typography.caption,
-                        color = Color(117, 117, 117)
+                        style = ReboundTheme.typography.caption,
+                        color = ReboundTheme.colors.onBackground
                     )
                 }
             }

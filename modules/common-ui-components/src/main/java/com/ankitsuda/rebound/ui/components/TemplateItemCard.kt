@@ -21,6 +21,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 
 @Composable
 fun TemplateItemCard(
@@ -31,8 +32,12 @@ fun TemplateItemCard(
 ) {
     AppCard(modifier = modifier, onClick = onClick) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = name, style = MaterialTheme.typography.body1)
             Text(
+                text = name, style = MaterialTheme.typography.body1,
+                color = LocalThemeState.current.onBackgroundColor
+            )
+            Text(
+                color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.5f),
                 text = "$totalExercises Exercises",
                 style = MaterialTheme.typography.body2,
             )

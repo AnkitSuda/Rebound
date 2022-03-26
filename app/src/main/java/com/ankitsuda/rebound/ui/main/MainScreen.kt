@@ -15,6 +15,7 @@
 package com.ankitsuda.rebound.ui.main
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -171,7 +172,11 @@ private fun MainLayout(
                                         workoutPanelViewModel.finishWorkout()
                                     })
                             }) {
-                            Box(Modifier.fillMaxSize()) {
+                            Box(
+                                Modifier
+                                    .fillMaxSize()
+                                    .background(ReboundTheme.colors.background)
+                            ) {
                                 AppNavigation(navController)
                             }
                         }
@@ -214,8 +219,8 @@ private fun BottomBar(
 
 
     BottomNavigation(
-        contentColor = MaterialTheme.colors.primary,
-        backgroundColor = MaterialTheme.colors.surface,
+        contentColor = ReboundTheme.colors.primary,
+        backgroundColor = ReboundTheme.colors.background,
         elevation = if (elevationEnabled) 8.dp else 0.dp,
         modifier = Modifier
             .navigationBarsHeight(additional = 56.dp)

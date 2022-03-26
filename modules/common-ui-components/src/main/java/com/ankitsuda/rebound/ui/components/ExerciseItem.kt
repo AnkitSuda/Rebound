@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
@@ -47,21 +48,22 @@ fun ExerciseItem(
                 Text(
                     text = name,
                     style = ReboundTheme.typography.subtitle1,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = LocalThemeState.current.onBackgroundColor
                 )
                 RSpacer(space = 4.dp)
                 Text(
                     text = muscle,
                     style = ReboundTheme.typography.caption,
                     fontSize = 14.sp,
-                    color = Color(158, 158, 158)
+                    color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.7f)
                 )
             }
             if (totalLogs > 0) {
                 Text(
                     text = totalLogs.toString(),
                     style = ReboundTheme.typography.subtitle2,
-                    color = Color(158, 158, 158)
+                    color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.5f)
                 )
             }
 

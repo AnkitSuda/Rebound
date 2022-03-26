@@ -27,6 +27,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 //import com.ankitsuda.rebound.utils.lighterOrDarkerColor
@@ -40,7 +41,10 @@ fun SessionExerciseCardItem(
 ) {
     AppCard(modifier = modifier, onClick = onClick) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = exerciseName, style = ReboundTheme.typography.body1)
+            Text(
+                text = exerciseName, style = ReboundTheme.typography.body1,
+                color = LocalThemeState.current.onBackgroundColor
+            )
             RSpacer(8.dp)
             if (entries.isNotEmpty()) {
                 for (i in entries.indices) {
@@ -72,20 +76,25 @@ fun SessionExerciseSetItem(order: Int, set: Pair<Float, Int>) {
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = order.toString()
+                text = order.toString(),
+                color = LocalThemeState.current.onBackgroundColor
             )
         }
 
         RSpacer(16.dp)
         Text(text = buildAnnotatedString {
-            append(set.first.toString())
+            withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
+                append(set.first.toString())
+            }
             withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
                 append(" kg")
             }
         })
         RSpacer(20.dp)
         Text(text = buildAnnotatedString {
-            append(set.second.toString())
+            withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
+                append(set.second.toString())
+            }
             withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
                 append(" reps")
             }

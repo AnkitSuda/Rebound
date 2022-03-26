@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.components.AppCard
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
@@ -55,7 +56,10 @@ fun RadioGroupCardItem(
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = text)
+                    Text(
+                        text = text,
+                        color = LocalThemeState.current.onBackgroundColor
+                    )
                     if (description.isNotEmpty()) {
                         Text(
                             text = description,
@@ -66,9 +70,14 @@ fun RadioGroupCardItem(
                 }
 
             }
-            FlowRow(crossAxisSpacing = 8.dp, mainAxisSpacing = 8.dp, modifier = Modifier.padding(bottom = 16.dp, start = 16.dp, end = 16.dp)) {
+            FlowRow(
+                crossAxisSpacing = 8.dp,
+                mainAxisSpacing = 8.dp,
+                modifier = Modifier.padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
+            ) {
                 for (item in items) {
-                    Row(modifier = Modifier.clickable(onClick = {
+                    Row(
+                        modifier = Modifier.clickable(onClick = {
                             onSelectionChange(items.indexOf(item), item)
                         }, indication = null,
                             interactionSource = remember { MutableInteractionSource() })
@@ -78,6 +87,7 @@ fun RadioGroupCardItem(
                         })
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
+                            color = LocalThemeState.current.onBackgroundColor,
                             text = item.replaceFirstChar { it.uppercase() }
                         )
                     }

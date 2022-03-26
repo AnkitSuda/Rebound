@@ -38,6 +38,7 @@ import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.insets.statusBarsHeight
 import kotlinx.coroutines.launch
@@ -138,6 +139,9 @@ fun MainScreenScaffold(
         Box(
             Modifier
                 .fillMaxWidth()
+                .background(
+                    color = LocalThemeState.current.backgroundColor
+                )
                 .alpha((1f - outOf1).coerceIn(0.7f, 1f))
         ) {
             bottomBar()
@@ -208,6 +212,7 @@ fun MainScreenScaffold(
                         }
                     }),
             elevation = 8.dp,
+            color = LocalThemeState.current.backgroundColor,
             shape = RoundedCornerShape(
                 topStart = cornerRadius.dp,
                 topEnd = cornerRadius.dp
@@ -221,7 +226,6 @@ fun MainScreenScaffold(
 
 
                 Box(
-
                     modifier = Modifier
                         .onGloballyPositioned { constraints ->
                             panelTopHeight =
@@ -235,7 +239,10 @@ fun MainScreenScaffold(
                                 swipeableState.animateTo(if (swipeableState.currentValue == 0) 1 else 0)
                             }
 
-                        },
+                        }
+                        .background(
+                            color = LocalThemeState.current.backgroundColor
+                        ),
                 ) {
 
                     // Using additional Box so we can set alpha without recomposing the panelTopExpanded

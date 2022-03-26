@@ -34,6 +34,7 @@ import com.ankitsuda.base.util.*
 import com.ankitsuda.rebound.ui.calendar.models.CalendarDay
 import com.ankitsuda.rebound.ui.calendar.models.CalendarMonth
 import com.ankitsuda.rebound.ui.calendar.models.DayOwner
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -116,6 +117,7 @@ fun ColumnScope.CalendarMonthHeader(text: String) {
         style = MaterialTheme.typography.body1,
         textAlign = TextAlign.Center,
         fontSize = 20.sp,
+        color = LocalThemeState.current.onBackgroundColor,
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp)
