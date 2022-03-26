@@ -16,7 +16,9 @@ package com.ankitsuda.rebound.domain.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.ankitsuda.base.utils.toEpochMillis
 import java.time.LocalDateTime
 import java.util.*
 
@@ -45,4 +47,7 @@ data class Workout(
     var createdAt: LocalDateTime? = null,
     @ColumnInfo(name = "update_at")
     var updatedAt: LocalDateTime? = null,
-)
+) {
+    fun getDuration(): Long? =
+        startAt?.toEpochMillis()?.let { completedAt?.toEpochMillis()?.minus(it) }
+}

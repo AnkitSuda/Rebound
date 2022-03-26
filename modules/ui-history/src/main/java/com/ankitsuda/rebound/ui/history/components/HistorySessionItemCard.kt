@@ -20,6 +20,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.components.AppCard
@@ -35,10 +39,13 @@ fun HistorySessionItemCard(
     onClick: () -> Unit,
     title: String,
     totalExercises: Int,
-    time: String,
+    duration: Long?,
     volume: String,
     prs: Int,
 ) {
+    val durationStr: String by rememberSaveable(inputs = arrayOf(duration)) {
+        mutableStateOf(duration?.toDurationStr() ?: "NA")
+    }
 
     AppCard(modifier = modifier, onClick = onClick) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -46,7 +53,18 @@ fun HistorySessionItemCard(
             Spacer(Modifier.height(4.dp))
             Text(text = "$totalExercises Exercises", style = ReboundTheme.typography.caption)
             Spacer(Modifier.height(4.dp))
-            SessionCompleteQuickInfo(time = time, volume = volume, prs = prs)
+            SessionCompleteQuickInfo(time = durationStr, volume = volume, prs = prs)
         }
     }
+}
+
+private fun Long.toDurationStr(): String {
+    val totalSeconds = this / 1000
+    val seconds = totalSeconds % 60
+    val minutes = totalSeconds / 60 % 60
+    val hours = totalSeconds / 3600
+    val secondsStr = if (seconds > 0 && minutes == 0L && hours == 0L) "${seconds}s" else null
+    val minutesStr = if (minutes > 0) "${minutes}m" else null
+    val hoursStr = if (hours > 0) "${hours}h" else null
+    return listOfNotNull(hoursStr, minutesStr, secondsStr).joinToString(separator = " ")
 }

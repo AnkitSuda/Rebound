@@ -209,7 +209,9 @@ fun HistoryScreen(
                             },
                             title = workout.name.toString(),
                             totalExercises = 7,
-                            time = "45 m", volume = "1000 kg", prs = 2
+                            duration = workout.getDuration(),
+                            volume = "1000 kg",
+                            prs = 2
                         )
                     }
 
