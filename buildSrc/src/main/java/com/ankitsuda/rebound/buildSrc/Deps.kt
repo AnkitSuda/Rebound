@@ -27,7 +27,7 @@ object Deps {
         const val serialization = "org.jetbrains.kotlin:kotlin-serialization:$version"
         const val serializationRuntime = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
 
-        const val coroutinesVersion = "1.6.0"
+        const val coroutinesVersion = "1.6.1"
         const val coroutinesCore =
             "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
         const val coroutinesAndroid =
@@ -44,7 +44,7 @@ object Deps {
         const val activityVersion = "1.4.0"
         const val activityCompose = "androidx.activity:activity-compose:$activityVersion"
 
-        private const val navigationVersion = "2.5.0-alpha01"
+        private const val navigationVersion = "2.5.0-alpha04"
 
         //        const val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-beta01"
         const val navigationCompose = "androidx.navigation:navigation-compose:$navigationVersion"
@@ -53,7 +53,7 @@ object Deps {
         const val dataStore = "androidx.datastore:datastore-preferences:1.0.0"
 
         object Compose {
-            const val version = "1.2.0-alpha02"
+            const val version = "1.2.0-alpha07"
 
             const val ui = "androidx.compose.ui:ui:$version"
             const val uiUtil = "androidx.compose.ui:ui-util:$version"
@@ -79,7 +79,7 @@ object Deps {
         }
 
         object Accompanist {
-            private const val version = "0.24.1-alpha"
+            private const val version = "0.24.6-alpha"
 
             const val insets = "com.google.accompanist:accompanist-insets:$version"
             const val insetsUi = "com.google.accompanist:accompanist-insets-ui:$version"
@@ -143,7 +143,7 @@ object Deps {
 
 
     object Dagger {
-        private const val version = "2.40.5"
+        private const val version = "2.41"
 
         const val hilt = "com.google.dagger:hilt-android:$version"
         const val hiltCompiler = "com.google.dagger:hilt-compiler:$version"
