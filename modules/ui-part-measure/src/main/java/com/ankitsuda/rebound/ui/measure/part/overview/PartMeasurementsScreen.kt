@@ -124,6 +124,7 @@ fun PartMeasurementsScreen(
                 Text(
                     text = "History",
                     style = ReboundTheme.typography.h6,
+                    color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
                 )
             }
@@ -157,7 +158,7 @@ fun PartMeasurementsScreen(
                     Text(
                         text = log.measurement.toString(),
                         style = ReboundTheme.typography.body2,
-                        color = LocalThemeState.current.backgroundColor,
+                        color = LocalThemeState.current.onBackgroundColor,
                         modifier = Modifier
                     )
                 }
