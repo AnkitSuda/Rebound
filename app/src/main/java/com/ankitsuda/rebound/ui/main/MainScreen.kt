@@ -55,6 +55,7 @@ import com.ankitsuda.rebound.ui.workout_panel.WorkoutPanel
 import com.ankitsuda.rebound.ui.workout_panel.WorkoutPanelViewModel
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.BottomSheetNavigatorSheetState
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -65,11 +66,14 @@ import timber.log.Timber
 /**
  * Root screen of the app
  */
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
+@OptIn(
+    ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class,
+    androidx.compose.animation.ExperimentalAnimationApi::class
+)
 @Composable
 fun MainScreen(
 ) {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     navController.navigatorProvider += bottomSheetNavigator
     MainLayout(

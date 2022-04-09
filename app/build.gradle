@@ -147,6 +147,7 @@ dependencies {
     api Deps.Android.Accompanist.insetsUi
     api Deps.Android.Accompanist.systemUiController
     api Deps.Android.Accompanist.navigationMaterial
+    api Deps.Android.Accompanist.navigationAnimation
 
     api Deps.Android.Lifecycle.runtime
     api Deps.Android.Lifecycle.runtimeKtx

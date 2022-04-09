@@ -14,6 +14,8 @@
 
 package com.ankitsuda.rebound.ui.navigation
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -21,7 +23,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.navigation
 import com.ankitsuda.common.compose.collectEvent
 import com.ankitsuda.navigation.*
 import com.ankitsuda.rebound.ui.measure.MeasureScreen
@@ -46,10 +47,16 @@ import com.ankitsuda.rebound.ui.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.workout.WorkoutScreen
 import com.ankitsuda.rebound.ui.workout_details.SessionScreen
 import com.ankitsuda.rebound.ui.workouttemplate.preview.WorkoutTemplatePreviewScreen
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
-@OptIn(InternalCoroutinesApi::class, ExperimentalMaterialNavigationApi::class)
+@OptIn(
+    InternalCoroutinesApi::class,
+    ExperimentalMaterialNavigationApi::class,
+    androidx.compose.animation.ExperimentalAnimationApi::class
+)
 @Composable
 internal fun AppNavigation(
     navController: NavHostController,
@@ -76,9 +83,32 @@ internal fun AppNavigation(
         }
     }
 
-    NavHost(
+    val animDuration = 250
+
+    AnimatedNavHost(
         navController = navController,
-        startDestination = RootScreen.HomeTab.route
+        startDestination = RootScreen.HomeTab.route,
+        enterTransition = {
+            fadeIn(animationSpec = tween(animDuration)) + scaleIn(
+                animationSpec = tween(animDuration),
+                initialScale = 0.75f
+            )
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(animDuration))
+        },
+        popEnterTransition = {
+            fadeIn(animationSpec = tween(animDuration / 1)) + scaleIn(
+                animationSpec = tween(animDuration / 1),
+                initialScale = 0.9f
+            )
+        },
+        popExitTransition = {
+            fadeOut(animationSpec = tween(animDuration)) + scaleOut(
+                animationSpec = tween(animDuration),
+                targetScale = 0.75f
+            )
+        }
     ) {
         addHomeRoot(navController)
         addHistoryRoot(navController)
@@ -90,6 +120,7 @@ internal fun AppNavigation(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addHomeRoot(navController: NavController) {
     navigation(
         route = RootScreen.HomeTab.route,
@@ -99,6 +130,7 @@ private fun NavGraphBuilder.addHomeRoot(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addHistoryRoot(navController: NavController) {
     navigation(
         route = RootScreen.HistoryTab.route,
@@ -110,6 +142,7 @@ private fun NavGraphBuilder.addHistoryRoot(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addWorkoutRoot(navController: NavController) {
     navigation(
         route = RootScreen.WorkoutTab.route,
@@ -120,6 +153,7 @@ private fun NavGraphBuilder.addWorkoutRoot(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addExercisesRoot(navController: NavController) {
     navigation(
         route = RootScreen.ExercisesTab.route,
@@ -131,6 +165,7 @@ private fun NavGraphBuilder.addExercisesRoot(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addMoreRoot(navController: NavController) {
     navigation(
         route = RootScreen.MoreTab.route,

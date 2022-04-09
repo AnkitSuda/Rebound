@@ -14,15 +14,17 @@
 
 package com.ankitsuda.navigation
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.*
-import androidx.navigation.compose.composable
+import com.google.accompanist.navigation.animation.composable
 import com.ankitsuda.base.utils.toEpochMillis
-import com.ankitsuda.base.utils.toLocalDateTime
+import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
 import java.time.Instant
@@ -221,11 +223,17 @@ sealed class LeafScreen(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.composableScreen(
     screen: LeafScreen,
-    content: @Composable (NavBackStackEntry) -> Unit
+    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit
 ) {
-    composable(screen.createRoute(), screen.arguments, screen.deepLinks, content)
+    composable(
+        route = screen.createRoute(),
+        arguments = screen.arguments,
+        deepLinks = screen.deepLinks,
+        content = content
+    )
 }
 
 @OptIn(ExperimentalMaterialNavigationApi::class)

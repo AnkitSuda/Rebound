@@ -48,6 +48,8 @@ repositories {
 }
 
 dependencies {
+    api Deps.Android.Accompanist.navigationAnimation
+
     implementation Deps.Dagger.hilt
     kapt Deps.Dagger.hiltCompiler
 

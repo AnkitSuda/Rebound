@@ -98,6 +98,9 @@ object Deps {
                 "com.google.accompanist:accompanist-navigation-material:$version"
             const val navigationFlowlayout =
                 "com.google.accompanist:accompanist-flowlayout:$version"
+            const val navigationAnimation =
+                "com.google.accompanist:accompanist-navigation-animation:$version"
+
         }
 
         object Lifecycle {

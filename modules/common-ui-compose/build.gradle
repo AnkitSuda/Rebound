@@ -81,6 +81,7 @@ dependencies {
     api Deps.Android.Accompanist.systemUiController
     api Deps.Android.Accompanist.navigationMaterial
     api Deps.Android.Accompanist.navigationFlowlayout
+    api Deps.Android.Accompanist.navigationAnimation
 
     // 3rd party
 //    api Deps.Android.Compose.coil
