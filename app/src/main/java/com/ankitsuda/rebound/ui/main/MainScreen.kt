@@ -17,23 +17,22 @@ package com.ankitsuda.rebound.ui.main
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
 import com.ankitsuda.base.ui.ThemeState
 import com.ankitsuda.base.util.LabelVisible
@@ -57,7 +56,6 @@ import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.BottomSheetNavigator
-import com.google.accompanist.navigation.material.BottomSheetNavigatorSheetState
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import kotlinx.coroutines.launch
@@ -225,8 +223,8 @@ private fun BottomBar(
 
 
     BottomNavigation(
-        contentColor = ReboundTheme.colors.primary,
-        backgroundColor = ReboundTheme.colors.background,
+        contentColor = LocalThemeState.current.primaryColor,
+        backgroundColor = LocalThemeState.current.backgroundColor,
         elevation = if (elevationEnabled) 8.dp else 0.dp,
         modifier = Modifier
             .navigationBarsHeight(additional = 56.dp)
@@ -236,15 +234,26 @@ private fun BottomBar(
 
         bottomNavigationItems.forEach { screen ->
 
+            val isSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+
             BottomNavigationItem(
-                icon = { Icon(screen.icon, screen.title, Modifier.size(iconSize.dp)) },
+                icon = {
+                    Icon(
+                        if (isSelected) screen.selectedIcon else screen.unselectedIcon,
+                        screen.title,
+                        Modifier.size(iconSize.dp)
+                    )
+                },
                 label = if (labelVisible == LabelVisible.NEVER) {
                     null
                 } else {
                     {
 
                         Text(
-                            screen.title, fontWeight = when (labelWeight) {
+                            text = screen.title,
+                            maxLines = 1,
+                            overflow = TextOverflow.Visible,
+                            fontWeight = when (labelWeight) {
                                 "bold" -> FontWeight.Bold
                                 else -> FontWeight.Normal
                             }
@@ -256,7 +265,7 @@ private fun BottomBar(
                 unselectedContentColor = ReboundTheme.colors.onBackground.copy(0.4f),
                 alwaysShowLabel = labelVisible == LabelVisible.ALWAYS,
                 modifier = Modifier.navigationBarsPadding(),
-                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                selected = isSelected,
                 onClick = {
                     // This if check gives us a "singleTop" behavior where we do not create a
                     // second instance of the composable if we are already on that destination
@@ -284,23 +293,48 @@ private fun BottomBar(
     }
 }
 
-sealed class BottomNavigationScreens(val route: String, val title: String, val icon: ImageVector) {
+sealed class BottomNavigationScreens(
+    val route: String,
+    val title: String,
+    val unselectedIcon: ImageVector,
+    val selectedIcon: ImageVector
+) {
     object Home :
-        BottomNavigationScreens(RootScreen.HomeTab.route, "Home", Icons.Outlined.Home)
+        BottomNavigationScreens(
+            RootScreen.HomeTab.route,
+            "Home",
+            Icons.Outlined.Home,
+            Icons.Filled.Home
+        )
 
     object History :
-        BottomNavigationScreens(RootScreen.HistoryTab.route, "History", Icons.Outlined.AccessTime)
+        BottomNavigationScreens(
+            RootScreen.HistoryTab.route,
+            "History",
+            Icons.Outlined.WatchLater,
+            Icons.Filled.WatchLater
+        )
 
     object Workout :
-        BottomNavigationScreens(RootScreen.WorkoutTab.route, "Workout", Icons.Outlined.PlayArrow)
+        BottomNavigationScreens(
+            RootScreen.WorkoutTab.route,
+            "Workout",
+            Icons.Outlined.PlayArrow,
+            Icons.Filled.PlayArrow
+        )
 
     object Exercises :
         BottomNavigationScreens(
             RootScreen.ExercisesTab.route,
             "Exercises",
-            Icons.Outlined.FitnessCenter
+            Icons.Outlined.FitnessCenter, Icons.Filled.FitnessCenter
         )
 
     object More :
-        BottomNavigationScreens(RootScreen.MoreTab.route, "More", Icons.Outlined.Menu)
+        BottomNavigationScreens(
+            RootScreen.MoreTab.route,
+            "More",
+            Icons.Outlined.Menu,
+            Icons.Filled.Menu
+        )
 }
