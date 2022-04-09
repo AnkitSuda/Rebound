@@ -65,14 +65,11 @@ fun PersonalizationScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
-            contentPadding = PaddingValues(16.dp)
         ) {
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.background)
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     text = "Main Colors",
                     onClick = {
                         navigator.navigate(LeafScreen.MainColorsPersonalization().route)
@@ -81,8 +78,7 @@ fun PersonalizationScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     text = "Shapes",
                     onClick = {
                         navigator.navigate(LeafScreen.ShapesPersonalization().route)
@@ -91,8 +87,7 @@ fun PersonalizationScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     text = "Cards",
                     onClick = {
                         navigator.navigate(LeafScreen.CardsPersonalization().route)
@@ -101,8 +96,7 @@ fun PersonalizationScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     text = "Top Bar",
                     onClick = {
                         navigator.navigate(LeafScreen.TopBarPersonalization().route)
@@ -111,8 +105,7 @@ fun PersonalizationScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     text = "Bottom Bar",
                     onClick = {
                         navigator.navigate(LeafScreen.BottomBarPersonalization().route)
@@ -121,8 +114,7 @@ fun PersonalizationScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     text = "Charts",
                     onClick = {
                         navigator.navigate(LeafScreen.ChartsPersonalization().route)
@@ -131,8 +123,7 @@ fun PersonalizationScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     text = "Color Picker Demo",
                     onClick = {
                         navigator.navigate(LeafScreen.ColorPickerDemo().route)

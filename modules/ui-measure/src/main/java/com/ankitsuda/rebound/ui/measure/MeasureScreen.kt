@@ -78,7 +78,6 @@ fun MeasureScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
             item {
                 MoreSectionHeader(text = "Core")
@@ -87,8 +86,7 @@ fun MeasureScreen(
                 val part = core[it]
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     text = part,
                     onClick = {
 //                        navController.navigate(Route.PartMeasurements.createRoute(it.toLong()))
@@ -103,8 +101,7 @@ fun MeasureScreen(
                 val part = body[it]
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     text = part,
                     onClick = {
 //                        navController.navigate(Route.PartMeasurements.createRoute((it + core.size).toLong()))

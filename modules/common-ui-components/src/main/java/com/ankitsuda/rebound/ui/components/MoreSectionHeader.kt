@@ -20,9 +20,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 
 @Composable
 fun MoreSectionHeader(text: String) {
-    Text(text = text, style = MaterialTheme.typography.caption, modifier = Modifier.padding(8.dp))
+    Text(
+        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+        text = text,
+        style = MaterialTheme.typography.caption,
+        color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.75f)
+    )
 }
-

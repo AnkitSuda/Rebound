@@ -101,14 +101,13 @@ fun BottomBarPersonalizationScreen(
 
         val itemModifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp)
+
 
         with(LocalDialog.current) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colors.background),
-                contentPadding = PaddingValues(16.dp)
             ) {
 
                 item {

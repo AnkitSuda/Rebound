@@ -53,13 +53,11 @@ fun MoreScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
-            contentPadding = PaddingValues(16.dp)
         ) {
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.Straighten,
                     text = "Measure",
                     description = "Body measurements",
@@ -71,8 +69,7 @@ fun MoreScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.SportsScore,
                     text = "Achievements",
                     description = "0 achievements",
@@ -85,27 +82,23 @@ fun MoreScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.BubbleChart,
                     text = "Personalization",
                     description = "Make rebound yours",
                     onClick = {
-//                        navController.navigate(Route.Personalization.route)
                         navigator.navigate(LeafScreen.Personalization().route)
                     })
             }
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.Settings,
                     text = "Settings",
                     description = "Units, backups etc.",
                     onClick = {
                         navigator.navigate(LeafScreen.Settings().route)
-//                        navController.navigate(Route.Settings.route)
                     })
             }
         }

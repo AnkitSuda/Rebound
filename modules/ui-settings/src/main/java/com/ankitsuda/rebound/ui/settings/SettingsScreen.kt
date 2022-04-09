@@ -63,13 +63,11 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
-            contentPadding = PaddingValues(16.dp)
         ) {
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.BubbleChart,
                     text = "Personalization",
                     description = "Make rebound yours",
@@ -83,8 +81,7 @@ fun SettingsScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.FitnessCenter,
                     text = "Weight Unit",
                     description = "Metric (kg)",
@@ -95,8 +92,7 @@ fun SettingsScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.DirectionsRun,
                     text = "Distance Unit",
                     description = "Metric (m/km)",
@@ -107,8 +103,7 @@ fun SettingsScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.Event,
                     text = "First Day of The Week",
                     description = "Sunday",
@@ -122,8 +117,7 @@ fun SettingsScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.Folder,
                     text = "Backup Data",
                     description = "To JSON",
@@ -134,8 +128,7 @@ fun SettingsScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.Restore,
                     text = "Restore Data",
                     description = "From a previous backup",
@@ -150,8 +143,7 @@ fun SettingsScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.ThumbsUpDown,
                     text = "Write a Review",
                     description = "It will motivate us to make rebound more better.",
@@ -162,8 +154,7 @@ fun SettingsScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.BugReport,
                     text = "Suggestions & Bug Report",
                     description = "You can open an issue in Github repository",
@@ -177,8 +168,7 @@ fun SettingsScreen(
             item {
                 MoreItemCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .fillMaxWidth(),
                     icon = Icons.Outlined.Info,
                     text = "About app",
                     onClick = {

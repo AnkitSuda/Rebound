@@ -42,7 +42,7 @@ fun RadioGroupCardItem(
     items: List<String>,
     selected: String,
 ) {
-    AppCard(modifier = modifier) {
+    Box(modifier = modifier) {
         Column() {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -80,7 +80,8 @@ fun RadioGroupCardItem(
                         modifier = Modifier.clickable(onClick = {
                             onSelectionChange(items.indexOf(item), item)
                         }, indication = null,
-                            interactionSource = remember { MutableInteractionSource() })
+                            interactionSource = remember { MutableInteractionSource() }),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(selected = item == selected, onClick = {
                             onSelectionChange(items.indexOf(item), item)

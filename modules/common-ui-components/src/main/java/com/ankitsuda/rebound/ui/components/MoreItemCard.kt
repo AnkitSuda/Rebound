@@ -14,10 +14,9 @@
 
 package com.ankitsuda.rebound.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MoreItemCard(
     modifier: Modifier = Modifier,
@@ -35,14 +35,17 @@ fun MoreItemCard(
     description: String = "",
     onClick: () -> Unit
 ) {
-    AppCard(modifier = modifier, onClick = onClick) {
-        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+    Box(modifier = modifier.clickable(onClick = onClick)) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             if (icon != null) {
                 Icon(
                     imageVector = icon,
                     contentDescription = text,
                     tint = LocalThemeState.current.onBackgroundColor,
-                    modifier = Modifier.padding(end = 16.dp)
+                    modifier = Modifier.padding(start = 2.dp, end = 18.dp)
                 )
             }
             Column() {
@@ -54,7 +57,7 @@ fun MoreItemCard(
                     Text(
                         text = description,
                         style = ReboundTheme.typography.caption,
-                        color = ReboundTheme.colors.onBackground
+                        color = ReboundTheme.colors.onBackground.copy(alpha = 0.8f),
                     )
                 }
             }

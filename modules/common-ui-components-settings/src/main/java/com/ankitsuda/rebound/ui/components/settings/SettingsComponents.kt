@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.ui.components.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -55,7 +56,7 @@ fun ColorPickerCardItem(
     onClick: () -> Unit = {}
 ) {
     with(LocalDialog.current) {
-        AppCard(modifier = modifier, onClick = {
+        Box(modifier = modifier.clickable {
             onClick()
             if (enableAutoColorPicker) {
                 dialogContent = {
@@ -76,14 +77,14 @@ fun ColorPickerCardItem(
             }
         }) {
             Row(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (icon != null) {
                     Icon(
                         imageVector = icon,
                         contentDescription = text,
-                        modifier = Modifier.padding(end = 16.dp)
+                        modifier = Modifier.padding(start = 2.dp, end = 18.dp)
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
@@ -134,15 +135,15 @@ fun SwitchCardItem(
         onChange(it)
     }
 
-    AppCard(modifier = modifier, onClick = {
+    Box(modifier = modifier.clickable {
         handleOnChange(!checked)
     }) {
-        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp), verticalAlignment = Alignment.CenterVertically) {
             if (icon != null) {
                 Icon(
                     imageVector = icon,
                     contentDescription = text,
-                    modifier = Modifier.padding(end = 16.dp)
+                    modifier = Modifier.padding(start = 2.dp, end = 18.dp)
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
@@ -211,7 +212,7 @@ fun SliderCardItem(
 
 //    if (value != mValue) mValue = value
 
-    AppCard(modifier = modifier) {
+    Box(modifier = modifier) {
 
         Row(
             modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
@@ -221,7 +222,7 @@ fun SliderCardItem(
                 Icon(
                     imageVector = icon,
                     contentDescription = text,
-                    modifier = Modifier.padding(end = 16.dp)
+                    modifier = Modifier.padding(start = 2.dp, end = 18.dp)
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
@@ -287,7 +288,7 @@ fun ShapesEditorCardItem(
         mutableStateOf(defaultValues)
     }
 
-    AppCard(modifier = modifier) {
+    Box(modifier = modifier) {
         Column(modifier = Modifier.fillMaxWidth()) {
 
             Row(
@@ -300,7 +301,7 @@ fun ShapesEditorCardItem(
                     Icon(
                         imageVector = icon,
                         contentDescription = text,
-                        modifier = Modifier.padding(end = 16.dp)
+                        modifier = Modifier.padding(start = 2.dp, end = 18.dp)
                     )
                 }
                 Column(modifier = Modifier.fillMaxWidth()) {
