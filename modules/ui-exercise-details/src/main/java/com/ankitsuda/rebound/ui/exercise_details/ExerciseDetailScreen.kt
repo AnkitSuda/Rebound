@@ -23,11 +23,13 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import me.onebone.toolbar.CollapsingToolbarScaffold
@@ -74,41 +76,36 @@ fun ExerciseDetailScreen(
     )
     val tabIndex = pagerState.currentPage
     val coroutineScope = rememberCoroutineScope()
+    val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(
         modifier = Modifier.fillMaxSize(),
-        state = rememberCollapsingToolbarScaffoldState(),
+        state = collapsingState,
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
-            Surface(
-                Modifier
-                    .background(ReboundTheme.colors.background)
-                    .zIndex(2f),
-                elevation = 2.dp,
-                color = LocalThemeState.current.backgroundColor,
-            ) {
-                Column() {
-                    TopBar(
-                        elevationEnabled = false,
-                        title = exercise?.name.toString(),
-                        strictLeftIconAlignToStart = true,
-                        leftIconBtn = {
-                            TopBarBackIconButton(onClick = {
-                                navController.popBackStack()
-                            })
-                        },
-                        rightIconBtn = {
-                            TopBarIconButton(
-                                icon = Icons.Outlined.StarBorder,
-                                title = "Favorite",
-                                onClick = {
+            TopBar2(
+                elevationEnabled = false,
+                toolbarState = collapsingState.toolbarState,
+                title = exercise?.name.toString(),
+                navigationIcon = {
+                    TopBarBackIconButton(onClick = {
+                        navController.popBackStack()
+                    })
+                },
+                actions = {
+                    TopBarIconButton(
+                        icon = Icons.Outlined.StarBorder,
+                        title = "Favorite",
+                        onClick = {
 
-                                })
                         })
+                },
+                bottomLayout = {
 
                     TabRow(
                         selectedTabIndex = tabIndex,
-                        backgroundColor = ReboundTheme.colors.topBar,
+                        backgroundColor = Color.Transparent,
+                        contentColor = contentColorFor(backgroundColor = ReboundTheme.colors.topBar),
                         divider = { Divider(thickness = 0.dp) },
                         indicator = { tabPositions ->
                             TabRowDefaults.Indicator(
@@ -140,7 +137,7 @@ fun ExerciseDetailScreen(
                         }
                     }
                 }
-            }
+            )
         },
     ) {
 

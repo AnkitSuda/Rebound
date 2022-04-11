@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -42,12 +44,15 @@ import me.onebone.toolbar.CollapsingToolbarState
  * Variant of TopBar,
  * Title font size and offset changes as user scrolls
  *
+ * ISSUE: Unwanted space while scrolling https://github.com/onebone/compose-collapsing-toolbar/issues/44
+ *
  * @param title Title text
  * @param toolbarState Collapsing toolbar state
  * @param statusBarEnabled Adds status bar padding when true
  * @param navigationIcon Navigation icon (start icon)
  * @param actions Menu icons (end icons)
  * @param elevationEnabled Adds elevation to TopBar when true (no effect as of now)
+ * @param bottomLayout Layout to show at bottom of the TopBar
  */
 @Composable
 fun CollapsingToolbarScope.TopBar2(
@@ -57,6 +62,7 @@ fun CollapsingToolbarScope.TopBar2(
     navigationIcon: (@Composable BoxScope.() -> Unit)? = null,
     actions: (@Composable RowScope.() -> Unit)? = null,
     elevationEnabled: Boolean = true,
+    bottomLayout: (@Composable () -> Unit)? = null
 ) {
     val theme = LocalThemeState.current
 
@@ -79,12 +85,17 @@ fun CollapsingToolbarScope.TopBar2(
         minTitleOffset.dp
     }
 
+    var bottomLayoutHeight by rememberSaveable {
+        mutableStateOf(0)
+    }
+
+    val bottomLayoutHeightDp = with(LocalDensity.current) { bottomLayoutHeight.toDp() }
 
     Box(
         modifier = Modifier
             .background(backgroundColor)
             .fillMaxWidth()
-            .height(150.dp + statusBarHeight)
+            .height(150.dp + statusBarHeight + bottomLayoutHeightDp)
             .pin()
     )
 
@@ -92,51 +103,99 @@ fun CollapsingToolbarScope.TopBar2(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(toolbarHeight + statusBarHeight)
+            .height(toolbarHeight + statusBarHeight + bottomLayoutHeightDp)
     ) {
-        navigationIcon?.let {
-            Box(
-                modifier = Modifier
-                    .padding(top = statusBarHeight, start = 8.dp)
-                    .align(Alignment.CenterStart)
-            ) {
-                navigationIcon()
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(toolbarHeight + statusBarHeight)
+                .align(Alignment.TopStart)
+        ) {
+
+            navigationIcon?.let {
+                Box(
+                    modifier = Modifier
+                        .padding(top = statusBarHeight, start = 8.dp)
+                        .align(Alignment.CenterStart)
+                ) {
+                    navigationIcon()
+                }
+            }
+
+            actions?.let {
+                Row(
+                    modifier = Modifier
+                        .padding(top = statusBarHeight, end = 8.dp)
+                        .align(Alignment.CenterEnd),
+                    verticalAlignment = Alignment.CenterVertically,
+                    content = actions
+                )
             }
         }
+    }
 
-        actions?.let {
-            Row(
-                modifier = Modifier
-                    .padding(top = statusBarHeight, end = 8.dp)
-                    .align(Alignment.CenterEnd),
-                verticalAlignment = Alignment.CenterVertically,
-                content = actions
+//    Box(
+//        Modifier
+//            .height(statusBarHeight + toolbarHeight)
+//            .offset(titleOffset, 0.dp)
+//            .road(
+//                whenCollapsed = Alignment.CenterStart,
+//                whenExpanded = Alignment.BottomStart
+//            ),
+//        contentAlignment = Alignment.CenterStart,
+//    ) {
+//
+//        Text(
+//            modifier = Modifier.padding(top = statusBarHeight),
+//            text = title,
+//            style = ReboundTheme.typography.h6,
+//            fontWeight = FontWeight.Bold,
+//            fontSize = titleSize,
+//            textAlign = TextAlign.Start,
+//            color = contentColor,
+//        )
+//    }
+
+    Column(
+        Modifier
+            .defaultMinSize(minHeight = statusBarHeight + toolbarHeight + bottomLayoutHeightDp)
+            .fillMaxWidth()
+            .road(
+                whenCollapsed = Alignment.TopCenter,
+                whenExpanded = Alignment.BottomCenter
             )
+    ) {
+
+        Box(
+            modifier = Modifier
+                .height(toolbarHeight + statusBarHeight)
+                .offset(titleOffset, 0.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(top = statusBarHeight),
+                text = title,
+                style = ReboundTheme.typography.h6,
+                fontWeight = FontWeight.Bold,
+                fontSize = titleSize,
+                textAlign = TextAlign.Start,
+                color = contentColor,
+                maxLines = 1
+            )
+        }
+
+        bottomLayout?.let {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned {
+                    bottomLayoutHeight = it.size.height
+                }
+            ) {
+                it()
+            }
+
         }
     }
 
-    Box(
-        Modifier
-            .height(statusBarHeight + toolbarHeight)
-            .offset(titleOffset, 0.dp)
-            .road(
-                whenCollapsed = Alignment.CenterStart,
-                whenExpanded = Alignment.BottomStart
-            ),
-        contentAlignment = Alignment.CenterStart,
-    ) {
-
-        Text(
-            modifier = Modifier.padding(top = statusBarHeight),
-            text = title,
-            style = ReboundTheme.typography.h6,
-            fontWeight = FontWeight.Bold,
-            fontSize = titleSize,
-            textAlign = TextAlign.Start,
-            color = contentColor,
-        )
-
-    }
 }
-
-

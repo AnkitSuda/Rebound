@@ -127,11 +127,12 @@ private fun ExercisesScreenContent(
     )
     val tabIndex = pagerState.currentPage
     val coroutineScope = rememberCoroutineScope()
+    val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     Column {
         CollapsingToolbarScaffold(
             modifier = Modifier.fillMaxSize(),
-            state = rememberCollapsingToolbarScaffoldState(),
+            state = collapsingState,
             scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
             toolbar = {
                 Surface(
