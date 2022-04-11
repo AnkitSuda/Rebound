@@ -19,4 +19,10 @@ enum class LogSetType(val value: String, val readableName: String) {
     WARM_UP("warm_up", " Warm Up"),
     DROP_SET("drop_set", "Drop Set"),
     FAILURE("failure", "Failure");
+
+    companion object {
+        fun fromString(value: String): LogSetType {
+            return values().find { it.value == value } ?: NORMAL
+        }
+    }
 }

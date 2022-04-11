@@ -54,6 +54,7 @@ import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -81,7 +82,6 @@ fun LazyListScope.workoutExerciseItemAlt(
         var popupMenuExpanded by remember {
             mutableStateOf(false)
         }
-
 
         Row(
             modifier = Modifier
@@ -178,9 +178,37 @@ fun LazyListScope.workoutExerciseItemAlt(
     // Sets
     val sortedEntries = logEntries.sortedWith(ExerciseLogEntryComparator)
 
+
+    fun getRevisedSetNumbers(): List<Pair<String, Color?>> {
+        var counter = 0
+        val newPairs = sortedEntries.map {
+            when (it.setType ?: LogSetType.NORMAL) {
+                LogSetType.NORMAL -> {
+                    counter++
+                    Pair(counter.toString(), null)
+                }
+                LogSetType.WARM_UP -> Pair("W", Color.Yellow)
+                LogSetType.DROP_SET -> {
+                    counter++
+                    Pair("D", Color.Magenta)
+                }
+                LogSetType.FAILURE -> {
+                    counter++
+                    Pair("F", Color.Red)
+                }
+            }
+        }
+
+        return newPairs
+    }
+
+    val revisedSetsTexts = getRevisedSetNumbers()
+
     items(items = sortedEntries, key = { "${it.entryId}_${it.setNumber}" }) { entry ->
 
+
         SetItem(
+            revisedSetText = revisedSetsTexts[sortedEntries.indexOf(entry)],
             exercise = exercise,
             exerciseLogEntry = entry,
             onChange = {
@@ -221,6 +249,7 @@ fun LazyListScope.workoutExerciseItemAlt(
 @Composable
 private fun LazyItemScope.SetItem(
     exercise: Exercise,
+    revisedSetText: Pair<String, Color?>,
     exerciseLogEntry: ExerciseLogEntry,
     onChange: (ExerciseLogEntry) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
@@ -339,6 +368,7 @@ private fun LazyItemScope.SetItem(
             contentColor = contentColor,
             exercise = exercise,
             exerciseLogEntry = mLogEntry,
+            revisedSetText = revisedSetText,
             onWeightChange = { _, value ->
                 handleOnChange(mLogEntry.copy(weight = value))
             },
@@ -353,6 +383,9 @@ private fun LazyItemScope.SetItem(
             },
             onCompleteChange = { _, value ->
                 handleOnCompleteChange(value)
+            },
+            onSetTypeChange = { _, value ->
+                handleOnChange(mLogEntry.copy(setType = value))
             },
         )
     }
@@ -401,22 +434,18 @@ private fun SetItemLayout(
     contentColor: Color,
     exercise: Exercise,
     exerciseLogEntry: ExerciseLogEntry,
+    revisedSetText: Pair<String, Color?>,
     onWeightChange: (ExerciseLogEntry, Float?) -> Unit,
     onRepsChange: (ExerciseLogEntry, Int?) -> Unit,
     onDistanceChange: (ExerciseLogEntry, Long?) -> Unit,
     onTimeChange: (ExerciseLogEntry, Long?) -> Unit,
     onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
+    onSetTypeChange: (ExerciseLogEntry, LogSetType) -> Unit,
 ) {
+    val typeOfSet = exerciseLogEntry.setType ?: LogSetType.NORMAL
     var isSetTypeChangerExpanded by rememberSaveable {
         mutableStateOf(false)
     }
-    var selectedType by remember {
-        mutableStateOf(LogSetType.NORMAL)
-    }
-    val typeProps by remember(key1 = selectedType) {
-        mutableStateOf(selectedType.getIconProps())
-    }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -434,21 +463,20 @@ private fun SetItemLayout(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (selectedType == LogSetType.NORMAL) (exerciseLogEntry.setNumber
-                    ?: 0).toString() else typeProps.first,
+                text = revisedSetText.first,
                 style = ReboundTheme.typography.caption,
-                color = if (selectedType == LogSetType.NORMAL) contentColor else typeProps.second,
+                color = revisedSetText.second ?: contentColor,
                 textAlign = TextAlign.Center,
             )
             SetTypeChangerMenu(
-                selectedType = selectedType,
+                selectedType = typeOfSet,
                 expanded = isSetTypeChangerExpanded,
                 onDismissRequest = {
                     isSetTypeChangerExpanded = false
                 },
                 onChangeSetType = {
-                    selectedType = it
                     isSetTypeChangerExpanded = false
+                    onSetTypeChange(exerciseLogEntry, it)
                 }
             )
         }

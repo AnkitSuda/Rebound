@@ -18,6 +18,7 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ankitsuda.rebound.domain.LogSetType
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 import java.util.*
@@ -37,6 +38,8 @@ data class ExerciseLogEntry(
     // Number of set
     @ColumnInfo(name = "set_number")
     var setNumber: Int? = null,
+    @ColumnInfo(name = "set_type")
+    var setType: LogSetType? = null,
 
     @ColumnInfo(name = "weight")
     var weight: Float? = null,

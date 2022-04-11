@@ -56,7 +56,7 @@ fun SetTypeChangerMenu(
                         Color.White
                     } else {
                         Color.Black
-                    }.copy(alpha = 0.25f)
+                    }.copy(alpha = 0.1f)
                 } else {
                     Color.Transparent
                 }
