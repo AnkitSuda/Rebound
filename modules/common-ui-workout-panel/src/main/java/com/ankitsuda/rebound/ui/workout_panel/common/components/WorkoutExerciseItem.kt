@@ -21,6 +21,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
@@ -50,6 +51,7 @@ import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.domain.ExerciseCategory
+import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
 import kotlinx.coroutines.delay
@@ -405,6 +407,15 @@ private fun SetItemLayout(
     onTimeChange: (ExerciseLogEntry, Long?) -> Unit,
     onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
 ) {
+    var isSetTypeChangerExpanded by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var selectedType by remember {
+        mutableStateOf(LogSetType.NORMAL)
+    }
+    val typeProps by remember(key1 = selectedType) {
+        mutableStateOf(selectedType.getIconProps())
+    }
 
     Row(
         modifier = Modifier
@@ -414,13 +425,33 @@ private fun SetItemLayout(
         verticalAlignment = Alignment.CenterVertically,
 //            horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(
-            text = (exerciseLogEntry.setNumber ?: 0).toString(),
-            style = ReboundTheme.typography.caption,
-            color = contentColor,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.weight(0.5f)
-        )
+        Box(
+            modifier = Modifier
+                .weight(0.5f)
+                .clickable {
+                    isSetTypeChangerExpanded = true
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = if (selectedType == LogSetType.NORMAL) (exerciseLogEntry.setNumber
+                    ?: 0).toString() else typeProps.first,
+                style = ReboundTheme.typography.caption,
+                color = if (selectedType == LogSetType.NORMAL) contentColor else typeProps.second,
+                textAlign = TextAlign.Center,
+            )
+            SetTypeChangerMenu(
+                selectedType = selectedType,
+                expanded = isSetTypeChangerExpanded,
+                onDismissRequest = {
+                    isSetTypeChangerExpanded = false
+                },
+                onChangeSetType = {
+                    selectedType = it
+                    isSetTypeChangerExpanded = false
+                }
+            )
+        }
 //        Text(
 //            text = "2.5 kg x 12",
 //            style = ReboundTheme.typography.caption,
@@ -510,75 +541,4 @@ private fun SetItemLayout(
         }
     }
 
-}
-
-
-@Composable
-fun RowScope.SetTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    contentColor: Color,
-    bgColor: Color
-) {
-    var mValue by rememberSaveable {
-        mutableStateOf(value)
-    }
-
-    fun updateValue(newValue: String) {
-        mValue = newValue
-        onValueChange(newValue)
-    }
-
-    BasicTextField(
-        modifier = Modifier
-//            .width(64.dp)
-            .height(32.dp)
-            .padding(start = 8.dp, end = 8.dp)
-            .weight(1.25f)
-            .clip(RoundedCornerShape(12.dp))
-            .background(bgColor.lighterOrDarkerColor(0.05f)),
-        textStyle = LocalTextStyle.current.copy(
-            textAlign = TextAlign.Center,
-            fontSize = 14.sp,
-            color = contentColor
-        ),
-        decorationBox = { innerTextField ->
-            Box(
-                contentAlignment = Alignment.Center
-            ) {
-                innerTextField()
-            }
-        },
-        value = mValue,
-        onValueChange = {
-            updateValue(it)
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done
-        ),
-        singleLine = true,
-    )
-}
-
-@Composable
-fun ExercisePopupMenu(
-    modifier: Modifier = Modifier,
-    expanded: Boolean,
-    onDismissRequest: () -> Unit,
-    onDeleteExercise: () -> Unit,
-) {
-
-    DropdownMenu(
-        modifier = modifier,
-        expanded = expanded,
-        onDismissRequest = onDismissRequest
-    ) {
-        DropdownMenuItem(onClick = {
-            onDismissRequest()
-            onDeleteExercise()
-        }) {
-            Text("Delete exercise")
-        }
-    }
 }
