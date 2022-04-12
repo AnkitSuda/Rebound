@@ -60,6 +60,7 @@ fun CalendarScreen(
     val scrollState = rememberLazyListState()
 
     val calendar = viewModel.calendar
+    val countsWithDate by viewModel.workoutsCountOnDates.collectAsState()
     val today = LocalDate.now()
 
     val coroutine = rememberCoroutineScope()
@@ -114,6 +115,7 @@ fun CalendarScreen(
                 CalendarMonthItem(
                     month = month,
                     selectedDate = selectedDate,
+                    countsWithDate = countsWithDate ?: emptyList(),
                     onClickOnDay = { dateItem ->
                         navController.previousBackStackEntry?.savedStateHandle?.set(
                             DATE_KEY,

@@ -201,4 +201,10 @@ class WorkoutsRepository @Inject constructor(
             mWorkouts.toList()
         }
 
+    fun getWorkoutsCountOnDateRange(dateStart: LocalDate, dateEnd: LocalDate) =
+        workoutsDao.getWorkoutsCountOnDateRange(
+            dateStart = dateStart.toEpochMillis(),
+            dateEnd = dateEnd.toEpochMillis()
+        )
+
 }

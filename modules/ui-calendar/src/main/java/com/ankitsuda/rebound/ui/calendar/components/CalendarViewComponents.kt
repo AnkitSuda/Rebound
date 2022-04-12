@@ -31,6 +31,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.*
+import com.ankitsuda.base.utils.toLocalDate
+import com.ankitsuda.rebound.domain.entities.CountWithDate
 import com.ankitsuda.rebound.ui.calendar.models.CalendarDay
 import com.ankitsuda.rebound.ui.calendar.models.CalendarMonth
 import com.ankitsuda.rebound.ui.calendar.models.DayOwner
@@ -45,6 +47,7 @@ const val WEIGHT_7DAY_WEEK = 1f / 7f
 @Composable
 fun CalendarMonthItem(
     month: CalendarMonth,
+    countsWithDate: List<CountWithDate>,
     selectedDate: LocalDate,
     onClickOnDay: (CalendarDay) -> Unit
 ) {
@@ -66,7 +69,6 @@ fun CalendarMonthItem(
                 CalendarDayNameItem(text = name)
             }
         }
-
 
         for (week in month.weekDays) {
             key(week) {
@@ -92,7 +94,7 @@ fun CalendarMonthItem(
                                     ),
                                     isSelected = day.date == selectedDate,
                                     isToday = isToday,
-                                    dotVisible = false,
+                                    dotVisible = countsWithDate.any { it.date.toLocalDate() == day.date },
                                     onClick = {
                                         onClickOnDay(day)
                                     }

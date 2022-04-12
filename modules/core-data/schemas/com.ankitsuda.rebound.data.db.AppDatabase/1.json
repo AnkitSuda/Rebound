@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ddf5cdd4e22237aa40d9e0bb7efd9e31",
+    "identityHash": "da18ca513b59fbf65b7f90892302db78",
     "entities": [
       {
         "tableName": "body_parts",
@@ -130,7 +130,7 @@
       },
       {
         "tableName": "body_part_measurement_logs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `body_part_id` TEXT, `note` TEXT, `image` TEXT, `measurement` REAL NOT NULL, `measurement_unit` TEXT, `measurement_type` TEXT, `created_at` INTEGER, `update_at` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `body_part_id` TEXT, `note` TEXT, `image` TEXT, `measurement` REAL NOT NULL, `measurement_unit` TEXT, `measurement_type` TEXT, `created_at` INTEGER, `updated_at` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -182,7 +182,7 @@
           },
           {
             "fieldPath": "updatedAt",
-            "columnName": "update_at",
+            "columnName": "updated_at",
             "affinity": "INTEGER",
             "notNull": false
           }
@@ -642,7 +642,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ddf5cdd4e22237aa40d9e0bb7efd9e31')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'da18ca513b59fbf65b7f90892302db78')"
     ]
   }
 }

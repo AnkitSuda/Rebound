@@ -126,4 +126,7 @@ interface WorkoutsDao {
 
     @RawQuery(observedEntities = [Workout::class, ExerciseLogEntry::class, ExerciseWorkoutJunction::class])
     fun getAllWorkoutsRawQuery(query: SupportSQLiteQuery): Flow<List<Workout>>
+
+    @Query("SELECT COUNT(*) as count, start_at as date FROM workouts WHERE date(start_at / 1000,'unixepoch') >= date(:dateStart / 1000,'unixepoch') AND date(start_at / 1000,'unixepoch') <= date(:dateEnd / 1000,'unixepoch') AND is_hidden = 0 AND in_progress = 0 GROUP BY start_at")
+    fun getWorkoutsCountOnDateRange(dateStart: Long, dateEnd: Long): Flow<List<CountWithDate>>
 }

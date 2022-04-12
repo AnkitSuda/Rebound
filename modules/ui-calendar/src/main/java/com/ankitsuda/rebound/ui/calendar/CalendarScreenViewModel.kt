@@ -18,13 +18,19 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
+import com.ankitsuda.rebound.domain.entities.CountWithDate
 import com.ankitsuda.rebound.ui.calendar.models.CalendarMonth
 import com.ankitsuda.rebound.ui.calendar.models.InDateStyle
 import com.ankitsuda.rebound.ui.calendar.models.MonthConfig
 import com.ankitsuda.rebound.ui.calendar.models.OutDateStyle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.DayOfWeek
 import java.time.Month
 import java.time.Year
@@ -32,11 +38,17 @@ import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
-class CalendarScreenViewModel @Inject constructor() : ViewModel() {
+class CalendarScreenViewModel @Inject constructor(
+    private val workoutsRepository: WorkoutsRepository
+) : ViewModel() {
     private var _calendar: SnapshotStateList<CalendarMonth> = mutableStateListOf()
     val calendar = _calendar
 
+    private var _workoutsCountOnDates = MutableStateFlow<List<CountWithDate>?>(null)
+    val workoutsCountOnDates = _workoutsCountOnDates.asStateFlow()
+
     private var calendarJob: Job? = null
+    private var countJob: Job? = null
 
     fun getCalendar(
     ) {
@@ -53,7 +65,25 @@ class CalendarScreenViewModel @Inject constructor() : ViewModel() {
                 job = Job()
             )
 
+            refreshCounts()
             _calendar.addAll(monthConfig.months)
+        }
+    }
+
+    private fun refreshCounts() {
+        countJob?.cancel()
+        countJob = viewModelScope.launch {
+            val counts = workoutsRepository.getWorkoutsCountOnDateRange(
+                dateStart = YearMonth.of(
+                    Year.now().value,
+                    Month.JANUARY
+                ).atDay(1),
+                dateEnd = YearMonth.of(Year.now().value, Month.DECEMBER).atEndOfMonth()
+            ).firstOrNull()
+
+            Timber.d("Newcounts $counts")
+
+            _workoutsCountOnDates.value = counts
         }
     }
 
