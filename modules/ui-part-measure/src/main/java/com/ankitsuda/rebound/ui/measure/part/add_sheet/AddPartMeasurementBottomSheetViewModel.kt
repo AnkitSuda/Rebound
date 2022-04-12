@@ -17,6 +17,7 @@ package com.ankitsuda.rebound.ui.measure.part.add_sheet
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.navigation.LOG_ID_KEY
 import com.ankitsuda.navigation.PART_ID_KEY
 import com.ankitsuda.navigation.WORKOUT_ID_KEY
@@ -25,6 +26,8 @@ import com.ankitsuda.rebound.data.repositories.MeasurementsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
@@ -47,6 +50,11 @@ class AddPartMeasurementBottomSheetViewModel @Inject constructor(
 
     private var _fieldValue = MutableStateFlow("")
     val fieldValue = _fieldValue
+
+    val bodyPart = measurementsRepository
+        .getBodyPartByPartId(partId!!)
+        .distinctUntilChanged()
+        .shareWhileObserved(viewModelScope)
 
     init {
         Timber.d("logId null = ${logId == null}")
@@ -80,7 +88,7 @@ class AddPartMeasurementBottomSheetViewModel @Inject constructor(
     private fun addMeasurementToDb() {
         if (partId != null) {
             viewModelScope.launch {
-                measurementsRepository.addMeasurementToDb(fieldValue.value.toFloat(), partId)
+                measurementsRepository.addMeasurementToDb(fieldValue.value.toDouble(), partId)
                 _fieldValue.value = ""
                 _log.value = null
             }
@@ -91,7 +99,7 @@ class AddPartMeasurementBottomSheetViewModel @Inject constructor(
         if (_log.value != null) {
             viewModelScope.launch {
                 val mLog = _log.value!!
-                mLog.measurement = fieldValue.value.toFloat()
+                mLog.measurement = fieldValue.value.toDouble()
                 mLog.updatedAt = LocalDateTime.now()
                 measurementsRepository.updateMeasurement(
                     mLog

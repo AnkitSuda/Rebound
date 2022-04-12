@@ -33,13 +33,13 @@ data class BodyPartMeasurementLog(
     @ColumnInfo(name = "image")
     var image: String? = null,
     @ColumnInfo(name = "measurement")
-    var measurement: Float,
+    var measurement: Double,
     @ColumnInfo(name = "measurement_unit")
     var measurementUnit: String? = null,
     @ColumnInfo(name = "measurement_type")
     var measurementType: String? = null,
     @ColumnInfo(name = "created_at")
     var createdAt: LocalDateTime? = null,
-    @ColumnInfo(name = "update_at")
+    @ColumnInfo(name = "updated_at")
     var updatedAt: LocalDateTime? = null,
 )

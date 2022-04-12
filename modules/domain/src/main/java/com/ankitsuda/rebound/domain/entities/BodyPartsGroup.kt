@@ -17,11 +17,10 @@ package com.ankitsuda.rebound.domain.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ankitsuda.rebound.domain.LogSetType
 import java.time.LocalDateTime
 
-@Entity(tableName = "body_parts")
-data class BodyPart(
+@Entity(tableName = "body_parts_group")
+data class BodyPartsGroup(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
     val id: String,
@@ -29,10 +28,6 @@ data class BodyPart(
     var name: String? = null,
     @ColumnInfo(name = "image")
     var image: String? = null,
-    @ColumnInfo(name = "group_id")
-    var groupId: String? = null,
-    @ColumnInfo(name = "unit_type")
-    var unitType: BodyPartUnitType? = null,
     @ColumnInfo(name = "is_deletable")
     var isDeletable: Boolean? = null,
     @ColumnInfo(name = "is_hidden")
@@ -42,16 +37,3 @@ data class BodyPart(
     @ColumnInfo(name = "created_at")
     var createdAt: LocalDateTime? = null,
 )
-
-enum class BodyPartUnitType(val value: String) {
-    WEIGHT("weight"),
-    PERCENTAGE("percentage"),
-    CALORIES("calories"),
-    LENGTH("length");
-
-    companion object {
-        fun fromString(value: String): BodyPartUnitType {
-            return values().find { it.value == value } ?: LENGTH
-        }
-    }
-}

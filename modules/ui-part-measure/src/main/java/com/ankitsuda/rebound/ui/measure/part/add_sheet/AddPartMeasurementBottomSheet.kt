@@ -26,7 +26,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
+import com.ankitsuda.rebound.domain.entities.BodyPart
+import com.ankitsuda.rebound.domain.entities.BodyPartUnitType
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.insets.navigationBarsPadding
 
 @Composable
@@ -37,6 +40,7 @@ fun AddPartMeasurementBottomSheet(
 ) {
     val isUpdate by viewModel.isUpdate.collectAsState(false)
     val fieldValue by viewModel.fieldValue.collectAsState("")
+    val bodyPart by viewModel.bodyPart.collectAsState(initial = BodyPart(id = ""))
     val isCreateBtnEnabled = fieldValue.isNotBlank()
 
     BottomSheetSurface {
@@ -52,14 +56,38 @@ fun AddPartMeasurementBottomSheet(
                 elevationEnabled = false
             )
 
-            AppTextField(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp),
-                value = fieldValue,
-                placeholderValue = "",
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                onValueChange = { viewModel.setFieldValue(it) }
-            )
+            Box(
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp,
+                    top = 8.dp
+                )
+            ) {
+                AppTextField(
+                    value = fieldValue,
+                    placeholderValue = "",
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal,
+                    ),
+                    onValueChange = { viewModel.setFieldValue(it) }
+                )
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(16.dp),
+                    text = when (bodyPart.unitType ?: BodyPartUnitType.LENGTH) {
+                        BodyPartUnitType.WEIGHT -> "kg"
+                        BodyPartUnitType.CALORIES -> "kcal"
+                        BodyPartUnitType.PERCENTAGE -> "%"
+                        BodyPartUnitType.LENGTH -> "in"
+                        else -> ""
+                    },
+                    style = ReboundTheme.typography.caption,
+                    color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
+                )
+            }
 
             Row(
                 Modifier

@@ -46,21 +46,14 @@ fun PartMeasurementsScreen(
     navigator: Navigator = LocalNavigator.current,
     viewModel: PartMeasurementsScreenViewModel = hiltViewModel()
 ) {
-    val partId by remember {
-        mutableStateOf(
-            navController.currentBackStackEntry?.arguments?.getString(
-                "partId"
-            )
-        )
-    }
-
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
-    val logs by viewModel.getLogsForPart(partId!!).collectAsState(initial = emptyList())
+    val bodyPart by viewModel.bodyPart.collectAsState(initial = null)
+    val logs by viewModel.logs.collectAsState(initial = emptyList())
 
     val points = if (logs.isEmpty()) emptyList() else logs.map {
-        LineChartData.Point(it.measurement, "id ${it.id}")
+        LineChartData.Point(it.measurement.toFloat(), it.createdAt.toString())
     }
 
     val showChart = points.size > 1
@@ -71,7 +64,7 @@ fun PartMeasurementsScreen(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
             TopBar2(
-                title = partId.toString(),
+                title = bodyPart?.name ?: "",
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -82,13 +75,10 @@ fun PartMeasurementsScreen(
         },
         fab = {
             FloatingActionButton(onClick = {
-//                bottomSheet.show {
-                partId?.let {
-//                        AddPartMeasurementBottomSheet(it)
-//                    navController.navigate(Route.AddPartMeasurement.createRoute(partId = it))
+                bodyPart?.id?.let {
                     navigator.navigate(LeafScreen.AddPartMeasurement.createRoute(partId = it))
                 }
-//                }
+//
             }) {
                 Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add measurement")
             }
@@ -136,7 +126,7 @@ fun PartMeasurementsScreen(
                         .clickable {
                             navigator.navigate(
                                 LeafScreen.AddPartMeasurement.createRoute(
-                                    partId = partId!!,
+                                    partId = bodyPart?.id!!,
                                     logId = log.id
                                 )
                             )

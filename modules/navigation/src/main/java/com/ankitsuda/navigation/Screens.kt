@@ -122,7 +122,7 @@ sealed class LeafScreen(
 
 
     data class Measure(override val route: String = "measure") : LeafScreen(route)
-    data class PartMeasurements(override val route: String = "part_measurements/{partId}") :
+    data class PartMeasurements(override val route: String = "part_measurements/{${PART_ID_KEY}}") :
         LeafScreen(route) {
         companion object {
             fun createRoute(partId: String) = "part_measurements/$partId"

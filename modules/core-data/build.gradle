@@ -28,6 +28,14 @@ android {
 
     defaultConfig {
         minSdkVersion App.minSdkVersion
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
+
     }
 
     compileOptions {

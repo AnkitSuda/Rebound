@@ -17,6 +17,7 @@ package com.ankitsuda.rebound.data.repositories
 import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.rebound.data.db.daos.MeasurementsDao
 import com.ankitsuda.rebound.domain.entities.BodyPartMeasurementLog
+import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
@@ -25,6 +26,10 @@ class MeasurementsRepository @Inject constructor(
     private val measurementsDao: MeasurementsDao
 ) {
 
+    fun getBodyPartByPartId(partId: String) = measurementsDao.getBodyPartByPartId(partId = partId)
+
+    fun getBodyPartsWithGroup() = measurementsDao.getBodyPartsWithGroup()
+
     fun getLogsForPart(partId: String) = measurementsDao.getLogsForPart(partId)
 
     suspend fun getLog(logId: String) = measurementsDao.getLog(logId)
@@ -32,7 +37,7 @@ class MeasurementsRepository @Inject constructor(
     /**
      * Testing just for now
      */
-    suspend fun addMeasurementToDb(measurement: Float, partId: String) {
+    suspend fun addMeasurementToDb(measurement: Double, partId: String) {
         measurementsDao.insertMeasurementLog(
             BodyPartMeasurementLog(
                 id = generateId(),

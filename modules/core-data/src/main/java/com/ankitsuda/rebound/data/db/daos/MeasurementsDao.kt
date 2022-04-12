@@ -15,20 +15,33 @@
 package com.ankitsuda.rebound.data.db.daos
 
 import androidx.room.*
-import com.ankitsuda.rebound.domain.entities.BodyPartMeasurementLog
+import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MeasurementsDao {
 
+    @Query("SELECT * FROM body_parts WHERE id = :partId")
+    fun getBodyPartByPartId(partId: String): Flow<BodyPart>
+
+    @Transaction
+    @Query("SELECT * FROM body_parts_group")
+    fun getBodyPartsWithGroup(): Flow<List<BodyPartWithGroup>>
+
     @Query("SELECT * FROM body_part_measurement_logs WHERE body_part_id = :partId")
-    fun getLogsForPart(partId: String) : Flow<List<BodyPartMeasurementLog>>
+    fun getLogsForPart(partId: String): Flow<List<BodyPartMeasurementLog>>
 
     @Query("SELECT * FROM body_part_measurement_logs WHERE id = :logId")
-    suspend fun getLog(logId: String) : BodyPartMeasurementLog
+    suspend fun getLog(logId: String): BodyPartMeasurementLog
 
     @Insert
     suspend fun insertMeasurementLog(log: BodyPartMeasurementLog)
+
+    @Insert
+    fun insertBodyPartsGroups(groups: List<BodyPartsGroup>)
+
+    @Insert
+    fun insertBodyParts(parts: List<BodyPart>)
 
     @Update
     suspend fun updateMeasurementLog(log: BodyPartMeasurementLog)

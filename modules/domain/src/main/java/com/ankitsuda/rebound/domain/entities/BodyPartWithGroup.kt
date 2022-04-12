@@ -14,21 +14,15 @@
 
 package com.ankitsuda.rebound.domain.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+import java.time.LocalDateTime
 
-@Entity(tableName = "muscles")
-data class Muscle(
-    @PrimaryKey
-    @ColumnInfo(name = "tag")
-    val tag: String = "",
-    @ColumnInfo(name = "name")
-    var name: String,
-    @ColumnInfo(name = "type")
-    var type: String? = null,
-    @ColumnInfo(name = "is_deletable")
-    var isDeletable: Boolean? = null,
-    @ColumnInfo(name = "is_hidden")
-    var isHidden: Boolean? = null
+data class BodyPartWithGroup(
+    @Embedded
+    val group: BodyPartsGroup,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "group_id"
+    )
+    val parts: List<BodyPart>,
 )

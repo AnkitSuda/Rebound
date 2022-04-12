@@ -21,8 +21,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
@@ -34,28 +37,12 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun MeasureScreen(
-    navController: NavController, navigator: Navigator = LocalNavigator.current,
+    navController: NavController,
+    navigator: Navigator = LocalNavigator.current,
+    viewModel: MeasureScreenViewModel = hiltViewModel()
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
-
-    val core = arrayListOf("Weight", "Body fat percentage", "Calorie intake")
-    val body = arrayListOf(
-        "Neck",
-        "Shoulders",
-        "Chest",
-        "Left bicep",
-        "Right bicep",
-        "Left forearm",
-        "Right forearm",
-        "Upper abs",
-        "Waist",
-        "Lower abs",
-        "Hips",
-        "Left thigh",
-        "Right thigh",
-        "Left calf",
-        "Right calf",
-    )
+    val partsWithGroup by viewModel.bodyPartsWithGroup.collectAsState(initial = listOf())
 
     CollapsingToolbarScaffold(
         state = collapsingState,
@@ -79,36 +66,24 @@ fun MeasureScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
         ) {
-            item {
-                MoreSectionHeader(text = "Core")
-            }
-            items(core.size) {
-                val part = core[it]
-                MoreItemCard(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = part,
-                    onClick = {
-//                        navController.navigate(Route.PartMeasurements.createRoute(it.toLong()))
-                        navigator.navigate(LeafScreen.PartMeasurements.createRoute(it.toString()))
-                    })
-            }
+            for (junction in partsWithGroup) {
+                item(key = junction.group.id) {
+                    MoreSectionHeader(text = junction.group.name ?: "Group")
+                }
 
-            item {
-                MoreSectionHeader(text = "Body")
+                items(junction.parts.size) {
+                    val part = junction.parts[it]
+                    MoreItemCard(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        text = part.name ?: "Body Part",
+                        onClick = {
+                            part.id.let { id ->
+                                navigator.navigate(LeafScreen.PartMeasurements.createRoute(id))
+                            }
+                        })
+                }
             }
-            items(body.size) {
-                val part = body[it]
-                MoreItemCard(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = part,
-                    onClick = {
-//                        navController.navigate(Route.PartMeasurements.createRoute((it + core.size).toLong()))
-                        navigator.navigate(LeafScreen.PartMeasurements.createRoute((it + core.size).toString()))
-                    })
-            }
-
 
         }
     }

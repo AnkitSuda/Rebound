@@ -27,6 +27,7 @@ import java.util.concurrent.Executors
 @Database(
     entities = [
         BodyPart::class,
+        BodyPartsGroup::class,
         BodyPartMeasurementLog::class,
         Exercise::class,
         ExerciseLog::class,
@@ -37,8 +38,8 @@ import java.util.concurrent.Executors
         WorkoutTemplate::class,
         WorkoutTemplateExercise::class,
     ],
-    version = 8,
-    exportSchema = false
+    version = 1,
+    exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -67,6 +68,10 @@ abstract class AppDatabase : RoomDatabase() {
                         //pre-populate data
                         Executors.newSingleThreadExecutor().execute {
                             instance?.musclesDao()?.insertMuscles(DataGenerator.getMuscles())
+                            instance?.measurementsDao()
+                                ?.insertBodyPartsGroups(DataGenerator.getBodyPartsGroups())
+                            instance?.measurementsDao()
+                                ?.insertBodyParts(DataGenerator.getBodyPart())
                         }
                     }
                 })

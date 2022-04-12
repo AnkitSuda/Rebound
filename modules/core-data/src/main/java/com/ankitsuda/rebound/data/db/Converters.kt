@@ -20,6 +20,7 @@ import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toLocalDateTime
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
+import com.ankitsuda.rebound.domain.entities.BodyPartUnitType
 import com.ankitsuda.rebound.domain.parseToExerciseCategory
 import java.text.DateFormat
 import java.text.ParseException
@@ -42,6 +43,18 @@ object Converters {
         return category?.tag ?: ExerciseCategory.UNKNOWN.tag
     }
 
+    @TypeConverter
+    @JvmStatic
+    fun toBodyPartUnitType(value: String): BodyPartUnitType {
+        return BodyPartUnitType.fromString(value)
+
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromBodyPartUnitType(value: BodyPartUnitType): String {
+        return value.value ?: BodyPartUnitType.LENGTH.value
+    }
 
     @TypeConverter
     @JvmStatic
