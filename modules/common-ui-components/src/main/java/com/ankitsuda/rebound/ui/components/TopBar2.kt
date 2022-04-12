@@ -44,8 +44,6 @@ import me.onebone.toolbar.CollapsingToolbarState
  * Variant of TopBar,
  * Title font size and offset changes as user scrolls
  *
- * ISSUE: Unwanted space while scrolling https://github.com/onebone/compose-collapsing-toolbar/issues/44
- *
  * @param title Title text
  * @param toolbarState Collapsing toolbar state
  * @param statusBarEnabled Adds status bar padding when true
@@ -161,8 +159,8 @@ fun CollapsingToolbarScope.TopBar2(
             .defaultMinSize(minHeight = statusBarHeight + toolbarHeight + bottomLayoutHeightDp)
             .fillMaxWidth()
             .road(
-                whenCollapsed = Alignment.TopCenter,
-                whenExpanded = Alignment.BottomCenter
+                whenCollapsed = Alignment.BottomEnd,
+                whenExpanded = Alignment.BottomEnd
             )
     ) {
 
