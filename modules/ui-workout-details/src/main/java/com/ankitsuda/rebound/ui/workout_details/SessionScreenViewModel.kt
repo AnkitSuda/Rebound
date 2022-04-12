@@ -17,18 +17,15 @@ package com.ankitsuda.rebound.ui.workout_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.base.ui.UIDataState
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.navigation.WORKOUT_ID_KEY
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
-import com.ankitsuda.rebound.domain.entities.Exercise
+import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.domain.entities.Workout
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,10 +39,40 @@ class SessionScreenViewModel @Inject constructor(
         workoutsRepository.getLogEntriesWithExerciseJunction(
             workoutId = workoutId
         ).distinctUntilChanged()
+            .map {
+                calculateTotalVolumeLifted(it)
+                it
+            }
             .shareWhileObserved(viewModelScope)
 
     val workout: SharedFlow<Workout?> = workoutsRepository.getWorkout(
         workoutId = workoutId
     ).distinctUntilChanged()
         .shareWhileObserved(viewModelScope)
+
+    val totalVolume: SharedFlow<Float> = workoutsRepository.getTotalVolumeLiftedByWorkoutId(
+        workoutId = workoutId
+    ).distinctUntilChanged()
+        .shareWhileObserved(viewModelScope)
+//
+//    private var _totalVolume: MutableStateFlow<Double> = MutableStateFlow(0.0)
+//    val totalVolume = _totalVolume.asStateFlow()
+
+    private fun calculateTotalVolumeLifted(mLogs: List<LogEntriesWithExerciseJunction>) {
+//        viewModelScope.launch {
+//            var volume = (0.0).toDouble()
+//            for (log in mLogs) {
+//                for (entry in log.logEntries) {
+//                    if (entry.setType != LogSetType.WARM_UP) {
+//                        volume += (entry.weight?.toDouble()
+//                            ?: (0).toDouble()) * (entry.reps?.toDouble()
+//                            ?: (0).toDouble())
+//                    }
+//                }
+//            }
+//
+//            _totalVolume.value = volume
+//        }
+    }
+
 }

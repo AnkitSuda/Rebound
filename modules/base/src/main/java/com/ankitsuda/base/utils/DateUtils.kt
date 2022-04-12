@@ -35,3 +35,14 @@ val YearMonth.next: YearMonth
 
 val YearMonth.previous: YearMonth
     get() = this.minusMonths(1)
+
+fun Long.toDurationStr(): String {
+    val totalSeconds = this / 1000
+    val seconds = totalSeconds % 60
+    val minutes = totalSeconds / 60 % 60
+    val hours = totalSeconds / 3600
+    val secondsStr = if (seconds > 0 && minutes == 0L && hours == 0L) "${seconds}s" else null
+    val minutesStr = if (minutes > 0) "${minutes}m" else null
+    val hoursStr = if (hours > 0) "${hours}h" else null
+    return listOfNotNull(hoursStr, minutesStr, secondsStr).joinToString(separator = " ")
+}

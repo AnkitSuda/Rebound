@@ -93,8 +93,6 @@ fun HistoryScreen(
     val workouts by viewModel.getWorkoutsOnDate(date)
         .collectAsState(initial = emptyList())
 
-    Timber.d("workouts $workouts")
-
     val isWeekHeaderVisible = week.any { it == date }
 
     Surface() {
@@ -203,14 +201,14 @@ fun HistoryScreen(
                             onClick = {
                                 navigator.navigate(
                                     LeafScreen.Session.createRoute(
-                                        workoutId = workout.id
+                                        workoutId = workout.workout?.id!!
                                     )
                                 )
                             },
-                            title = workout.name.toString(),
-                            totalExercises = 7,
-                            duration = workout.getDuration(),
-                            volume = "1000 kg",
+                            title = workout.workout?.name.toString(),
+                            totalExercises = workout.totalExercises ?: 0,
+                            duration = workout.workout?.getDuration(),
+                            volume = "${workout.totalVolume} kg",
                             prs = 2
                         )
                     }

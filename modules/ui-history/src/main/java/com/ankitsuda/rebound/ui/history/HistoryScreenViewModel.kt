@@ -17,10 +17,14 @@ package com.ankitsuda.rebound.ui.history
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.Workout
+import com.ankitsuda.rebound.domain.entities.WorkoutWithExtraInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.DayOfWeek.MONDAY
 import java.time.DayOfWeek.SUNDAY
@@ -61,7 +65,7 @@ class HistoryScreenViewModel @Inject constructor(private val workoutsRepository:
         Timber.d("Week days $tempList")
     }
 
-    fun getWorkoutsOnDate(date: LocalDate): Flow<List<Workout>> =
-        workoutsRepository.getAllWorkoutsOnDate(date)
-
+    fun getWorkoutsOnDate(date: LocalDate): SharedFlow<List<WorkoutWithExtraInfo>> =
+        workoutsRepository.getWorkoutsWithExtraInfo(date).distinctUntilChanged()
+            .shareWhileObserved(viewModelScope)
 }

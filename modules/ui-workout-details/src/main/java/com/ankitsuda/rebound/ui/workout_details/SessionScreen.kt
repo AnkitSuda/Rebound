@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ankitsuda.base.utils.toDurationStr
 import com.ankitsuda.navigation.WORKOUT_ID_KEY
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
@@ -48,6 +49,7 @@ fun SessionScreen(
 
     val logs by viewModel.logs.collectAsState(emptyList())
     val workout by viewModel.workout.collectAsState(null)
+    val totalVolume by viewModel.totalVolume.collectAsState(0.0)
 
     if (workout != null) {
 
@@ -93,8 +95,8 @@ fun SessionScreen(
                             )
                             RSpacer(space = 4.dp)
                             SessionCompleteQuickInfo(
-                                time = "45 m",
-                                volume = "1000 kg",
+                                time = workout?.getDuration()?.toDurationStr() ?: "NA",
+                                volume = "$totalVolume kg",
                                 prs = 2
                             )
                         }

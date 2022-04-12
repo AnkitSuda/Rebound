@@ -60,18 +60,18 @@ fun ExerciseHistoryCardItem(
                 space = 6.dp
             )
 
-            if (entries.isNotEmpty()) {
-                for (i in entries.indices) {
-                    val entry = entries[i]
-                    SessionExerciseSetItem(
-                        order = i,
-                        set = Pair(entry.weight ?: 0f, entry.reps ?: 0)
-                    )
-                    if (i != entries.size - 1) {
-                        RSpacer(8.dp)
-                    }
-                }
-            }
+//            if (entries.isNotEmpty()) {
+//                for (i in entries.indices) {
+//                    val entry = entries[i]
+//                    SessionExerciseSetItem(
+//                        order = i,
+//                        set = Pair(entry.weight ?: 0f, entry.reps ?: 0)
+//                    )
+//                    if (i != entries.size - 1) {
+//                        RSpacer(8.dp)
+//                    }
+//                }
+//            }
         }
     }
 }

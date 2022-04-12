@@ -15,6 +15,7 @@
 package com.ankitsuda.rebound.data.db.daos
 
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
@@ -29,7 +30,6 @@ interface WorkoutsDao {
     @Query("SELECT * FROM workouts")
     fun getAllWorkouts(): Flow<List<Workout>>
 
-    //    @Query("SELECT * FROM workouts WHERE date(created_at) = date(:date)")
     @Query("SELECT * FROM workouts WHERE date(created_at / 1000,'unixepoch') = date(:date / 1000,'unixepoch') AND is_hidden = 0 AND in_progress = 0")
     fun getAllWorkoutsOnDate(date: Long): Flow<List<Workout>>
 
@@ -117,4 +117,13 @@ interface WorkoutsDao {
             )
         }
     }
+
+    @Query("SELECT SUM(volume) FROM (SELECT SUM(weight) * SUM(reps) AS volume FROM exercise_log_entries WHERE junction_id IN (SELECT id FROM exercise_workout_junctions WHERE workout_id = :workoutId) GROUP BY junction_id)")
+    fun getTotalVolumeOfWorkout(workoutId: String): Flow<Float>
+
+    @Query("SELECT COUNT(*) FROM exercise_workout_junctions WHERE workout_id = :workoutId")
+    fun getExercisesCountByWorkoutId(workoutId: String): Flow<Int>
+
+    @RawQuery(observedEntities = [Workout::class, ExerciseLogEntry::class, ExerciseWorkoutJunction::class])
+    fun getAllWorkoutsRawQuery(query: SupportSQLiteQuery): Flow<List<Workout>>
 }

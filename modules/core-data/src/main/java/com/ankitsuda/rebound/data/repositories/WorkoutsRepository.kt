@@ -14,14 +14,14 @@
 
 package com.ankitsuda.rebound.data.repositories
 
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.domain.entities.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -168,4 +168,37 @@ class WorkoutsRepository @Inject constructor(
             updateWorkout(updatedWorkout)
         }
     }
+
+    fun getExercisesCountByWorkoutId(workoutId: String) =
+        workoutsDao.getExercisesCountByWorkoutId(workoutId)
+
+    fun getTotalVolumeLiftedByWorkoutId(workoutId: String) =
+        workoutsDao.getTotalVolumeOfWorkout(workoutId = workoutId)
+
+    fun getWorkoutsWithExtraInfo(date: LocalDate) =
+        workoutsDao.getAllWorkoutsRawQuery(
+            SimpleSQLiteQuery(
+                "SELECT * FROM workouts WHERE date(created_at / 1000,'unixepoch') = date(? / 1000,'unixepoch')",
+                arrayOf<Any>(date.toEpochMillis())
+            )
+        ).map {
+            val mWorkouts = arrayListOf<WorkoutWithExtraInfo>()
+            for (workout in it) {
+                val totalVolume =
+                    getTotalVolumeLiftedByWorkoutId(workoutId = workout.id).firstOrNull()
+                val totalExercises =
+                    getExercisesCountByWorkoutId(workoutId = workout.id).firstOrNull()
+
+                mWorkouts.add(
+                    WorkoutWithExtraInfo(
+                        workout = workout,
+                        totalVolume = totalVolume,
+                        totalExercises = totalExercises
+                    )
+                )
+            }
+
+            mWorkouts.toList()
+        }
+
 }
