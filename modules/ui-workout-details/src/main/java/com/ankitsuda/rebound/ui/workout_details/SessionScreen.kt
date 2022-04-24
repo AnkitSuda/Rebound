@@ -31,14 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.utils.toDurationStr
-import com.ankitsuda.navigation.WORKOUT_ID_KEY
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.ScrollStrategy
-import kotlin.random.Random
 
 @Composable
 fun SessionScreen(
@@ -117,7 +115,7 @@ fun SessionScreen(
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp),
                             onClick = { },
-                            exerciseName = log.exercise.name ?: "",
+                            title = log.exercise.name ?: "",
                             entries = log.logEntries
                         )
                     }

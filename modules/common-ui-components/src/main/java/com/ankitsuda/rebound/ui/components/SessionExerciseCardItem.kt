@@ -31,6 +31,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
@@ -45,7 +46,8 @@ private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, ri
 fun SessionExerciseCardItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    exerciseName: String,
+    title: String?,
+    subtitle: String? = null,
     entries: List<ExerciseLogEntry>
 ) {
     val sortedEntries by remember(key1 = entries) {
@@ -81,11 +83,20 @@ fun SessionExerciseCardItem(
 
     AppCard(modifier = modifier, onClick = onClick) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = exerciseName, style = ReboundTheme.typography.body1,
-                color = LocalThemeState.current.onBackgroundColor
-            )
-            RSpacer(8.dp)
+            title?.let {
+                Text(
+                    text = it, style = ReboundTheme.typography.body1,
+                    color = LocalThemeState.current.onBackgroundColor
+                )
+                RSpacer(8.dp)
+            }
+            subtitle?.let {
+                Text(
+                    text = it, style = ReboundTheme.typography.body2,
+                    color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.75f)
+                )
+                RSpacer(8.dp)
+            }
             if (sortedEntries.isNotEmpty()) {
                 for (i in sortedEntries.indices) {
                     val entry = sortedEntries[i]
@@ -114,8 +125,7 @@ fun SessionExerciseSetItem(
             modifier = Modifier
                 .size(28.dp)
                 .clip(CircleShape)
-//                .background(Color(224, 224, 224))
-                .background(ReboundTheme.colors.card/*.lighterOrDarkerColor(0.15f)*/),
+                .background(ReboundTheme.colors.card.lighterOrDarkerColor(0.10f)),
             contentAlignment = Alignment.Center,
         ) {
             Text(

@@ -20,7 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithWorkout
-import com.ankitsuda.rebound.ui.components.ExerciseHistoryCardItem
+import com.ankitsuda.rebound.ui.components.SessionExerciseCardItem
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun ExerciseDetailHistoryTab(list: List<LogEntriesWithWorkout>) {
@@ -35,12 +37,18 @@ fun ExerciseDetailHistoryTab(list: List<LogEntriesWithWorkout>) {
             val workout = item.workout
             val entries = item.logEntries
 
-            ExerciseHistoryCardItem(
+            SessionExerciseCardItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
                 onClick = { },
-               workout = workout,
+                title = workout.name,
+                subtitle = (workout.startAt ?: workout.createdAt)?.format(
+                    DateTimeFormatter.ofLocalizedDateTime(
+                        FormatStyle.MEDIUM,
+                        FormatStyle.SHORT
+                    )
+                ),
                 entries = entries
             )
         }
