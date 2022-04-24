@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,8 +41,11 @@ import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.common.compose.LocalDialog
 import com.ankitsuda.common.compose.MainDialog
 import com.ankitsuda.common.compose.rememberFlowWithLifecycle
+import com.ankitsuda.navigation.LeafScreen
+import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.NavigatorHost
-import com.ankitsuda.navigation.RootScreen
+import com.ankitsuda.navigation.TabRootScreen
+import com.ankitsuda.rebound.resttimer.TimerState
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded
@@ -140,6 +144,7 @@ private fun MainLayout(
                         sheetBackgroundColor = Color.Transparent,
                         bottomSheetNavigator = bottomSheetNavigator
                     ) {
+                        val navigator = LocalNavigator.current
                         MainScreenScaffold(
                             modifier = Modifier,
                             panelHidden = panelHidden,
@@ -163,13 +168,32 @@ private fun MainLayout(
                                 )
                             },
                             panelTopExpanded = {
+                                val restTimerElapsedTime by viewModel.restTimerElapsedTime.observeAsState(
+                                    0L
+                                )
+                                val restTimerTotalTime by viewModel.restTimerTotalTime.observeAsState(
+                                    0L
+                                )
+                                val restTimerTimerState by viewModel.restTimerState.observeAsState(
+                                    TimerState.EXPIRED
+                                )
+                                val restTimerTimeString by viewModel.restTimerTimeString.observeAsState(
+                                    ""
+                                )
+
                                 PanelTopExpanded(
+                                    restTimerElapsedTime = restTimerElapsedTime,
+                                    restTimerTotalTime = restTimerTotalTime,
+                                    restTimerTimeString = restTimerTimeString,
+                                    isTimerRunning = restTimerTimerState != TimerState.EXPIRED,
                                     onCollapseBtnClicked = {
                                         coroutine.launch {
                                             swipeableState.animateTo(0)
                                         }
                                     },
-                                    onTimerBtnClicked = { },
+                                    onTimerBtnClicked = {
+                                        navigator.navigate(LeafScreen.RestTimer.createRoute())
+                                    },
                                     onFinishBtnClicked = {
                                         workoutPanelViewModel.finishWorkout()
                                     })
@@ -301,7 +325,7 @@ sealed class BottomNavigationScreens(
 ) {
     object Home :
         BottomNavigationScreens(
-            RootScreen.HomeTab.route,
+            TabRootScreen.HomeTab.route,
             "Home",
             Icons.Outlined.Home,
             Icons.Filled.Home
@@ -309,7 +333,7 @@ sealed class BottomNavigationScreens(
 
     object History :
         BottomNavigationScreens(
-            RootScreen.HistoryTab.route,
+            TabRootScreen.HistoryTab.route,
             "History",
             Icons.Outlined.WatchLater,
             Icons.Filled.WatchLater
@@ -317,7 +341,7 @@ sealed class BottomNavigationScreens(
 
     object Workout :
         BottomNavigationScreens(
-            RootScreen.WorkoutTab.route,
+            TabRootScreen.WorkoutTab.route,
             "Workout",
             Icons.Outlined.PlayArrow,
             Icons.Filled.PlayArrow
@@ -325,14 +349,14 @@ sealed class BottomNavigationScreens(
 
     object Exercises :
         BottomNavigationScreens(
-            RootScreen.ExercisesTab.route,
+            TabRootScreen.ExercisesTab.route,
             "Exercises",
             Icons.Outlined.FitnessCenter, Icons.Filled.FitnessCenter
         )
 
     object More :
         BottomNavigationScreens(
-            RootScreen.MoreTab.route,
+            TabRootScreen.MoreTab.route,
             "More",
             Icons.Outlined.Menu,
             Icons.Filled.Menu

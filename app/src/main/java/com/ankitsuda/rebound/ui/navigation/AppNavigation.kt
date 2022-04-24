@@ -22,7 +22,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import com.ankitsuda.common.compose.collectEvent
 import com.ankitsuda.navigation.*
 import com.ankitsuda.rebound.ui.measure.MeasureScreen
@@ -43,6 +42,7 @@ import com.ankitsuda.rebound.ui.settings.personalization.shapes.ShapesPersonaliz
 import com.ankitsuda.rebound.ui.settings.personalization.top_bar.TopBarPersonalizationScreen
 import com.ankitsuda.rebound.ui.measure.part.add_sheet.AddPartMeasurementBottomSheet
 import com.ankitsuda.rebound.ui.measure.part.overview.PartMeasurementsScreen
+import com.ankitsuda.rebound.ui.resttimer.RestTimerScreen
 import com.ankitsuda.rebound.ui.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.workout.WorkoutScreen
 import com.ankitsuda.rebound.ui.workout_details.SessionScreen
@@ -87,7 +87,7 @@ internal fun AppNavigation(
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = RootScreen.HomeTab.route,
+        startDestination = TabRootScreen.HomeTab.route,
         enterTransition = {
             fadeIn(animationSpec = tween(animDuration)) + scaleIn(
                 animationSpec = tween(animDuration),
@@ -117,13 +117,14 @@ internal fun AppNavigation(
         addMoreRoot(navController)
 
         addExercisesBottomSheet(navController)
+        addRestTimer(navController)
     }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addHomeRoot(navController: NavController) {
     navigation(
-        route = RootScreen.HomeTab.route,
+        route = TabRootScreen.HomeTab.route,
         startDestination = LeafScreen.Home().createRoute()
     ) {
         addHome(navController)
@@ -133,7 +134,7 @@ private fun NavGraphBuilder.addHomeRoot(navController: NavController) {
 @OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addHistoryRoot(navController: NavController) {
     navigation(
-        route = RootScreen.HistoryTab.route,
+        route = TabRootScreen.HistoryTab.route,
         startDestination = LeafScreen.History().createRoute()
     ) {
         addHistory(navController)
@@ -145,7 +146,7 @@ private fun NavGraphBuilder.addHistoryRoot(navController: NavController) {
 @OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addWorkoutRoot(navController: NavController) {
     navigation(
-        route = RootScreen.WorkoutTab.route,
+        route = TabRootScreen.WorkoutTab.route,
         startDestination = LeafScreen.Workout().createRoute()
     ) {
         addWorkout(navController)
@@ -156,7 +157,7 @@ private fun NavGraphBuilder.addWorkoutRoot(navController: NavController) {
 @OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addExercisesRoot(navController: NavController) {
     navigation(
-        route = RootScreen.ExercisesTab.route,
+        route = TabRootScreen.ExercisesTab.route,
         startDestination = LeafScreen.Exercises().createRoute()
     ) {
         addExercises(navController)
@@ -168,7 +169,7 @@ private fun NavGraphBuilder.addExercisesRoot(navController: NavController) {
 @OptIn(ExperimentalAnimationApi::class)
 private fun NavGraphBuilder.addMoreRoot(navController: NavController) {
     navigation(
-        route = RootScreen.MoreTab.route,
+        route = TabRootScreen.MoreTab.route,
         startDestination = LeafScreen.More().createRoute()
     ) {
         addMoreScreen(navController)
@@ -328,6 +329,12 @@ private fun NavGraphBuilder.addAddPartMeasurementBottomSheet(navController: NavC
     }
 }
 
+private fun NavGraphBuilder.addRestTimer(navController: NavController) {
+    bottomSheetScreen(LeafScreen.RestTimer()) {
+        RestTimerScreen()
+    }
+}
+
 
 /**
  * Adds an [NavController.OnDestinationChangedListener] to this [NavController] and updates the
@@ -335,9 +342,9 @@ private fun NavGraphBuilder.addAddPartMeasurementBottomSheet(navController: NavC
  */
 @Stable
 @Composable
-internal fun NavController.currentScreenAsState(): State<RootScreen> {
-    val selectedItem = remember { mutableStateOf<RootScreen>(RootScreen.HomeTab) }
-    val rootScreens = ROOT_SCREENS
+internal fun NavController.currentScreenAsState(): State<TabRootScreen> {
+    val selectedItem = remember { mutableStateOf<TabRootScreen>(TabRootScreen.HomeTab) }
+    val rootScreens = TAB_ROOT_SCREENS
     DisposableEffect(this) {
         val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
             rootScreens.firstOrNull { rs -> destination.hierarchy.any { it.route == rs.route } }

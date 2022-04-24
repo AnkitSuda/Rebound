@@ -14,7 +14,11 @@
 
 package com.ankitsuda.rebound.ui.components.panel_tops
 
+import android.widget.ProgressBar
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -28,10 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import timber.log.Timber
 
 @Composable
 fun PanelTopDragHandle(modifier: Modifier = Modifier) {
@@ -83,6 +90,10 @@ fun PanelTopCollapsed(
 
 @Composable
 fun PanelTopExpanded(
+    restTimerElapsedTime: Long?,
+    restTimerTotalTime: Long?,
+    restTimerTimeString: String?,
+    isTimerRunning: Boolean,
     onCollapseBtnClicked: () -> Unit,
     onTimerBtnClicked: () -> Unit,
     onFinishBtnClicked: () -> Unit
@@ -108,18 +119,108 @@ fun PanelTopExpanded(
                     contentDescription = "Collapse panel"
                 )
             }
-            IconButton(onClick = onTimerBtnClicked) {
-                Icon(
-                    imageVector = Icons.Outlined.Timer,
-                    contentDescription = "Collapse panel"
-                )
-            }
+            RestTimerButton(
+                restTimerElapsedTime = restTimerElapsedTime,
+                restTimerTotalTime = restTimerTotalTime,
+                onTimerBtnClicked = onTimerBtnClicked,
+                isTimerRunning = isTimerRunning,
+                restTimerTimeString = restTimerTimeString
+            )
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = onFinishBtnClicked,
                 elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp)
             ) {
                 Text(text = "Finish", style = MaterialTheme.typography.button)
+            }
+        }
+    }
+}
+
+@Composable
+private fun RestTimerButton(
+    restTimerElapsedTime: Long?,
+    restTimerTotalTime: Long?,
+    isTimerRunning: Boolean,
+    restTimerTimeString: String?,
+    onTimerBtnClicked: () -> Unit,
+) {
+    val primaryColor = LocalThemeState.current.primaryColor
+    val contentColor by animateColorAsState(
+        targetValue = if (isTimerRunning)
+            LocalThemeState.current.onPrimaryColor
+        else
+            LocalThemeState.current.onBackgroundColor
+    )
+
+    var parentModifier = Modifier
+        .width(100.dp)
+        .clip(ReboundTheme.shapes.small)
+
+
+    var iconModifier = Modifier
+        .padding(8.dp)
+
+    if (isTimerRunning) {
+        parentModifier = parentModifier.clickable(onClick = onTimerBtnClicked)
+    } else {
+        iconModifier = iconModifier.clickable(onClick = onTimerBtnClicked)
+    }
+
+    Box(
+        modifier = parentModifier
+    ) {
+
+        AnimatedVisibility(
+            modifier = Modifier
+                .matchParentSize()
+                .width(100.dp),
+            enter = slideInHorizontally(
+                initialOffsetX = { -it })/* + fadeIn()*/,
+            exit = slideOutHorizontally(
+                targetOffsetX = { -it })/* + fadeOut()*/,
+            visible = restTimerElapsedTime != null && restTimerTotalTime != null && isTimerRunning
+        ) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .matchParentSize()
+                    .width(100.dp),
+                progress = (restTimerElapsedTime!!.toFloat() / restTimerTotalTime!!.toFloat()),
+                color = primaryColor,
+                backgroundColor = primaryColor.copy(alpha = 0.5f)
+            )
+        }
+        Box(modifier = Modifier) {
+            Icon(
+                modifier = iconModifier
+                    .align(Alignment.CenterStart),
+                imageVector = Icons.Outlined.Timer,
+                contentDescription = "Rest timer",
+                tint = contentColor
+            )
+
+
+            AnimatedVisibility(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd),
+                enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
+                exit = slideOutHorizontally(targetOffsetX = { -it }) + fadeOut(),
+                visible = isTimerRunning && restTimerTimeString != null
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 8.dp)
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd),
+                        text = restTimerTimeString ?: "",
+                        fontSize = 14.sp,
+                        color = contentColor
+                    )
+                }
             }
         }
     }

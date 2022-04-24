@@ -18,19 +18,14 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.*
 import com.google.accompanist.navigation.animation.composable
 import com.ankitsuda.base.utils.toEpochMillis
-import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
-import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneId
 import java.util.*
 
 const val QUERY_KEY = "query"
@@ -49,55 +44,56 @@ interface Screen {
     val route: String
 }
 
-val ROOT_SCREENS = listOf(
-    RootScreen.HomeTab,
-    RootScreen.HistoryTab,
-    RootScreen.WorkoutTab,
-    RootScreen.ExercisesTab,
-    RootScreen.MoreTab
+val TAB_ROOT_SCREENS = listOf(
+    TabRootScreen.HomeTab,
+    TabRootScreen.HistoryTab,
+    TabRootScreen.WorkoutTab,
+    TabRootScreen.ExercisesTab,
+    TabRootScreen.MoreTab
 )
 
-sealed class RootScreen(
+sealed class TabRootScreen(
     override val route: String,
     val startScreen: LeafScreen,
     val arguments: List<NamedNavArgument> = emptyList(),
     val deepLinks: List<NavDeepLink> = emptyList(),
 ) : Screen {
-    object HomeTab : RootScreen("home_tab", LeafScreen.HomeTab())
-    object HistoryTab : RootScreen("history_tab", LeafScreen.HistoryTab())
-    object WorkoutTab : RootScreen("workout_tab", LeafScreen.WorkoutTab())
-    object ExercisesTab : RootScreen("exercises_tab", LeafScreen.ExercisesTab())
-    object MoreTab : RootScreen("more_tab", LeafScreen.MoreTab())
+    object HomeTab : TabRootScreen("home_tab", LeafScreen.HomeTab())
+    object HistoryTab : TabRootScreen("history_tab", LeafScreen.HistoryTab())
+    object WorkoutTab : TabRootScreen("workout_tab", LeafScreen.WorkoutTab())
+    object ExercisesTab : TabRootScreen("exercises_tab", LeafScreen.ExercisesTab())
+    object MoreTab : TabRootScreen("more_tab", LeafScreen.MoreTab())
 }
 
 sealed class LeafScreen(
     override val route: String,
-    open val root: RootScreen? = null,
+    open val root: TabRootScreen? = null,
     protected open val path: String = "",
     val arguments: List<NamedNavArgument> = emptyList(),
     val deepLinks: List<NavDeepLink> = emptyList(),
 ) : Screen {
 
 
-    fun createRoute(root: RootScreen? = null) = when (val rootPath = (root ?: this.root)?.route) {
-        is String -> "$rootPath/$route"
-        else -> route
-    }
+    fun createRoute(root: TabRootScreen? = null) =
+        when (val rootPath = (root ?: this.root)?.route) {
+            is String -> "$rootPath/$route"
+            else -> route
+        }
 
     data class HomeTab(override val route: String = "home_tab") :
-        LeafScreen(route, RootScreen.HomeTab)
+        LeafScreen(route, TabRootScreen.HomeTab)
 
     data class HistoryTab(override val route: String = "history_tab") :
-        LeafScreen(route, RootScreen.HistoryTab)
+        LeafScreen(route, TabRootScreen.HistoryTab)
 
     data class WorkoutTab(override val route: String = "workout_tab") :
-        LeafScreen(route, RootScreen.WorkoutTab)
+        LeafScreen(route, TabRootScreen.WorkoutTab)
 
     data class ExercisesTab(override val route: String = "exercises_tab") :
-        LeafScreen(route, RootScreen.ExercisesTab)
+        LeafScreen(route, TabRootScreen.ExercisesTab)
 
     data class MoreTab(override val route: String = "more_tab") :
-        LeafScreen(route, RootScreen.MoreTab)
+        LeafScreen(route, TabRootScreen.MoreTab)
 
 
     data class Home(override val route: String = "home") : LeafScreen(route)
@@ -219,6 +215,13 @@ sealed class LeafScreen(
         LeafScreen(route) {
         companion object {
             fun createRoute(templateId: String) = "workout_template/$templateId/preview"
+        }
+    }
+
+    data class RestTimer(override val route: String = "rest_timer") :
+        LeafScreen(route) {
+        companion object {
+            fun createRoute() = "rest_timer"
         }
     }
 }

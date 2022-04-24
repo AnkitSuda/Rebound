@@ -53,10 +53,11 @@ dependencies {
     implementation project(":modules:common-ui-compose")
     implementation project(":modules:common-ui-theme")
     implementation project(":modules:common-ui-components")
-    implementation project(":modules:common-ui-workout-panel")
-    implementation project(":modules:ui-rest-timer")
     implementation project(":modules:core-data")
-    implementation project(":modules:navigation")
+    implementation project(":modules:core-rest-timer")
+
+    api Deps.Android.Compose.constraintLayout
+
     coreLibraryDesugaring Deps.Android.desugaring
 
     implementation Deps.Dagger.hilt

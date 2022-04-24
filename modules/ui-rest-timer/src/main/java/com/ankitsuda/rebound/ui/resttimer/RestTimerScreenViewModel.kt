@@ -12,59 +12,45 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.rebound.ui.main
+package com.ankitsuda.rebound.ui.resttimer
 
-import android.os.Looper
-import androidx.core.os.HandlerCompat.postDelayed
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.map
-import com.ankitsuda.rebound.R
-import com.ankitsuda.rebound.data.datastore.PrefStorage
-import com.ankitsuda.rebound.data.stopwatch.*
-import com.ankitsuda.rebound.resttimer.Constants
+import com.ankitsuda.rebound.resttimer.Constants.TIMER_STARTING_IN_TIME
 import com.ankitsuda.rebound.resttimer.RestTimerRepository
 import com.ankitsuda.rebound.resttimer.TimerState
 import com.ankitsuda.rebound.resttimer.getFormattedStopWatchTime
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
-import java.util.*
-import java.util.logging.Handler
 import javax.inject.Inject
-import kotlin.math.max
-
 
 @HiltViewModel
-class MainScreenViewModel @Inject constructor(
-    prefStorage: PrefStorage,
+class RestTimerScreenViewModel @Inject constructor(
     private val restTimerRepository: RestTimerRepository
 ) : ViewModel() {
-    val currentWorkoutId = prefStorage.currentWorkoutId
 
-
-    val restTimerState: LiveData<TimerState>
+    val timerState: LiveData<TimerState>
         get() = restTimerRepository.getTimerServiceTimerState()
 
-    val restTimerElapsedTime: LiveData<Long>
+    val timeString: LiveData<String>
+        get() = restTimerRepository.getTimerServiceElapsedTimeMillisESeconds().map {
+            if (timerState.value != TimerState.EXPIRED)
+                getFormattedStopWatchTime(it)
+            else
+                getFormattedStopWatchTime(TIMER_STARTING_IN_TIME)
+        }
+
+    val elapsedTime: LiveData<Long>
         get() = restTimerRepository.getTimerServiceElapsedTimeMillis().map {
             //Timber.i("elapsedTime: $it")
-            if (restTimerState.value != TimerState.EXPIRED)
+            if (timerState.value != TimerState.EXPIRED)
                 it
             else
-                Constants.TIMER_STARTING_IN_TIME
+                TIMER_STARTING_IN_TIME
         }
 
-    val restTimerTotalTime: LiveData<Long>
+    val totalTime: LiveData<Long>
         get() = restTimerRepository.getTimerServiceTotalTimeMillis()
-
-    val restTimerTimeString: LiveData<String>
-        get() = restTimerRepository.getTimerServiceElapsedTimeMillisESeconds().map {
-            if (restTimerState.value != TimerState.EXPIRED)
-                getFormattedStopWatchTime(ms = it, spaces = false)
-            else
-                getFormattedStopWatchTime(ms = Constants.TIMER_STARTING_IN_TIME, spaces = false)
-        }
-
 }

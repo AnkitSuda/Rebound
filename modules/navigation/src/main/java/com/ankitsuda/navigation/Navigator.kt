@@ -45,7 +45,7 @@ class Navigator {
 
     fun navigate(route: String) {
         val basePath = route.split("/").firstOrNull()
-        val root = if (ROOT_SCREENS.any { it.route == basePath }) basePath else null
+        val root = if (TAB_ROOT_SCREENS.any { it.route == basePath }) basePath else null
         navigationQueue.trySend(NavigationEvent.Destination(route, root))
     }
 
