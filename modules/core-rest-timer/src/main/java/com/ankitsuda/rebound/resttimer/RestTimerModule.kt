@@ -24,6 +24,7 @@ import com.ankitsuda.rebound.coreRestTimer.R
 import com.ankitsuda.rebound.resttimer.Constants.ACTION_CANCEL
 import com.ankitsuda.rebound.resttimer.Constants.ACTION_PAUSE
 import com.ankitsuda.rebound.resttimer.Constants.ACTION_RESUME
+import com.ankitsuda.rebound.resttimer.Constants.ACTION_SHOW_MAIN_ACTIVITY
 import com.ankitsuda.rebound.resttimer.Constants.NOTIFICATION_CHANNEL_ID
 import dagger.Module
 import dagger.Provides
@@ -36,19 +37,17 @@ import dagger.hilt.android.scopes.ServiceScoped
 @InstallIn(ServiceComponent::class)
 object RestTimerModule {
 
-//    @MainActivityPendingIntent
-//    @ServiceScoped
-//    @Provides
-//    fun provideMainActivityPendingIntent(
-//        @ApplicationContext app: Context
-//    ): PendingIntent = PendingIntent.getActivity(
-//        app,
-//        0,
-//        Intent(app, Activity::class.java).also {
-//            it.action = ACTION_SHOW_MAIN_ACTIVITY
-//        },
-//        PendingIntent.FLAG_UPDATE_CURRENT
-//    )
+    @ClickPendingIntent
+    @ServiceScoped
+    @Provides
+    fun provideClickPendingIntent(
+        @ApplicationContext app: Context
+    ): PendingIntent = PendingIntent.getActivity(
+        app,
+        0,
+        app.packageManager.getLaunchIntentForPackage(app.packageName),
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+    )
 
     @CancelActionPendingIntent
     @ServiceScoped
@@ -99,14 +98,14 @@ object RestTimerModule {
     @Provides
     fun provideBaseNotificationBuilder(
         @ApplicationContext app: Context,
-//        @MainActivityPendingIntent pendingIntent: PendingIntent
+        @ClickPendingIntent pendingIntent: PendingIntent
     ): NotificationCompat.Builder = NotificationCompat.Builder(app, NOTIFICATION_CHANNEL_ID)
         .setAutoCancel(false)
         .setOngoing(true)
         .setSmallIcon(R.drawable.ic_alarm)
         .setContentTitle("INTime")
         .setContentText("00:00:00")
-//        .setContentIntent(pendingIntent)
+        .setContentIntent(pendingIntent)
 
     @ServiceScoped
     @Provides

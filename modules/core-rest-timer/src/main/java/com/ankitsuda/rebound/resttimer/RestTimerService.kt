@@ -17,6 +17,7 @@ package com.ankitsuda.rebound.resttimer
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.*
 import android.speech.tts.TextToSpeech
@@ -51,6 +52,10 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+/**
+ * Thanks to
+ * https://github.com/p-hlp/InTimeAndroid
+ */
 @AndroidEntryPoint
 class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
 
@@ -63,6 +68,10 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
     lateinit var notificationManager: NotificationManager
 
     // pending intents for notification action-handling
+    @ClickPendingIntent
+    @Inject
+    lateinit var clickPendingIntent: PendingIntent
+
     @ResumeActionPendingIntent
     @Inject
     lateinit var resumeActionPendingIntent: PendingIntent
@@ -206,7 +215,7 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
         // UI is not visible anymore, push service to foreground -> notifications visible
         Timber.i("onUnbind")
         isBound = false
-        if (!isKilled) pushToForeground()
+        if (!isKilled && currentTimerState.value != TimerState.EXPIRED) pushToForeground()
         // return true so onRebind is used if service is alive and client connects
         return true
     }
@@ -307,12 +316,8 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
     private fun initializeData(intent: Intent) {
         if (!isInitialized) {
             intent.extras?.let {
-                currentNotificationBuilder
-//                        .setContentIntent(buildMainActivityPendingIntentWithId(id, this))
 
-                // launch coroutine, fetch workout from db & audiostate from data store
                 serviceScope.launch {
-//                        workout = workoutRepository.getWorkout(id).first()
 //                        audioState = AudioState.valueOf(preferenceRepository.getCurrentSoundState())
                     isInitialized = true
                     postInitData()
@@ -395,6 +400,7 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
 
     private fun pushToForeground() {
         Timber.i("pushToForeground - isBound: $isBound")
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannel(notificationManager)
         startForeground(Constants.NOTIFICATION_ID, baseNotificationBuilder.build())

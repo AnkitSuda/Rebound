@@ -22,6 +22,10 @@ annotation class MainActivityPendingIntent
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class ClickPendingIntent
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class CancelActionPendingIntent
 
 @Qualifier
