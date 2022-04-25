@@ -24,14 +24,30 @@ class RestTimerRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    fun sendCommandToService(action: String) {
+    private fun sendCommandToService(action: String, time: Long? = null) {
         Intent(context, RestTimerService::class.java).also {
             it.action = action
-            if (action == Constants.ACTION_START) {
-                it.putExtra(Constants.EXTRA_TOTAL_TIME, 10000L)
+            if (time != null) {
+                it.putExtra(Constants.EXTRA_TOTAL_TIME, time)
             }
             context.startService(it)
         }
+    }
+
+    fun startTimer(time: Long) {
+        sendCommandToService(Constants.ACTION_START, time)
+    }
+
+    fun pauseTimer() {
+        sendCommandToService(Constants.ACTION_PAUSE)
+    }
+
+    fun resumeTimer() {
+        sendCommandToService(Constants.ACTION_RESUME)
+    }
+
+    fun cancelTimer() {
+        sendCommandToService(Constants.ACTION_CANCEL)
     }
 
     // return immutable flow from timer service

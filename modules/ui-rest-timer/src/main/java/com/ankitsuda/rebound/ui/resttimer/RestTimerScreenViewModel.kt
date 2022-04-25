@@ -15,6 +15,7 @@
 package com.ankitsuda.rebound.ui.resttimer
 
 import androidx.lifecycle.*
+import com.ankitsuda.rebound.resttimer.Constants
 import com.ankitsuda.rebound.resttimer.Constants.TIMER_STARTING_IN_TIME
 import com.ankitsuda.rebound.resttimer.RestTimerRepository
 import com.ankitsuda.rebound.resttimer.TimerState
@@ -50,7 +51,19 @@ class RestTimerScreenViewModel @Inject constructor(
 
     val totalTime = restTimerRepository.getTimerServiceTotalTimeMillis()
 
-    fun sendCommandToService(action: String) {
-        restTimerRepository.sendCommandToService(action)
+    fun startTimer(time: Long) {
+        restTimerRepository.startTimer(time)
+    }
+
+    fun pauseTimer() {
+        restTimerRepository.pauseTimer()
+    }
+
+    fun resumeTimer() {
+        restTimerRepository.resumeTimer()
+    }
+
+    fun cancelTimer() {
+        restTimerRepository.cancelTimer()
     }
 }

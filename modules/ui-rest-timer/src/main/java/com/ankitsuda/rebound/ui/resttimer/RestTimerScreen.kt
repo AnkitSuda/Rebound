@@ -45,35 +45,30 @@ fun RestTimerScreen(
     val timerState by viewModel.timerState.observeAsState(TimerState.EXPIRED)
     val timeString by viewModel.timeString.observeAsState(null)
 
-    val context = LocalContext.current
-
     BottomSheetSurface {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 TimerCircleComponent(
                     screenWidthDp = screenWidthDp,
                     screenHeightDp = screenHeightDp,
                     time = timeString ?: "",
-                    state = timerState.stateName,
-                    reps = "1",
+                    timerState = timerState,
                     elapsedTime = elapsedTime ?: 0L,
-                    totalTime = totalTime ?: 0L
+                    totalTime = totalTime ?: 1L,
+                    onClickResume = {
+                        viewModel.resumeTimer()
+                    },
+                    onClickPause = {
+                        viewModel.pauseTimer()
+                    },
+                    onClickCancel = {
+                        viewModel.cancelTimer()
+                    },
+                    onClickStart = {
+                        viewModel.startTimer(it)
+                    },
                 )
             }
-
-            Button(onClick = { viewModel.sendCommandToService(Constants.ACTION_START) }) {
-                Text(text = "Start")
-            }
-            Button(onClick = { viewModel.sendCommandToService(Constants.ACTION_RESUME) }) {
-                Text(text = "Resume")
-            }
-            Button(onClick = { viewModel.sendCommandToService(Constants.ACTION_PAUSE) }) {
-                Text(text = "Pause")
-            }
-            Button(onClick = { viewModel.sendCommandToService(Constants.ACTION_CANCEL) }) {
-                Text(text = "Cancel")
-            }
-
         }
 
     }

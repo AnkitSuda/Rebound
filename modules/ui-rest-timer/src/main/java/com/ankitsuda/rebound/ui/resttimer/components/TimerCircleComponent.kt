@@ -14,24 +14,34 @@
 
 package com.ankitsuda.rebound.ui.resttimer.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import kotlin.math.max
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
+import com.ankitsuda.rebound.resttimer.TimerState
+import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import kotlin.math.min
 
@@ -39,68 +49,133 @@ import kotlin.math.min
  * Circle timer
  * Thanks to https://github.com/p-hlp/InTimeAndroid/blob/master/app/src/main/java/com/example/intimesimple/ui/composables/TimerCircleComponent.kt
  */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TimerCircleComponent(
     modifier: Modifier = Modifier,
     screenWidthDp: Int,
     screenHeightDp: Int,
     time: String,
-    state: String,
-    reps: String,
+    timerState: TimerState,
     elapsedTime: Long,
-    totalTime: Long
+    totalTime: Long,
+    onClickCancel: () -> Unit,
+    onClickPause: () -> Unit,
+    onClickResume: () -> Unit,
+    onClickStart: (Long) -> Unit,
 ) {
     val maxRadius by remember { mutableStateOf(min(screenHeightDp, screenWidthDp)) }
 
-    Box(
-        modifier = modifier
+    val density = LocalDensity.current
+
+    BoxWithConstraints(
+        modifier = Modifier
             .size(maxRadius.dp)
-            .padding(8.dp)
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
 
-        val constraints = if (screenWidthDp.dp < 600.dp) {
-            portraitConstraints()
-        } else landscapeConstraints()
-        ConstraintLayout(modifier = Modifier.fillMaxSize(), constraintSet = constraints) {
+        Box(
+            modifier = modifier
+                .size(maxRadius.dp)
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            AnimatedContent(targetState = timerState != TimerState.EXPIRED) { bln ->
+                if (bln) {
 
-            Text(
-                modifier = Modifier.layoutId("timerText"),
-                text = time,
-                style = typography.h2,
-            )
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            key(time) {
+                                Text(
+                                    modifier = Modifier,
+                                    text = time,
+                                    style = typography.h2,
+                                )
+                            }
+                        }
 
-            Text(
-                modifier = Modifier.layoutId("workoutStateText"),
-                text = state,
-                style = typography.h5,
-            )
+                        Row(
+                            modifier = Modifier
+                                .padding(bottom = 28.dp)
+                                .align(Alignment.BottomCenter)
+                        ) {
+                            if (timerState == TimerState.RUNNING) {
+                                IconButton(
+                                    onClick = onClickPause
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(32.dp),
+                                        imageVector = Icons.Outlined.Pause,
+                                        contentDescription = "Pause"
+                                    )
+                                }
+                            } else if (timerState == TimerState.PAUSED) {
+                                IconButton(
+                                    onClick = onClickResume
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(32.dp),
+                                        imageVector = Icons.Outlined.PlayArrow,
+                                        contentDescription = "Resume"
+                                    )
+                                }
+                            }
+                            RSpacer(space = 16.dp)
+                            IconButton(
+                                onClick = onClickCancel
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(32.dp),
+                                    imageVector = Icons.Outlined.Close,
+                                    contentDescription = "Cancel"
+                                )
+                            }
+                        }
+                    }
 
-            Text(
-                modifier = Modifier.layoutId("repText"),
-                text = reps,
-                style = typography.h5,
-            )
+                } else {
+                    TimesListComponent(
+                        contentPadding = PaddingValues(vertical = with(density) { (this@BoxWithConstraints.constraints.minHeight / 3).toDp() }),
+                        onClickStart = onClickStart
+                    )
+                }
+            }
         }
 
-        // only show in portrait mode
-        if (screenWidthDp.dp < 600.dp) {
-            TimerCircle(
-                modifier = modifier,
-                elapsedTime = elapsedTime,
-                totalTime = totalTime
-            )
-        }
+
+        TimerCircle(
+            modifier = modifier.align(Alignment.Center),
+            elapsedTime = elapsedTime,
+            totalTime = totalTime,
+            cWidth = with(density) { constraints.minWidth.toDp() },
+            cHeight = with(density) { constraints.minHeight.toDp() }
+        )
     }
+
 }
 
 @Composable
 fun TimerCircle(
     modifier: Modifier = Modifier,
     elapsedTime: Long,
+    cHeight: Dp,
+    cWidth: Dp,
     totalTime: Long
 ) {
     val completedColor = LocalThemeState.current.primaryColor
-    Canvas(modifier = modifier.fillMaxSize(), onDraw = {
+    val whitePercent by animateFloatAsState(
+        targetValue =
+//        min(
+//            1f,
+        elapsedTime.toFloat() / totalTime.toFloat()
+//        ),
+    )
+
+    Canvas(modifier = modifier.size(cWidth, cHeight), onDraw = {
         val height = size.height
         val width = size.width
         val dotDiameter = 12.dp
@@ -115,8 +190,8 @@ fun TimerCircle(
 
         val remainderColor = Color.White.copy(alpha = 0.25f)
 
-        val whitePercent =
-            min(1f, elapsedTime.toFloat() / totalTime.toFloat())
+//        val whitePercent =
+//            min(1f, elapsedTime.toFloat() / totalTime.toFloat())
         val greenPercent = 1 - whitePercent
 
         drawArc(
@@ -140,73 +215,6 @@ fun TimerCircle(
         )
 
     })
-}
-
-@Composable
-fun DebugCenterLines(
-    modifier: Modifier
-) {
-    Canvas(modifier = modifier.fillMaxSize(), onDraw = {
-        drawLine(
-            color = Color.Black,
-            start = Offset(size.width / 2f, 0f),
-            end = Offset(size.width / 2f, size.height),
-            strokeWidth = 4f
-        )
-
-        drawLine(
-            color = Color.Black,
-            start = Offset(0f, size.height / 2f),
-            end = Offset(size.width, size.height / 2f),
-            strokeWidth = 4f
-        )
-    })
-}
-
-private fun portraitConstraints(): ConstraintSet {
-    return ConstraintSet {
-        val timerText = createRefFor("timerText")
-        val workoutStateText = createRefFor("workoutStateText")
-        val repText = createRefFor("repText")
-
-        constrain(timerText) {
-            centerHorizontallyTo(parent)
-            centerVerticallyTo(parent)
-        }
-
-        constrain(workoutStateText) {
-            centerHorizontallyTo(parent)
-            bottom.linkTo(timerText.top, 8.dp)
-        }
-
-        constrain(repText) {
-            centerHorizontallyTo(parent)
-            top.linkTo(timerText.bottom, 8.dp)
-        }
-    }
-}
-
-private fun landscapeConstraints(): ConstraintSet {
-    return ConstraintSet {
-        val timerText = createRefFor("timerText")
-        val workoutStateText = createRefFor("workoutStateText")
-        val repText = createRefFor("repText")
-
-        constrain(timerText) {
-            centerHorizontallyTo(parent)
-            bottom.linkTo(repText.top, 8.dp)
-        }
-
-        constrain(workoutStateText) {
-            centerHorizontallyTo(parent)
-            bottom.linkTo(timerText.top, 8.dp)
-        }
-
-        constrain(repText) {
-            centerHorizontallyTo(parent)
-            centerVerticallyTo(parent)
-        }
-    }
 }
 
 fun calculateRadiusOffset(strokeSize: Float, dotStrokeSize: Float, markerStrokeSize: Float)
