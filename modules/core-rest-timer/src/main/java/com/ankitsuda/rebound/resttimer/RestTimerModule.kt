@@ -50,7 +50,6 @@ object RestTimerModule {
 //        PendingIntent.FLAG_UPDATE_CURRENT
 //    )
 
-
     @CancelActionPendingIntent
     @ServiceScoped
     @Provides

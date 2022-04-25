@@ -38,13 +38,12 @@ import com.ankitsuda.rebound.resttimer.Constants.ACTION_VIBRATE
 import com.ankitsuda.rebound.resttimer.Constants.EXTRA_TOTAL_TIME
 import com.ankitsuda.rebound.resttimer.Constants.NOTIFICATION_CHANNEL_ID
 import com.ankitsuda.rebound.resttimer.Constants.NOTIFICATION_CHANNEL_NAME
-import com.ankitsuda.rebound.resttimer.Constants.TIMER_STARTING_IN_TIME
 import com.ankitsuda.rebound.resttimer.Constants.TIMER_UPDATE_INTERVAL
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -101,9 +100,9 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
     companion object {
         // holds MutableLiveData for UI to observe
         val currentTimerState = MutableLiveData<TimerState>()
-        val elapsedTimeInMillis = MutableLiveData<Long>()
-        val elapsedTimeInMillisEverySecond = MutableLiveData<Long>()
-        val totalTimeInMillis = MutableLiveData<Long>()
+        val elapsedTimeInMillis = MutableLiveData<Long?>()
+        val elapsedTimeInMillisEverySecond = MutableLiveData<Long?>()
+        val totalTimeInMillis = MutableLiveData<Long?>()
     }
 
 
@@ -130,15 +129,18 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
                 // Timer related actions
                 ACTION_INITIALIZE_DATA -> {
                     /*Is called when navigating from ListScreen to DetailScreen, fetching data
-                    * from database here -> data initialization*/
+                * from database here -> data initialization*/
                     Timber.i("ACTION_INITIALIZE_DATA")
                     initializeData(it)
                 }
                 ACTION_START -> {
                     /*This is called when Start-Button is pressed, starting timer here and setting*/
-                    Timber.i("ACTION_START")
-                    val intentTime = it.extras?.getLong(EXTRA_TOTAL_TIME) ?: TIMER_STARTING_IN_TIME
-                    startServiceTimer(intentTime)
+                    val intentTime =
+                        it.extras?.getLong(EXTRA_TOTAL_TIME)
+                    Timber.i("ACTION_START, intentTime = $intentTime")
+                    if (intentTime != null) {
+                        startServiceTimer(intentTime)
+                    }
                 }
                 ACTION_PAUSE -> {
                     /*Called when pause button is pressed, pause timer, set isTimerRunning = false*/
@@ -147,19 +149,19 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
                 }
                 ACTION_RESUME -> {
                     /*Called when resume button is pressed, resume timer here, set isTimerRunning
-                    * = true*/
+                * = true*/
                     Timber.i("ACTION_RESUME")
                     resumeTimer()
                 }
                 ACTION_CANCEL -> {
                     /*This is called when cancel button is pressed - resets the current timer to
-                    * start state*/
+                * start state*/
                     Timber.i("ACTION_CANCEL")
                     cancelServiceTimer()
                 }
                 ACTION_CANCEL_AND_RESET -> {
                     /*Is called when navigating back to ListsScreen, resetting acquired data
-                    * to null*/
+                * to null*/
                     Timber.i("ACTION_CANCEL_AND_RESET")
                     cancelServiceTimer()
                     resetData()
@@ -180,6 +182,7 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
                 }
             }
         }
+
         return START_STICKY
     }
 
@@ -221,19 +224,24 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
 //        workout?.let {
 
         // time to count down
-        val time = if (wasPaused) millisToCompletion else (newTotalTime ?: TIMER_STARTING_IN_TIME)
-//            getTimeFromWorkoutState(wasPaused, workoutState, millisToCompletion, it)
+        val time = (if (wasPaused) millisToCompletion else newTotalTime) ?: return
+
+        Timber.d("startTimer, time = $time")
+
+        //            getTimeFromWorkoutState(wasPaused, workoutState, millisToCompletion, it)
 //        Timber.i("Starting timer - time: $time - workoutState: ${workoutState.stateName}")
 
         // post start values
         elapsedTimeInMillisEverySecond.postValue(time)
         elapsedTimeInMillis.postValue(time)
+
         lastSecondTimestamp = time
 
         //initialize timer and start
         timer = object : CountDownTimer(time, TIMER_UPDATE_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
                 /*handle what happens on every tick with interval of TIMER_UPDATE_INTERVAL*/
+                Timber.d("onTick, millisUntilFinished = $millisUntilFinished")
                 onTimerTick(millisUntilFinished)
             }
 
@@ -251,6 +259,7 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
     private fun onTimerTick(millisUntilFinished: Long) {
         millisToCompletion = millisUntilFinished
         elapsedTimeInMillis.postValue(millisUntilFinished)
+
         if (millisUntilFinished <= lastSecondTimestamp - 1000L) {
             lastSecondTimestamp -= 1000L
             //Timber.i("onTick - lastSecondTimestamp: $lastSecondTimestamp")
@@ -273,7 +282,6 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
         timerIndex += 1
         Timber.i("onTimerFinish - timerIndex: $timerIndex - maxRep: $timerMaxRepetitions")
         cancelTimer()
-
     }
 
     private fun pauseTimer() {
@@ -293,17 +301,12 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
 
     private fun resetTimer() {
         timerIndex = 0
-//        timerMaxRepetitions = workout?.repetitions?.times(2)?.minus(2) ?: 0
-//        workoutState = WorkoutState.STARTING
         postInitData()
     }
 
     private fun initializeData(intent: Intent) {
         if (!isInitialized) {
             intent.extras?.let {
-//                val id = it.getLong(EXTRA_WORKOUT_ID)
-//                if (id != -1L) {
-                // id is valid
                 currentNotificationBuilder
 //                        .setContentIntent(buildMainActivityPendingIntentWithId(id, this))
 
@@ -337,23 +340,13 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
 
     private fun postInitData() {
         /*Post current data to MutableLiveData*/
-//        workout?.let {
         currentTimerState.postValue(TimerState.EXPIRED)
-//            currentWorkout.postValue(it)
-//            currentWorkoutState.postValue(WorkoutState.STARTING)
-//            currentRepetition.postValue(1)
-        elapsedTimeInMillis.postValue(TIMER_STARTING_IN_TIME)
-        elapsedTimeInMillisEverySecond.postValue(TIMER_STARTING_IN_TIME)
-//        }
+        elapsedTimeInMillis.postValue(null)
+        elapsedTimeInMillisEverySecond.postValue(null)
     }
 
     private fun resetData() {
         isInitialized = false
-//        workout = null
-//        // set current workout to dummyWorkout
-//        currentWorkout.postValue(dummyWorkout)
-//        // -1 is an invalid value, therefore repString will reset to an empty string
-//        currentRepetition.postValue(-1)
     }
 
     private fun startServiceTimer(newTotalTime: Long) {
@@ -405,6 +398,7 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannel(notificationManager)
         startForeground(Constants.NOTIFICATION_ID, baseNotificationBuilder.build())
+
         currentTimerState.value?.let { updateNotificationActions(it) }
     }
 
@@ -415,21 +409,21 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
 
     private fun setupObservers() {
         // observe timerState and update notification actions
-        currentTimerState.observe(this, Observer {
+        currentTimerState.observe(this) {
             Timber.i("currentTimerState changed - ${it.stateName}")
             if (!isKilled && !isBound)
                 updateNotificationActions(it)
-        })
+        }
 
         // Observe timeInMillis and update notification
-        elapsedTimeInMillisEverySecond.observe(this, Observer {
+        elapsedTimeInMillisEverySecond.observe(this) {
             if (!isKilled && !isBound) {
                 // Only do something if timer is running and service in foreground
                 val notification = currentNotificationBuilder
                     .setContentText(getFormattedStopWatchTime(it))
                 notificationManager.notify(Constants.NOTIFICATION_ID, notification.build())
             }
-        })
+        }
     }
 
     private fun updateNotificationActions(state: TimerState) {
@@ -437,10 +431,13 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
         val notificationActionText = if (state == TimerState.RUNNING) "Pause" else "Resume"
 
         // Build pendingIntent depending on TimerState
-        val pendingIntent = if (state == TimerState.RUNNING) {
-            pauseActionPendingIntent
-        } else {
-            resumeActionPendingIntent
+        val pendingIntent = when (state) {
+            TimerState.RUNNING -> {
+                pauseActionPendingIntent
+            }
+            else -> {
+                resumeActionPendingIntent
+            }
         }
 
         // Clear current actions
@@ -455,30 +452,6 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
             .addAction(R.drawable.ic_alarm, notificationActionText, pendingIntent)
             .addAction(R.drawable.ic_alarm, "Cancel", cancelActionPendingIntent)
         notificationManager.notify(Constants.NOTIFICATION_ID, currentNotificationBuilder.build())
-    }
-
-
-    fun getFormattedStopWatchTime(ms: Long?): String {
-        ms?.let {
-            var milliseconds = ms
-
-            // Convert to hours
-            val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
-            milliseconds -= TimeUnit.HOURS.toMillis(hours)
-
-            // Convert to minutes
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds)
-            milliseconds -= TimeUnit.MINUTES.toMillis(minutes)
-
-            // Convert to seconds
-            val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds)
-
-            // Build formatted String
-            return "${if (hours < 10) "0" else ""}$hours : " +
-                    "${if (minutes < 10) "0" else ""}$minutes : " +
-                    "${if (seconds < 10) "0" else ""}$seconds"
-        }
-        return ""
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

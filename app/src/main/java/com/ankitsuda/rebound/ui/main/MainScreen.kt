@@ -169,16 +169,16 @@ private fun MainLayout(
                             },
                             panelTopExpanded = {
                                 val restTimerElapsedTime by viewModel.restTimerElapsedTime.observeAsState(
-                                    0L
+                                    null
                                 )
                                 val restTimerTotalTime by viewModel.restTimerTotalTime.observeAsState(
-                                    0L
+                                    null
                                 )
                                 val restTimerTimerState by viewModel.restTimerState.observeAsState(
                                     TimerState.EXPIRED
                                 )
                                 val restTimerTimeString by viewModel.restTimerTimeString.observeAsState(
-                                    ""
+                                    null
                                 )
 
                                 PanelTopExpanded(

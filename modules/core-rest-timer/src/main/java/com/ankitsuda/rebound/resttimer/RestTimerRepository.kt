@@ -14,15 +14,31 @@
 
 package com.ankitsuda.rebound.resttimer
 
+import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.LiveData
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class RestTimerRepository {
+class RestTimerRepository @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
-    // return immutable livedata from timer service
+    fun sendCommandToService(action: String) {
+        Intent(context, RestTimerService::class.java).also {
+            it.action = action
+            if (action == Constants.ACTION_START) {
+                it.putExtra(Constants.EXTRA_TOTAL_TIME, 10000L)
+            }
+            context.startService(it)
+        }
+    }
+
+    // return immutable flow from timer service
     fun getTimerServiceTimerState() = RestTimerService.currentTimerState as LiveData<TimerState>
     fun getTimerServiceElapsedTimeMillisESeconds() =
-        RestTimerService.elapsedTimeInMillisEverySecond as LiveData<Long>
+        RestTimerService.elapsedTimeInMillisEverySecond as LiveData<Long?>
 
-    fun getTimerServiceElapsedTimeMillis() = RestTimerService.elapsedTimeInMillis as LiveData<Long>
-    fun getTimerServiceTotalTimeMillis() = RestTimerService.totalTimeInMillis as LiveData<Long>
+    fun getTimerServiceElapsedTimeMillis() = RestTimerService.elapsedTimeInMillis as LiveData<Long?>
+    fun getTimerServiceTotalTimeMillis() = RestTimerService.totalTimeInMillis as LiveData<Long?>
 }

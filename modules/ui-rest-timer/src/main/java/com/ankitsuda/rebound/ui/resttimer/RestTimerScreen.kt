@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -39,46 +40,37 @@ fun RestTimerScreen(
     val screenWidthDp = configuration.screenWidthDp
     val screenHeightDp = configuration.screenHeightDp
 
-    val elapsedTime by viewModel.elapsedTime.observeAsState(0L)
-    val totalTime by viewModel.totalTime.observeAsState(0L)
+    val elapsedTime by viewModel.elapsedTime.observeAsState(null)
+    val totalTime by viewModel.totalTime.observeAsState(null)
     val timerState by viewModel.timerState.observeAsState(TimerState.EXPIRED)
-    val timeString by viewModel.timeString.observeAsState("")
+    val timeString by viewModel.timeString.observeAsState(null)
 
     val context = LocalContext.current
 
-    fun sendCommandToService(action: String) {
-        Intent(context, RestTimerService::class.java).also {
-            it.action = action
-            if (action == Constants.ACTION_START) {
-                it.putExtra(Constants.EXTRA_TOTAL_TIME, 10000L)
-            }
-            context.startService(it)
-        }
-    }
     BottomSheetSurface {
         Column(modifier = Modifier.fillMaxSize()) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 TimerCircleComponent(
                     screenWidthDp = screenWidthDp,
                     screenHeightDp = screenHeightDp,
-                    time = timeString,
+                    time = timeString ?: "",
                     state = timerState.stateName,
                     reps = "1",
-                    elapsedTime = elapsedTime,
-                    totalTime = totalTime
+                    elapsedTime = elapsedTime ?: 0L,
+                    totalTime = totalTime ?: 0L
                 )
             }
 
-            Button(onClick = { sendCommandToService(Constants.ACTION_START) }) {
+            Button(onClick = { viewModel.sendCommandToService(Constants.ACTION_START) }) {
                 Text(text = "Start")
             }
-            Button(onClick = { sendCommandToService(Constants.ACTION_RESUME) }) {
+            Button(onClick = { viewModel.sendCommandToService(Constants.ACTION_RESUME) }) {
                 Text(text = "Resume")
             }
-            Button(onClick = { sendCommandToService(Constants.ACTION_PAUSE) }) {
+            Button(onClick = { viewModel.sendCommandToService(Constants.ACTION_PAUSE) }) {
                 Text(text = "Pause")
             }
-            Button(onClick = { sendCommandToService(Constants.ACTION_CANCEL) }) {
+            Button(onClick = { viewModel.sendCommandToService(Constants.ACTION_CANCEL) }) {
                 Text(text = "Cancel")
             }
 

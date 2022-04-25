@@ -27,8 +27,7 @@ import com.ankitsuda.rebound.resttimer.RestTimerRepository
 import com.ankitsuda.rebound.resttimer.TimerState
 import com.ankitsuda.rebound.resttimer.getFormattedStopWatchTime
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import timber.log.Timber
 import java.util.*
 import java.util.logging.Handler
@@ -43,28 +42,24 @@ class MainScreenViewModel @Inject constructor(
 ) : ViewModel() {
     val currentWorkoutId = prefStorage.currentWorkoutId
 
+    val restTimerState = restTimerRepository.getTimerServiceTimerState()
 
-    val restTimerState: LiveData<TimerState>
-        get() = restTimerRepository.getTimerServiceTimerState()
+    val restTimerElapsedTime = restTimerRepository.getTimerServiceElapsedTimeMillis().map {
+        //Timber.i("elapsedTime: $it")
+        if (restTimerState.value != TimerState.EXPIRED)
+            it
+        else
+            null
+    }
 
-    val restTimerElapsedTime: LiveData<Long>
-        get() = restTimerRepository.getTimerServiceElapsedTimeMillis().map {
-            //Timber.i("elapsedTime: $it")
-            if (restTimerState.value != TimerState.EXPIRED)
-                it
-            else
-                Constants.TIMER_STARTING_IN_TIME
-        }
+    val restTimerTotalTime =
+        restTimerRepository.getTimerServiceTotalTimeMillis()
 
-    val restTimerTotalTime: LiveData<Long>
-        get() = restTimerRepository.getTimerServiceTotalTimeMillis()
-
-    val restTimerTimeString: LiveData<String>
-        get() = restTimerRepository.getTimerServiceElapsedTimeMillisESeconds().map {
-            if (restTimerState.value != TimerState.EXPIRED)
-                getFormattedStopWatchTime(ms = it, spaces = false)
-            else
-                getFormattedStopWatchTime(ms = Constants.TIMER_STARTING_IN_TIME, spaces = false)
-        }
+    val restTimerTimeString = restTimerRepository.getTimerServiceElapsedTimeMillisESeconds().map {
+        if (restTimerState.value != TimerState.EXPIRED)
+            getFormattedStopWatchTime(ms = it, spaces = false)
+        else
+            null
+    }
 
 }

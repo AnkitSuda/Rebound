@@ -185,7 +185,8 @@ private fun RestTimerButton(
                 modifier = Modifier
                     .matchParentSize()
                     .width(100.dp),
-                progress = (restTimerElapsedTime!!.toFloat() / restTimerTotalTime!!.toFloat()),
+                progress = ((restTimerElapsedTime ?: 0f).toFloat() / (restTimerTotalTime
+                    ?: 0f).toFloat()),
                 color = primaryColor,
                 backgroundColor = primaryColor.copy(alpha = 0.5f)
             )

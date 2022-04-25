@@ -14,11 +14,13 @@
 
 package com.ankitsuda.rebound.resttimer
 
+import android.content.Context
 import com.ankitsuda.rebound.data.db.daos.MeasurementsDao
 import com.ankitsuda.rebound.data.repositories.MeasurementsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -28,7 +30,9 @@ class RestTimerRepositoryModule {
 
     @Singleton
     @Provides
-    fun provideRestTimerRepository() =
-        RestTimerRepository()
+    fun provideRestTimerRepository(
+        @ApplicationContext context: Context
+    ) =
+        RestTimerRepository(context)
 
 }
