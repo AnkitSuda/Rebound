@@ -28,11 +28,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
+import com.ankitsuda.base.util.toast
 import com.ankitsuda.common.compose.LocalPanel
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
@@ -69,21 +71,17 @@ fun WorkoutPanel1(
     val currentDurationStr by viewModel.currentDurationStr.collectAsState("")
     val logEntriesWithJunction by viewModel.logEntriesWithExerciseJunction.collectAsState()
 
-//    val mainPanel = LocalPanel.current
-//    val coroutine = rememberCoroutineScope()
-
-//    BackHandler(mainPanel.isExpanded) {
-//        coroutine.launch {
-//            mainPanel.collapse()
-//        }
-//    }
+//    val workoutName by viewModel.workoutName.collectAsState("")
+//    val workoutNote by viewModel.workoutNote.collectAsState("")
+    val workoutName = workout?.name
+    val workoutNote = workout?.note
 
     if (currentWorkoutId != NONE_WORKOUT_ID && workout != null) {
         WorkoutEditorComponent(
             navController = navController,
             navigator = navigator,
-            workoutName = workout?.name,
-            workoutNote = workout?.note,
+            workoutName = workoutName,
+            workoutNote = workoutNote,
             cancelWorkoutButtonVisible = true,
             logEntriesWithJunction = logEntriesWithJunction,
             onChangeWorkoutName = {

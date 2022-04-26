@@ -59,6 +59,14 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
         it
     }
 
+    private var _workoutName: MutableStateFlow<String?> = MutableStateFlow(null)
+    val workoutName = _workoutName.asStateFlow()
+
+    private var _workoutNote: MutableStateFlow<String?> = MutableStateFlow(null)
+    val workoutNote = _workoutNote.asStateFlow()
+
+    private var didGotFirstNameNote = false
+
     private var _logEntriesWithExerciseJunction: MutableStateFlow<List<LogEntriesWithExerciseJunction>> =
         MutableStateFlow(emptyList())
     val logEntriesWithExerciseJunction = _logEntriesWithExerciseJunction.asStateFlow()
@@ -67,9 +75,9 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
 //    val logEntriesWithExerciseJunction = _logEntriesWithExerciseJunction
 
     init {
-        Timber.d("WorkoutPanelViewModel instance $this")
         viewModelScope.launch {
             currentWorkoutId.collectLatest {
+                didGotFirstNameNote = false
                 if (it != NONE_WORKOUT_ID) {
                     refresh(it)
                 }
@@ -83,8 +91,6 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
             workoutsRepository.getLogEntriesWithExerciseJunction(
                 newWorkoutId
             ).collectLatest {
-//                _logEntriesWithExerciseJunction.clear()
-//                _logEntriesWithExerciseJunction.addAll(it)
                 _logEntriesWithExerciseJunction.emit(it)
             }
         }
@@ -93,6 +99,11 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
         workoutFlowJob = viewModelScope.launch {
             workoutsRepository.getWorkout(newWorkoutId)
                 .collectLatest {
+//                    if (!didGotFirstNameNote) {
+                    _workoutName.value = it?.name
+                    _workoutNote.value = it?.note
+//                        didGotFirstNameNote = true
+//                    }
                     _workout.value = it
                     setupDurationUpdater(it?.inProgress == true, it?.startAt)
                 }
@@ -109,12 +120,9 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
         }
     }
 
-    fun getExerciseWorkoutJunctions() =
-        workoutsRepository.getExerciseWorkoutJunctions(mWorkout?.id ?: NONE_WORKOUT_ID)
-
-
     fun updateWorkoutName(name: String) {
         viewModelScope.launch {
+//            _workoutName.value = name
             mWorkout?.let {
                 workoutsRepository.updateWorkout(it.copy(name = name))
             }
@@ -123,6 +131,7 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
 
     fun updateWorkoutNote(note: String) {
         viewModelScope.launch {
+//            _workoutNote.value = note
             mWorkout?.let {
                 workoutsRepository.updateWorkout(it.copy(note = note))
             }

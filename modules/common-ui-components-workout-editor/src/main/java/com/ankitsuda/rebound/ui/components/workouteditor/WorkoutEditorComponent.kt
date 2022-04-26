@@ -60,27 +60,10 @@ fun WorkoutEditorComponent(
     onUpdateLogEntry: (ExerciseLogEntry) -> Unit,
     layoutAtTop: @Composable LazyItemScope.() -> Unit = {}
 ) {
-    var mWorkoutName by rememberSaveable {
-        mutableStateOf(workoutName ?: "")
-    }
-    var mWorkoutNote by rememberSaveable {
-        mutableStateOf(workoutNote ?: "")
-    }
-
     // Observes results when ExercisesScreen changes value of arg
     val exercisesScreenResult = navController.currentBackStackEntry
         ?.savedStateHandle
         ?.getLiveData<String?>("result_exercises_screen_exercise_id")?.observeAsState()
-
-    fun updateWorkoutName(newName: String) {
-        mWorkoutName = newName
-        onChangeWorkoutName(newName)
-    }
-
-    fun updateWorkoutNote(newNote: String) {
-        mWorkoutNote = newNote
-        onChangeWorkoutNote(newNote)
-    }
 
     LaunchedEffect(key1 = exercisesScreenResult?.value) {
         exercisesScreenResult?.value?.let { resultId ->
@@ -104,14 +87,14 @@ fun WorkoutEditorComponent(
         item {
             Column(modifier = Modifier.padding(16.dp)) {
                 AppTextField(
-                    value = mWorkoutName,
-                    onValueChange = { updateWorkoutName(it) },
+                    value = workoutName ?: "",
+                    onValueChange = { onChangeWorkoutName(it) },
                     placeholderValue = "Workout name",
                     modifier = Modifier.fillMaxWidth()
                 )
                 AppTextField(
-                    value = mWorkoutNote,
-                    onValueChange = { updateWorkoutNote(it) },
+                    value = workoutNote ?: "",
+                    onValueChange = { onChangeWorkoutNote(it) },
                     placeholderValue = "Workout note",
                     modifier = Modifier
                         .fillMaxWidth()
