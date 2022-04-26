@@ -46,6 +46,9 @@ class RepositoriesModule {
 
     @Singleton
     @Provides
-    fun provideExercisesRepository(exercisesDao: ExercisesDao) =
-        ExercisesRepository(exercisesDao)
+    fun provideExercisesRepository(
+        exercisesDao: ExercisesDao,
+        musclesDao: MusclesDao
+    ) =
+        ExercisesRepository(exercisesDao, musclesDao)
 }

@@ -43,6 +43,10 @@ interface ExercisesDao {
     @Query("SELECT exercise_workout_junctions.* FROM exercise_workout_junctions JOIN workouts WHERE exercise_id = :exerciseId AND workouts.id = workout_id AND workouts.is_hidden = 0 AND workouts.in_progress = 0 ORDER BY start_at")
     fun getVisibleLogEntries(exerciseId: String): Flow<List<LogEntriesWithWorkout>>
 
+    @Transaction
+    @Query("SELECT COUNT(exercise_workout_junctions.id) FROM exercise_workout_junctions JOIN workouts WHERE exercise_id = :exerciseId AND workouts.id = workout_id AND workouts.is_hidden = 0 AND workouts.in_progress = 0 ORDER BY start_at")
+    fun getVisibleLogEntriesCount(exerciseId: String): Flow<Long>
+
     @Insert
     suspend fun insertExercise(exercise: Exercise)
 }

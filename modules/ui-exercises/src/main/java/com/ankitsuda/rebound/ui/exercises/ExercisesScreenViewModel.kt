@@ -15,15 +15,13 @@
 package com.ankitsuda.rebound.ui.exercises
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.text.toUpperCase
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
 import com.ankitsuda.rebound.data.repositories.MusclesRepository
-import com.ankitsuda.rebound.domain.entities.ExerciseWithMuscle
-import com.ankitsuda.rebound.domain.entities.Muscle
+import com.ankitsuda.rebound.domain.entities.ExerciseWithExtraInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -33,7 +31,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExercisesScreenViewModel @Inject constructor(
-    private val musclesRepository: MusclesRepository,
     private val exercisesRepository: ExercisesRepository
 ) : ViewModel() {
     private var _isSearchMode = MutableLiveData(false)
@@ -42,19 +39,19 @@ class ExercisesScreenViewModel @Inject constructor(
     private var _searchTerm = MutableLiveData("")
     val searchTerm = _searchTerm
 
-    private val allExercises = arrayListOf<ExerciseWithMuscle>()
+    private val allExercises = arrayListOf<ExerciseWithExtraInfo>()
 
-    private var _filteredExercises: SnapshotStateList<ExerciseWithMuscle> =
+    private var _filteredExercises: SnapshotStateList<ExerciseWithExtraInfo> =
         SnapshotStateList()
 
-    private var _groupedExercises: MutableStateFlow<Map<String, List<ExerciseWithMuscle>>> =
+    private var _groupedExercises: MutableStateFlow<Map<String, List<ExerciseWithExtraInfo>>> =
         MutableStateFlow(emptyMap())
     val groupedExercises = _groupedExercises
         .shareWhileObserved(viewModelScope)
 
     init {
         viewModelScope.launch {
-            exercisesRepository.getAllExercisesWithMuscles().collect {
+            exercisesRepository.getExercisesWithExtraInfo().collect {
                 allExercises.clear()
                 allExercises.addAll(it)
                 filterExercises()

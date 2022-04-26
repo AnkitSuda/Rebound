@@ -12,24 +12,15 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.rebound.data.db.daos
+package com.ankitsuda.rebound.domain.entities
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import com.ankitsuda.rebound.domain.entities.Muscle
-import kotlinx.coroutines.flow.Flow
+import androidx.room.*
+import com.ankitsuda.base.utils.toEpochMillis
+import java.time.LocalDateTime
+import java.util.*
 
-@Dao
-interface MusclesDao {
-
-    @Query("SELECT * FROM muscles WHERE tag = :tag")
-    fun getMuscle(tag: String): Flow<Muscle>
-
-    @Query("SELECT * FROM muscles")
-    fun getMuscles(): Flow<List<Muscle>>
-
-    @Insert
-    fun insertMuscles(muscles: List<Muscle>)
-
-}
+data class ExerciseWithExtraInfo(
+    var exercise: Exercise,
+    var primaryMuscle: Muscle?,
+    var logsCount: Long,
+)

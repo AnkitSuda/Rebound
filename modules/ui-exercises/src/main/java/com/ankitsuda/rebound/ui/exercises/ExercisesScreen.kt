@@ -33,7 +33,7 @@ import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.rebound.domain.entities.ExerciseWithMuscle
+import com.ankitsuda.rebound.domain.entities.ExerciseWithExtraInfo
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import me.onebone.toolbar.CollapsingToolbarScaffold
@@ -92,7 +92,7 @@ private fun ExercisesScreenContent(
     isBottomSheet: Boolean,
     isSearchMode: Boolean,
     searchTerm: String,
-    groupedExercises: Map<String, List<ExerciseWithMuscle>>,
+    groupedExercises: Map<String, List<ExerciseWithExtraInfo>>,
     onToggleSearchMode: () -> Unit,
     onChangeSearchTerm: (String) -> Unit
 ) {
@@ -165,7 +165,7 @@ private fun ExercisesScreenContent(
                         ExerciseItem(
                             name = item.exercise.name.toString(),
                             muscle = item.primaryMuscle?.name.toString(),
-                            totalLogs = item.junctions.size,
+                            totalLogs = item.logsCount,
                             onClick = {
                                 if (isBottomSheet) {
                                     navController.previousBackStackEntry?.savedStateHandle?.set(

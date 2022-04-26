@@ -16,21 +16,51 @@ package com.ankitsuda.rebound.data.repositories
 
 import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.rebound.data.db.daos.ExercisesDao
+import com.ankitsuda.rebound.data.db.daos.MusclesDao
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.entities.Exercise
+import com.ankitsuda.rebound.domain.entities.ExerciseWithExtraInfo
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
-import java.util.*
 import javax.inject.Inject
 
-class ExercisesRepository @Inject constructor(private val exercisesDao: ExercisesDao) {
+class ExercisesRepository @Inject constructor(
+    private val exercisesDao: ExercisesDao,
+    private val musclesDao: MusclesDao,
+) {
 
     fun getExercise(exerciseId: String) = exercisesDao.getSingleExercise(exerciseId)
 
     fun getAllLogEntries(exerciseId: String) = exercisesDao.getAllLogEntries(exerciseId)
     fun getVisibleLogEntries(exerciseId: String) = exercisesDao.getVisibleLogEntries(exerciseId)
+    fun getVisibleLogEntriesCount(exerciseId: String) =
+        exercisesDao.getVisibleLogEntriesCount(exerciseId)
 
     fun getAllExercises() = exercisesDao.getAllExercises()
-    fun getAllExercisesWithMuscles() = exercisesDao.getAllExercisesWithMuscles()
+    fun getAllExercisesWithMuscles() =
+        exercisesDao.getAllExercisesWithMuscles()
+
+    fun getExercisesWithExtraInfo() = exercisesDao.getAllExercises().map {
+        val list = arrayListOf<ExerciseWithExtraInfo>()
+
+        for (exercise in it) {
+            val logsCount = getVisibleLogEntriesCount(exercise.exerciseId).first()
+            val primaryMuscle =
+                if (exercise.primaryMuscleTag != null) musclesDao.getMuscle(exercise.primaryMuscleTag!!)
+                    .firstOrNull() else null
+            list.add(
+                ExerciseWithExtraInfo(
+                    exercise = exercise,
+                    primaryMuscle = primaryMuscle,
+                    logsCount = logsCount
+                )
+            )
+        }
+
+        list
+    }
 
     suspend fun createExercise(
         name: String? = null,
