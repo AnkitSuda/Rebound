@@ -73,7 +73,6 @@ fun MainScreenScaffold(
     panelTopExpanded: @Composable () -> Unit,
     mainBody: @Composable () -> Unit,
 ) {
-    Timber.d("panelHidden $panelHidden")
 
     val coroutine = rememberCoroutineScope()
 
