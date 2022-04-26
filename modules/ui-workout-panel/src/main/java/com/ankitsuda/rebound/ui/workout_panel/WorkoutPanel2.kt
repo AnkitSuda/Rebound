@@ -36,13 +36,12 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import com.ankitsuda.rebound.ui.workout_panel.common.components.workoutExerciseItemAlt
+import com.ankitsuda.rebound.ui.components.workouteditor.workoutExerciseItemAlt
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 import timber.log.Timber
 import java.time.LocalDateTime
-import kotlin.random.Random
 
 @Composable
 fun WorkoutPanel2(

@@ -12,7 +12,7 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.rebound.ui.workout_panel.common.components
+package com.ankitsuda.rebound.ui.components.workouteditor
 
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem

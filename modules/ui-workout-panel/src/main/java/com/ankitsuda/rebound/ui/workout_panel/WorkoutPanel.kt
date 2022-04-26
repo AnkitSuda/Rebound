@@ -38,8 +38,9 @@ import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.AppTextField
+import com.ankitsuda.rebound.ui.components.workouteditor.WorkoutEditorComponent
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import com.ankitsuda.rebound.ui.workout_panel.common.components.workoutExerciseItemAlt
+import com.ankitsuda.rebound.ui.components.workouteditor.workoutExerciseItemAlt
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
@@ -77,130 +78,48 @@ fun WorkoutPanel1(
 //        }
 //    }
 
-    if (currentWorkoutId != NONE_WORKOUT_ID) {
-
-        val workoutName = workout?.name ?: ""
-        val workoutNote = workout?.note ?: ""
-
-        // Observes results when ExercisesScreen changes value of arg
-        val exercisesScreenResult = navController.currentBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<String?>("result_exercises_screen_exercise_id")?.observeAsState()
-
-        LaunchedEffect(key1 = exercisesScreenResult?.value) {
-            exercisesScreenResult?.value?.let { resultId ->
-                viewModel.addExerciseToWorkout(resultId)
-
-                navController.currentBackStackEntry?.savedStateHandle?.set(
-                    "result_exercises_screen_exercise_id",
-                    null
+    if (currentWorkoutId != NONE_WORKOUT_ID && workout != null) {
+        WorkoutEditorComponent(
+            navController = navController,
+            navigator = navigator,
+            workoutName = workout?.name,
+            workoutNote = workout?.note,
+            cancelWorkoutButtonVisible = true,
+            logEntriesWithJunction = logEntriesWithJunction,
+            onChangeWorkoutName = {
+                viewModel.updateWorkoutName(it)
+            },
+            onChangeWorkoutNote = {
+                viewModel.updateWorkoutNote(it)
+            },
+            onAddExerciseToWorkout = {
+                viewModel.addExerciseToWorkout(it)
+            },
+            onCancelCurrentWorkout = {
+                viewModel.cancelCurrentWorkout()
+            },
+            onDeleteExerciseFromWorkout = {
+                viewModel.deleteExerciseFromWorkout(it)
+            },
+            onAddEmptySetToExercise = { setNumber, exerciseWorkoutJunction ->
+                viewModel.addEmptySetToExercise(
+                    setNumber = setNumber,
+                    exerciseWorkoutJunction = exerciseWorkoutJunction
                 )
-            }
-        }
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(ReboundTheme.colors.background)
-        ) {
-            item {
-                Column() {
+            },
+            onDeleteLogEntry = {
+                viewModel.deleteLogEntry(it)
+            },
+            onUpdateLogEntry = {
+                viewModel.updateLogEntry(it)
+            },
+            layoutAtTop = {
+                Column {
                     WorkoutQuickInfo(currentDurationStr = currentDurationStr)
                     Divider()
                 }
             }
-            item {
-                Text(text = "TEST: current workout id $currentWorkoutId")
-            }
-            item {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    AppTextField(
-                        value = workoutName,
-                        onValueChange = { viewModel.updateWorkoutName(it) },
-                        placeholderValue = "Workout name",
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    AppTextField(
-                        value = workoutNote,
-                        onValueChange = { viewModel.updateWorkoutNote(it) },
-                        placeholderValue = "Workout note",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp)
-                    )
-                }
-            }
-
-            for (logEntriesWithJunctionItem in logEntriesWithJunction) {
-                workoutExerciseItemAlt(
-                    logEntriesWithJunction = logEntriesWithJunctionItem,
-                    onValuesUpdated = { updatedEntry ->
-                        viewModel.updateLogEntry(updatedEntry)
-                    },
-                    onSwipeDelete = { entryToDelete ->
-                        viewModel.deleteLogEntry(entryToDelete)
-                    },
-                    onAddSet = {
-                        viewModel.addEmptySetToExercise(
-                            try {
-                                logEntriesWithJunctionItem.logEntries[logEntriesWithJunctionItem.logEntries.size - 1].setNumber!! + 1
-                            } catch (e: Exception) {
-                                1
-                            },
-                            logEntriesWithJunctionItem.junction
-                        )
-                    },
-                    onDeleteExercise = {
-                        viewModel.deleteExerciseFromWorkout(logEntriesWithJunctionItem)
-                    }
-                )
-            }
-
-            item {
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    onClick = {
-
-                        navigator.navigate(LeafScreen.ExercisesBottomSheet().route)
-//                    navController.navigate(Route.ExercisesBottomSheet.route)
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Add,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp),
-                        tint = MaterialTheme.colors.onPrimary
-                    )
-                    Text(text = "Add Exercise", style = MaterialTheme.typography.button)
-                }
-            }
-
-            item {
-                TextButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    onClick = {
-                        viewModel.cancelCurrentWorkout()
-                    },
-                    colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp),
-                        tint = Color.Red
-                    )
-                    Text(
-                        text = "Cancel Workout",
-                        style = MaterialTheme.typography.button,
-                        color = Color.Red
-                    )
-                }
-            }
-        }
+        )
     }
 }
 

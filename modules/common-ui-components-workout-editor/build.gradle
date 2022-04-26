@@ -17,7 +17,6 @@ import com.ankitsuda.rebound.buildSrc.Deps
 
 plugins {
     id "com.android.library"
-    id "dagger.hilt.android.plugin"
     id "kotlin-android"
     id "kotlin-kapt"
 }
@@ -51,9 +50,6 @@ dependencies {
     implementation project(":modules:common-ui-compose")
     implementation project(":modules:common-ui-theme")
     implementation project(":modules:common-ui-components")
-    implementation project(":modules:core-data")
     implementation project(":modules:navigation")
-
-    implementation Deps.Dagger.hilt
-    kapt Deps.Dagger.hiltCompiler
+    implementation project(":modules:domain")
 }
