@@ -101,12 +101,6 @@ private fun MainLayout(
 
     val panelHidden = currentWorkoutId == NONE_WORKOUT_ID
 
-    BackHandler(swipeableState.currentValue != 0) {
-        coroutine.launch {
-            swipeableState.animateTo(0)
-        }
-    }
-
     var dialogContent: @Composable () -> Unit by remember {
         mutableStateOf({})
     }
@@ -137,6 +131,7 @@ private fun MainLayout(
                 LocalDialog provides dialog,
                 LocalPanel provides mainPanel
             ) {
+
                 Box() {
                     /**
                      * Temporary using ModalBottomSheetLayout

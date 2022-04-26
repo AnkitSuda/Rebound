@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.workout_panel
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
+import com.ankitsuda.common.compose.LocalPanel
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
@@ -41,7 +43,9 @@ import com.ankitsuda.rebound.ui.workout_panel.common.components.workoutExerciseI
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
@@ -52,7 +56,7 @@ fun WorkoutPanel(
     WorkoutPanel1(navController, navigator)
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun WorkoutPanel1(
     navController: NavHostController,
@@ -64,12 +68,14 @@ fun WorkoutPanel1(
     val currentDurationStr by viewModel.currentDurationStr.collectAsState("")
     val logEntriesWithJunction by viewModel.logEntriesWithExerciseJunction.collectAsState()
 
-    Timber.d("logEntriesWithJunction $logEntriesWithJunction")
+//    val mainPanel = LocalPanel.current
+//    val coroutine = rememberCoroutineScope()
 
-    if (viewModel.mWorkout == null || viewModel.mWorkout != workout) {
-        Timber.d("Updating viewModel mWorkout to currentWorkout")
-        viewModel.mWorkout = workout
-    }
+//    BackHandler(mainPanel.isExpanded) {
+//        coroutine.launch {
+//            mainPanel.collapse()
+//        }
+//    }
 
     if (currentWorkoutId != NONE_WORKOUT_ID) {
 

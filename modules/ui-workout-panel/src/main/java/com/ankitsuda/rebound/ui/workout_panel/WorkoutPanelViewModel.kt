@@ -51,7 +51,13 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
 
     private var _workout: MutableStateFlow<Workout?> =
         MutableStateFlow(null)
-    val workout = _workout.asStateFlow()
+    val workout = _workout.asStateFlow().map {
+        if (mWorkout == null || mWorkout != it) {
+            Timber.d("Updating viewModel mWorkout to currentWorkout")
+            mWorkout = it
+        }
+        it
+    }
 
     private var _logEntriesWithExerciseJunction: MutableStateFlow<List<LogEntriesWithExerciseJunction>> =
         MutableStateFlow(emptyList())

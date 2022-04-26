@@ -20,9 +20,11 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 
 @OptIn(ExperimentalMaterialApi::class)
-data class MainPanel constructor(
+class MainPanel constructor(
     val swipeableState: SwipeableState<Int>
 ) {
+    val isExpanded: Boolean get() = swipeableState.currentValue != 0
+
     suspend fun expand() {
         swipeableState.animateTo(1)
     }
