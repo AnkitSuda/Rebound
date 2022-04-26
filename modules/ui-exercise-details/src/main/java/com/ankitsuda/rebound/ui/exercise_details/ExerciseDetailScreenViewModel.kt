@@ -22,8 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ExerciseDetailScreenViewModel @Inject constructor(private val exercisesRepository: ExercisesRepository) :
     ViewModel() {
-
     fun getExercise(exerciseId: String) = exercisesRepository.getExercise(exerciseId)
 
-    fun getHistory(exerciseId: String) = exercisesRepository.getAllLogEntries(exerciseId)
+    fun getHistory(exerciseId: String) = exercisesRepository.getVisibleLogEntries(exerciseId)
 }

@@ -27,6 +27,7 @@ class ExercisesRepository @Inject constructor(private val exercisesDao: Exercise
     fun getExercise(exerciseId: String) = exercisesDao.getSingleExercise(exerciseId)
 
     fun getAllLogEntries(exerciseId: String) = exercisesDao.getAllLogEntries(exerciseId)
+    fun getVisibleLogEntries(exerciseId: String) = exercisesDao.getVisibleLogEntries(exerciseId)
 
     fun getAllExercises() = exercisesDao.getAllExercises()
     fun getAllExercisesWithMuscles() = exercisesDao.getAllExercisesWithMuscles()

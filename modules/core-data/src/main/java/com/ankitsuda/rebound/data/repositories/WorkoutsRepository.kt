@@ -172,13 +172,23 @@ class WorkoutsRepository @Inject constructor(
     fun getExercisesCountByWorkoutId(workoutId: String) =
         workoutsDao.getExercisesCountByWorkoutId(workoutId)
 
-    fun getTotalVolumeLiftedByWorkoutId(workoutId: String) =
-        workoutsDao.getTotalVolumeOfWorkout(workoutId = workoutId)
+//    fun getTotalVolumeLiftedByWorkoutId(workoutId: String) =
+//        workoutsDao.getTotalVolumeOfWorkout(workoutId = workoutId)
+
+    fun getTotalVolumeLiftedByWorkoutId(workoutId: String): Flow<Float> =
+        workoutsDao.getLogEntriesByWorkoutId(workoutId).map {
+            var volume = 0F
+            for (entry in it) {
+                volume += ((entry.weight ?: 0f) * (entry.reps ?: 0).toFloat())
+            }
+            volume
+        }
+
 
     fun getWorkoutsWithExtraInfo(date: LocalDate) =
         workoutsDao.getAllWorkoutsRawQuery(
             SimpleSQLiteQuery(
-                "SELECT * FROM workouts WHERE date(created_at / 1000,'unixepoch') = date(? / 1000,'unixepoch')",
+                "SELECT * FROM workouts WHERE date(created_at / 1000,'unixepoch') = date(? / 1000,'unixepoch') AND is_hidden = 0 AND in_progress = 0",
                 arrayOf<Any>(date.toEpochMillis())
             )
         ).map {

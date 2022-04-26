@@ -44,8 +44,6 @@ class ExercisesScreenViewModel @Inject constructor(
 
     private val allExercises = arrayListOf<ExerciseWithMuscle>()
 
-    val allMuscles = musclesRepository.getMuscles()
-
     private var _filteredExercises: SnapshotStateList<ExerciseWithMuscle> =
         SnapshotStateList()
 

@@ -52,6 +52,10 @@ interface WorkoutsDao {
     @Query("SELECT * FROM exercise_workout_junctions WHERE workout_id = :workoutId")
     fun getLogEntriesWithExerciseJunction(workoutId: String): Flow<List<LogEntriesWithExerciseJunction>>
 
+    @Transaction
+    @Query("SELECT exercise_log_entries.* FROM exercise_log_entries JOIN exercise_workout_junctions j WHERE j.workout_id = :workoutId AND j.id = junction_id")
+    fun getLogEntriesByWorkoutId(workoutId: String): Flow<List<ExerciseLogEntry>>
+
     @Delete
     suspend fun deleteExerciseLogEntry(exerciseLogEntry: ExerciseLogEntry)
 
