@@ -18,8 +18,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
+import com.ankitsuda.base.utils.TimePeriod
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.base.utils.toReadableDuration
+import com.ankitsuda.domain.models.orNone
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -83,6 +85,7 @@ class WorkoutScreenViewModel @Inject constructor(private val workoutsRepository:
             val newWorkoutId = workoutsRepository.createWorkout(
                 Workout(
                     id = "",
+                    name = "${TimePeriod.now()} Workout",
                     startAt = LocalDateTime.now(),
                     completedAt = null,
                     inProgress = true,

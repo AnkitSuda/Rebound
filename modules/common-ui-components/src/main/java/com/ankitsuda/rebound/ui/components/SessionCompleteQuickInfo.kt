@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.icons.Weight
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
@@ -42,7 +43,7 @@ fun SessionCompleteQuickInfo(modifier: Modifier = Modifier, time: String, volume
         )
         Spacer(modifier = Modifier.width(8.dp))
         SessionQuickInfoRowItem(
-            icon = Icons.Outlined.FitnessCenter,
+            icon = Icons.Filled.Weight,
             text = volume,
             contentDescription = "Total volume"
         )

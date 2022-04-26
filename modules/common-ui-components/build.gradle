@@ -49,6 +49,7 @@ repositories {
 dependencies {
     api project(":modules:common-ui-compose")
     api project(":modules:common-ui-theme")
+    api project(":modules:common-ui-icons")
     api project(":modules:navigation")
     api project(":modules:domain")
     api Deps.Android.Compose.collapsingToolbar
