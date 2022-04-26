@@ -15,16 +15,20 @@
 package com.ankitsuda.rebound.ui.exercises
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.text.toUpperCase
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
 import com.ankitsuda.rebound.data.repositories.MusclesRepository
 import com.ankitsuda.rebound.domain.entities.ExerciseWithMuscle
+import com.ankitsuda.rebound.domain.entities.Muscle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +48,11 @@ class ExercisesScreenViewModel @Inject constructor(
 
     private var _filteredExercises: SnapshotStateList<ExerciseWithMuscle> =
         SnapshotStateList()
-    val filteredExercises = _filteredExercises
+
+    private var _groupedExercises: MutableStateFlow<Map<String, List<ExerciseWithMuscle>>> =
+        MutableStateFlow(emptyMap())
+    val groupedExercises = _groupedExercises
+        .shareWhileObserved(viewModelScope)
 
     init {
         viewModelScope.launch {
@@ -84,6 +92,10 @@ class ExercisesScreenViewModel @Inject constructor(
             } else {
                 _filteredExercises.addAll(allExercises)
             }
+
+            _groupedExercises.emit(_filteredExercises.groupBy {
+                (it.exercise.name?.firstOrNull() ?: "#").toString().uppercase(Locale.getDefault())
+            })
 //            }
         }
     }
