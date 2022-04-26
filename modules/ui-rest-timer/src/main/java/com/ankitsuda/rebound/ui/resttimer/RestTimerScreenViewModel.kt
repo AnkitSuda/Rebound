@@ -42,7 +42,6 @@ class RestTimerScreenViewModel @Inject constructor(
     }
 
     val elapsedTime = restTimerRepository.getTimerServiceElapsedTimeMillis().map {
-        //Timber.i("elapsedTime: $it")
         if (timerState.value != TimerState.EXPIRED)
             it
         else

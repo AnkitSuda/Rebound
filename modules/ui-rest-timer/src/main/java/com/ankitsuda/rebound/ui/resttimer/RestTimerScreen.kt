@@ -53,7 +53,7 @@ fun RestTimerScreen(
                     screenHeightDp = screenHeightDp,
                     time = timeString ?: "",
                     timerState = timerState,
-                    elapsedTime = elapsedTime ?: 0L,
+                    elapsedTime = elapsedTime ?: 1L,
                     totalTime = totalTime ?: 1L,
                     onClickResume = {
                         viewModel.resumeTimer()

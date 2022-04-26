@@ -78,7 +78,6 @@ fun getTimes(): List<Any> {
 
     var lastI = 0
     for (i in 5..600) {
-        Timber.d("$i")
         if (i == lastI + 5) {
             list.add(TimeUnit.SECONDS.toMillis(i.toLong()))
             lastI = i

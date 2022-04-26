@@ -167,11 +167,12 @@ fun TimerCircle(
     totalTime: Long
 ) {
     val completedColor = LocalThemeState.current.primaryColor
+    val remainderColor = completedColor.copy(alpha = 0.25f)
     val whitePercent by animateFloatAsState(
         targetValue =
 //        min(
 //            1f,
-        elapsedTime.toFloat() / totalTime.toFloat()
+        1f - (elapsedTime.toFloat() / totalTime.toFloat())
 //        ),
     )
 
@@ -188,10 +189,6 @@ fun TimerCircle(
         val arcWidthHeight = ((radius - radiusOffset) * 2f)
         val arcSize = Size(arcWidthHeight, arcWidthHeight)
 
-        val remainderColor = Color.White.copy(alpha = 0.25f)
-
-//        val whitePercent =
-//            min(1f, elapsedTime.toFloat() / totalTime.toFloat())
         val greenPercent = 1 - whitePercent
 
         drawArc(

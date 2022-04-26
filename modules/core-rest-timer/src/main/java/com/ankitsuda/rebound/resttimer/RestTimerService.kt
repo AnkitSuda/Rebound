@@ -347,6 +347,7 @@ class RestTimerService : LifecycleService(), TextToSpeech.OnInitListener {
         /*Post current data to MutableLiveData*/
         currentTimerState.postValue(TimerState.EXPIRED)
         elapsedTimeInMillis.postValue(null)
+        totalTimeInMillis.postValue(null)
         elapsedTimeInMillisEverySecond.postValue(null)
     }
 
