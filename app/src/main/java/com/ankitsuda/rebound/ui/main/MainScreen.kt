@@ -38,9 +38,7 @@ import androidx.navigation.plusAssign
 import com.ankitsuda.base.ui.ThemeState
 import com.ankitsuda.base.util.LabelVisible
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
-import com.ankitsuda.common.compose.LocalDialog
-import com.ankitsuda.common.compose.MainDialog
-import com.ankitsuda.common.compose.rememberFlowWithLifecycle
+import com.ankitsuda.common.compose.*
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.NavigatorHost
@@ -128,10 +126,16 @@ private fun MainLayout(
         dialogVisible = false
     }
 
+    // Panel
+    val mainPanel = MainPanel(
+        swipeableState = swipeableState
+    )
+
     ReboundThemeWrapper(themeState = themeState) {
         NavigatorHost {
             CompositionLocalProvider(
                 LocalDialog provides dialog,
+                LocalPanel provides mainPanel
             ) {
                 Box() {
                     /**

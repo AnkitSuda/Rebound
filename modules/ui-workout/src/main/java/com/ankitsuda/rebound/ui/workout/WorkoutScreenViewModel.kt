@@ -16,10 +16,16 @@ package com.ankitsuda.rebound.ui.workout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
+import com.ankitsuda.base.utils.extensions.shareWhileObserved
+import com.ankitsuda.base.utils.toReadableDuration
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -27,8 +33,50 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkoutScreenViewModel @Inject constructor(private val workoutsRepository: WorkoutsRepository) :
     ViewModel() {
-    private var _currentWorkoutId = workoutsRepository.getCurrentWorkoutId()
-    val currentWorkoutId = _currentWorkoutId
+    private var _currentWorkout = MutableSharedFlow<Workout?>()
+    val currentWorkout = _currentWorkout
+        .distinctUntilChanged()
+        .shareWhileObserved(viewModelScope)
+
+    private var _currentWorkoutDurationStr = MutableSharedFlow<String?>()
+    val currentWorkoutDurationStr = _currentWorkoutDurationStr
+        .distinctUntilChanged()
+        .shareWhileObserved(viewModelScope)
+
+    private var durationJob: Job? = null
+
+    init {
+        viewModelScope.launch {
+            workoutsRepository.getCurrentWorkoutId().collectLatest {
+                refreshCurrentWorkout(it)
+            }
+        }
+    }
+
+    private fun refreshCurrentWorkout(workoutId: String) {
+        viewModelScope.launch {
+            var workout = if (workoutId != NONE_WORKOUT_ID) {
+                workoutsRepository.getWorkout(workoutId = workoutId).firstOrNull()
+            } else {
+                null
+            }
+            setupDurationUpdater(workout?.inProgress == true, workout?.startAt)
+
+            _currentWorkout.emit(workout)
+        }
+    }
+
+
+    private fun setupDurationUpdater(inProgress: Boolean, startAt: LocalDateTime?) {
+        durationJob?.cancel()
+        durationJob = viewModelScope.launch {
+            while (inProgress && startAt != null) {
+                _currentWorkoutDurationStr.emit(startAt.toReadableDuration())
+                delay(25)
+            }
+        }
+    }
+
 
     fun startEmptyWorkout() {
         viewModelScope.launch {

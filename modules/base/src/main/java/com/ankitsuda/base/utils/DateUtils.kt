@@ -46,3 +46,26 @@ fun Long.toDurationStr(): String {
     val hoursStr = if (hours > 0) "${hours}h" else null
     return listOfNotNull(hoursStr, minutesStr, secondsStr).joinToString(separator = " ")
 }
+
+fun LocalDateTime.toReadableDuration(endAt: LocalDateTime = LocalDateTime.now()): String {
+    val totalTime =
+        endAt.toEpochMillis() - this.toEpochMillis()
+
+    val totalSeconds = totalTime / 1000
+    val seconds = totalSeconds % 60
+    val minutes = totalSeconds / 60 % 60
+    val hours = totalSeconds / 3600
+    val readableStr = when {
+        hours > 0 -> {
+            "$hours hour $minutes min $seconds sec"
+        }
+        minutes > 0 -> {
+            "$minutes min $seconds sec"
+        }
+        else -> {
+            "$seconds sec"
+        }
+    }
+
+    return readableStr
+}

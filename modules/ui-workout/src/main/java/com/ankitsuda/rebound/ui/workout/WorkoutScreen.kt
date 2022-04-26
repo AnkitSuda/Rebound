@@ -28,6 +28,7 @@ import androidx.compose.material.icons.outlined.OpenInFull
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -36,14 +37,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.utils.generateId
+import com.ankitsuda.common.compose.LocalPanel
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import kotlinx.coroutines.launch
 import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
+import kotlin.math.exp
 
 @OptIn(
     ExperimentalFoundationApi::class,
@@ -54,10 +58,19 @@ import me.onebone.toolbar.FabPosition
 fun WorkoutScreen(
     navController: NavController,
     navigator: Navigator = LocalNavigator.current,
-    viewModel: WorkoutScreenViewModel = hiltViewModel()
+    viewModel: WorkoutScreenViewModel = hiltViewModel(),
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
-    val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
+    val currentWorkout by viewModel.currentWorkout.collectAsState(initial = null)
+    val currentWorkoutDurationStr by viewModel.currentWorkoutDurationStr.collectAsState(initial = null)
+    val coroutine = rememberCoroutineScope()
+    val mainPanel = LocalPanel.current
+
+    fun expandPanel() {
+        coroutine.launch {
+            mainPanel.expand()
+        }
+    }
 
     ToolbarWithFabScaffold(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
@@ -70,7 +83,7 @@ fun WorkoutScreen(
         },
         fab = {
 
-            AnimatedVisibility(visible = currentWorkoutId == NONE_WORKOUT_ID) {
+            if (currentWorkout == null) {
                 ExtendedFloatingActionButton(
                     modifier = Modifier,
                     elevation = FloatingActionButtonDefaults.elevation(
@@ -105,7 +118,7 @@ fun WorkoutScreen(
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
 
-            if (currentWorkoutId != NONE_WORKOUT_ID) {
+            if (currentWorkout != null) {
                 item {
                     AppCard(
                         modifier = Modifier
@@ -113,7 +126,7 @@ fun WorkoutScreen(
                             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp),
                         backgroundColor = ReboundTheme.colors.primary,
                         onClick = {
-                            // Expand panel
+                            expandPanel()
                         }
                     ) {
                         Row(
@@ -129,15 +142,17 @@ fun WorkoutScreen(
                                     style = ReboundTheme.typography.h6,
                                     color = ReboundTheme.colors.onPrimary
                                 )
-                                RSpacer(space = 4.dp)
-                                Text(
-                                    text = "32 minutes 12 seconds",
-                                    style = ReboundTheme.typography.body2,
-                                    color = ReboundTheme.colors.onPrimary.copy(alpha = 0.7f)
+                                currentWorkoutDurationStr?.let {
+                                    RSpacer(space = 4.dp)
+                                    Text(
+                                        text = it,
+                                        style = ReboundTheme.typography.body2,
+                                        color = ReboundTheme.colors.onPrimary.copy(alpha = 0.7f)
 
-                                )
+                                    )
+                                }
                             }
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = { expandPanel() }) {
                                 Icon(
                                     imageVector = Icons.Outlined.OpenInFull,
                                     contentDescription = "Open",

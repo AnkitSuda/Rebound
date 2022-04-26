@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.base.utils.toEpochMillis
+import com.ankitsuda.base.utils.toReadableDuration
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
@@ -96,35 +97,11 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
         durationJob?.cancel()
         durationJob = viewModelScope.launch {
             while (inProgress && startAt != null) {
-                updateDurationStr(startAt = startAt)
+                _currentDurationStr.value = startAt.toReadableDuration()
                 delay(25)
             }
         }
     }
-
-    private suspend fun updateDurationStr(startAt: LocalDateTime) {
-        val totalTime =
-            LocalDateTime.now().toEpochMillis() - startAt.toEpochMillis()
-
-        val totalSeconds = totalTime / 1000
-        val seconds = totalSeconds % 60
-        val minutes = totalSeconds / 60 % 60
-        val hours = totalSeconds / 3600
-        val readableStr = when {
-            hours > 0 -> {
-                "$hours hour $minutes min $seconds sec"
-            }
-            minutes > 0 -> {
-                "$minutes min $seconds sec"
-            }
-            else -> {
-                "$seconds sec"
-            }
-        }
-
-        _currentDurationStr.value = readableStr
-    }
-
 
     fun getExerciseWorkoutJunctions() =
         workoutsRepository.getExerciseWorkoutJunctions(mWorkout?.id ?: NONE_WORKOUT_ID)
