@@ -31,6 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.utils.toDurationStr
+import com.ankitsuda.navigation.LeafScreen
+import com.ankitsuda.navigation.LocalNavigator
+import com.ankitsuda.navigation.Navigator
+import com.ankitsuda.navigation.Screen
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import me.onebone.toolbar.CollapsingToolbarScaffold
@@ -40,7 +44,7 @@ import me.onebone.toolbar.ScrollStrategy
 
 @Composable
 fun SessionScreen(
-    navController: NavController,
+    navigator: Navigator = LocalNavigator.current,
     viewModel: SessionScreenViewModel = hiltViewModel()
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
@@ -60,7 +64,7 @@ fun SessionScreen(
                     toolbarState = collapsingState.toolbarState,
                     navigationIcon = {
                         TopBarBackIconButton {
-                            navController.popBackStack()
+                            navigator.goBack()
                         }
                     },
                     actions = {
@@ -98,7 +102,11 @@ fun SessionScreen(
                                 prs = 2
                             )
                         }
-                        IconButton(onClick = {}) {
+                        IconButton(onClick = {
+                            workout?.id?.let {
+                                navigator.navigate(LeafScreen.WorkoutEdit.createRoute(workoutId = it))
+                            }
+                        }) {
                             Icon(
                                 imageVector = Icons.Outlined.Edit,
                                 contentDescription = "Edit session",

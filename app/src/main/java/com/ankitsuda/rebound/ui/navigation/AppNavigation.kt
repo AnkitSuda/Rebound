@@ -46,6 +46,7 @@ import com.ankitsuda.rebound.ui.resttimer.RestTimerScreen
 import com.ankitsuda.rebound.ui.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.workout.WorkoutScreen
 import com.ankitsuda.rebound.ui.workout_details.SessionScreen
+import com.ankitsuda.rebound.ui.workoutedit.WorkoutEditScreen
 import com.ankitsuda.rebound.ui.workouttemplate.preview.WorkoutTemplatePreviewScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.navigation
@@ -140,6 +141,7 @@ private fun NavGraphBuilder.addHistoryRoot(navController: NavController) {
         addHistory(navController)
         addCalendar(navController)
         addSession(navController)
+        addWorkoutEdit(navController)
     }
 }
 
@@ -210,7 +212,13 @@ private fun NavGraphBuilder.addCalendar(navController: NavController) {
 
 private fun NavGraphBuilder.addSession(navController: NavController) {
     composableScreen(LeafScreen.Session()) {
-        SessionScreen(navController)
+        SessionScreen()
+    }
+}
+
+private fun NavGraphBuilder.addWorkoutEdit(navController: NavController) {
+    composableScreen(LeafScreen.WorkoutEdit()) {
+        WorkoutEditScreen(navController)
     }
 }
 

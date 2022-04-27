@@ -204,6 +204,23 @@ sealed class LeafScreen(
         }
     }
 
+    data class WorkoutEdit(
+        override val route: String = "workout_edit/{${WORKOUT_ID_KEY}}",
+    ) : LeafScreen(
+        route = route,
+        arguments = listOf(
+            navArgument(WORKOUT_ID_KEY) {
+                type = NavType.StringType
+            }
+        ),
+    ) {
+        companion object {
+
+            fun createRoute(workoutId: String) = "workout_edit/$workoutId"
+
+        }
+    }
+
     data class ExerciseDetails(override val route: String = "exercises/{exerciseId}") :
         LeafScreen(route) {
         companion object {
