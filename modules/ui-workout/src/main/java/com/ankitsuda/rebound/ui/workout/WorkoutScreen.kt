@@ -77,7 +77,9 @@ fun WorkoutScreen(
 
     fun createAndNavigateToTemplate() {
         viewModel.createTemplate {
-            Timber.d("Routine created $it")
+            if (it.workoutId != null) {
+                navigator.navigate(LeafScreen.WorkoutEdit.createRoute(it.workoutId!!))
+            }
         }
     }
 
@@ -255,7 +257,7 @@ fun WorkoutScreen(
                     name = it.workout.name ?: it.template.id,
                     totalExercises = 7,
                     onClick = {
-                        navigator.navigate(LeafScreen.WorkoutEdit.createRoute(it.workout.id))
+                        navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(it.template.id))
                     }
                 )
             }

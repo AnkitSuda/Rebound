@@ -36,6 +36,7 @@ const val PLAYLIST_ID_KEY = "playlist_id"
 const val DATE_KEY = "date"
 const val SELECTED_DATE_KEY = "selected_date"
 const val WORKOUT_ID_KEY = "workout_id"
+const val EXERCISE_ID_KEY = "exercise_id"
 const val WORKOUT_TEMPLATE_ID_KEY = "workout_template_id"
 const val PART_ID_KEY = "part_id"
 const val LOG_ID_KEY = "log_id"
@@ -96,54 +97,110 @@ sealed class LeafScreen(
         LeafScreen(route, TabRootScreen.MoreTab)
 
 
-    data class Home(override val route: String = "home") : LeafScreen(route)
-    data class History(override val route: String = "history?$DATE_KEY={$DATE_KEY}") :
-        LeafScreen(route = route,
+    data class Home(
+        override val route: String = "home",
+        override val root: TabRootScreen = TabRootScreen.HomeTab
+    ) : LeafScreen(route = route, root = root)
+
+    data class History(
+        override val route: String = "history?$DATE_KEY={$DATE_KEY}",
+        override val root: TabRootScreen = TabRootScreen.HistoryTab
+    ) :
+        LeafScreen(
+            route = route,
+            root = root,
             arguments = listOf(
                 navArgument(DATE_KEY) {
                     nullable = true
                     type = NavType.StringType
                 }
             )) {
-        fun createRoute(date: Date) =
-            "history?$DATE_KEY=${date.time}"
+        fun createRoute(date: Date, root: TabRootScreen = TabRootScreen.HistoryTab) =
+            "${root.route}/history?$DATE_KEY=${date.time}"
     }
 
-    data class Workout(override val route: String = "workout") : LeafScreen(route)
-    data class Exercises(override val route: String = "exercises") : LeafScreen(route)
-    data class More(override val route: String = "more") : LeafScreen(route)
+    data class Workout(
+        override val route: String = "workout",
+        override val root: TabRootScreen = TabRootScreen.WorkoutTab
+    ) : LeafScreen(route, root)
 
-    data class ExercisesBottomSheet(override val route: String = "exercises_bottom_sheet") :
+    data class Exercises(
+        override val route: String = "exercises",
+        override val root: TabRootScreen = TabRootScreen.ExercisesTab
+    ) : LeafScreen(route, root)
+
+    data class More(
+        override val route: String = "more",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) : LeafScreen(route, root)
+
+    data class ExercisesBottomSheet(
+        override val route: String = "exercises_bottom_sheet"
+    ) :
         LeafScreen(route)
 
 
-    data class Measure(override val route: String = "measure") : LeafScreen(route)
-    data class PartMeasurements(override val route: String = "part_measurements/{${PART_ID_KEY}}") :
+    data class Measure(
+        override val route: String = "measure",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) : LeafScreen(route, root)
+
+    data class PartMeasurements(
+        override val route: String = "part_measurements/{${PART_ID_KEY}}",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) :
         LeafScreen(route) {
         companion object {
-            fun createRoute(partId: String) = "part_measurements/$partId"
+            fun createRoute(partId: String, root: TabRootScreen = TabRootScreen.MoreTab) =
+                "${root.route}/part_measurements/$partId"
         }
     }
 
-    data class Settings(override val route: String = "settings") : LeafScreen(route)
-    data class Personalization(override val route: String = "personalization") : LeafScreen(route)
-    data class MainColorsPersonalization(override val route: String = "personalization/main_colors") :
-        LeafScreen(route)
+    data class Settings(
+        override val route: String = "settings",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) : LeafScreen(route, root)
 
-    data class ShapesPersonalization(override val route: String = "personalization/shapes") :
-        LeafScreen(route)
+    data class Personalization(
+        override val route: String = "personalization",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) : LeafScreen(route, root)
 
-    data class CardsPersonalization(override val route: String = "personalization/cards") :
-        LeafScreen(route)
+    data class MainColorsPersonalization(
+        override val route: String = "personalization/main_colors",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) :
+        LeafScreen(route, root)
 
-    data class TopBarPersonalization(override val route: String = "personalization/top_bar") :
-        LeafScreen(route)
+    data class ShapesPersonalization(
+        override val route: String = "personalization/shapes",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) :
+        LeafScreen(route, root)
 
-    data class BottomBarPersonalization(override val route: String = "personalization/bottom_bar") :
-        LeafScreen(route)
+    data class CardsPersonalization(
+        override val route: String = "personalization/cards",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) :
+        LeafScreen(route, root)
 
-    data class ChartsPersonalization(override val route: String = "personalization/charts") :
-        LeafScreen(route)
+    data class TopBarPersonalization(
+        override val route: String = "personalization/top_bar",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) :
+        LeafScreen(route, root)
+
+    data class BottomBarPersonalization(
+        override val route: String = "personalization/bottom_bar",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) :
+        LeafScreen(route, root)
+
+    data class ChartsPersonalization(
+        override val route: String = "personalization/charts",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) :
+        LeafScreen(route, root)
 
     data class ColorPickerDemo(override val route: String = "personalization/color_picker_demo") :
         LeafScreen(route)
@@ -177,20 +234,26 @@ sealed class LeafScreen(
         }
     }
 
-    data class Calendar(override val route: String = "calendar/{$SELECTED_DATE_KEY}") :
-        LeafScreen(route) {
+    data class Calendar(
+        override val route: String = "calendar/{$SELECTED_DATE_KEY}",
+        override val root: TabRootScreen = TabRootScreen.HistoryTab
+    ) :
+        LeafScreen(route, root) {
         companion object {
 
-            fun createRoute(selectedDate: LocalDate) = "calendar/${selectedDate.toEpochMillis()}"
-            fun createRoute(selectedDate: Date) = "calendar/${selectedDate.time}"
-            fun createRoute(selectedDate: Long) = "calendar/${selectedDate}"
+            fun createRoute(
+                selectedDate: LocalDate,
+                root: TabRootScreen = TabRootScreen.HistoryTab
+            ) = "${root.route}/calendar/${selectedDate.toEpochMillis()}"
         }
     }
 
     data class Session(
         override val route: String = "session/{${WORKOUT_ID_KEY}}",
+        override val root: TabRootScreen = TabRootScreen.HistoryTab
     ) : LeafScreen(
         route = route,
+        root = root,
         arguments = listOf(
             navArgument(WORKOUT_ID_KEY) {
                 type = NavType.StringType
@@ -199,15 +262,17 @@ sealed class LeafScreen(
     ) {
         companion object {
 
-            fun createRoute(workoutId: String) = "session/$workoutId"
+            fun createRoute(workoutId: String, root: TabRootScreen = TabRootScreen.HistoryTab) = "${root.route}/session/$workoutId"
 
         }
     }
 
     data class WorkoutEdit(
         override val route: String = "workout_edit/{${WORKOUT_ID_KEY}}",
+        override val root: TabRootScreen = TabRootScreen.HistoryTab
     ) : LeafScreen(
         route = route,
+        root = root,
         arguments = listOf(
             navArgument(WORKOUT_ID_KEY) {
                 type = NavType.StringType
@@ -216,22 +281,42 @@ sealed class LeafScreen(
     ) {
         companion object {
 
-            fun createRoute(workoutId: String) = "workout_edit/$workoutId"
+            fun createRoute(workoutId: String, root: TabRootScreen = TabRootScreen.HistoryTab) = "${root.route}/workout_edit/$workoutId"
 
         }
     }
 
-    data class ExerciseDetails(override val route: String = "exercises/{exerciseId}") :
-        LeafScreen(route) {
+    data class ExerciseDetails(
+        override val route: String = "exercises/{${EXERCISE_ID_KEY}}",
+        override val root: TabRootScreen = TabRootScreen.ExercisesTab
+    ) :
+        LeafScreen(
+            route = route,
+            root = root,
+            arguments = listOf(
+                navArgument(EXERCISE_ID_KEY) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
         companion object {
-            fun createRoute(exerciseId: String) = "exercises/$exerciseId"
+            fun createRoute(exerciseId: String, root: TabRootScreen = TabRootScreen.ExercisesTab) = "${root.route}/exercises/$exerciseId"
         }
     }
 
-    data class WorkoutTemplatePreview(override val route: String = "workout_template/{${WORKOUT_TEMPLATE_ID_KEY}}/preview") :
-        LeafScreen(route) {
+    data class WorkoutTemplatePreview(override val route: String = "workout_template/{${WORKOUT_TEMPLATE_ID_KEY}}/preview",
+                                      override val root: TabRootScreen = TabRootScreen.MoreTab) :
+        LeafScreen(
+            route = route,
+            root = root,
+            arguments = listOf(
+                navArgument(WORKOUT_TEMPLATE_ID_KEY) {
+                    type = NavType.StringType
+                }
+            ),
+        ) {
         companion object {
-            fun createRoute(templateId: String) = "workout_template/$templateId/preview"
+            fun createRoute(templateId: String, root: TabRootScreen = TabRootScreen.WorkoutTab) = "${root.route}/workout_template/$templateId/preview"
         }
     }
 

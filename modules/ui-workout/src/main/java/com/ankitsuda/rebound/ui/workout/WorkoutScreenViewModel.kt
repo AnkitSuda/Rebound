@@ -23,6 +23,7 @@ import com.ankitsuda.base.utils.toReadableDuration
 import com.ankitsuda.rebound.data.repositories.WorkoutTemplatesRepository
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
+import com.ankitsuda.rebound.domain.entities.WorkoutTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -98,10 +99,10 @@ class WorkoutScreenViewModel @Inject constructor(
         }
     }
 
-    fun createTemplate(onCreated: (String) -> Unit) {
+    fun createTemplate(onCreated: (WorkoutTemplate) -> Unit) {
         viewModelScope.launch {
-            val templateId = workoutTemplatesRepository.createTemplate()
-            onCreated(templateId)
+            val template = workoutTemplatesRepository.createTemplate()
+            onCreated(template)
         }
     }
 

@@ -20,6 +20,7 @@ import com.ankitsuda.rebound.data.db.daos.WorkoutTemplatesDao
 import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
 import com.ankitsuda.rebound.domain.entities.WorkoutTemplate
 import com.ankitsuda.rebound.domain.entities.Workout
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import java.time.LocalDateTime
 import java.util.*
@@ -30,11 +31,13 @@ class WorkoutTemplatesRepository @Inject constructor(
     private val workoutsDao: WorkoutsDao
 ) {
 
+    fun getTemplate(templateId: String) = workoutTemplatesDao.getTemplate(templateId = templateId)
+
     fun getNonHiddenTemplatesWithWorkouts() =
         workoutTemplatesDao.getNonHiddenTemplatesWithWorkouts()
 
     @Transaction
-    suspend fun createTemplate(): String {
+    suspend fun createTemplate(): WorkoutTemplate {
         val workoutId = generateId()
         workoutsDao.insertWorkout(
             Workout(
@@ -49,7 +52,7 @@ class WorkoutTemplatesRepository @Inject constructor(
         val routineId = generateId()
         val lastListOrder = workoutTemplatesDao.getLastListOrder().firstOrNull() ?: 0
 
-        workoutTemplatesDao.insertTemplate(
+        val template =
             WorkoutTemplate(
                 id = routineId,
                 workoutId = workoutId,
@@ -59,8 +62,11 @@ class WorkoutTemplatesRepository @Inject constructor(
                 createdAt = LocalDateTime.now(),
                 updatedAt = LocalDateTime.now()
             )
+
+        workoutTemplatesDao.insertTemplate(
+            template
         )
 
-        return routineId
+        return template
     }
 }

@@ -141,7 +141,7 @@ private fun NavGraphBuilder.addHistoryRoot(navController: NavController) {
         addHistory(navController)
         addCalendar(navController)
         addSession(navController)
-        addWorkoutEdit(navController)
+        addWorkoutEdit(navController, TabRootScreen.HistoryTab)
     }
 }
 
@@ -153,6 +153,8 @@ private fun NavGraphBuilder.addWorkoutRoot(navController: NavController) {
     ) {
         addWorkout(navController)
         addWorkoutTemplatePreview(navController)
+        addExerciseDetail(navController, TabRootScreen.WorkoutTab)
+        addWorkoutEdit(navController, TabRootScreen.WorkoutTab)
     }
 }
 
@@ -163,7 +165,7 @@ private fun NavGraphBuilder.addExercisesRoot(navController: NavController) {
         startDestination = LeafScreen.Exercises().createRoute()
     ) {
         addExercises(navController)
-        addExerciseDetail(navController)
+        addExerciseDetail(navController, TabRootScreen.ExercisesTab)
         addCreateExerciseBottomSheet(navController)
     }
 }
@@ -216,8 +218,8 @@ private fun NavGraphBuilder.addSession(navController: NavController) {
     }
 }
 
-private fun NavGraphBuilder.addWorkoutEdit(navController: NavController) {
-    composableScreen(LeafScreen.WorkoutEdit()) {
+private fun NavGraphBuilder.addWorkoutEdit(navController: NavController, root: TabRootScreen) {
+    composableScreen(LeafScreen.WorkoutEdit(root = root)) {
         WorkoutEditScreen(navController)
     }
 }
@@ -235,8 +237,8 @@ private fun NavGraphBuilder.addExercises(navController: NavController) {
     }
 }
 
-private fun NavGraphBuilder.addExerciseDetail(navController: NavController) {
-    composableScreen(LeafScreen.ExerciseDetails()) {
+private fun NavGraphBuilder.addExerciseDetail(navController: NavController, root: TabRootScreen) {
+    composableScreen(LeafScreen.ExerciseDetails(root = root)) {
         ExerciseDetailScreen(navController)
     }
 }

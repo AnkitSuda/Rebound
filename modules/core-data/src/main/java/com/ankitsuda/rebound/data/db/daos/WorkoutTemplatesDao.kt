@@ -21,6 +21,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WorkoutTemplatesDao {
 
+    @Query("SELECT * FROM workout_templates WHERE id = :templateId")
+    fun getTemplate(templateId: String): Flow<WorkoutTemplate>
+
     @Query("SELECT * FROM workout_templates WHERE is_hidden = 0 ORDER BY list_order ASC")
     fun getNonHiddenTemplatesWithWorkouts(): Flow<List<TemplateWithWorkout>>
 

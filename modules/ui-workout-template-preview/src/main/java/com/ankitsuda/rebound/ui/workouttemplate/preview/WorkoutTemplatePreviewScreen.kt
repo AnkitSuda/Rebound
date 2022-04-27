@@ -20,19 +20,28 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.base.utils.toReadableDuration
+import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
+import com.ankitsuda.navigation.TabRootScreen
 import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
+import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.workouttemplate.preview.components.TemplateExerciseComponent
 import me.onebone.toolbar.*
@@ -42,10 +51,15 @@ import kotlin.random.Random
 @OptIn(ExperimentalToolbarApi::class)
 @Composable
 fun WorkoutTemplatePreviewScreen(
-    navigator: Navigator = LocalNavigator.current
+    navigator: Navigator = LocalNavigator.current,
+    viewModel: WorkoutTemplatePreviewScreenViewModel = hiltViewModel()
 ) {
-    val templateName = "Legs & Core"
-    val lastPerformedStr = "Last performed: 25-Nov-2021"
+    val template by viewModel.workoutTemplate.collectAsState(initial = null)
+    val workout by viewModel.workout.collectAsState(initial = null)
+    val entriesJunctions by viewModel.entriesJunctions.collectAsState(initial = emptyList())
+
+    val templateName = workout?.name ?: ""
+    val lastPerformedStr = template?.lastPerformedAt?.toString()
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
@@ -59,6 +73,18 @@ fun WorkoutTemplatePreviewScreen(
                 navigationIcon = {
                     TopBarBackIconButton {
                         navigator.goBack()
+                    }
+                },
+                actions = {
+                    TopBarIconButton(icon = Icons.Outlined.Edit, title = "Edit") {
+                        workout?.id?.let {
+                            navigator.navigate(
+                                LeafScreen.WorkoutEdit.createRoute(
+                                    workoutId = it,
+                                    TabRootScreen.WorkoutTab
+                                )
+                            )
+                        }
                     }
                 })
         },
@@ -88,21 +114,28 @@ fun WorkoutTemplatePreviewScreen(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
-            item {
-                Text(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    text = lastPerformedStr,
-                    style = ReboundTheme.typography.caption,
-                    fontSize = 14.sp,
-                    color = Color(158, 158, 158)
-                )
+            lastPerformedStr?.let {
+                item {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        text = it,
+                        style = ReboundTheme.typography.caption,
+                        fontSize = 14.sp,
+                        color = Color(158, 158, 158)
+                    )
+                }
             }
-            items(10) {
+            items(entriesJunctions) {
                 TemplateExerciseComponent(
-                    name = Random.nextInt().toString(),
-                    muscle = Random.nextInt().toString(),
+                    name = "${it.logEntries.size} x ${it.exercise.name}",
+                    muscle = ":/",
                     onClickInfo = {
-
+                        navigator.navigate(
+                            LeafScreen.ExerciseDetails.createRoute(
+                                it.exercise.exerciseId,
+                                TabRootScreen.WorkoutTab
+                            )
+                        )
                     },
                     onClick = {
 
@@ -110,6 +143,5 @@ fun WorkoutTemplatePreviewScreen(
                 )
             }
         }
-
     }
 }
