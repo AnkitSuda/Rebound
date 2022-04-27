@@ -14,28 +14,17 @@
 
 package com.ankitsuda.rebound.domain.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+import com.ankitsuda.base.utils.toEpochMillis
 import java.time.LocalDateTime
 import java.util.*
 
-@Entity(tableName = "workout_template_exercises")
-data class WorkoutTemplateExercise(
-    @PrimaryKey(autoGenerate = false)
-    @ColumnInfo(name = "id")
-    val id: String,
-
-    @ColumnInfo(name = "template_id")
-    var templateId: String,
-    @ColumnInfo(name = "exercise_id")
-    var exerciseId: String,
-
-    @ColumnInfo(name = "sets")
-    var sets: Int? = null,
-
-    @ColumnInfo(name = "created_at")
-    var createdAt: LocalDateTime? = null,
-    @ColumnInfo(name = "update_at")
-    var updatedAt: LocalDateTime? = null,
+data class TemplateWithWorkout(
+    @Embedded
+    var template: WorkoutTemplate,
+    @Relation(
+        parentColumn = "workout_id",
+        entityColumn = "id",
+    )
+    var workout: Workout,
 )

@@ -21,6 +21,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -47,6 +48,7 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
+import timber.log.Timber
 import kotlin.math.exp
 
 @OptIn(
@@ -63,12 +65,19 @@ fun WorkoutScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val currentWorkout by viewModel.currentWorkout.collectAsState(initial = null)
     val currentWorkoutDurationStr by viewModel.currentWorkoutDurationStr.collectAsState(initial = null)
+    val templatesWithWorkouts by viewModel.templatesWithWorkouts.collectAsState(emptyList())
     val coroutine = rememberCoroutineScope()
     val mainPanel = LocalPanel.current
 
     fun expandPanel() {
         coroutine.launch {
             mainPanel.expand()
+        }
+    }
+
+    fun createAndNavigateToTemplate() {
+        viewModel.createTemplate {
+            Timber.d("Routine created $it")
         }
     }
 
@@ -178,7 +187,6 @@ fun WorkoutScreen(
                             color = LocalThemeState.current.onBackgroundColor
                         )
                         TextButton(onClick = {
-
                         }) {
                             Icon(
                                 imageVector = Icons.Outlined.Add,
@@ -225,7 +233,7 @@ fun WorkoutScreen(
                             color = LocalThemeState.current.onBackgroundColor
                         )
                         TextButton(onClick = {
-
+                            createAndNavigateToTemplate()
                         }) {
                             Icon(
                                 imageVector = Icons.Outlined.Add,
@@ -239,15 +247,15 @@ fun WorkoutScreen(
                 }
             }
 
-            items(5) {
+            items(templatesWithWorkouts, key = { it.template.id }) {
                 TemplateItemCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    name = "Push",
+                    name = it.workout.name ?: it.template.id,
                     totalExercises = 7,
                     onClick = {
-                        navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(generateId()))
+                        navigator.navigate(LeafScreen.WorkoutEdit.createRoute(it.workout.id))
                     }
                 )
             }

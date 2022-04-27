@@ -18,7 +18,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
-import java.util.*
 
 @Entity(tableName = "workout_templates")
 data class WorkoutTemplate(
@@ -26,13 +25,19 @@ data class WorkoutTemplate(
     @ColumnInfo(name = "id")
     val id: String,
 
-    @ColumnInfo(name = "name")
-    var name: String,
-    @ColumnInfo(name = "description")
-    var description: String? = null,
-    @ColumnInfo(name = "image")
-    var image: String? = null,
+    @ColumnInfo(name = "is_hidden")
+    var isHidden: Boolean? = null,
+    @ColumnInfo(name = "is_archived")
+    var isArchived: Boolean? = null,
 
+    @ColumnInfo(name = "list_order")
+    var listOrder: Int? = null,
+
+    @ColumnInfo(name = "workout_id")
+    var workoutId: String? = null,
+
+    @ColumnInfo(name = "last_performed_at")
+    var lastPerformedAt: LocalDateTime? = null,
     @ColumnInfo(name = "created_at")
     var createdAt: LocalDateTime? = null,
     @ColumnInfo(name = "update_at")

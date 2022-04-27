@@ -15,10 +15,7 @@
 package com.ankitsuda.rebound.data.repositories
 
 import com.ankitsuda.rebound.data.datastore.PrefStorage
-import com.ankitsuda.rebound.data.db.daos.ExercisesDao
-import com.ankitsuda.rebound.data.db.daos.MeasurementsDao
-import com.ankitsuda.rebound.data.db.daos.MusclesDao
-import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
+import com.ankitsuda.rebound.data.db.daos.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,4 +48,12 @@ class RepositoriesModule {
         musclesDao: MusclesDao
     ) =
         ExercisesRepository(exercisesDao, musclesDao)
+
+    @Singleton
+    @Provides
+    fun provideWorkoutTemplatesRepository(
+        workoutTemplatesDao: WorkoutTemplatesDao,
+        workoutsDao: WorkoutsDao
+    ) =
+        WorkoutTemplatesRepository(workoutTemplatesDao, workoutsDao)
 }

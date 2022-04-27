@@ -16,12 +16,11 @@ package com.ankitsuda.rebound.ui.workout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.utils.TimePeriod
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.base.utils.toReadableDuration
-import com.ankitsuda.domain.models.orNone
+import com.ankitsuda.rebound.data.repositories.WorkoutTemplatesRepository
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,17 +32,20 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class WorkoutScreenViewModel @Inject constructor(private val workoutsRepository: WorkoutsRepository) :
+class WorkoutScreenViewModel @Inject constructor(
+    private val workoutsRepository: WorkoutsRepository,
+    private val workoutTemplatesRepository: WorkoutTemplatesRepository
+) :
     ViewModel() {
-    private var _currentWorkout = MutableSharedFlow<Workout?>()
+    private var _currentWorkout = MutableStateFlow<Workout?>(null)
     val currentWorkout = _currentWorkout
-        .distinctUntilChanged()
         .shareWhileObserved(viewModelScope)
 
-    private var _currentWorkoutDurationStr = MutableSharedFlow<String?>()
+    private var _currentWorkoutDurationStr = MutableStateFlow<String?>(null)
     val currentWorkoutDurationStr = _currentWorkoutDurationStr
-        .distinctUntilChanged()
         .shareWhileObserved(viewModelScope)
+
+    val templatesWithWorkouts = workoutTemplatesRepository.getNonHiddenTemplatesWithWorkouts()
 
     private var durationJob: Job? = null
 
@@ -96,9 +98,11 @@ class WorkoutScreenViewModel @Inject constructor(private val workoutsRepository:
         }
     }
 
-    fun cancelCurrentWorkout() {
+    fun createTemplate(onCreated: (String) -> Unit) {
         viewModelScope.launch {
-            workoutsRepository.setCurrentWorkoutId(NONE_WORKOUT_ID)
+            val templateId = workoutTemplatesRepository.createTemplate()
+            onCreated(templateId)
         }
     }
+
 }

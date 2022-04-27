@@ -17,10 +17,7 @@ package com.ankitsuda.rebound.data.db
 import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.ankitsuda.rebound.data.db.daos.ExercisesDao
-import com.ankitsuda.rebound.data.db.daos.MeasurementsDao
-import com.ankitsuda.rebound.data.db.daos.MusclesDao
-import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
+import com.ankitsuda.rebound.data.db.daos.*
 import com.ankitsuda.rebound.domain.entities.*
 import java.util.concurrent.Executors
 
@@ -36,7 +33,6 @@ import java.util.concurrent.Executors
         Muscle::class,
         Workout::class,
         WorkoutTemplate::class,
-        WorkoutTemplateExercise::class,
     ],
     version = 1,
     exportSchema = true
@@ -48,6 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun workoutsDao(): WorkoutsDao
     abstract fun musclesDao(): MusclesDao
     abstract fun exercisesDao(): ExercisesDao
+    abstract fun workoutTemplatesDao(): WorkoutTemplatesDao
 
     companion object {
         @Volatile
