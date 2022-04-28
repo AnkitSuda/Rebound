@@ -42,6 +42,7 @@ import com.ankitsuda.common.compose.LocalPanel
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
+import com.ankitsuda.navigation.TabRootScreen
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -78,7 +79,12 @@ fun WorkoutScreen(
     fun createAndNavigateToTemplate() {
         viewModel.createTemplate {
             if (it.workoutId != null) {
-                navigator.navigate(LeafScreen.WorkoutEdit.createRoute(it.workoutId!!))
+                navigator.navigate(
+                    LeafScreen.WorkoutEdit.createRoute(
+                        it.workoutId!!,
+                        TabRootScreen.WorkoutTab
+                    )
+                )
             }
         }
     }

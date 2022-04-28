@@ -62,8 +62,7 @@ fun MoreScreen(
                     text = "Measure",
                     description = "Body measurements",
                     onClick = {
-//                        navController.navigate(Route.Measure.route)
-                        navigator.navigate(LeafScreen.Measure().route)
+                        navigator.navigate(LeafScreen.Measure().createRoute())
                     })
             }
             item {
@@ -87,7 +86,7 @@ fun MoreScreen(
                     text = "Personalization",
                     description = "Make rebound yours",
                     onClick = {
-                        navigator.navigate(LeafScreen.Personalization().route)
+                        navigator.navigate(LeafScreen.Personalization().createRoute())
                     })
             }
             item {
@@ -98,7 +97,7 @@ fun MoreScreen(
                     text = "Settings",
                     description = "Units, backups etc.",
                     onClick = {
-                        navigator.navigate(LeafScreen.Settings().route)
+                        navigator.navigate(LeafScreen.Settings().createRoute())
                     })
             }
         }

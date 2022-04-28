@@ -72,7 +72,7 @@ fun PersonalizationScreen(
                         .fillMaxWidth(),
                     text = "Main Colors",
                     onClick = {
-                        navigator.navigate(LeafScreen.MainColorsPersonalization().route)
+                        navigator.navigate(LeafScreen.MainColorsPersonalization().createRoute())
                     })
             }
             item {
@@ -81,7 +81,7 @@ fun PersonalizationScreen(
                         .fillMaxWidth(),
                     text = "Shapes",
                     onClick = {
-                        navigator.navigate(LeafScreen.ShapesPersonalization().route)
+                        navigator.navigate(LeafScreen.ShapesPersonalization().createRoute())
                     })
             }
             item {
@@ -90,7 +90,7 @@ fun PersonalizationScreen(
                         .fillMaxWidth(),
                     text = "Cards",
                     onClick = {
-                        navigator.navigate(LeafScreen.CardsPersonalization().route)
+                        navigator.navigate(LeafScreen.CardsPersonalization().createRoute())
                     })
             }
             item {
@@ -99,7 +99,7 @@ fun PersonalizationScreen(
                         .fillMaxWidth(),
                     text = "Top Bar",
                     onClick = {
-                        navigator.navigate(LeafScreen.TopBarPersonalization().route)
+                        navigator.navigate(LeafScreen.TopBarPersonalization().createRoute())
                     })
             }
             item {
@@ -108,7 +108,7 @@ fun PersonalizationScreen(
                         .fillMaxWidth(),
                     text = "Bottom Bar",
                     onClick = {
-                        navigator.navigate(LeafScreen.BottomBarPersonalization().route)
+                        navigator.navigate(LeafScreen.BottomBarPersonalization().createRoute())
                     })
             }
             item {
@@ -117,7 +117,7 @@ fun PersonalizationScreen(
                         .fillMaxWidth(),
                     text = "Charts",
                     onClick = {
-                        navigator.navigate(LeafScreen.ChartsPersonalization().route)
+                        navigator.navigate(LeafScreen.ChartsPersonalization().createRoute())
                     })
             }
             item {
@@ -126,7 +126,7 @@ fun PersonalizationScreen(
                         .fillMaxWidth(),
                     text = "Color Picker Demo",
                     onClick = {
-                        navigator.navigate(LeafScreen.ColorPickerDemo().route)
+                        navigator.navigate(LeafScreen.ColorPickerDemo().createRoute())
                     })
             }
         }

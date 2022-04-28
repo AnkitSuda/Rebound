@@ -72,7 +72,7 @@ fun SettingsScreen(
                     text = "Personalization",
                     description = "Make rebound yours",
                     onClick = {
-                        navigator.navigate(LeafScreen.Personalization().route)
+                        navigator.navigate(LeafScreen.Personalization().createRoute())
                     })
             }
             item {

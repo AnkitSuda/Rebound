@@ -262,7 +262,8 @@ sealed class LeafScreen(
     ) {
         companion object {
 
-            fun createRoute(workoutId: String, root: TabRootScreen = TabRootScreen.HistoryTab) = "${root.route}/session/$workoutId"
+            fun createRoute(workoutId: String, root: TabRootScreen = TabRootScreen.HistoryTab) =
+                "${root.route}/session/$workoutId"
 
         }
     }
@@ -281,7 +282,8 @@ sealed class LeafScreen(
     ) {
         companion object {
 
-            fun createRoute(workoutId: String, root: TabRootScreen = TabRootScreen.HistoryTab) = "${root.route}/workout_edit/$workoutId"
+            fun createRoute(workoutId: String, root: TabRootScreen = TabRootScreen.HistoryTab) =
+                "${root.route}/workout_edit/$workoutId"
 
         }
     }
@@ -300,12 +302,15 @@ sealed class LeafScreen(
             )
         ) {
         companion object {
-            fun createRoute(exerciseId: String, root: TabRootScreen = TabRootScreen.ExercisesTab) = "${root.route}/exercises/$exerciseId"
+            fun createRoute(exerciseId: String, root: TabRootScreen = TabRootScreen.ExercisesTab) =
+                "${root.route}/exercises/$exerciseId"
         }
     }
 
-    data class WorkoutTemplatePreview(override val route: String = "workout_template/{${WORKOUT_TEMPLATE_ID_KEY}}/preview",
-                                      override val root: TabRootScreen = TabRootScreen.MoreTab) :
+    data class WorkoutTemplatePreview(
+        override val route: String = "workout_template/{${WORKOUT_TEMPLATE_ID_KEY}}/preview",
+        override val root: TabRootScreen = TabRootScreen.WorkoutTab
+    ) :
         LeafScreen(
             route = route,
             root = root,
@@ -316,7 +321,8 @@ sealed class LeafScreen(
             ),
         ) {
         companion object {
-            fun createRoute(templateId: String, root: TabRootScreen = TabRootScreen.WorkoutTab) = "${root.route}/workout_template/$templateId/preview"
+            fun createRoute(templateId: String, root: TabRootScreen = TabRootScreen.WorkoutTab) =
+                "${root.route}/workout_template/$templateId/preview"
         }
     }
 

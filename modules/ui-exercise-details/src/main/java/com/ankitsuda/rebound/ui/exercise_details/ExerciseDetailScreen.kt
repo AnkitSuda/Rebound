@@ -52,15 +52,8 @@ fun ExerciseDetailScreen(
     navController: NavController,
     viewModel: ExerciseDetailScreenViewModel = hiltViewModel()
 ) {
-    val exerciseId by remember {
-        mutableStateOf(
-            navController.currentBackStackEntry?.arguments?.getString("exerciseId")!!
-        )
-    }
-
-    val exercise by viewModel.getExercise(exerciseId).collectAsState(initial = null)
-    val logEntriesWithWorkoutList by viewModel.getHistory(exerciseId)
-        .collectAsState(initial = emptyList())
+    val exercise by viewModel.exercise.collectAsState(initial = null)
+    val logEntriesWithWorkoutList by viewModel.history.collectAsState(initial = emptyList())
 
     val tabData = listOf(
         "Statistics",
@@ -68,10 +61,6 @@ fun ExerciseDetailScreen(
         "About"
     )
     val pagerState = rememberPagerState(
-
-//        pageCount = tabData.size,
-//        initialOffscreenLimit = 2,
-//        infiniteLoop = false,
         initialPage = 0,
     )
     val tabIndex = pagerState.currentPage
