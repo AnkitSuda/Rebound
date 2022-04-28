@@ -36,7 +36,6 @@ class WorkoutTemplatesRepository @Inject constructor(
     fun getNonHiddenTemplatesWithWorkouts() =
         workoutTemplatesDao.getNonHiddenTemplatesWithWorkouts()
 
-    @Transaction
     suspend fun createTemplate(): WorkoutTemplate {
         val workoutId = generateId()
         workoutsDao.insertWorkout(
@@ -68,5 +67,23 @@ class WorkoutTemplatesRepository @Inject constructor(
         )
 
         return template
+    }
+
+    suspend fun deleteTemplate(templateId: String) {
+        val template = workoutTemplatesDao.getTemplate(templateId).firstOrNull()
+        template?.let {
+            workoutTemplatesDao.deleteTemplate(it.id)
+            if (it.workoutId != null) {
+                workoutsDao.deleteWorkoutById(it.workoutId!!)
+            }
+        }
+    }
+
+    suspend fun toggleArchiveTemplate(templateId: String) {
+        val isArchived = workoutTemplatesDao.isTemplateArchived(templateId).firstOrNull()
+        workoutTemplatesDao.updateTemplateIsArchived(
+            templateId = templateId,
+            isArchived = !(isArchived ?: false)
+        )
     }
 }

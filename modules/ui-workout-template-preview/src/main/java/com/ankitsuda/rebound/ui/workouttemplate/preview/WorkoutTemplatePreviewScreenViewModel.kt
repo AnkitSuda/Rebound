@@ -59,9 +59,8 @@ class WorkoutTemplatePreviewScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            templatesRepository.getTemplate(templateId = templateId).collect {
-                Timber.d("template $it")
-                it.workoutId?.let { workoutId ->
+            templatesRepository.getTemplate(templateId = templateId).collectLatest {
+                it?.workoutId?.let { workoutId ->
                     refreshWorkout(workoutId)
                     refreshJunctions(workoutId)
                 } ?: run {
@@ -94,4 +93,16 @@ class WorkoutTemplatePreviewScreenViewModel @Inject constructor(
         }
     }
 
+    fun deleteTemplate(onDeleted: () -> Unit) {
+        viewModelScope.launch {
+            templatesRepository.deleteTemplate(templateId)
+            onDeleted()
+        }
+    }
+
+    fun toggleIsArchived() {
+        viewModelScope.launch {
+            templatesRepository.toggleArchiveTemplate(templateId)
+        }
+    }
 }

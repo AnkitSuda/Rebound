@@ -23,6 +23,7 @@ import com.ankitsuda.base.utils.toReadableDuration
 import com.ankitsuda.rebound.data.repositories.WorkoutTemplatesRepository
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
+import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.domain.entities.WorkoutTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -46,7 +47,11 @@ class WorkoutScreenViewModel @Inject constructor(
     val currentWorkoutDurationStr = _currentWorkoutDurationStr
         .shareWhileObserved(viewModelScope)
 
-    val templatesWithWorkouts = workoutTemplatesRepository.getNonHiddenTemplatesWithWorkouts()
+    private var _unarchivedTemplates = MutableStateFlow<List<TemplateWithWorkout>>(emptyList())
+    val unarchivedTemplates = _unarchivedTemplates.asStateFlow()
+
+    private var _archivedTemplates = MutableStateFlow<List<TemplateWithWorkout>>(emptyList())
+    val archivedTemplates = _archivedTemplates.asStateFlow()
 
     private var durationJob: Job? = null
 
@@ -54,6 +59,12 @@ class WorkoutScreenViewModel @Inject constructor(
         viewModelScope.launch {
             workoutsRepository.getCurrentWorkoutId().collectLatest {
                 refreshCurrentWorkout(it)
+            }
+        }
+        viewModelScope.launch {
+            workoutTemplatesRepository.getNonHiddenTemplatesWithWorkouts().collectLatest {
+                _unarchivedTemplates.value = it.filter { t -> t.template.isArchived == false }
+                _archivedTemplates.value = it.filter { t -> t.template.isArchived == true }
             }
         }
     }

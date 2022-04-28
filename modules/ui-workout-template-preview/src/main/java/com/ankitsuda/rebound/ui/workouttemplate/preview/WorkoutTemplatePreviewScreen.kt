@@ -23,18 +23,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.PlayArrow
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.base.utils.toReadableDuration
+import com.ankitsuda.common.compose.toast
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
@@ -44,6 +41,7 @@ import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.workouttemplate.preview.components.TemplateExerciseComponent
+import com.ankitsuda.rebound.ui.workouttemplate.preview.components.TemplateMenuComponent
 import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
 import kotlin.random.Random
@@ -58,10 +56,20 @@ fun WorkoutTemplatePreviewScreen(
     val workout by viewModel.workout.collectAsState(initial = null)
     val entriesJunctions by viewModel.entriesJunctions.collectAsState(initial = emptyList())
 
+    var menuExpanded by remember {
+        mutableStateOf(false)
+    }
+
     val templateName = workout?.name ?: ""
     val lastPerformedStr = template?.lastPerformedAt?.toString()
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
+
+    fun deleteTemplate() {
+        viewModel.deleteTemplate {
+            navigator.goBack()
+        }
+    }
 
     ToolbarWithFabScaffold(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
@@ -86,6 +94,17 @@ fun WorkoutTemplatePreviewScreen(
                             )
                         }
                     }
+                    TopBarIconButton(icon = Icons.Outlined.MoreVert, title = "More") {
+                        menuExpanded = true
+                    }
+                    TemplateMenuComponent(
+                        expanded = menuExpanded,
+                        isArchived = template?.isArchived ?: false,
+                        onDismissRequest = { menuExpanded = false },
+                        onDeleteTemplate = { deleteTemplate() },
+                        onToggleArchiveTemplate = {
+                            viewModel.toggleIsArchived()
+                        })
                 })
         },
         fab = {

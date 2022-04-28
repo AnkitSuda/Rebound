@@ -18,6 +18,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -25,15 +26,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.OpenInFull
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
@@ -43,6 +46,7 @@ import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.navigation.TabRootScreen
+import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -63,10 +67,14 @@ fun WorkoutScreen(
     navigator: Navigator = LocalNavigator.current,
     viewModel: WorkoutScreenViewModel = hiltViewModel(),
 ) {
+    var areArchivedTemplatesVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val currentWorkout by viewModel.currentWorkout.collectAsState(initial = null)
     val currentWorkoutDurationStr by viewModel.currentWorkoutDurationStr.collectAsState(initial = null)
-    val templatesWithWorkouts by viewModel.templatesWithWorkouts.collectAsState(emptyList())
+    val archivedTemplates by viewModel.archivedTemplates.collectAsState(emptyList())
+    val unarchivedTemplates by viewModel.unarchivedTemplates.collectAsState(emptyList())
     val coroutine = rememberCoroutineScope()
     val mainPanel = LocalPanel.current
 
@@ -255,20 +263,75 @@ fun WorkoutScreen(
                 }
             }
 
-            items(templatesWithWorkouts, key = { it.template.id }) {
-                TemplateItemCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    name = it.workout.name ?: it.template.id,
-                    totalExercises = 7,
-                    onClick = {
-                        navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(it.template.id))
+            items(unarchivedTemplates, key = { it.template.id }) {
+                TemplateListItem(navigator = navigator, templateWithWorkout = it)
+            }
+
+            if (archivedTemplates.isNotEmpty()) {
+                if (areArchivedTemplatesVisible) {
+                    item {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            text = "${archivedTemplates.size} archived template${if (archivedTemplates.size > 1) "s" else ""}",
+                            textAlign = TextAlign.Center,
+                            style = ReboundTheme.typography.caption,
+                            color = ReboundTheme.colors.onBackground.copy(alpha = 0.7f)
+                        )
                     }
-                )
+
+                    items(archivedTemplates, key = { it.template.id }) {
+                        TemplateListItem(navigator = navigator, templateWithWorkout = it)
+                    }
+                }
+
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                areArchivedTemplatesVisible = !areArchivedTemplatesVisible
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(modifier = Modifier.padding(12.dp)) {
+                            Icon(
+                                modifier = Modifier.size(18.dp),
+                                imageVector = if (areArchivedTemplatesVisible) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown,
+                                contentDescription = null,
+                                tint = ReboundTheme.colors.onBackground.copy(alpha = 0.7f)
+                            )
+                            RSpacer(space = 4.dp)
+                            Text(
+                                textAlign = TextAlign.Center,
+                                style = ReboundTheme.typography.caption,
+                                color = ReboundTheme.colors.onBackground.copy(alpha = 0.7f),
+                                text = if (areArchivedTemplatesVisible) "Hide archived" else "Show archived"
+                            )
+                        }
+                    }
+                }
+
             }
 
         }
 
+    }
+}
+
+@Composable
+private fun TemplateListItem(navigator: Navigator, templateWithWorkout: TemplateWithWorkout) {
+    with(templateWithWorkout) {
+        TemplateItemCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            name = workout.name ?: template.id,
+            totalExercises = 7,
+            onClick = {
+                navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(template.id))
+            }
+        )
     }
 }

@@ -22,10 +22,16 @@ import kotlinx.coroutines.flow.Flow
 interface WorkoutTemplatesDao {
 
     @Query("SELECT * FROM workout_templates WHERE id = :templateId")
-    fun getTemplate(templateId: String): Flow<WorkoutTemplate>
+    fun getTemplate(templateId: String): Flow<WorkoutTemplate?>
 
     @Query("SELECT * FROM workout_templates WHERE is_hidden = 0 ORDER BY list_order ASC")
     fun getNonHiddenTemplatesWithWorkouts(): Flow<List<TemplateWithWorkout>>
+
+    @Query("SELECT is_archived FROM workout_templates WHERE id = :templateId")
+    fun isTemplateArchived(templateId: String): Flow<Boolean?>
+
+    @Query("UPDATE workout_templates SET is_archived = :isArchived WHERE id = :templateId")
+    suspend fun updateTemplateIsArchived(templateId: String, isArchived: Boolean)
 
     @Query("SELECT list_order FROM workout_templates ORDER BY list_order DESC LIMIT 1")
     fun getLastListOrder(): Flow<Int>
