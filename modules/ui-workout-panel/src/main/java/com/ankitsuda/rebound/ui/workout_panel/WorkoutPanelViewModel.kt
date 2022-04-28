@@ -22,6 +22,7 @@ import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toReadableDuration
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
+import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
@@ -200,13 +201,51 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
         }
     }
 
-    fun finishWorkout() {
+    fun finishWorkout(onSetsIncomplete: () -> Unit) {
         Timber.d("Finish workout")
         viewModelScope.launch {
             val workoutId = mWorkout?.id ?: return@launch
+
+            if (!checkIfAllSetsAreComplete()) {
+                onSetsIncomplete()
+                return@launch
+            }
             workoutsRepository.finishWorkout(workoutId)
             durationJob?.cancel()
             workoutsRepository.setCurrentWorkoutId(NONE_WORKOUT_ID)
         }
+    }
+
+    private suspend fun checkIfAllSetsAreComplete(): Boolean {
+        val junctions = _logEntriesWithExerciseJunction.value
+
+        if (junctions.isNullOrEmpty()) return false
+
+        for (junction in junctions) {
+            val isIncomplete = junction.logEntries.any {
+                when (junction.exercise.category) {
+                    ExerciseCategory.DISTANCE_AND_TIME -> {
+                        it.distance == null || it.timeRecorded == null
+                    }
+                    ExerciseCategory.WEIGHTS_AND_REPS -> {
+                        it.weight == null || it.reps == null
+                    }
+                    ExerciseCategory.REPS -> {
+                        it.reps == null
+                    }
+                    ExerciseCategory.TIME -> {
+                        it.timeRecorded == null
+                    }
+                    ExerciseCategory.UNKNOWN -> {
+                        false
+                    }
+                }
+            }
+
+            if (isIncomplete) {
+                return false
+            }
+        }
+        return true
     }
 }

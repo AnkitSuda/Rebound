@@ -26,6 +26,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,6 +39,7 @@ import androidx.navigation.plusAssign
 import com.ankitsuda.base.ui.ThemeState
 import com.ankitsuda.base.util.LabelVisible
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
+import com.ankitsuda.base.util.toast
 import com.ankitsuda.common.compose.*
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
@@ -95,6 +97,7 @@ private fun MainLayout(
 
     val swipeableState = rememberSwipeableState(0)
     val coroutine = rememberCoroutineScope()
+    val context = LocalContext.current
 
 
     val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
@@ -124,6 +127,7 @@ private fun MainLayout(
     val mainPanel = MainPanel(
         swipeableState = swipeableState
     )
+
 
     ReboundThemeWrapper(themeState = themeState) {
         NavigatorHost {
@@ -194,7 +198,9 @@ private fun MainLayout(
                                         navigator.navigate(LeafScreen.RestTimer.createRoute())
                                     },
                                     onFinishBtnClicked = {
-                                        workoutPanelViewModel.finishWorkout()
+                                        workoutPanelViewModel.finishWorkout(onSetsIncomplete = {
+                                            context.toast(message = "Please complete all sets to finish")
+                                        })
                                     })
                             }) {
                             Box(
