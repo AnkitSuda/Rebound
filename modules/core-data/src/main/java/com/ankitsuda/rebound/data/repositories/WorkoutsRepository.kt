@@ -75,6 +75,13 @@ class WorkoutsRepository @Inject constructor(
         prefStorage.setCurrentWorkoutId(value)
     }
 
+    suspend fun deleteWorkoutWithEverything(workoutId: String) {
+        val workout = getWorkout(workoutId).firstOrNull()
+        workout?.let {
+            deleteWorkoutWithEverything(it)
+        }
+    }
+
     /**
      * Deletes everything related to workout
      */
@@ -217,4 +224,88 @@ class WorkoutsRepository @Inject constructor(
             dateEnd = dateEnd.toEpochMillis()
         )
 
+    fun getExerciseLogByLogId(logId: String) = workoutsDao.getExerciseLogByLogId(logId)
+
+    suspend fun startWorkoutFromWorkout(workoutId: String) {
+        val fromWorkout = getWorkout(workoutId).first()
+
+        if (fromWorkout == null) {
+            Timber.e("Workout with id $workoutId not found")
+            return
+        }
+
+        val exerciseWorkoutJunctionsToAdd = arrayListOf<ExerciseWorkoutJunction>()
+        val exerciseLogsToAdd = arrayListOf<ExerciseLog>()
+        val exerciseLogEntriesToAdd = arrayListOf<ExerciseLogEntry>()
+
+        val newWorkoutId = generateId()
+        val currentDateTime = LocalDateTime.now()
+        val newWorkout = fromWorkout.copy(
+            id = newWorkoutId,
+            isHidden = true,
+            inProgress = true,
+            startAt = currentDateTime,
+            createdAt = currentDateTime,
+            updatedAt = currentDateTime
+        )
+
+        val fromWithJunctions = getLogEntriesWithExerciseJunction(workoutId).first()
+
+        for (withJunction in fromWithJunctions) {
+            val newJunctionId = generateId()
+            val newJunction = withJunction.junction.copy(
+                id = newJunctionId,
+                workoutId = newWorkoutId
+            )
+
+            exerciseWorkoutJunctionsToAdd.add(newJunction)
+
+            for (entry in withJunction.logEntries) {
+                val newEntryId = generateId()
+
+                val newLogId = if (entry.logId != null) {
+                    val newExerciseLogId = generateId()
+                    val oldExerciseLog = getExerciseLogByLogId(entry.logId!!).first()
+                    val newExerciseLog = oldExerciseLog.copy(
+                        id = newExerciseLogId,
+                        workoutId = newWorkoutId,
+                        createdAt = currentDateTime,
+                        updatedAt = currentDateTime
+                    )
+                    exerciseLogsToAdd.add(newExerciseLog)
+                    newExerciseLogId
+                } else {
+                    null
+                }
+
+                val newEntry = entry.copy(
+                    entryId = newEntryId,
+                    logId = newLogId,
+                    junctionId = newJunctionId,
+                    createdAt = currentDateTime,
+                    updatedAt = currentDateTime
+                )
+
+                exerciseLogEntriesToAdd.add(newEntry)
+            }
+
+        }
+
+        // Insert to db
+        workoutsDao.insertWorkout(newWorkout)
+
+        for (junction in exerciseWorkoutJunctionsToAdd) {
+            workoutsDao.insertExerciseWorkoutJunction(junction)
+        }
+
+        for (exerciseLog in exerciseLogsToAdd) {
+            workoutsDao.insertExerciseLog(exerciseLog)
+        }
+
+        for (entry in exerciseLogEntriesToAdd) {
+            workoutsDao.insertExerciseLogEntry(entry)
+        }
+
+        setCurrentWorkoutId(newWorkoutId)
+    }
 }

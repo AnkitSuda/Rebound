@@ -25,6 +25,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,7 @@ import com.ankitsuda.navigation.TabRootScreen
 import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
+import com.ankitsuda.rebound.ui.components.dialogs.DiscardActiveWorkoutDialog
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.workouttemplate.preview.components.TemplateExerciseComponent
 import com.ankitsuda.rebound.ui.workouttemplate.preview.components.TemplateMenuComponent
@@ -60,6 +62,10 @@ fun WorkoutTemplatePreviewScreen(
         mutableStateOf(false)
     }
 
+    var isDiscardActiveWorkoutDialogVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     val templateName = workout?.name ?: ""
     val lastPerformedStr = template?.lastPerformedAt?.toString()
 
@@ -69,6 +75,15 @@ fun WorkoutTemplatePreviewScreen(
         viewModel.deleteTemplate {
             navigator.goBack()
         }
+    }
+
+    fun startWorkout(discardActive: Boolean) {
+        viewModel.startWorkout(
+            discardActive = discardActive,
+            onWorkoutAlreadyActive = {
+                isDiscardActiveWorkoutDialogVisible = true
+            }
+        )
     }
 
     ToolbarWithFabScaffold(
@@ -122,7 +137,7 @@ fun WorkoutTemplatePreviewScreen(
                     )
                 },
                 onClick = {
-
+                    startWorkout(discardActive = false)
                 })
         },
         fabPosition = FabPosition.Center,
@@ -162,5 +177,17 @@ fun WorkoutTemplatePreviewScreen(
                 )
             }
         }
+    }
+
+    if (isDiscardActiveWorkoutDialogVisible) {
+        DiscardActiveWorkoutDialog(
+            onClickDiscard = {
+                isDiscardActiveWorkoutDialogVisible = false
+                startWorkout(discardActive = true)
+            },
+            onDismissRequest = {
+                isDiscardActiveWorkoutDialogVisible = false
+            }
+        )
     }
 }

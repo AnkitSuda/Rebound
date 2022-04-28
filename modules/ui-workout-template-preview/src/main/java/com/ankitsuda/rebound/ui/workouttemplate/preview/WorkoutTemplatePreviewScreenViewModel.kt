@@ -17,13 +17,10 @@ package com.ankitsuda.rebound.ui.workouttemplate.preview
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.base.utils.extensions.lazyAsync
-import com.ankitsuda.base.utils.extensions.shareWhileObserved
-import com.ankitsuda.navigation.WORKOUT_ID_KEY
+import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.navigation.WORKOUT_TEMPLATE_ID_KEY
 import com.ankitsuda.rebound.data.repositories.WorkoutTemplatesRepository
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
-import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.domain.entities.WorkoutTemplate
@@ -41,6 +38,7 @@ class WorkoutTemplatePreviewScreenViewModel @Inject constructor(
     handle: SavedStateHandle,
 ) : ViewModel() {
     private val templateId = requireNotNull(handle.get<String>(WORKOUT_TEMPLATE_ID_KEY))
+    private var _workoutId: String? = null
 
     private var _workoutTemplate: MutableStateFlow<WorkoutTemplate?> = MutableStateFlow(null)
     val workoutTemplate = _workoutTemplate.asStateFlow()
@@ -60,6 +58,7 @@ class WorkoutTemplatePreviewScreenViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             templatesRepository.getTemplate(templateId = templateId).collectLatest {
+                _workoutId = it?.workoutId
                 it?.workoutId?.let { workoutId ->
                     refreshWorkout(workoutId)
                     refreshJunctions(workoutId)
@@ -103,6 +102,38 @@ class WorkoutTemplatePreviewScreenViewModel @Inject constructor(
     fun toggleIsArchived() {
         viewModelScope.launch {
             templatesRepository.toggleArchiveTemplate(templateId)
+        }
+    }
+
+
+    fun startWorkout(
+        discardActive: Boolean,
+        onWorkoutAlreadyActive: () -> Unit
+    ) {
+        viewModelScope.launch {
+            _workoutId?.let {
+                val activeWorkoutId = getActiveWorkoutId()
+                if (activeWorkoutId == null) {
+                    workoutsRepository.startWorkoutFromWorkout(it)
+                } else {
+                    if (discardActive) {
+                        workoutsRepository.setCurrentWorkoutId(NONE_WORKOUT_ID)
+                        workoutsRepository.deleteWorkoutWithEverything(activeWorkoutId)
+                        workoutsRepository.startWorkoutFromWorkout(it)
+                    } else {
+                        onWorkoutAlreadyActive()
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun getActiveWorkoutId(): String? {
+        val activeWorkoutId = workoutsRepository.getCurrentWorkoutId().firstOrNull()
+        return if (activeWorkoutId == null || activeWorkoutId == NONE_WORKOUT_ID) {
+            null
+        } else {
+            activeWorkoutId
         }
     }
 }
