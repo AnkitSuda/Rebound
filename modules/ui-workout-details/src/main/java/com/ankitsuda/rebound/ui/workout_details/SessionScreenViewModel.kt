@@ -75,4 +75,18 @@ class SessionScreenViewModel @Inject constructor(
 //        }
     }
 
+
+    fun startWorkout(
+        discardActive: Boolean,
+        onWorkoutAlreadyActive: () -> Unit
+    ) {
+        viewModelScope.launch {
+            workoutsRepository.startWorkoutFromWorkout(
+                workoutId = workoutId,
+                discardActive = discardActive,
+                onWorkoutAlreadyActive = onWorkoutAlreadyActive
+            )
+
+        }
+    }
 }

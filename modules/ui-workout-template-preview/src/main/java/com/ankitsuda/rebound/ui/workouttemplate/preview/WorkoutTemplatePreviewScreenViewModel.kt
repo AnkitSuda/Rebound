@@ -112,28 +112,14 @@ class WorkoutTemplatePreviewScreenViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             _workoutId?.let {
-                val activeWorkoutId = getActiveWorkoutId()
-                if (activeWorkoutId == null) {
-                    workoutsRepository.startWorkoutFromWorkout(it)
-                } else {
-                    if (discardActive) {
-                        workoutsRepository.setCurrentWorkoutId(NONE_WORKOUT_ID)
-                        workoutsRepository.deleteWorkoutWithEverything(activeWorkoutId)
-                        workoutsRepository.startWorkoutFromWorkout(it)
-                    } else {
-                        onWorkoutAlreadyActive()
-                    }
-                }
+                workoutsRepository.startWorkoutFromWorkout(
+                    workoutId = it,
+                    discardActive = discardActive,
+                    onWorkoutAlreadyActive = onWorkoutAlreadyActive
+                )
             }
         }
     }
 
-    private suspend fun getActiveWorkoutId(): String? {
-        val activeWorkoutId = workoutsRepository.getCurrentWorkoutId().firstOrNull()
-        return if (activeWorkoutId == null || activeWorkoutId == NONE_WORKOUT_ID) {
-            null
-        } else {
-            activeWorkoutId
-        }
-    }
+
 }

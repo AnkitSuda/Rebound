@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.data.repositories
 
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
@@ -226,7 +227,27 @@ class WorkoutsRepository @Inject constructor(
 
     fun getExerciseLogByLogId(logId: String) = workoutsDao.getExerciseLogByLogId(logId)
 
-    suspend fun startWorkoutFromWorkout(workoutId: String) {
+
+    suspend fun startWorkoutFromWorkout(
+        workoutId: String,
+        discardActive: Boolean,
+        onWorkoutAlreadyActive: () -> Unit
+    ) {
+        val activeWorkoutId = getCurrentWorkoutId().firstOrNull()
+        if (activeWorkoutId == null || activeWorkoutId == NONE_WORKOUT_ID) {
+            startWorkoutFromWorkout(workoutId)
+        } else {
+            if (discardActive) {
+                setCurrentWorkoutId(NONE_WORKOUT_ID)
+                deleteWorkoutWithEverything(activeWorkoutId)
+                startWorkoutFromWorkout(workoutId)
+            } else {
+                onWorkoutAlreadyActive()
+            }
+        }
+    }
+
+    private suspend fun startWorkoutFromWorkout(workoutId: String) {
         val fromWorkout = getWorkout(workoutId).first()
 
         if (fromWorkout == null) {

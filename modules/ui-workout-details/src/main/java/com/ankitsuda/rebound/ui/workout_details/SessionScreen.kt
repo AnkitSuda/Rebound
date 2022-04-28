@@ -17,14 +17,13 @@ package com.ankitsuda.rebound.ui.workout_details
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -36,11 +35,14 @@ import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.navigation.Screen
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.components.dialogs.DiscardActiveWorkoutDialog
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import me.onebone.toolbar.FabPosition
 import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.ToolbarWithFabScaffold
 
 @Composable
 fun SessionScreen(
@@ -53,11 +55,43 @@ fun SessionScreen(
     val workout by viewModel.workout.collectAsState(null)
     val totalVolume by viewModel.totalVolume.collectAsState(0.0)
 
+    var isDiscardActiveWorkoutDialogVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    fun startWorkout(discardActive: Boolean) {
+        viewModel.startWorkout(
+            discardActive = discardActive,
+            onWorkoutAlreadyActive = {
+                isDiscardActiveWorkoutDialogVisible = true
+            }
+        )
+    }
+
     if (workout != null) {
 
-        CollapsingToolbarScaffold(
+        ToolbarWithFabScaffold(
             scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
             state = collapsingState,
+            fab = {
+                ExtendedFloatingActionButton(
+                    modifier = Modifier,
+                    elevation = FloatingActionButtonDefaults.elevation(
+                        defaultElevation = 2.dp,
+                        pressedElevation = 4.dp
+                    ),
+                    text = { Text(text = "Perform Again") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.PlayArrow,
+                            contentDescription = null
+                        )
+                    },
+                    onClick = {
+                        startWorkout(discardActive = false)
+                    })
+            },
+            fabPosition = FabPosition.Center,
             toolbar = {
                 TopBar2(
                     title = workout?.name ?: "Workout",
@@ -131,5 +165,17 @@ fun SessionScreen(
             }
 
         }
+    }
+
+    if (isDiscardActiveWorkoutDialogVisible) {
+        DiscardActiveWorkoutDialog(
+            onClickDiscard = {
+                isDiscardActiveWorkoutDialogVisible = false
+                startWorkout(discardActive = true)
+            },
+            onDismissRequest = {
+                isDiscardActiveWorkoutDialogVisible = false
+            }
+        )
     }
 }
