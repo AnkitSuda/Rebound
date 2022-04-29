@@ -136,4 +136,8 @@ interface WorkoutsDao {
 
     @Query("SELECT * FROM exercise_logs WHERE id = :logId")
     fun getExerciseLogByLogId(logId: String): Flow<ExerciseLog>
+
+    @Transaction
+    @Query("SELECT * FROM exercise_workout_junctions j JOIN exercises e ON e.exercise_id = j.exercise_id JOIN muscles m ON m.tag = e.primary_muscle_tag WHERE workout_id = :workoutId")
+    fun getLogEntriesWithExtraInfo(workoutId: String): Flow<List<LogEntriesWithExtraInfo>>
 }

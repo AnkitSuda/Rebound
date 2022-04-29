@@ -36,13 +36,11 @@ fun TemplateExerciseComponent(
     name: String,
     muscle: String,
     onClickInfo: () -> Unit,
-    onClick: () -> Unit
 ) {
     Box(modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onClick)
                 .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically

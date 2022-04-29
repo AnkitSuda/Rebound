@@ -17,11 +17,10 @@ package com.ankitsuda.rebound.ui.workouttemplate.preview
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.navigation.WORKOUT_TEMPLATE_ID_KEY
 import com.ankitsuda.rebound.data.repositories.WorkoutTemplatesRepository
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
-import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
+import com.ankitsuda.rebound.domain.entities.LogEntriesWithExtraInfo
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.domain.entities.WorkoutTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,13 +45,13 @@ class WorkoutTemplatePreviewScreenViewModel @Inject constructor(
     private var _workout: MutableStateFlow<Workout?> = MutableStateFlow(null)
     val workout = _workout.asStateFlow()
 
-    private var _entriesJunctions: MutableStateFlow<List<LogEntriesWithExerciseJunction>> =
+    private var _entriesInfo: MutableStateFlow<List<LogEntriesWithExtraInfo>> =
         MutableStateFlow(
             emptyList()
         )
-    val entriesJunctions = _entriesJunctions.asStateFlow()
+    val entriesInfo = _entriesInfo.asStateFlow()
 
-    private var junctionsJob: Job? = null
+    private var entriesInfoJob: Job? = null
     private var workoutJob: Job? = null
 
     init {
@@ -64,7 +63,7 @@ class WorkoutTemplatePreviewScreenViewModel @Inject constructor(
                     refreshJunctions(workoutId)
                 } ?: run {
                     workoutJob?.cancel()
-                    junctionsJob?.cancel()
+                    entriesInfoJob?.cancel()
                 }
                 _workoutTemplate.value = it
             }
@@ -83,11 +82,11 @@ class WorkoutTemplatePreviewScreenViewModel @Inject constructor(
     }
 
     private fun refreshJunctions(workoutId: String) {
-        junctionsJob?.cancel()
-        junctionsJob = viewModelScope.launch {
-            workoutsRepository.getLogEntriesWithExerciseJunction(workoutId)
-                .collectLatest { junctions ->
-                    _entriesJunctions.value = junctions
+        entriesInfoJob?.cancel()
+        entriesInfoJob = viewModelScope.launch {
+            workoutsRepository.getLogEntriesWithExtraInfo(workoutId)
+                .collectLatest { output ->
+                    _entriesInfo.value = output
                 }
         }
     }

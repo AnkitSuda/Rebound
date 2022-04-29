@@ -56,7 +56,7 @@ fun WorkoutTemplatePreviewScreen(
 ) {
     val template by viewModel.workoutTemplate.collectAsState(initial = null)
     val workout by viewModel.workout.collectAsState(initial = null)
-    val entriesJunctions by viewModel.entriesJunctions.collectAsState(initial = emptyList())
+    val entriesInfo by viewModel.entriesInfo.collectAsState(initial = emptyList())
 
     var menuExpanded by remember {
         mutableStateOf(false)
@@ -159,10 +159,10 @@ fun WorkoutTemplatePreviewScreen(
                     )
                 }
             }
-            items(entriesJunctions) {
+            items(entriesInfo) {
                 TemplateExerciseComponent(
                     name = "${it.logEntries.size} x ${it.exercise.name}",
-                    muscle = ":/",
+                    muscle = it.primaryMuscle.name,
                     onClickInfo = {
                         navigator.navigate(
                             LeafScreen.ExerciseDetails.createRoute(
@@ -170,9 +170,6 @@ fun WorkoutTemplatePreviewScreen(
                                 TabRootScreen.WorkoutTab
                             )
                         )
-                    },
-                    onClick = {
-
                     }
                 )
             }

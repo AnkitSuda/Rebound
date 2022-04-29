@@ -329,4 +329,7 @@ class WorkoutsRepository @Inject constructor(
 
         setCurrentWorkoutId(newWorkoutId)
     }
+
+    fun getLogEntriesWithExtraInfo(workoutId: String): Flow<List<LogEntriesWithExtraInfo>> =
+        workoutsDao.getLogEntriesWithExtraInfo(workoutId)
 }

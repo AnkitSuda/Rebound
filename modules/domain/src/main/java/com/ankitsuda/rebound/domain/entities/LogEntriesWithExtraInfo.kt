@@ -18,14 +18,14 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 
-data class LogEntriesWithExerciseJunction(
+data class LogEntriesWithExtraInfo(
     @Embedded val junction: ExerciseWorkoutJunction,
-
     @Relation(
         parentColumn = "exercise_id",
-        entityColumn = "exercise_id"
+        entityColumn = "exercise_id",
     )
     val exercise: Exercise,
+    @Embedded val primaryMuscle: Muscle,
     @Relation(
         parentColumn = "id",
         entityColumn = "junction_id",
