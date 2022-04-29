@@ -16,10 +16,11 @@ package com.ankitsuda.rebound.ui.exercise_details.charts
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.RSpacer
@@ -38,37 +39,51 @@ fun ExerciseDetailChartsTab(charts: Map<String, List<LineChartData.Point>>) {
             .fillMaxSize(),
         contentPadding = PaddingValues(16.dp)
     ) {
-        if (charts.size > 1) {
-            for (chart in charts) {
-                item {
-                    AppCard(modifier = Modifier.padding(bottom = 16.dp)) {
-                        Column(
-                            modifier = Modifier.padding(
-                                top = 16.dp,
-                                start = 16.dp,
-                                end = 16.dp,
-                                bottom = 8.dp
-                            )
-                        ) {
-                            Text(
-                                text = chart.key,
-                                style = ReboundTheme.typography.body1,
-                                color = LocalThemeState.current.onBackgroundColor
-                            )
 
-                            RSpacer(space = 16.dp)
+        for (chart in charts) {
+            item {
+                AppCard(modifier = Modifier.padding(bottom = 16.dp)) {
+                    Column(
+                        modifier = Modifier.padding(
+                            top = 16.dp,
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 8.dp
+                        )
+                    ) {
+                        Text(
+                            text = chart.key,
+                            style = ReboundTheme.typography.body1,
+                            color = LocalThemeState.current.onBackgroundColor
+                        )
 
+                        RSpacer(space = 16.dp)
+
+                        if (chart.value.size > 1) {
                             ReboundChart(
                                 points = chart.value,
                                 modifier = Modifier
                                     .height(250.dp)
                                     .fillMaxWidth(),
                             )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(250.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Not enough data",
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+
     }
 }
 
