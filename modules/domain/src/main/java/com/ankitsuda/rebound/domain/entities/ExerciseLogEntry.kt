@@ -67,3 +67,11 @@ data class ExerciseLogEntry(
     @ColumnInfo(name = "update_at")
     var updatedAt: LocalDateTime? = null,
 ) : Parcelable
+
+fun List<ExerciseLogEntry>.calculateTotalVolume(): Float {
+    var volume = 0F
+    for (entry in this) {
+        volume += ((entry.weight ?: 0f) * (entry.reps ?: 0).toFloat())
+    }
+    return volume
+}

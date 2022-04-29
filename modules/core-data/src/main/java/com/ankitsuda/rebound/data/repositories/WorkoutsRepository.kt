@@ -185,11 +185,7 @@ class WorkoutsRepository @Inject constructor(
 
     fun getTotalVolumeLiftedByWorkoutId(workoutId: String): Flow<Float> =
         workoutsDao.getLogEntriesByWorkoutId(workoutId).map {
-            var volume = 0F
-            for (entry in it) {
-                volume += ((entry.weight ?: 0f) * (entry.reps ?: 0).toFloat())
-            }
-            volume
+            it.calculateTotalVolume()
         }
 
 

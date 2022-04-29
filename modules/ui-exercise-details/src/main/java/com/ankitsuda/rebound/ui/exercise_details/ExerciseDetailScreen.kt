@@ -54,6 +54,7 @@ fun ExerciseDetailScreen(
 ) {
     val exercise by viewModel.exercise.collectAsState(initial = null)
     val logEntriesWithWorkoutList by viewModel.history.collectAsState(initial = emptyList())
+    val charts by viewModel.charts.collectAsState(initial = emptyMap())
 
     val tabData = listOf(
         "Statistics",
@@ -138,7 +139,7 @@ fun ExerciseDetailScreen(
         ) { index ->
             when (index) {
                 0 -> {
-                    ExerciseDetailChartsTab()
+                    ExerciseDetailChartsTab(charts)
                 }
                 1 -> {
                     ExerciseDetailHistoryTab(logEntriesWithWorkoutList)

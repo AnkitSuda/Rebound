@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.ui.exercise_details.charts
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,7 +30,7 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import kotlin.random.Random
 
 @Composable
-fun ExerciseDetailChartsTab() {
+fun ExerciseDetailChartsTab(charts: Map<String, List<LineChartData.Point>>) {
 
 
     LazyColumn(
@@ -37,30 +38,34 @@ fun ExerciseDetailChartsTab() {
             .fillMaxSize(),
         contentPadding = PaddingValues(16.dp)
     ) {
-        items(4) {
-            AppCard(modifier = Modifier.padding(bottom = 16.dp)) {
-                Column(
-                    modifier = Modifier.padding(
-                        top = 16.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 8.dp
-                    )
-                ) {
-                    Text(
-                        text = "Stat",
-                        style = ReboundTheme.typography.body1,
-                        color = LocalThemeState.current.onBackgroundColor
-                    )
+        if (charts.size > 1) {
+            for (chart in charts) {
+                item {
+                    AppCard(modifier = Modifier.padding(bottom = 16.dp)) {
+                        Column(
+                            modifier = Modifier.padding(
+                                top = 16.dp,
+                                start = 16.dp,
+                                end = 16.dp,
+                                bottom = 8.dp
+                            )
+                        ) {
+                            Text(
+                                text = chart.key,
+                                style = ReboundTheme.typography.body1,
+                                color = LocalThemeState.current.onBackgroundColor
+                            )
 
-                    RSpacer(space = 16.dp)
+                            RSpacer(space = 16.dp)
 
-                    ReboundChart(
-                        points = getRandomPoints(),
-                        modifier = Modifier
-                            .height(250.dp)
-                            .fillMaxWidth(),
-                    )
+                            ReboundChart(
+                                points = chart.value,
+                                modifier = Modifier
+                                    .height(250.dp)
+                                    .fillMaxWidth(),
+                            )
+                        }
+                    }
                 }
             }
         }
