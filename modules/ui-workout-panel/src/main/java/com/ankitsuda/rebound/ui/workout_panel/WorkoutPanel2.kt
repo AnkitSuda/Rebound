@@ -37,6 +37,7 @@ import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.components.workouteditor.workoutExerciseItemAlt
+import com.ankitsuda.rebound.ui.workout_panel.components.WorkoutQuickInfo
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
@@ -84,7 +85,7 @@ fun WorkoutPanel2(
     ) {
         item {
             Column() {
-                WorkoutQuickInfo()
+//                WorkoutQuickInfo()
                 Divider()
             }
         }
@@ -174,36 +175,6 @@ fun WorkoutPanel2(
                     text = "Cancel Workout",
                     style = MaterialTheme.typography.button,
                     color = Color.Red
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun WorkoutQuickInfo() {
-
-    FlowRow(
-        mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
-        mainAxisSize = SizeMode.Expand,
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
-    ) {
-        repeat(3) {
-
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "15 min",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onSurface
-                )
-                Text(
-                    text = "Duration",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.body2,
-                    color = Color(117, 117, 117),
-                    modifier = Modifier.padding(top = 2.dp)
                 )
             }
         }

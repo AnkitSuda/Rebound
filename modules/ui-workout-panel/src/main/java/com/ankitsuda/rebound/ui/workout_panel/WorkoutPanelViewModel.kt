@@ -21,18 +21,18 @@ import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toReadableDuration
+import com.ankitsuda.base.utils.toReadableDurationStyle2
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.ExerciseCategory
-import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
-import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
-import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
-import com.ankitsuda.rebound.domain.entities.Workout
+import com.ankitsuda.rebound.domain.entities.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -45,6 +45,12 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
 
     private var _currentDurationStr = MutableStateFlow<String>("")
     val currentDurationStr = _currentDurationStr.asStateFlow()
+
+    private var _currentVolumeStr = MutableStateFlow<String>("")
+    val currentVolumeStr = _currentVolumeStr.asStateFlow()
+
+    private var _currentSetsStr = MutableStateFlow<String>("")
+    val currentSetsStr = _currentSetsStr.asStateFlow()
 
     private var workoutFlowJob: Job? = null
     private var entriesFlowJob: Job? = null
@@ -93,6 +99,7 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
                 newWorkoutId
             ).collectLatest {
                 _logEntriesWithExerciseJunction.emit(it)
+                refreshHeaderValues(it.flatMap { j -> j.logEntries })
             }
         }
 
@@ -115,10 +122,16 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
         durationJob?.cancel()
         durationJob = viewModelScope.launch {
             while (inProgress && startAt != null) {
-                _currentDurationStr.value = startAt.toReadableDuration()
+                _currentDurationStr.value = startAt.toReadableDurationStyle2(spaces = false)
                 delay(25)
             }
         }
+    }
+
+    private suspend fun refreshHeaderValues(entries: List<ExerciseLogEntry>) {
+        _currentVolumeStr.value =
+            "${DecimalFormat("#.##").format(entries.calculateTotalVolume())}kg"
+        _currentSetsStr.value = "${entries.size}"
     }
 
     fun updateWorkoutName(name: String) {

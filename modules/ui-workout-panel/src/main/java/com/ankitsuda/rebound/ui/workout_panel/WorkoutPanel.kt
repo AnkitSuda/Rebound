@@ -43,6 +43,7 @@ import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.components.workouteditor.WorkoutEditorComponent
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.components.workouteditor.workoutExerciseItemAlt
+import com.ankitsuda.rebound.ui.workout_panel.components.WorkoutQuickInfo
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
@@ -69,6 +70,8 @@ fun WorkoutPanel1(
     val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
     val workout by viewModel.workout.collectAsState(null)
     val currentDurationStr by viewModel.currentDurationStr.collectAsState("")
+    val currentVolumeStr by viewModel.currentVolumeStr.collectAsState("")
+    val currentSetsStr by viewModel.currentSetsStr.collectAsState("")
     val logEntriesWithJunction by viewModel.logEntriesWithExerciseJunction.collectAsState()
 
 //    val workoutName by viewModel.workoutName.collectAsState("")
@@ -113,40 +116,14 @@ fun WorkoutPanel1(
             },
             layoutAtTop = {
                 Column {
-                    WorkoutQuickInfo(currentDurationStr = currentDurationStr)
+                    WorkoutQuickInfo(
+                        currentDurationStr = currentDurationStr,
+                        currentVolumeStr = currentVolumeStr,
+                        currentSetsStr = currentSetsStr
+                    )
                     Divider()
                 }
             }
         )
-    }
-}
-
-@Composable
-private fun WorkoutQuickInfo(currentDurationStr: String) {
-
-    FlowRow(
-        mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
-        mainAxisSize = SizeMode.Expand,
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
-    ) {
-//        repeat(3) {
-
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = currentDurationStr,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.onSurface
-            )
-            Text(
-                text = "Duration",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body2,
-                color = Color(117, 117, 117),
-                modifier = Modifier.padding(top = 2.dp)
-            )
-        }
-//        }
     }
 }
