@@ -14,8 +14,13 @@
 
 package com.ankitsuda.base.utils
 
+import timber.log.Timber
 import java.time.*
+import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalAdjusters
 import java.util.concurrent.TimeUnit
+import java.util.stream.Collectors
+import java.util.stream.IntStream
 
 
 fun LocalDateTime.toEpochMillis() = this.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
@@ -89,4 +94,24 @@ fun LocalDateTime.toReadableDurationStyle2(
     return if (hours > 0) "${if (hours < 10) "0" else ""}$hours$seprater" else "" +
             "${if (minutes < 10) "0" else ""}$minutes$seprater" +
             "${if (seconds < 10) "0" else ""}$seconds"
+}
+
+fun getCurrentWeekOfMonth(): ArrayList<LocalDate> {
+    val today = LocalDate.now();
+
+    val tempList = arrayListOf<LocalDate>()
+
+    val monday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+    val sunday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+    val numOfDaysBetween: Long = ChronoUnit.DAYS.between(monday, sunday)
+    val daysBetween = IntStream.iterate(0) { i -> i + 1 }
+        .limit(numOfDaysBetween)
+        .mapToObj { i -> monday.plusDays(i.toLong()) }
+        .collect(Collectors.toList())
+
+    tempList.addAll(daysBetween)
+    tempList.add(sunday)
+
+    return tempList
 }

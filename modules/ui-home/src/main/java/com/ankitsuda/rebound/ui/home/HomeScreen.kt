@@ -15,32 +15,65 @@
 package com.ankitsuda.rebound.ui.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.TopBar2
+import com.ankitsuda.rebound.ui.home.components.OverallCardComponent
+import com.ankitsuda.rebound.ui.home.components.WorkoutsCardComponent
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(viewModel: HomeScreenViewModel = hiltViewModel()) {
+    val workoutsInfo by viewModel.workoutsInfo.collectAsState()
+    val overallInfo by viewModel.overallInfo.collectAsState()
 
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                color = LocalThemeState.current.backgroundColor
+    val collapsingState = rememberCollapsingToolbarScaffoldState()
+
+    CollapsingToolbarScaffold(
+        state = collapsingState,
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+        toolbar = {
+            TopBar2(
+                title = "Home",
+                toolbarState = collapsingState.toolbarState,
             )
+        },
+        modifier = Modifier.background(ReboundTheme.colors.background)
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            TopBar(title = "Home")
+
+            item {
+                WorkoutsCardComponent(workoutsInfo = workoutsInfo)
+            }
+
+
+            overallInfo?.let {
+                item {
+                    OverallCardComponent(overallInfo = it)
+                }
+            }
+
         }
     }
-
-
 }

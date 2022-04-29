@@ -19,6 +19,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Dao
@@ -140,5 +141,4 @@ interface WorkoutsDao {
     @Transaction
     @Query("SELECT * FROM exercise_workout_junctions j JOIN exercises e ON e.exercise_id = j.exercise_id JOIN muscles m ON m.tag = e.primary_muscle_tag WHERE workout_id = :workoutId")
     fun getLogEntriesWithExtraInfo(workoutId: String): Flow<List<LogEntriesWithExtraInfo>>
-
 }

@@ -19,6 +19,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
+import com.ankitsuda.base.utils.getCurrentWeekOfMonth
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.domain.entities.WorkoutWithExtraInfo
@@ -44,25 +45,9 @@ class HistoryScreenViewModel @Inject constructor(private val workoutsRepository:
     val week = _week
 
     fun getCurrentWeek() {
-        val today = LocalDate.now();
-
-        val tempList = arrayListOf<LocalDate>()
-
-        val monday = today.with(previousOrSame(MONDAY));
-        val sunday = today.with(nextOrSame(SUNDAY));
-
-        val numOfDaysBetween: Long = ChronoUnit.DAYS.between(monday, sunday)
-        val daysBetween = IntStream.iterate(0) { i -> i + 1 }
-            .limit(numOfDaysBetween)
-            .mapToObj { i -> monday.plusDays(i.toLong()) }
-            .collect(Collectors.toList())
-
-        tempList.addAll(daysBetween)
-        tempList.add(sunday)
+        val newList = getCurrentWeekOfMonth()
         week.clear()
-        week.addAll(tempList)
-
-        Timber.d("Week days $tempList")
+        week.addAll(newList)
     }
 
     fun getWorkoutsOnDate(date: LocalDate): SharedFlow<List<WorkoutWithExtraInfo>> =
