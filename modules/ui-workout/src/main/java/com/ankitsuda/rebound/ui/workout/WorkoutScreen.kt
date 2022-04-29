@@ -328,7 +328,7 @@ private fun TemplateListItem(navigator: Navigator, templateWithWorkout: Template
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
             name = workout.name ?: template.id,
-            totalExercises = 7,
+            totalExercises = exerciseWorkoutJunctions.size,
             onClick = {
                 navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(template.id))
             }

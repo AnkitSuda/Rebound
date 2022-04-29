@@ -27,4 +27,9 @@ data class TemplateWithWorkout(
         entityColumn = "id",
     )
     var workout: Workout,
+    @Relation(
+        parentColumn = "workout_id",
+        entityColumn = "workout_id"
+    )
+    var exerciseWorkoutJunctions: List<ExerciseWorkoutJunction>
 )
