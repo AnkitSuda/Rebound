@@ -49,21 +49,21 @@ fun TemplateExerciseComponent(
                 Text(
                     text = name,
                     style = ReboundTheme.typography.subtitle1,
-                    fontSize = 16.sp
+                    fontSize = 16.sp, color = ReboundTheme.colors.onBackground
                 )
                 RSpacer(space = 4.dp)
                 Text(
                     text = muscle,
                     style = ReboundTheme.typography.caption,
                     fontSize = 14.sp,
-                    color = Color(158, 158, 158)
+                    color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f)
                 )
             }
             IconButton(onClick = onClickInfo) {
                 Icon(
                     imageVector = Icons.Outlined.Info,
                     contentDescription = "About exercise",
-                    tint = Color(158, 158, 158)
+                    tint = ReboundTheme.colors.onBackground.copy(alpha = 0.75f)
                 )
             }
         }

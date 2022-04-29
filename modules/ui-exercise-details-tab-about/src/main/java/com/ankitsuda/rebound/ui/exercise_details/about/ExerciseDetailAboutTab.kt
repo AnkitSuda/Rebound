@@ -52,8 +52,15 @@ fun ExerciseDetailAboutTab(exercise: Exercise) {
 
 @Composable
 private fun ColumnScope.Section(title: String, text: String) {
-    Text(text = title, style = ReboundTheme.typography.caption)
+    Text(
+        text = title,
+        style = ReboundTheme.typography.caption,
+        color = ReboundTheme.colors.onBackground.copy(alpha = 0.75f)
+    )
     RSpacer(space = 4.dp)
-    Text(text = text, style = ReboundTheme.typography.body1)
+    Text(
+        text = text, style = ReboundTheme.typography.body1,
+        color = ReboundTheme.colors.onBackground
+    )
     RSpacer(space = 16.dp)
 }
