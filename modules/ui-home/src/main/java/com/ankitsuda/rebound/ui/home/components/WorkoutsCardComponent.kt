@@ -39,16 +39,22 @@ fun WorkoutsCardComponent(modifier: Modifier = Modifier, workoutsInfo: WorkoutsI
                 .padding(16.dp)
         ) {
             CardHeaderComponent(text = "Workouts")
-            RSpacer(space = 12.dp)
+            RSpacer(space = 16.dp)
             InfosContainerComponent {
-                InfoComponent(value = workoutsInfo.workoutsThisWeek.toString(), title = "THIS WEEK")
+                InfoComponent(
+                    value = workoutsInfo.workoutsThisWeek.toString(),
+                    title = "This Week",
+                    constrains = it
+                )
                 InfoComponent(
                     value = workoutsInfo.workoutsThisMonth.toString(),
-                    title = "THIS MONTH"
+                    title = "This Month",
+                    constrains = it
                 )
                 InfoComponent(
                     value = workoutsInfo.workoutsLastMonth.toString(),
-                    title = "LAST MONTH"
+                    title = "Last Month",
+                    constrains = it
                 )
             }
             if (workoutsInfo.chartsData != null && workoutsInfo.chartsData!!.size > 1) {

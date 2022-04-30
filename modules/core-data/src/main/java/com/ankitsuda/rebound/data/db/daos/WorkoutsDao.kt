@@ -141,4 +141,19 @@ interface WorkoutsDao {
     @Transaction
     @Query("SELECT * FROM exercise_workout_junctions j JOIN exercises e ON e.exercise_id = j.exercise_id JOIN muscles m ON m.tag = e.primary_muscle_tag WHERE workout_id = :workoutId")
     fun getLogEntriesWithExtraInfo(workoutId: String): Flow<List<LogEntriesWithExtraInfo>>
+
+    @Query("SELECT COUNT() FROM workouts WHERE is_hidden = 0 AND in_progress = 0")
+    fun getTotalWorkoutsCount(): Flow<Long>
+
+    @Query("SELECT e.weight FROM exercise_log_entries e JOIN exercise_logs j ON j.id = e.log_id JOIN workouts w ON w.id = j.workout_id WHERE w.is_hidden = 0 AND w.in_progress = 0 ORDER BY e.weight DESC LIMIT 1")
+    fun getMaxWeightLifted(): Flow<Float>
+
+    @Query("SELECT e.* FROM exercise_log_entries e JOIN exercise_logs j ON j.id = e.log_id JOIN workouts w ON w.id = j.workout_id WHERE w.is_hidden = 0 AND w.in_progress = 0 ORDER BY w.start_at")
+    fun getNonHiddenExerciseLogeEntries(): Flow<List<ExerciseLogEntry>>
+
+    @Query("SELECT SUM(completed_at - start_at) as duration FROM workouts WHERE is_hidden = 0 AND in_progress = 0")
+    fun getTotalWorkoutsDuration(): Flow<Long>
+
+    @Query("SELECT (completed_at - start_at) as duration FROM workouts WHERE is_hidden = 0 AND in_progress = 0")
+    fun getWorkoutsDurationsOnly(): Flow<List<Long>>
 }

@@ -76,14 +76,26 @@ fun LocalDateTime.toReadableDuration(endAt: LocalDateTime = LocalDateTime.now())
     return readableStr
 }
 
-
 fun LocalDateTime.toReadableDurationStyle2(
     endAt: LocalDateTime = LocalDateTime.now(),
-    spaces: Boolean = true
+    spaces: Boolean = true,
+    hoursAndMinutesOnly: Boolean = false,
+): String {
+    return this.toEpochMillis()
+        .toReadableDurationStyle2(
+            endAt = endAt.toEpochMillis(),
+            spaces = spaces,
+            hoursAndMinutesOnly = hoursAndMinutesOnly
+        )
+}
+
+fun Long.toReadableDurationStyle2(
+    endAt: Long = LocalDateTime.now().toEpochMillis(),
+    spaces: Boolean = true,
+    hoursAndMinutesOnly: Boolean = false,
 ): String {
 
-    val totalTime =
-        endAt.toEpochMillis() - this.toEpochMillis()
+    val totalTime = endAt - this
 
     val totalSeconds = totalTime / 1000
     val seconds = totalSeconds % 60
@@ -91,9 +103,9 @@ fun LocalDateTime.toReadableDurationStyle2(
     val hours = totalSeconds / 3600
     val seprater = if (spaces) " : " else ":"
     // Build formatted String
-    return (if (hours > 0) "${if (hours < 10) "0" else ""}$hours$seprater" else "") +
-            "${if (minutes < 10) "0" else ""}$minutes$seprater" +
-            "${if (seconds < 10) "0" else ""}$seconds"
+    return (if (hoursAndMinutesOnly || hours > 0) "${if (hours < 10) "0" else ""}$hours$seprater" else "") +
+            "${if (minutes < 10) "0" else ""}$minutes${if (hoursAndMinutesOnly) "" else seprater}" +
+            (if (!hoursAndMinutesOnly) "${if (seconds < 10) "0" else ""}$seconds" else "")
 }
 
 fun getCurrentWeekOfMonth(): ArrayList<LocalDate> {

@@ -18,7 +18,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ankitsuda.base.utils.getCurrentWeekOfMonth
+import com.ankitsuda.base.utils.toDurationStr
+import com.ankitsuda.base.utils.toReadableDurationStyle2
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
+import com.ankitsuda.rebound.domain.entities.calculateTotalVolume
 import com.ankitsuda.rebound.ui.home.models.OverallInfo
 import com.ankitsuda.rebound.ui.home.models.WorkoutsInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +41,7 @@ class HomeScreenViewModel @Inject constructor(private val workoutsRepository: Wo
     private var _workoutsInfo = MutableStateFlow(WorkoutsInfo())
     val workoutsInfo = _workoutsInfo.asStateFlow()
 
-    private var _overallInfo = MutableStateFlow<OverallInfo?>(null)
+    private var _overallInfo = MutableStateFlow(OverallInfo())
     val overallInfo = _overallInfo.asStateFlow()
 
     init {
@@ -78,6 +81,70 @@ class HomeScreenViewModel @Inject constructor(private val workoutsRepository: Wo
             ).collectLatest {
                 _workoutsInfo.value =
                     _workoutsInfo.value.copy(workoutsLastMonth = it.sumOf { i -> i.count })
+            }
+        }
+        viewModelScope.launch {
+            workoutsRepository.getTotalWorkoutsCount().collectLatest {
+                _overallInfo.value = _overallInfo.value.copy(totalWorkouts = it)
+            }
+        }
+        viewModelScope.launch {
+            workoutsRepository.getMaxWeightLifted().collectLatest {
+                _overallInfo.value = _overallInfo.value.copy(maxWeight = it)
+            }
+        }
+        viewModelScope.launch {
+            workoutsRepository.getNonHiddenExerciseLogeEntries().collectLatest {
+                _overallInfo.value =
+                    _overallInfo.value.copy(
+                        totalVolumeLifted = try {
+                            it.calculateTotalVolume()
+                        } catch (e: Exception) {
+                            0f
+                        }
+                    )
+            }
+        }
+        viewModelScope.launch {
+            workoutsRepository.getWorkoutsDurationsOnly().collectLatest {
+                val total = it.sum()
+
+                val average = try {
+                    total / it.size
+                } catch (e: Exception) {
+                    null
+                }
+
+                val longest = it.maxOrNull()
+
+                var averageWorkoutDurationStr = 0L.toReadableDurationStyle2(
+                    endAt = average ?: 0L,
+                    hoursAndMinutesOnly = false,
+                    spaces = false
+                )
+                averageWorkoutDurationStr += if (averageWorkoutDurationStr.filter { s -> s == ':' }.length == 2) {
+                    "h"
+                } else {
+                    "m"
+                }
+
+                _overallInfo.value =
+                    _overallInfo.value.copy(
+                        totalWorkoutsDuration = total,
+                        averageWorkoutDuration = average,
+                        longestWorkoutDuration = longest,
+                        averageWorkoutDurationStr = averageWorkoutDurationStr,
+                        totalWorkoutsDurationStr = 0L.toReadableDurationStyle2(
+                            endAt = total,
+                            hoursAndMinutesOnly = true,
+                            spaces = false
+                        ) + "h",
+                        longestWorkoutDurationStr = 0L.toReadableDurationStyle2(
+                            endAt = longest ?: 0L,
+                            hoursAndMinutesOnly = true,
+                            spaces = false
+                        ) + "h",
+                    )
             }
         }
     }

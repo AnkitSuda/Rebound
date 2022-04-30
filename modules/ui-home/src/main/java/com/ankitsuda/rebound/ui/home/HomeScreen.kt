@@ -67,11 +67,8 @@ fun HomeScreen(viewModel: HomeScreenViewModel = hiltViewModel()) {
                 WorkoutsCardComponent(workoutsInfo = workoutsInfo)
             }
 
-
-            overallInfo?.let {
-                item {
-                    OverallCardComponent(overallInfo = it)
-                }
+            item {
+                OverallCardComponent(overallInfo = overallInfo)
             }
 
         }

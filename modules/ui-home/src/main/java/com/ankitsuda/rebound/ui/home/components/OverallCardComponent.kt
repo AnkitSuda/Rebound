@@ -39,33 +39,39 @@ fun OverallCardComponent(modifier: Modifier = Modifier, overallInfo: OverallInfo
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            CardHeaderComponent(text = "Workouts")
-            RSpacer(space = 4.dp)
+            CardHeaderComponent(text = "Overall")
+            RSpacer(space = 16.dp)
             InfosContainerComponent {
                 with(overallInfo) {
                     InfoComponent(
-                        value = totalWorkouts.toString(),
-                        title = "Workouts"
+                        value = (totalWorkouts ?: 0).toString(),
+                        title = "Workouts",
+                        constrains = it
                     )
                     InfoComponent(
-                        value = totalVolumeLifted.toString(),
-                        title = "Volume Lifted"
+                        value = (totalVolumeLifted ?: 0).toString(),
+                        title = "Volume Lifted",
+                        constrains = it
                     )
                     InfoComponent(
-                        value = maxWeight.toString(),
-                        title = "Max Weight"
+                        value = (maxWeight ?: 0).toString(),
+                        title = "Max Weight",
+                        constrains = it
                     )
                     InfoComponent(
-                        value = totalWorkoutsDurationStr,
-                        title = "Total Duration"
+                        value = totalWorkoutsDurationStr ?: "",
+                        title = "Total Duration",
+                        constrains = it
                     )
                     InfoComponent(
-                        value = averageWorkoutDurationStr,
-                        title = "Average Duration"
+                        value = averageWorkoutDurationStr ?: "",
+                        title = "Average Duration",
+                        constrains = it
                     )
                     InfoComponent(
-                        value = longestWorkoutDurationStr,
-                        title = "Longest Duration"
+                        value = longestWorkoutDurationStr ?: "",
+                        title = "Longest Duration",
+                        constrains = it
                     )
                 }
             }

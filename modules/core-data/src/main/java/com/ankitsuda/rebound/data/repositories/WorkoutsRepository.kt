@@ -328,4 +328,18 @@ class WorkoutsRepository @Inject constructor(
 
     fun getLogEntriesWithExtraInfo(workoutId: String): Flow<List<LogEntriesWithExtraInfo>> =
         workoutsDao.getLogEntriesWithExtraInfo(workoutId)
+
+    fun getTotalWorkoutsCount(): Flow<Long> = workoutsDao.getTotalWorkoutsCount()
+
+    fun getMaxWeightLifted(): Flow<Float> = workoutsDao.getMaxWeightLifted()
+
+    fun getNonHiddenExerciseLogeEntries(): Flow<List<ExerciseLogEntry>> =
+        workoutsDao.getNonHiddenExerciseLogeEntries()
+
+    fun getTotalWorkoutsDuration(): Flow<Long> =
+        workoutsDao.getTotalWorkoutsDuration()
+
+    fun getWorkoutsDurationsOnly(): Flow<List<Long>> =
+        workoutsDao.getWorkoutsDurationsOnly()
+
 }

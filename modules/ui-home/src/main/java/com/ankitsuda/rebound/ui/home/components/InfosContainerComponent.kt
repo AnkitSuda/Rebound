@@ -14,9 +14,12 @@
 
 package com.ankitsuda.rebound.ui.home.components
 
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
@@ -24,12 +27,17 @@ import com.google.accompanist.flowlayout.SizeMode
 
 @Composable
 fun InfosContainerComponent(
-    content: @Composable () -> Unit
+    content: @Composable (Constraints) -> Unit
 ) {
-    FlowRow(
-        modifier = Modifier,
-        mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
-        mainAxisSize = SizeMode.Expand,
-        content = content
-    )
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        FlowRow(
+            modifier = Modifier,
+            mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
+            crossAxisSpacing = 16.dp,
+            mainAxisSize = SizeMode.Expand,
+            content = {
+                content(constraints)
+            }
+        )
+    }
 }

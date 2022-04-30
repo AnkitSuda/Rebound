@@ -16,17 +16,25 @@ package com.ankitsuda.rebound.ui.home.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstrainScope
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
-fun InfoComponent(value: String, title: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun InfoComponent(value: String, title: String, constrains: Constraints) {
+    val width = with(LocalDensity.current) { constrains.minWidth.toDp() / 3 }
+    Column(
+        modifier = Modifier.width(width),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = value,
             textAlign = TextAlign.Center,
@@ -37,7 +45,7 @@ fun InfoComponent(value: String, title: String) {
             text = title,
             textAlign = TextAlign.Center,
             style = ReboundTheme.typography.body2,
-            color = ReboundTheme.colors.onBackground.copy(alpha = 0.75f),
+            color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
             modifier = Modifier.padding(top = 2.dp)
         )
     }

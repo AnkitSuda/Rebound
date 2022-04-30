@@ -18,12 +18,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
 fun CardHeaderComponent(modifier: Modifier = Modifier, text: String) {
     Text(
+        modifier = modifier,
         text = text,
-        style = ReboundTheme.typography.subtitle2
+        style = ReboundTheme.typography.h6.copy(fontSize = 16.sp)
     )
 }
