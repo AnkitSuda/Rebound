@@ -81,112 +81,111 @@ fun SessionScreen(
         )
     }
 
-    if (workout != null) {
 
-        ToolbarWithFabScaffold(
-            scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
-            state = collapsingState,
-            fab = {
-                ExtendedFloatingActionButton(
-                    modifier = Modifier,
-                    elevation = FloatingActionButtonDefaults.elevation(
-                        defaultElevation = 2.dp,
-                        pressedElevation = 4.dp
-                    ),
-                    text = { Text(text = "Perform Again") },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.PlayArrow,
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-                        startWorkout(discardActive = false)
-                    })
-            },
-            fabPosition = FabPosition.Center,
-            toolbar = {
-                TopBar2(
-                    title = workout?.name ?: "Workout",
-                    toolbarState = collapsingState.toolbarState,
-                    navigationIcon = {
-                        TopBarBackIconButton {
-                            navigator.goBack()
-                        }
-                    },
-                    actions = {
-                        TopBarIconButton(
-                            icon = Icons.Outlined.MoreVert,
-                            title = "Open Menu",
-                            onClick = { menuExpanded = true }
-                        )
-                        SessionMenuComponent(
-                            expanded = menuExpanded,
-                            onDismissRequest = { menuExpanded = false },
-                            onDelete = {
-                                deleteWorkout()
-                            }
-                        )
-                    })
-            },
-            modifier = Modifier.background(MaterialTheme.colors.background)
-        ) {
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.background),
-                contentPadding = PaddingValues(16.dp)
-            ) {
-                item {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp)
-                    ) {
-                        Column() {
-                            Text(
-                                text = "${logs.size} Exercises",
-                                color = LocalThemeState.current.onBackgroundColor
-                            )
-                            RSpacer(space = 4.dp)
-                            SessionCompleteQuickInfo(
-                                time = workout?.getDuration()?.toDurationStr() ?: "NA",
-                                volume = "$totalVolume kg",
-                                prs = 2
-                            )
-                        }
-                        IconButton(onClick = {
-                            workout?.id?.let {
-                                navigator.navigate(LeafScreen.WorkoutEdit.createRoute(workoutId = it))
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Edit,
-                                contentDescription = "Edit session",
-                                tint = ReboundTheme.colors.primary
-                            )
-                        }
+    ToolbarWithFabScaffold(
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+        state = collapsingState,
+        fab = {
+            ExtendedFloatingActionButton(
+                modifier = Modifier,
+                elevation = FloatingActionButtonDefaults.elevation(
+                    defaultElevation = 2.dp,
+                    pressedElevation = 4.dp
+                ),
+                text = { Text(text = "Perform Again") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Outlined.PlayArrow,
+                        contentDescription = null
+                    )
+                },
+                onClick = {
+                    startWorkout(discardActive = false)
+                })
+        },
+        fabPosition = FabPosition.Center,
+        toolbar = {
+            TopBar2(
+                title = workout?.name ?: "Workout",
+                toolbarState = collapsingState.toolbarState,
+                navigationIcon = {
+                    TopBarBackIconButton {
+                        navigator.goBack()
                     }
-                }
+                },
+                actions = {
+                    TopBarIconButton(
+                        icon = Icons.Outlined.MoreVert,
+                        title = "Open Menu",
+                        onClick = { menuExpanded = true }
+                    )
+                    SessionMenuComponent(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
+                        onDelete = {
+                            deleteWorkout()
+                        }
+                    )
+                })
+        },
+        modifier = Modifier.background(MaterialTheme.colors.background)
+    ) {
 
-                for (log in logs) {
-                    item() {
-                        SessionExerciseCardItem(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 16.dp),
-                            onClick = { },
-                            title = log.exercise.name ?: "",
-                            entries = log.logEntries
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                ) {
+                    Column() {
+                        Text(
+                            text = "${logs.size} Exercises",
+                            color = LocalThemeState.current.onBackgroundColor
+                        )
+                        RSpacer(space = 4.dp)
+                        SessionCompleteQuickInfo(
+                            time = workout?.getDuration()?.toDurationStr() ?: "NA",
+                            volume = "$totalVolume kg",
+                            prs = 2
+                        )
+                    }
+                    IconButton(onClick = {
+                        workout?.id?.let {
+                            navigator.navigate(LeafScreen.WorkoutEdit.createRoute(workoutId = it))
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Edit,
+                            contentDescription = "Edit session",
+                            tint = ReboundTheme.colors.primary
                         )
                     }
                 }
             }
 
+            for (log in logs) {
+                item() {
+                    SessionExerciseCardItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        onClick = { },
+                        title = log.exercise.name ?: "",
+                        entries = log.logEntries
+                    )
+                }
+            }
         }
+
     }
 
     if (isDiscardActiveWorkoutDialogVisible) {
