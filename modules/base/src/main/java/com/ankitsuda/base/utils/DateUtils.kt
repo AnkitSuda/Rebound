@@ -91,7 +91,7 @@ fun LocalDateTime.toReadableDurationStyle2(
     val hours = totalSeconds / 3600
     val seprater = if (spaces) " : " else ":"
     // Build formatted String
-    return if (hours > 0) "${if (hours < 10) "0" else ""}$hours$seprater" else "" +
+    return (if (hours > 0) "${if (hours < 10) "0" else ""}$hours$seprater" else "") +
             "${if (minutes < 10) "0" else ""}$minutes$seprater" +
             "${if (seconds < 10) "0" else ""}$seconds"
 }
