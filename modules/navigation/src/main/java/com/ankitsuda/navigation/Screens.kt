@@ -202,7 +202,10 @@ sealed class LeafScreen(
     ) :
         LeafScreen(route, root)
 
-    data class ColorPickerDemo(override val route: String = "personalization/color_picker_demo") :
+    data class ColorPickerDemo(override val route: String = "demo/color_picker_demo") :
+        LeafScreen(route)
+
+    data class ReboundSetKeyboardDemo(override val route: String = "demo/rebound_set_keyboard_demo_screen") :
         LeafScreen(route)
 
     data class CreateExercise(override val route: String = "create_exercise") : LeafScreen(route)

@@ -129,6 +129,15 @@ fun PersonalizationScreen(
                         navigator.navigate(LeafScreen.ColorPickerDemo().createRoute())
                     })
             }
+            item {
+                MoreItemCard(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = "Set Keyboard Demo",
+                    onClick = {
+                        navigator.navigate(LeafScreen.ReboundSetKeyboardDemo().createRoute())
+                    })
+            }
         }
     }
 }
