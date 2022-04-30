@@ -40,6 +40,7 @@ import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.ui.workout_details.components.SessionMenuComponent
 import me.onebone.toolbar.FabPosition
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.ToolbarWithFabScaffold
@@ -55,6 +56,10 @@ fun SessionScreen(
     val workout by viewModel.workout.collectAsState(null)
     val totalVolume by viewModel.totalVolume.collectAsState(0.0)
 
+    var menuExpanded by remember {
+        mutableStateOf(false)
+    }
+
     var isDiscardActiveWorkoutDialogVisible by rememberSaveable {
         mutableStateOf(false)
     }
@@ -64,6 +69,14 @@ fun SessionScreen(
             discardActive = discardActive,
             onWorkoutAlreadyActive = {
                 isDiscardActiveWorkoutDialogVisible = true
+            }
+        )
+    }
+
+    fun deleteWorkout() {
+        viewModel.deleteWorkout(
+            onDeleted = {
+                navigator.goBack()
             }
         )
     }
@@ -102,9 +115,18 @@ fun SessionScreen(
                         }
                     },
                     actions = {
-                        TopBarIconButton(icon = Icons.Outlined.MoreVert, title = "Open Menu") {
-
-                        }
+                        TopBarIconButton(
+                            icon = Icons.Outlined.MoreVert,
+                            title = "Open Menu",
+                            onClick = { menuExpanded = true }
+                        )
+                        SessionMenuComponent(
+                            expanded = menuExpanded,
+                            onDismissRequest = { menuExpanded = false },
+                            onDelete = {
+                                deleteWorkout()
+                            }
+                        )
                     })
             },
             modifier = Modifier.background(MaterialTheme.colors.background)

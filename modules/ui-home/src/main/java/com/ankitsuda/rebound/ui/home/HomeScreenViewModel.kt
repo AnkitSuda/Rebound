@@ -16,9 +16,7 @@ package com.ankitsuda.rebound.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ankitsuda.base.utils.getCurrentWeekOfMonth
-import com.ankitsuda.base.utils.toDurationStr
 import com.ankitsuda.base.utils.toReadableDurationStyle2
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.calculateTotalVolume
@@ -28,10 +26,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.Month
 import javax.inject.Inject
 
 @HiltViewModel
@@ -94,11 +90,11 @@ class HomeScreenViewModel @Inject constructor(private val workoutsRepository: Wo
             }
         }
         viewModelScope.launch {
-            workoutsRepository.getNonHiddenExerciseLogeEntries().collectLatest {
+            workoutsRepository.getNonHiddenExerciseLogEntries().collectLatest {
                 _overallInfo.value =
                     _overallInfo.value.copy(
                         totalVolumeLifted = try {
-                            it.calculateTotalVolume()
+                            it?.calculateTotalVolume()
                         } catch (e: Exception) {
                             0f
                         }

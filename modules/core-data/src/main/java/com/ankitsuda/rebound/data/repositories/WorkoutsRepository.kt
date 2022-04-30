@@ -331,10 +331,10 @@ class WorkoutsRepository @Inject constructor(
 
     fun getTotalWorkoutsCount(): Flow<Long> = workoutsDao.getTotalWorkoutsCount()
 
-    fun getMaxWeightLifted(): Flow<Float> = workoutsDao.getMaxWeightLifted()
+    fun getMaxWeightLifted(): Flow<Float?> = workoutsDao.getMaxWeightLifted()
 
-    fun getNonHiddenExerciseLogeEntries(): Flow<List<ExerciseLogEntry>> =
-        workoutsDao.getNonHiddenExerciseLogeEntries()
+    fun getNonHiddenExerciseLogEntries(): Flow<List<ExerciseLogEntry>?> =
+        workoutsDao.getNonHiddenExerciseLogEntries()
 
     fun getTotalWorkoutsDuration(): Flow<Long> =
         workoutsDao.getTotalWorkoutsDuration()

@@ -89,4 +89,11 @@ class SessionScreenViewModel @Inject constructor(
 
         }
     }
+
+    fun deleteWorkout(onDeleted: () -> Unit) {
+        viewModelScope.launch {
+            workoutsRepository.deleteWorkoutWithEverything(workoutId)
+            onDeleted()
+        }
+    }
 }
