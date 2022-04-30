@@ -14,55 +14,79 @@
 
 package com.ankitsuda.rebound.ui.keyboard.field
 
+import android.text.InputType
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.TextView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.widget.addTextChangedListener
 import com.ankitsuda.base.util.lighterOrDarkerColor
+import com.ankitsuda.base.util.toLegacyInt
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
-fun ReboundSetTextField(
-    modifier: Modifier = Modifier,
+fun RowScope.ReboundSetTextField(
     value: String,
+    contentColor: Color,
+    bgColor: Color,
     onValueChange: (String) -> Unit
 ) {
     val keyboard = LocalReboundSetKeyboard.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(Unit) {
-        keyboard.numKeyPressLiveData.observe(lifecycleOwner) {
-            if (it !is ClearNumKey) {
-                onValueChange(value + it.toString())
-            } else {
-                onValueChange(
-                    if (value.length <= 1) "" else value.substring(
-                        0,
-                        value.length - 2
-                    )
-                )
-            }
-        }
-    }
 
-    Box(
-        modifier = modifier
-            .background(ReboundTheme.colors.background.lighterOrDarkerColor(0.5f))
-            .clickable {
-                keyboard.show()
-            },
+    BoxWithConstraints(
+        modifier = Modifier
+            .height(32.dp)
+            .padding(start = 8.dp, end = 8.dp)
+            .weight(1.25f)
+            .clip(RoundedCornerShape(12.dp))
+            .background(bgColor.lighterOrDarkerColor(0.10f)),
     ) {
-        Text(
-            modifier = Modifier.padding(4.dp),
-            text = value
-        )
-    }
+        val width = with(LocalDensity.current) { constraints.minWidth.toDp() }
+        val height = with(LocalDensity.current) { constraints.minHeight.toDp() }
 
+        AndroidView(modifier = Modifier
+            .width(width)
+            .height(height),
+            factory = {
+            TextView(it).apply {
+                text = value
+                setTextColor(contentColor.toLegacyInt())
+                showSoftInputOnFocus = false
+
+                addTextChangedListener { e ->
+                    onValueChange(e.toString())
+                }
+
+                setRawInputType(InputType.TYPE_CLASS_TEXT)
+                setTextIsSelectable(true)
+                val ic = onCreateInputConnection(EditorInfo())
+
+                onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+                    if (p1) {
+                        keyboard.show()
+                        keyboard.setInputConnection(ic)
+                    } else {
+                        keyboard.hide()
+                    }
+                }
+            }
+        })
+    }
 }

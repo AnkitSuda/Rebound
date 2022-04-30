@@ -53,6 +53,7 @@ dependencies {
     implementation project(":modules:common-ui-components")
     implementation project(":modules:common-ui-components-workout-editor")
     implementation project(":modules:common-ui-icons")
+    implementation project(":modules:ui-keyboard")
     implementation project(":modules:core-data")
     implementation project(":modules:navigation")
 

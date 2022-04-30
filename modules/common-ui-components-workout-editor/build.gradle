@@ -50,6 +50,7 @@ dependencies {
     implementation project(":modules:common-ui-compose")
     implementation project(":modules:common-ui-theme")
     implementation project(":modules:common-ui-components")
+    implementation project(":modules:ui-keyboard")
     implementation project(":modules:navigation")
     implementation project(":modules:domain")
 }

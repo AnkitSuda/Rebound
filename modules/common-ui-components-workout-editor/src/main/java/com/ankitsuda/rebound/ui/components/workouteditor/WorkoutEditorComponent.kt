@@ -46,6 +46,7 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 fun WorkoutEditorComponent(
     navController: NavController,
     navigator: Navigator = LocalNavigator.current,
+    useReboundKeyboard: Boolean = false,
     workoutName: String?,
     workoutNote: String?,
     cancelWorkoutButtonVisible: Boolean,
@@ -105,6 +106,7 @@ fun WorkoutEditorComponent(
 
         for (logEntriesWithJunctionItem in logEntriesWithJunction) {
             workoutExerciseItemAlt(
+                useReboundKeyboard = useReboundKeyboard,
                 logEntriesWithJunction = logEntriesWithJunctionItem,
                 onValuesUpdated = { updatedEntry ->
                     onUpdateLogEntry(updatedEntry)

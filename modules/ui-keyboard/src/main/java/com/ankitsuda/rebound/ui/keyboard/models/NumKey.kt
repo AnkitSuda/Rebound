@@ -16,8 +16,4 @@ package com.ankitsuda.rebound.ui.keyboard.models
 
 import com.ankitsuda.rebound.ui.keyboard.enums.NumKeyType
 
-sealed class NumKey {
-    override fun toString(): String {
-        return super.toString()
-    }
-}
+sealed class NumKey

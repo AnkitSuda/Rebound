@@ -14,28 +14,33 @@
 
 package com.ankitsuda.rebound.ui.keyboard
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.keyboard.models.NumKey
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import timber.log.Timber
 
 @Composable
 fun ReboundSetKeyboardComponent(
     onClickNumKey: (NumKey) -> Unit
 ) {
-    NumKeysContainerComponent(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(
-                height = 250.dp,
-            ),
-        onClickNumKey = {
-            Timber.d(it.toString())
-            onClickNumKey(it)
-        }
-    )
+    Box(modifier = Modifier.background(ReboundTheme.colors.background)) {
+        NumKeysContainerComponent(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(
+                    height = 250.dp,
+                ),
+            onClickNumKey = {
+                Timber.d(it.toString())
+                onClickNumKey(it)
+            }
+        )
 
+    }
 }

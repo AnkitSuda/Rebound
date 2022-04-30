@@ -14,15 +14,20 @@
 
 package com.ankitsuda.rebound.ui.keyboard
 
+import android.view.inputmethod.InputConnection
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ankitsuda.rebound.ui.keyboard.models.NumKey
 
 class ReboundSetKeyboard(
-    val numKeyPressLiveData: MutableLiveData<NumKey>,
-    val onChangeVisibility: (Boolean) -> Unit
+    val onChangeVisibility: (Boolean) -> Unit,
+    val onChangeInputConnection: (InputConnection) -> Unit
 ) {
+    fun setInputConnection(ic: InputConnection) {
+        onChangeInputConnection(ic)
+    }
+
     fun show() {
         onChangeVisibility(true)
     }

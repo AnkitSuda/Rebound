@@ -54,6 +54,7 @@ import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -65,6 +66,7 @@ private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, ri
 
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.workoutExerciseItemAlt(
+    useReboundKeyboard: Boolean = false,
     logEntriesWithJunction: LogEntriesWithExerciseJunction,
     onValuesUpdated: (updatedEntry: ExerciseLogEntry) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
@@ -208,6 +210,7 @@ fun LazyListScope.workoutExerciseItemAlt(
 
 
         SetItem(
+            useReboundKeyboard = useReboundKeyboard,
             revisedSetText = revisedSetsTexts[sortedEntries.indexOf(entry)],
             exercise = exercise,
             exerciseLogEntry = entry,
@@ -249,6 +252,7 @@ fun LazyListScope.workoutExerciseItemAlt(
 @Composable
 private fun LazyItemScope.SetItem(
     exercise: Exercise,
+    useReboundKeyboard: Boolean,
     revisedSetText: Pair<String, Color?>,
     exerciseLogEntry: ExerciseLogEntry,
     onChange: (ExerciseLogEntry) -> Unit,
@@ -365,6 +369,7 @@ private fun LazyItemScope.SetItem(
     ) {
         SetItemLayout(
             bgColor = bgColor,
+            useReboundKeyboard = useReboundKeyboard,
             contentColor = contentColor,
             exercise = exercise,
             exerciseLogEntry = mLogEntry,
@@ -431,6 +436,7 @@ fun SetItemBgLayout(
 @Composable
 private fun SetItemLayout(
     bgColor: Color,
+    useReboundKeyboard: Boolean,
     contentColor: Color,
     exercise: Exercise,
     exerciseLogEntry: ExerciseLogEntry,
@@ -495,24 +501,35 @@ private fun SetItemLayout(
                 (exerciseLogEntry.distance ?: "").toString()
             }
 
-            SetTextField(
-                value = fieldValue,
-                onValueChange = {
-                    if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
-                        val newValue =
-                            (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
-                                .toFloat())
-                        onWeightChange(exerciseLogEntry, newValue)
-                    } else {
-                        val newValue =
-                            (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
-                                .toLong())
-                        onDistanceChange(exerciseLogEntry, newValue)
-                    }
-                },
-                contentColor = contentColor,
-                bgColor = bgColor,
-            )
+            val mOnValueChange: (String) -> Unit = {
+                if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
+                    val newValue =
+                        (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
+                            .toFloat())
+                    onWeightChange(exerciseLogEntry, newValue)
+                } else {
+                    val newValue =
+                        (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
+                            .toLong())
+                    onDistanceChange(exerciseLogEntry, newValue)
+                }
+            }
+
+            if (useReboundKeyboard) {
+                ReboundSetTextField(
+                    value = fieldValue,
+                    onValueChange = mOnValueChange,
+                    contentColor = contentColor,
+                    bgColor = bgColor
+                )
+            } else {
+                SetTextField(
+                    value = fieldValue,
+                    onValueChange = mOnValueChange,
+                    contentColor = contentColor,
+                    bgColor = bgColor,
+                )
+            }
         }
 
         val rightFieldValue =
@@ -522,24 +539,35 @@ private fun SetItemLayout(
                 (exerciseLogEntry.timeRecorded ?: "").toString()
             }
 
-        SetTextField(
-            value = rightFieldValue,
-            onValueChange = {
-                if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS || exercise.category == ExerciseCategory.REPS) {
-                    val newValue =
-                        (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
-                            .toInt())
-                    onRepsChange(exerciseLogEntry, newValue)
-                } else {
-                    val newValue =
-                        (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
-                            .toLong())
-                    onTimeChange(exerciseLogEntry, newValue)
-                }
-            },
-            contentColor = contentColor,
-            bgColor = bgColor,
-        )
+        val mOnValueChange: (String) -> Unit = {
+            if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS || exercise.category == ExerciseCategory.REPS) {
+                val newValue =
+                    (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
+                        .toInt())
+                onRepsChange(exerciseLogEntry, newValue)
+            } else {
+                val newValue =
+                    (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
+                        .toLong())
+                onTimeChange(exerciseLogEntry, newValue)
+            }
+        }
+
+        if (useReboundKeyboard) {
+            ReboundSetTextField(
+                value = rightFieldValue,
+                onValueChange = mOnValueChange,
+                contentColor = contentColor,
+                bgColor = bgColor,
+            )
+        } else {
+            SetTextField(
+                value = rightFieldValue,
+                onValueChange = mOnValueChange,
+                contentColor = contentColor,
+                bgColor = bgColor,
+            )
+        }
 
         IconButton(
             onClick = {
