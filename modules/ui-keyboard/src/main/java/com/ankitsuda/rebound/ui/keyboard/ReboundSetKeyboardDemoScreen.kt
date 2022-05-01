@@ -36,94 +36,35 @@ import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.DecimalNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumberNumKey
+import com.ankitsuda.rebound.ui.keyboard.platecalculator.PlateCalculatorComponent
 
 @Composable
 fun ReboundSetKeyboardDemoScreen() {
-    var keyboardVisible by remember {
-        mutableStateOf(false)
-    }
-    var inputConnection: InputConnection? by remember {
-        mutableStateOf(null)
-    }
-    val keyboard = ReboundSetKeyboard(
-        onChangeVisibility = {
-            keyboardVisible = it
-        },
-        onChangeInputConnection = {
-            inputConnection = it
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+    ) {
+        var weight by rememberSaveable {
+            mutableStateOf(0f)
         }
-    )
-    CompositionLocalProvider(LocalReboundSetKeyboard provides keyboard) {
 
+        Row(modifier = Modifier.fillMaxWidth()) {
+            ReboundSetTextField(
+                contentColor = Color.Black,
+                bgColor = Color.Gray,
+                value = weight.toString(), onValueChange = {
+                    weight = it.toFloatOrNull() ?: weight
+                }
+            )
+        }
 
-        Column(
+        PlateCalculatorComponent(
             modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-        ) {
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            weight = weight
+        )
 
-
-            fun onClickNumKey(numKey: NumKey) {
-                if (inputConnection == null) return
-
-                when (numKey) {
-                    is NumberNumKey, DecimalNumKey -> inputConnection?.commitText(
-                        numKey.toString(),
-                        1
-                    )
-                    is ClearNumKey -> {
-                        val selectedText = inputConnection?.getSelectedText(0)
-
-                        if (TextUtils.isEmpty(selectedText)) {
-                            inputConnection?.deleteSurroundingText(1, 0)
-                        } else {
-                            inputConnection?.commitText("", 1)
-                        }
-                    }
-                }
-
-            }
-
-            var v1 by rememberSaveable {
-                mutableStateOf("test")
-            }
-            var v2 by rememberSaveable {
-                mutableStateOf("test2")
-            }
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                ReboundSetTextField(
-                    contentColor = Color.Black,
-                    bgColor = Color.Gray,
-                    value = v1, onValueChange = {
-                        v1 = it
-                    }
-                )
-                RSpacer(space = 16.dp)
-                ReboundSetTextField(
-                    contentColor = Color.Black,
-                    bgColor = Color.Gray,
-                    value = v2, onValueChange = {
-                        v2 = it
-                    }
-                )
-            }
-
-            if (keyboardVisible) {
-
-                BackHandler() {
-                    keyboardVisible = false
-                }
-
-//                ReboundSetKeyboardComponent(
-//                    onClickNumKey = {
-//                        onClickNumKey(it)
-//                    }
-//                )
-
-            }
-
-
-        }
     }
 }

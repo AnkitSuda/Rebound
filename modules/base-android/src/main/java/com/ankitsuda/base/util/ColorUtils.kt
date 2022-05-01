@@ -42,10 +42,25 @@ fun Color.lighterOrDarkerColor(ratio: Float = 0.5f) =
     if (isDark()) lighterColor(ratio) else darkerColor(ratio)
 
 fun Color.toHexString(): String {
-    val alphaString = (alpha * 255).toInt().toString(16).let { if(it.length == 1) "0$it" else it }
-    val redString = (red * 255).toInt().toString(16).let { if(it.length == 1) "0$it" else it }
-    val greenString = (green * 255).toInt().toString(16).let { if(it.length == 1) "0$it" else it }
-    val blueString = (blue * 255).toInt().toString(16).let { if(it.length == 1) "0$it" else it }
+    val alphaString = (alpha * 255).toInt().toString(16).let { if (it.length == 1) "0$it" else it }
+    val redString = (red * 255).toInt().toString(16).let { if (it.length == 1) "0$it" else it }
+    val greenString = (green * 255).toInt().toString(16).let { if (it.length == 1) "0$it" else it }
+    val blueString = (blue * 255).toInt().toString(16).let { if (it.length == 1) "0$it" else it }
 
     return "$alphaString$redString$greenString$blueString"
 }
+
+fun String.toColor(): Color? =
+    try {
+        Color(
+            android.graphics.Color.parseColor(
+                if (this.startsWith("#"))
+                    this
+                else
+                    "#$this"
+            )
+        )
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
