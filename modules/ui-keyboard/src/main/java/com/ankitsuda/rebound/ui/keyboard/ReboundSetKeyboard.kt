@@ -24,7 +24,10 @@ class ReboundSetKeyboard(
     val onChangeVisibility: (Boolean) -> Unit,
     val onChangeInputConnection: (InputConnection) -> Unit
 ) {
+    private var _inputConnection: InputConnection? = null
+
     fun setInputConnection(ic: InputConnection) {
+        _inputConnection = ic
         onChangeInputConnection(ic)
     }
 
@@ -33,6 +36,7 @@ class ReboundSetKeyboard(
     }
 
     fun hide() {
+        _inputConnection?.finishComposingText()
         onChangeVisibility(false)
     }
 }

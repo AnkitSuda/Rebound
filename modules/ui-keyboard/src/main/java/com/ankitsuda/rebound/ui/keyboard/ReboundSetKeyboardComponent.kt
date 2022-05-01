@@ -14,6 +14,9 @@
 
 package com.ankitsuda.rebound.ui.keyboard
 
+import android.text.TextUtils
+import android.view.inputmethod.InputConnection
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,14 +24,42 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
+import com.ankitsuda.rebound.ui.keyboard.models.DecimalNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumKey
+import com.ankitsuda.rebound.ui.keyboard.models.NumberNumKey
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import timber.log.Timber
 
 @Composable
 fun ReboundSetKeyboardComponent(
-    onClickNumKey: (NumKey) -> Unit
+    inputConnection: InputConnection?
 ) {
+    val reboundSetKeyboard = LocalReboundSetKeyboard.current
+
+    BackHandler() {
+        reboundSetKeyboard.hide()
+    }
+
+    fun onClickNumKey(numKey: NumKey) {
+        when (numKey) {
+            is NumberNumKey, DecimalNumKey -> inputConnection?.commitText(
+                numKey.toString(),
+                1
+            )
+            is ClearNumKey -> {
+                val selectedText = inputConnection?.getSelectedText(0)
+
+                if (TextUtils.isEmpty(selectedText)) {
+                    inputConnection?.deleteSurroundingText(1, 0)
+                } else {
+                    inputConnection?.commitText("", 1)
+                }
+            }
+        }
+
+    }
+
     Box(modifier = Modifier.background(ReboundTheme.colors.background)) {
         NumKeysContainerComponent(
             modifier = Modifier

@@ -115,11 +115,11 @@ fun ReboundSetKeyboardDemoScreen() {
                     keyboardVisible = false
                 }
 
-                ReboundSetKeyboardComponent(
-                    onClickNumKey = {
-                        onClickNumKey(it)
-                    }
-                )
+//                ReboundSetKeyboardComponent(
+//                    onClickNumKey = {
+//                        onClickNumKey(it)
+//                    }
+//                )
 
             }
 

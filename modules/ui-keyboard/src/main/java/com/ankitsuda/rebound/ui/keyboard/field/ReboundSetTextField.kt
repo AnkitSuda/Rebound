@@ -15,6 +15,7 @@
 package com.ankitsuda.rebound.ui.keyboard.field
 
 import android.text.InputType
+import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -65,28 +66,41 @@ fun RowScope.ReboundSetTextField(
             .width(width)
             .height(height),
             factory = {
-            TextView(it).apply {
-                text = value
-                setTextColor(contentColor.toLegacyInt())
-                showSoftInputOnFocus = false
+                TextView(it).apply {
+                    text = value
+                    textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                    gravity = Gravity.CENTER
+                    setTextColor(contentColor.toLegacyInt())
+                    showSoftInputOnFocus = false
 
-                addTextChangedListener { e ->
-                    onValueChange(e.toString())
-                }
+                    addTextChangedListener { e ->
+                        val newValue = e.toString()
+                        if (newValue != value) {
+                            onValueChange(newValue)
+                        }
+                    }
 
-                setRawInputType(InputType.TYPE_CLASS_TEXT)
-                setTextIsSelectable(true)
-                val ic = onCreateInputConnection(EditorInfo())
+                    setRawInputType(InputType.TYPE_CLASS_TEXT)
+                    setTextIsSelectable(true)
+                    val ic = onCreateInputConnection(EditorInfo())
 
-                onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
-                    if (p1) {
+                    setOnClickListener {
                         keyboard.show()
-                        keyboard.setInputConnection(ic)
-                    } else {
-                        keyboard.hide()
+                    }
+
+                    onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
+                        if (p1) {
+                            keyboard.show()
+                            keyboard.setInputConnection(ic)
+                        } else {
+                            keyboard.hide()
+                        }
                     }
                 }
+            },
+            update = {
+                it.setTextColor(contentColor.toLegacyInt())
             }
-        })
+        )
     }
 }

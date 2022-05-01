@@ -40,11 +40,11 @@ class ReboundSetKeyboardLegacy @JvmOverloads constructor(
     init {
         addView(ComposeView(context = context).apply {
             setContent {
-                ReboundSetKeyboardComponent(
-                    onClickNumKey = {
-                        onClickNumKey(it)
-                    }
-                )
+//                ReboundSetKeyboardComponent(
+//                    onClickNumKey = {
+//                        onClickNumKey(it)
+//                    }
+//                )
             }
         }).apply {
             updateLayoutParams {

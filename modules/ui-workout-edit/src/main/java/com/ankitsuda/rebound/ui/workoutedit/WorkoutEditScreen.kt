@@ -57,123 +57,71 @@ fun WorkoutEditScreen(
     val workout by viewModel.workout.collectAsState(null)
     val logEntriesWithJunction by viewModel.logEntriesWithExerciseJunction.collectAsState()
 
-    var keyboardVisible by remember {
-        mutableStateOf(false)
-    }
-    var inputConnection: InputConnection? by remember {
-        mutableStateOf(null)
-    }
-
     val workoutName = workout?.name
     val workoutNote = workout?.note
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
-    fun onClickNumKey(numKey: NumKey) {
-        if (inputConnection == null) return
 
-        when (numKey) {
-            is NumberNumKey, DecimalNumKey -> inputConnection?.commitText(
-                numKey.toString(),
-                1
+    Column() {
+        CollapsingToolbarScaffold(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .background(ReboundTheme.colors.background),
+            state = collapsingState,
+            scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+            toolbar = {
+                TopBar2(
+                    title = "Edit workout",
+                    toolbarState = collapsingState.toolbarState,
+                    navigationIcon = {
+                        TopBarBackIconButton {
+                            navigator.goBack()
+                        }
+                    },
+                    actions = {
+                        TopBarIconButton(icon = Icons.Outlined.MoreVert, title = "Open Menu") {
+
+                        }
+                    })
+
+            })
+        {
+            WorkoutEditorComponent(
+                navController = navController,
+                navigator = navigator,
+                workoutName = workoutName,
+                workoutNote = workoutNote,
+                useReboundKeyboard = true,
+                cancelWorkoutButtonVisible = false,
+                logEntriesWithJunction = logEntriesWithJunction,
+                onChangeWorkoutName = {
+                    viewModel.updateWorkoutName(it)
+                },
+                onChangeWorkoutNote = {
+                    viewModel.updateWorkoutNote(it)
+                },
+                onAddExerciseToWorkout = {
+                    viewModel.addExerciseToWorkout(it)
+                },
+                onDeleteExerciseFromWorkout = {
+                    viewModel.deleteExerciseFromWorkout(it)
+                },
+                onAddEmptySetToExercise = { setNumber, exerciseWorkoutJunction ->
+                    viewModel.addEmptySetToExercise(
+                        setNumber = setNumber,
+                        exerciseWorkoutJunction = exerciseWorkoutJunction
+                    )
+                },
+                onDeleteLogEntry = {
+                    viewModel.deleteLogEntry(it)
+                },
+                onUpdateLogEntry = {
+                    viewModel.updateLogEntry(it)
+                },
+                onCancelCurrentWorkout = {}
             )
-            is ClearNumKey -> {
-                val selectedText = inputConnection?.getSelectedText(0)
-
-                if (TextUtils.isEmpty(selectedText)) {
-                    inputConnection?.deleteSurroundingText(1, 0)
-                } else {
-                    inputConnection?.commitText("", 1)
-                }
-            }
-        }
-
-    }
-
-    val keyboard = ReboundSetKeyboard(
-        onChangeVisibility = {
-            keyboardVisible = it
-        },
-        onChangeInputConnection = {
-            inputConnection = it
-        }
-    )
-    CompositionLocalProvider(LocalReboundSetKeyboard provides keyboard) {
-
-        Column() {
-            CollapsingToolbarScaffold(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(ReboundTheme.colors.background),
-                state = collapsingState,
-                scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
-                toolbar = {
-                    TopBar2(
-                        title = "Edit workout",
-                        toolbarState = collapsingState.toolbarState,
-                        navigationIcon = {
-                            TopBarBackIconButton {
-                                navigator.goBack()
-                            }
-                        },
-                        actions = {
-                            TopBarIconButton(icon = Icons.Outlined.MoreVert, title = "Open Menu") {
-
-                            }
-                        })
-
-                })
-            {
-                WorkoutEditorComponent(
-                    navController = navController,
-                    navigator = navigator,
-                    workoutName = workoutName,
-                    workoutNote = workoutNote,
-                    useReboundKeyboard = true,
-                    cancelWorkoutButtonVisible = false,
-                    logEntriesWithJunction = logEntriesWithJunction,
-                    onChangeWorkoutName = {
-                        viewModel.updateWorkoutName(it)
-                    },
-                    onChangeWorkoutNote = {
-                        viewModel.updateWorkoutNote(it)
-                    },
-                    onAddExerciseToWorkout = {
-                        viewModel.addExerciseToWorkout(it)
-                    },
-                    onDeleteExerciseFromWorkout = {
-                        viewModel.deleteExerciseFromWorkout(it)
-                    },
-                    onAddEmptySetToExercise = { setNumber, exerciseWorkoutJunction ->
-                        viewModel.addEmptySetToExercise(
-                            setNumber = setNumber,
-                            exerciseWorkoutJunction = exerciseWorkoutJunction
-                        )
-                    },
-                    onDeleteLogEntry = {
-                        viewModel.deleteLogEntry(it)
-                    },
-                    onUpdateLogEntry = {
-                        viewModel.updateLogEntry(it)
-                    },
-                    onCancelCurrentWorkout = {}
-                )
-            }
-
-
-
-            if (keyboardVisible) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    ReboundSetKeyboardComponent(
-                        onClickNumKey = {
-                            onClickNumKey(it)
-                        })
-                }
-            }
         }
     }
 }

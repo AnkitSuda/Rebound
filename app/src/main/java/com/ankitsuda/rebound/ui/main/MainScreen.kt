@@ -14,15 +14,21 @@
 
 package com.ankitsuda.rebound.ui.main
 
+import android.view.inputmethod.InputConnection
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -50,6 +56,9 @@ import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded
 import com.ankitsuda.rebound.ui.ThemeViewModel
+import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
+import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboard
+import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboardComponent
 import com.ankitsuda.rebound.ui.navigation.AppNavigation
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -129,11 +138,32 @@ private fun MainLayout(
     )
 
 
+    var reboundSetKeyboardVisible by remember {
+        mutableStateOf(false)
+    }
+    var reboundSetKeyboardInputConnection: InputConnection? by remember {
+        mutableStateOf(null)
+    }
+
+    val reboundSetKeyboard by remember {
+        mutableStateOf(
+            ReboundSetKeyboard(
+                onChangeVisibility = {
+                    reboundSetKeyboardVisible = it
+                },
+                onChangeInputConnection = {
+                    reboundSetKeyboardInputConnection = it
+                }
+            )
+        )
+    }
+
     ReboundThemeWrapper(themeState = themeState) {
         NavigatorHost {
             CompositionLocalProvider(
                 LocalDialog provides dialog,
-                LocalPanel provides mainPanel
+                LocalPanel provides mainPanel,
+                LocalReboundSetKeyboard provides reboundSetKeyboard
             ) {
 
                 Box() {
@@ -223,11 +253,32 @@ private fun MainLayout(
                                 dialogContent()
                             })
                     }
+
+                    AnimatedVisibility(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter),
+                        enter = slideInVertically { it },
+                        exit = slideOutVertically { it },
+                        visible = reboundSetKeyboardVisible && reboundSetKeyboardInputConnection != null
+                    ) {
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            elevation = 8.dp,
+                            shape = RoundedCornerShape(0.dp)
+                        ) {
+                            Box(modifier = Modifier.navigationBarsPadding()) {
+                                ReboundSetKeyboardComponent(inputConnection = reboundSetKeyboardInputConnection)
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
+
 
 @Composable
 private fun BottomBar(

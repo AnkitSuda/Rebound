@@ -85,6 +85,8 @@ fun WorkoutPanel1(
             navigator = navigator,
             workoutName = workoutName,
             workoutNote = workoutNote,
+            useReboundKeyboard = true,
+            addNavigationBarPadding = true,
             cancelWorkoutButtonVisible = true,
             logEntriesWithJunction = logEntriesWithJunction,
             onChangeWorkoutName = {

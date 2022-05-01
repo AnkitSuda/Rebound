@@ -15,10 +15,7 @@
 package com.ankitsuda.rebound.ui.components.workouteditor
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.material.*
@@ -28,11 +25,15 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
+import com.ankitsuda.common.compose.SAFE_RS_KEYBOARD_HEIGHT
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
@@ -40,13 +41,18 @@ import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.components.AppTextField
+import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
+import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboard
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.google.accompanist.insets.LocalWindowInsets
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WorkoutEditorComponent(
     navController: NavController,
     navigator: Navigator = LocalNavigator.current,
     useReboundKeyboard: Boolean = false,
+    addNavigationBarPadding: Boolean = false,
     workoutName: String?,
     workoutNote: String?,
     cancelWorkoutButtonVisible: Boolean,
@@ -66,6 +72,9 @@ fun WorkoutEditorComponent(
         ?.savedStateHandle
         ?.getLiveData<String?>("result_exercises_screen_exercise_id")?.observeAsState()
 
+    val navigationBarHeight =
+        with(LocalDensity.current) { if (addNavigationBarPadding) LocalWindowInsets.current.navigationBars.bottom.toDp() else 0.dp }
+
     LaunchedEffect(key1 = exercisesScreenResult?.value) {
         exercisesScreenResult?.value?.let { resultId ->
             onAddExerciseToWorkout(resultId)
@@ -77,10 +86,22 @@ fun WorkoutEditorComponent(
         }
     }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val reboundKeyboard = LocalReboundSetKeyboard.current
+    fun hideKeyboard() {
+        try {
+            keyboardController?.hide()
+            reboundKeyboard.hide()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(ReboundTheme.colors.background)
+            .background(ReboundTheme.colors.background),
+        contentPadding = PaddingValues(bottom = SAFE_RS_KEYBOARD_HEIGHT + navigationBarHeight)
     ) {
         item {
             layoutAtTop()
@@ -136,7 +157,7 @@ fun WorkoutEditorComponent(
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 onClick = {
-
+                    hideKeyboard()
                     navigator.navigate(LeafScreen.ExercisesBottomSheet().route)
                 }
             ) {
@@ -157,6 +178,7 @@ fun WorkoutEditorComponent(
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                     onClick = {
+                        hideKeyboard()
                         onCancelCurrentWorkout()
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
