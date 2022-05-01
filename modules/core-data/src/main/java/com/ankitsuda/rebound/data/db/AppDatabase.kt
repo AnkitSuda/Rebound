@@ -19,6 +19,9 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ankitsuda.rebound.data.db.daos.*
 import com.ankitsuda.rebound.domain.entities.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
 @Database(
@@ -33,6 +36,7 @@ import java.util.concurrent.Executors
         Muscle::class,
         Workout::class,
         WorkoutTemplate::class,
+        Plate::class,
     ],
     version = 1,
     exportSchema = true
@@ -45,6 +49,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun musclesDao(): MusclesDao
     abstract fun exercisesDao(): ExercisesDao
     abstract fun workoutTemplatesDao(): WorkoutTemplatesDao
+    abstract fun platesDao(): PlatesDao
 
     companion object {
         @Volatile
@@ -57,18 +62,20 @@ abstract class AppDatabase : RoomDatabase() {
                 }
             }
 
+        @OptIn(DelicateCoroutinesApi::class)
         private fun buildDatabase(appContext: Context) =
             Room.databaseBuilder(appContext, AppDatabase::class.java, "ReboundDb.db")
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
                         //pre-populate data
-                        Executors.newSingleThreadExecutor().execute {
+                        GlobalScope.launch {
                             instance?.musclesDao()?.insertMuscles(DataGenerator.getMuscles())
                             instance?.measurementsDao()
                                 ?.insertBodyPartsGroups(DataGenerator.getBodyPartsGroups())
                             instance?.measurementsDao()
                                 ?.insertBodyParts(DataGenerator.getBodyPart())
+                            instance?.platesDao()?.insertPlates(DataGenerator.getPlates())
                         }
                     }
                 })

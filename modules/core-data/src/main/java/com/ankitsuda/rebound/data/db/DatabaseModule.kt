@@ -51,4 +51,8 @@ class DatabaseModule {
     @Provides
     fun provideWorkoutTemplatesDao(db: AppDatabase) = db.workoutTemplatesDao()
 
+    @Singleton
+    @Provides
+    fun providePlatesDao(db: AppDatabase) = db.platesDao()
+
 }
