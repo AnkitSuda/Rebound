@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.MutableLiveData
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
 import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
 import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.DecimalNumKey
@@ -53,6 +54,7 @@ fun ReboundSetKeyboardDemoScreen() {
             ReboundSetTextField(
                 contentColor = Color.Black,
                 bgColor = Color.Gray,
+                keyboardType = KeyboardType.WEIGHT,
                 value = weight.toString(), onValueChange = {
                     weight = it.toFloatOrNull() ?: weight
                 }

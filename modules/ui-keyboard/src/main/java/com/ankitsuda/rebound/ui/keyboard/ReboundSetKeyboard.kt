@@ -18,17 +18,23 @@ import android.view.inputmethod.InputConnection
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
 import com.ankitsuda.rebound.ui.keyboard.models.NumKey
 
 class ReboundSetKeyboard(
-    val onChangeVisibility: (Boolean) -> Unit,
-    val onChangeInputConnection: (InputConnection) -> Unit
+    private val onChangeKeyboardType: (KeyboardType) -> Unit,
+    private val onChangeVisibility: (Boolean) -> Unit,
+    private val onChangeInputConnection: (InputConnection) -> Unit
 ) {
     private var _inputConnection: InputConnection? = null
 
     fun setInputConnection(ic: InputConnection) {
         _inputConnection = ic
         onChangeInputConnection(ic)
+    }
+
+    fun setKeyboardType(type: KeyboardType) {
+        onChangeKeyboardType(type)
     }
 
     fun show() {

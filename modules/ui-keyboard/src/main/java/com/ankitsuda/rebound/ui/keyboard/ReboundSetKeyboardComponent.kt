@@ -15,27 +15,55 @@
 package com.ankitsuda.rebound.ui.keyboard
 
 import android.text.TextUtils
+import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputConnection
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ChangeCircle
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardModeType
+import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
 import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.DecimalNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumberNumKey
+import com.ankitsuda.rebound.ui.keyboard.platecalculator.PlateCalculatorComponent
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import timber.log.Timber
 
 @Composable
 fun ReboundSetKeyboardComponent(
+    keyboardType: KeyboardType,
     inputConnection: InputConnection?
 ) {
     val reboundSetKeyboard = LocalReboundSetKeyboard.current
+
+    Timber.d("current keyboardType $keyboardType")
+
+    var mCurrentMode by remember {
+        mutableStateOf(KeyboardModeType.NUMBERS)
+    }
+
+    val currentMode = if (keyboardType == KeyboardType.WEIGHT) {
+        mCurrentMode
+    } else {
+        KeyboardModeType.NUMBERS
+    }
+
+    var rightButtonsWidth by remember {
+        mutableStateOf(0.dp)
+    }
+
+    val density = LocalDensity.current
 
     BackHandler() {
         reboundSetKeyboard.hide()
@@ -60,18 +88,63 @@ fun ReboundSetKeyboardComponent(
 
     }
 
-    Box(modifier = Modifier.background(ReboundTheme.colors.background)) {
-        NumKeysContainerComponent(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(
-                    height = 250.dp,
-                ),
-            onClickNumKey = {
-                Timber.d(it.toString())
-                onClickNumKey(it)
+    Box() {
+        when (currentMode) {
+            KeyboardModeType.NUMBERS -> {
+                Row(
+                    modifier = Modifier
+                        .padding(end = rightButtonsWidth)
+                        .background(ReboundTheme.colors.background)
+                ) {
+                    NumKeysContainerComponent(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(
+                                height = 250.dp,
+                            ),
+                        keyboardType = keyboardType,
+                        onClickNumKey = {
+                            Timber.d(it.toString())
+                            onClickNumKey(it)
+                        }
+                    )
+                }
             }
-        )
+            KeyboardModeType.PLATE_CALCULATOR -> {
+                PlateCalculatorComponent(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(
+                            height = 250.dp,
+                        ),
+                    weight = inputConnection?.getExtractedText(
+                        ExtractedTextRequest(),
+                        0
+                    )?.text.toString().toFloatOrNull() ?: 0f
+                )
+            }
+        }
 
+        Column(
+            modifier = Modifier
+                .onGloballyPositioned {
+                    with(density) {
+                        rightButtonsWidth = it.size.width.toDp()
+                    }
+                }
+                .align(Alignment.TopEnd)
+        ) {
+            if (keyboardType == KeyboardType.WEIGHT) {
+                IconButton(onClick = {
+                    mCurrentMode = if (currentMode == KeyboardModeType.NUMBERS) {
+                        KeyboardModeType.PLATE_CALCULATOR
+                    } else {
+                        KeyboardModeType.NUMBERS
+                    }
+                }) {
+                    Icon(imageVector = Icons.Outlined.ChangeCircle, contentDescription = null)
+                }
+            }
+        }
     }
 }

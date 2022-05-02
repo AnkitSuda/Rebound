@@ -18,6 +18,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
+import com.ankitsuda.base.util.toRedableString
 import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toReadableDuration
@@ -129,8 +130,7 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     }
 
     private suspend fun refreshHeaderValues(entries: List<ExerciseLogEntry>) {
-        _currentVolumeStr.value =
-            "${DecimalFormat("#.##").format(entries.calculateTotalVolume())}kg"
+        _currentVolumeStr.value = "${entries.calculateTotalVolume().toRedableString()}kg"
         _currentSetsStr.value = "${entries.size}"
     }
 

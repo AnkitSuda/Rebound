@@ -39,6 +39,7 @@ import androidx.core.widget.addTextChangedListener
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toLegacyInt
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
+import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
 import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
@@ -47,6 +48,7 @@ fun RowScope.ReboundSetTextField(
     value: String,
     contentColor: Color,
     bgColor: Color,
+    keyboardType: KeyboardType,
     onValueChange: (String) -> Unit
 ) {
     val keyboard = LocalReboundSetKeyboard.current
@@ -85,11 +87,13 @@ fun RowScope.ReboundSetTextField(
                     val ic = onCreateInputConnection(EditorInfo())
 
                     setOnClickListener {
+                        keyboard.setKeyboardType(keyboardType)
                         keyboard.show()
                     }
 
                     onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
                         if (p1) {
+                            keyboard.setKeyboardType(keyboardType)
                             keyboard.show()
                             keyboard.setInputConnection(ic)
                         } else {

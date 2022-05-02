@@ -12,15 +12,9 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.base.util
+package com.ankitsuda.rebound.ui.keyboard.enums
 
-import java.text.DecimalFormat
-
-fun Float.cmprs(min: Float, max: Float) = min + (max - min) * this
-fun Float.cmprs(min: Int, max: Int) = this.cmprs(min.toFloat(), max.toFloat())
-fun Int.cmprs(min: Int, max: Int) = this.toFloat().cmprs(min.toFloat(), max.toFloat())
-fun Int.cmprs(min: Float, max: Float) = this.toFloat().cmprs(min, max)
-
-const val NONE_WORKOUT_ID = "none"
-
-fun Float.toRedableString() = DecimalFormat("#.##").format(this)
+enum class KeyboardModeType {
+    NUMBERS,
+    PLATE_CALCULATOR;
+}

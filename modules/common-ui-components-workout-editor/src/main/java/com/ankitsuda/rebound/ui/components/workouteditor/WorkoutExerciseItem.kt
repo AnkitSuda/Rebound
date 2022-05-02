@@ -520,7 +520,8 @@ private fun SetItemLayout(
                     value = fieldValue,
                     onValueChange = mOnValueChange,
                     contentColor = contentColor,
-                    bgColor = bgColor
+                    bgColor = bgColor,
+                    keyboardType = com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType.WEIGHT
                 )
             } else {
                 SetTextField(
@@ -559,6 +560,7 @@ private fun SetItemLayout(
                 onValueChange = mOnValueChange,
                 contentColor = contentColor,
                 bgColor = bgColor,
+                keyboardType = com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType.REPS
             )
         } else {
             SetTextField(

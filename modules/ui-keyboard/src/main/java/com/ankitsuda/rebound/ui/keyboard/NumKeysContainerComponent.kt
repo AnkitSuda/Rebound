@@ -15,6 +15,7 @@
 package com.ankitsuda.rebound.ui.keyboard
 
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
 import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.DecimalNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumKey
@@ -34,10 +36,11 @@ import com.google.accompanist.flowlayout.SizeMode
 @Composable
 internal fun NumKeysContainerComponent(
     modifier: Modifier = Modifier,
+    keyboardType: KeyboardType,
     onClickNumKey: (NumKey) -> Unit
 ) {
-    val allKeys by remember {
-        mutableStateOf(getAllKeys())
+    val allKeys by remember(key1 = keyboardType) {
+        mutableStateOf(getAllKeys(keyboardType))
     }
 
     BoxWithConstraints(modifier = modifier) {
@@ -50,29 +53,41 @@ internal fun NumKeysContainerComponent(
             mainAxisSize = SizeMode.Expand,
             content = {
                 for (numKey in allKeys) {
-                    NumKeyComponent(
-                        modifier = Modifier
-                            .width(keyWidth)
-                            .height(keyHeight),
-                        value = numKey,
-                        onClick = {
-                            onClickNumKey(numKey)
-                        }
-                    )
+                    if (numKey != null) {
+                        NumKeyComponent(
+                            modifier = Modifier
+                                .width(keyWidth)
+                                .height(keyHeight),
+                            value = numKey,
+                            onClick = {
+                                onClickNumKey(numKey)
+                            }
+                        )
+                    } else {
+                        Spacer(
+                            modifier = Modifier
+                                .width(keyWidth)
+                                .height(keyHeight)
+                        )
+                    }
                 }
             }
         )
     }
 }
 
-private fun getAllKeys(): List<NumKey> {
-    val keys = arrayListOf<NumKey>()
+private fun getAllKeys(keyboardType: KeyboardType): List<NumKey?> {
+    val keys = arrayListOf<NumKey?>()
 
     for (i in 1..9) {
         keys.add(NumberNumKey(value = i))
     }
 
-    keys.add(DecimalNumKey)
+    if (keyboardType == KeyboardType.WEIGHT) {
+        keys.add(DecimalNumKey)
+    } else {
+        keys.add(null)
+    }
     keys.add(NumberNumKey(value = 0))
     keys.add(ClearNumKey)
 

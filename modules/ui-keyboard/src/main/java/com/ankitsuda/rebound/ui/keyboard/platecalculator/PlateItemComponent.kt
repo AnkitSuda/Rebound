@@ -15,8 +15,7 @@
 package com.ankitsuda.rebound.ui.keyboard.platecalculator
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,30 +24,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.isDark
 import com.ankitsuda.base.util.toColor
+import com.ankitsuda.base.util.toRedableString
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import timber.log.Timber
 
 @Composable
-internal fun PlateItemComponent(plate: Plate) {
-    val maxHeightF = 200F
-    val maxWidthF = 48F
+internal fun PlateItemComponent(maxHeightF: Float, plate: Plate) {
+    val maxWidthF = 40F
     val height = ((plate.height ?: 1F) * maxHeightF).dp
     val width = ((plate.width ?: 1F) * maxWidthF).dp
-
-//    val height = 100.dp
-//    val width = 200.dp
 
     val bgColor = plate.color?.toColor() ?: ReboundTheme.colors.onBackground
 
     val textColor = if (bgColor.isDark()) Color.White else Color.Black
 
-    val text = plate.weight.toString()
+    val text = plate.weight?.toRedableString() ?: ""
 
     Timber.d("width $width height $height")
 
@@ -63,11 +61,22 @@ internal fun PlateItemComponent(plate: Plate) {
     ) {
         Text(
             modifier = Modifier
+                .layout { measurable, constraints ->
+                    val placeable = measurable.measure(constraints)
+                    layout(placeable.height, placeable.width) {
+                        placeable.place(
+                            x = -(placeable.width / 2 - placeable.height / 2),
+                            y = -(placeable.height / 2 - placeable.width / 2)
+                        )
+                    }
+                }
                 .rotate(-90F)
                 .align(Alignment.Center),
             text = text,
             color = textColor,
             fontSize = 12.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Visible
         )
     }
 

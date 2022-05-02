@@ -39,8 +39,8 @@ class PlateCalculatorComponentViewModel @Inject constructor(
     platesRepository: PlatesRepository
 ) : ViewModel() {
 
-    //    private var _plates: MutableStateFlow<List<Plate>> = MutableStateFlow(emptyList())
-    val plates = SnapshotStateList<Plate>()
+    private var _plates: MutableStateFlow<List<Plate>> = MutableStateFlow(emptyList())
+    val plates = _plates.asStateFlow()
 
     private var platesJob: Job? = null
 
@@ -59,34 +59,12 @@ class PlateCalculatorComponentViewModel @Inject constructor(
         Timber.d("refreshPlates newWeight $newWeight")
         platesJob?.cancel()
         platesJob = viewModelScope.launch {
-//            val platesNeeded = getLargestAvailablePlate(newWeight, _allPlates)
-//            Timber.d("platesNeeded $platesNeeded")
-            val test = calcTest(newWeight, _allPlates)
-            Timber.d("calcTest $test")
-            plates.clear()
-            plates.addAll(test)
+            val platesNeeded = calculatePlates(newWeight, _allPlates)
+            _plates.value = platesNeeded
         }
     }
 
-    private fun getLargestAvailablePlate(weight: Float, allPlates: List<Plate>): ArrayList<Plate> {
-        val sortedPlates = allPlates.sortedByDescending { it.weight }
-        val platesNeeded = arrayListOf<Plate>()
-
-        var mWeight = weight
-
-        for (plate in sortedPlates) {
-            val w1 = plate.weight ?: 0 - mWeight
-
-            if (allPlates.any { it.weight == w1 }) {
-                mWeight = w1
-                platesNeeded.add(plate)
-            }
-        }
-
-        return platesNeeded
-    }
-
-    fun calcTest(targetWeight: Float, allPlates: List<Plate>): List<Plate> {
+    fun calculatePlates(targetWeight: Float, allPlates: List<Plate>): List<Plate> {
         var currentWeight = 0F
         val multiplier = 2;
 

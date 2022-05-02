@@ -59,6 +59,7 @@ import com.ankitsuda.rebound.ui.ThemeViewModel
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboardComponent
+import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
 import com.ankitsuda.rebound.ui.navigation.AppNavigation
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -138,6 +139,9 @@ private fun MainLayout(
     )
 
 
+    var reboundSetKeyboardType by remember {
+        mutableStateOf(KeyboardType.WEIGHT)
+    }
     var reboundSetKeyboardVisible by remember {
         mutableStateOf(false)
     }
@@ -148,6 +152,9 @@ private fun MainLayout(
     val reboundSetKeyboard by remember {
         mutableStateOf(
             ReboundSetKeyboard(
+                onChangeKeyboardType = {
+                    reboundSetKeyboardType = it
+                },
                 onChangeVisibility = {
                     reboundSetKeyboardVisible = it
                 },
@@ -269,7 +276,10 @@ private fun MainLayout(
                             shape = RoundedCornerShape(0.dp)
                         ) {
                             Box(modifier = Modifier.navigationBarsPadding()) {
-                                ReboundSetKeyboardComponent(inputConnection = reboundSetKeyboardInputConnection)
+                                ReboundSetKeyboardComponent(
+                                    keyboardType = reboundSetKeyboardType,
+                                    inputConnection = reboundSetKeyboardInputConnection
+                                )
                             }
                         }
                     }
