@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.base.util.toRedableString
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
 fun PlateCalculatorComponent(
@@ -40,24 +41,48 @@ fun PlateCalculatorComponent(
     viewModel: PlateCalculatorComponentViewModel = hiltViewModel()
 ) {
     val plates by viewModel.plates.collectAsState()
-//    val plates = viewModel.plates
+    val remainingWeight by viewModel.remainingWeight.collectAsState()
 
     LaunchedEffect(key1 = weight) {
         viewModel.refreshPlates(weight)
     }
 
-    Column(modifier = modifier) {
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = "${weight.toRedableString()} kg"
-        )
-        BarbellComponent(plates = plates)
-        RSpacer(space = 16.dp)
+    BoxWithConstraints(modifier = modifier) {
+        val comHeight = with(LocalDensity.current) { constraints.minHeight.toDp() }
+
+        Column {
+            Column(modifier = Modifier.height(comHeight * 0.35F)) {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp),
+                    text = "${weight.toRedableString()} kg"
+                )
+                if (remainingWeight > 0f) {
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp),
+                        text = "Remaining weight: ${remainingWeight.toRedableString()} kg",
+                        style = ReboundTheme.typography.caption,
+                        color = ReboundTheme.colors.onBackground.copy(alpha = 0.75f)
+                    )
+                }
+            }
+
+            BarbellComponent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                plates = plates
+            )
+
+            RSpacer(space = comHeight * 0.03f)
+        }
     }
 }
 
 @Composable
-private fun BarbellComponent(plates: List<Plate>) {
+private fun BarbellComponent(
+    modifier: Modifier,
+    plates: List<Plate>
+) {
     val barbellHeight = 22.dp
     val barbellColor = Color.Gray
     val onBarbellColor = Color.White
@@ -67,9 +92,7 @@ private fun BarbellComponent(plates: List<Plate>) {
     val scrollState = rememberScrollState()
 
     Row(
-        modifier = Modifier
-            .fillMaxHeight()
-            .fillMaxWidth()
+        modifier = modifier
             .horizontalScroll(scrollState),
         verticalAlignment = Alignment.CenterVertically
     ) {

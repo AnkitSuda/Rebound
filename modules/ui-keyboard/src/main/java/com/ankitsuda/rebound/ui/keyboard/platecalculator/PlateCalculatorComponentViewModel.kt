@@ -14,12 +14,8 @@
 
 package com.ankitsuda.rebound.ui.keyboard.platecalculator
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.rebound.data.repositories.PlatesRepository
 import com.ankitsuda.rebound.domain.entities.Plate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +23,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -41,6 +36,9 @@ class PlateCalculatorComponentViewModel @Inject constructor(
 
     private var _plates: MutableStateFlow<List<Plate>> = MutableStateFlow(emptyList())
     val plates = _plates.asStateFlow()
+
+    private var _remainingWeight: MutableStateFlow<Float> = MutableStateFlow(0F)
+    val remainingWeight = _remainingWeight.asStateFlow()
 
     private var platesJob: Job? = null
 
@@ -60,11 +58,18 @@ class PlateCalculatorComponentViewModel @Inject constructor(
         platesJob?.cancel()
         platesJob = viewModelScope.launch {
             val platesNeeded = calculatePlates(newWeight, _allPlates)
+            val sumOfPlates = platesNeeded.sumOf { it.weight?.toDouble() ?: 0.toDouble() }.toFloat()
             _plates.value = platesNeeded
+            _remainingWeight.value = try {
+                newWeight - sumOfPlates * 2
+            } catch (e: Exception) {
+                e.printStackTrace()
+                0F
+            }
         }
     }
 
-    fun calculatePlates(targetWeight: Float, allPlates: List<Plate>): List<Plate> {
+    private fun calculatePlates(targetWeight: Float, allPlates: List<Plate>): List<Plate> {
         var currentWeight = 0F
         val multiplier = 2;
 
