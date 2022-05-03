@@ -47,7 +47,7 @@ fun ReboundSetKeyboardDemoScreen() {
             .statusBarsPadding()
     ) {
         var weight by rememberSaveable {
-            mutableStateOf(0f)
+            mutableStateOf(0.0)
         }
 
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -56,7 +56,7 @@ fun ReboundSetKeyboardDemoScreen() {
                 bgColor = Color.Gray,
                 keyboardType = KeyboardType.WEIGHT,
                 value = weight.toString(), onValueChange = {
-                    weight = it.toFloatOrNull() ?: weight
+                    weight = it.toDoubleOrNull() ?: weight
                 }
             )
         }

@@ -20,9 +20,7 @@ import com.ankitsuda.rebound.data.repositories.PlatesRepository
 import com.ankitsuda.rebound.domain.entities.Plate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,13 +29,13 @@ import kotlin.math.roundToInt
 
 @HiltViewModel
 class PlateCalculatorComponentViewModel @Inject constructor(
-    platesRepository: PlatesRepository
+    private val platesRepository: PlatesRepository
 ) : ViewModel() {
 
     private var _plates: MutableStateFlow<List<Plate>> = MutableStateFlow(emptyList())
     val plates = _plates.asStateFlow()
 
-    private var _remainingWeight: MutableStateFlow<Float> = MutableStateFlow(0F)
+    private var _remainingWeight: MutableStateFlow<Double> = MutableStateFlow(0.0)
     val remainingWeight = _remainingWeight.asStateFlow()
 
     private var platesJob: Job? = null
@@ -53,10 +51,14 @@ class PlateCalculatorComponentViewModel @Inject constructor(
         }
     }
 
-    fun refreshPlates(newWeight: Float) {
-        Timber.d("refreshPlates newWeight $newWeight")
+    fun refreshPlates(newWeight: Double) {
         platesJob?.cancel()
         platesJob = viewModelScope.launch {
+            if (_allPlates.isEmpty()) {
+                val availablePlates = platesRepository.getPlates().first()
+                _allPlates.clear()
+                _allPlates.addAll(availablePlates)
+            }
             val platesNeeded = calculatePlates(newWeight, _allPlates)
             val sumOfPlates = platesNeeded.sumOf { it.weight?.toDouble() ?: 0.toDouble() }.toFloat()
             _plates.value = platesNeeded
@@ -64,14 +66,14 @@ class PlateCalculatorComponentViewModel @Inject constructor(
                 newWeight - sumOfPlates * 2
             } catch (e: Exception) {
                 e.printStackTrace()
-                0F
+                0.0
             }
         }
     }
 
-    private fun calculatePlates(targetWeight: Float, allPlates: List<Plate>): List<Plate> {
-        var currentWeight = 0F
-        val multiplier = 2;
+    private fun calculatePlates(targetWeight: Double, allPlates: List<Plate>): List<Plate> {
+        var currentWeight = 0.0
+        val multiplier = 2
 
         val result = arrayListOf<Plate>()
 
@@ -87,11 +89,11 @@ class PlateCalculatorComponentViewModel @Inject constructor(
                     // How many of this plate can we add in total?
                     var qty = floor((targetWeight - currentWeight) / testWeight)
 
-                    if (qty % multiplier == 1F) {
+                    if (qty % multiplier == 1.0) {
                         qty -= 1;
                     }
 
-                    if (qty != 0F) {
+                    if (qty != 0.0) {
 
                         try {
                             repeat(qty.roundToInt() / 2) {

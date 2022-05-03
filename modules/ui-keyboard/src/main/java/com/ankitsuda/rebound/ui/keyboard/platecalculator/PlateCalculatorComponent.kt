@@ -33,14 +33,15 @@ import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import timber.log.Timber
 
 @Composable
 fun PlateCalculatorComponent(
     modifier: Modifier,
-    weight: Float,
+    weight: Double,
     viewModel: PlateCalculatorComponentViewModel = hiltViewModel()
 ) {
-    val plates by viewModel.plates.collectAsState()
+    val plates by viewModel.plates.collectAsState(emptyList())
     val remainingWeight by viewModel.remainingWeight.collectAsState()
 
     LaunchedEffect(key1 = weight) {
@@ -56,7 +57,7 @@ fun PlateCalculatorComponent(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp),
                     text = "${weight.toReadableString()} kg"
                 )
-                if (remainingWeight > 0f) {
+                if (remainingWeight > 0.0) {
                     Text(
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp),
                         text = "Remaining weight: ${remainingWeight.toReadableString()} kg",

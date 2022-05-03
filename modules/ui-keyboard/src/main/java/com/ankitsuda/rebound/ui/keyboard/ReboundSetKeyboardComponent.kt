@@ -120,7 +120,7 @@ fun ReboundSetKeyboardComponent(
                     weight = inputConnection?.getExtractedText(
                         ExtractedTextRequest(),
                         0
-                    )?.text.toString().toFloatOrNull() ?: 0f
+                    )?.text.toString().toDoubleOrNull() ?: 0.0
                 )
             }
         }
