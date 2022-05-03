@@ -36,6 +36,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toLocalDate
 import com.ankitsuda.navigation.DATE_KEY
@@ -208,7 +209,7 @@ fun HistoryScreen(
                             title = workout.workout?.name.toString(),
                             totalExercises = workout.totalExercises ?: 0,
                             duration = workout.workout?.getDuration(),
-                            volume = "${workout.totalVolume} kg",
+                            volume = "${workout.totalVolume?.toReadableString()} kg",
                             prs = 2
                         )
                     }

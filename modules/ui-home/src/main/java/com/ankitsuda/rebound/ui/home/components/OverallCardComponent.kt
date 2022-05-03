@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
@@ -49,12 +50,12 @@ fun OverallCardComponent(modifier: Modifier = Modifier, overallInfo: OverallInfo
                         constrains = it
                     )
                     InfoComponent(
-                        value = (totalVolumeLifted ?: 0).toString(),
+                        value = (totalVolumeLifted ?: 0.0).toReadableString(),
                         title = "Volume Lifted",
                         constrains = it
                     )
                     InfoComponent(
-                        value = (maxWeight ?: 0).toString(),
+                        value = (maxWeight ?: 0.0).toReadableString(),
                         title = "Max Weight",
                         constrains = it
                     )

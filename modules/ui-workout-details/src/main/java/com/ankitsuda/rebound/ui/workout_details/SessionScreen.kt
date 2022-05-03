@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.base.utils.toDurationStr
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
@@ -154,7 +155,7 @@ fun SessionScreen(
                         RSpacer(space = 4.dp)
                         SessionCompleteQuickInfo(
                             time = workout?.getDuration()?.toDurationStr() ?: "NA",
-                            volume = "$totalVolume kg",
+                            volume = "${totalVolume.toReadableString()} kg",
                             prs = 2
                         )
                     }
