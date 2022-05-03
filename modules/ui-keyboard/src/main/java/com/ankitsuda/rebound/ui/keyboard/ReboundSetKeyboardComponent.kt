@@ -31,7 +31,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardModeType
-import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
+import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.DecimalNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumKey
@@ -42,18 +42,15 @@ import timber.log.Timber
 
 @Composable
 fun ReboundSetKeyboardComponent(
-    keyboardType: KeyboardType,
-    inputConnection: InputConnection?
+    reboundKeyboardType: ReboundKeyboardType,
+    inputConnection: InputConnection?,
+    onHideKeyboard: () -> Unit
 ) {
-    val reboundSetKeyboard = LocalReboundSetKeyboard.current
-
-    Timber.d("current keyboardType $keyboardType")
-
     var mCurrentMode by remember {
         mutableStateOf(KeyboardModeType.NUMBERS)
     }
 
-    val currentMode = if (keyboardType == KeyboardType.WEIGHT) {
+    val currentMode = if (reboundKeyboardType == ReboundKeyboardType.WEIGHT) {
         mCurrentMode
     } else {
         KeyboardModeType.NUMBERS
@@ -63,52 +60,35 @@ fun ReboundSetKeyboardComponent(
         mutableStateOf(0.dp)
     }
 
-    val density = LocalDensity.current
-
-    BackHandler() {
-        reboundSetKeyboard.hide()
+    BackHandler {
+        onHideKeyboard()
     }
 
     fun onClickNumKey(numKey: NumKey) {
-        when (numKey) {
-            is NumberNumKey, DecimalNumKey -> inputConnection?.commitText(
-                numKey.toString(),
-                1
-            )
-            is ClearNumKey -> {
-                val selectedText = inputConnection?.getSelectedText(0)
-
-                if (TextUtils.isEmpty(selectedText)) {
-                    inputConnection?.deleteSurroundingText(1, 0)
-                } else {
-                    inputConnection?.commitText("", 1)
-                }
-            }
-        }
-
+        handleOnClickNumKey(
+            reboundKeyboardType = reboundKeyboardType,
+            numKey = numKey,
+            inputConnection = inputConnection
+        )
     }
 
-    Box() {
+    Box {
         when (currentMode) {
             KeyboardModeType.NUMBERS -> {
-                Row(
+                NumKeysContainerComponent(
                     modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .height(
+                            height = 250.dp,
+                        )
                         .padding(end = rightButtonsWidth)
-                        .background(ReboundTheme.colors.background)
-                ) {
-                    NumKeysContainerComponent(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(
-                                height = 250.dp,
-                            ),
-                        keyboardType = keyboardType,
-                        onClickNumKey = {
-                            Timber.d(it.toString())
-                            onClickNumKey(it)
-                        }
-                    )
-                }
+                        .background(ReboundTheme.colors.background),
+                    reboundKeyboardType = reboundKeyboardType,
+                    onClickNumKey = {
+                        Timber.d(it.toString())
+                        onClickNumKey(it)
+                    }
+                )
             }
             KeyboardModeType.PLATE_CALCULATOR -> {
                 PlateCalculatorComponent(
@@ -117,34 +97,62 @@ fun ReboundSetKeyboardComponent(
                         .height(
                             height = 250.dp,
                         ),
-                    weight = inputConnection?.getExtractedText(
-                        ExtractedTextRequest(),
-                        0
-                    )?.text.toString().toDoubleOrNull() ?: 0.0
+                    weight = inputConnection?.getText()?.toDoubleOrNull() ?: 0.0
                 )
             }
         }
 
-        Column(
+        RightLayoutComponent(
             modifier = Modifier
-                .onGloballyPositioned {
-                    with(density) {
-                        rightButtonsWidth = it.size.width.toDp()
-                    }
-                }
-                .align(Alignment.TopEnd)
+                .align(Alignment.TopEnd),
+            currentLayoutMode = currentMode,
+            keyboardType = reboundKeyboardType,
+            onChangeLayoutMode = {
+                mCurrentMode = it
+            },
+            onChangeWidth = {
+                rightButtonsWidth = it
+            }
+        )
+    }
+}
+
+private fun handleOnClickNumKey(
+    reboundKeyboardType: ReboundKeyboardType,
+    numKey: NumKey,
+    inputConnection: InputConnection?
+) {
+    val currentText = inputConnection?.getText() ?: ""
+
+    fun commitText() {
+        inputConnection?.commitText(
+            numKey.toString(),
+            1
+        )
+    }
+
+    when (numKey) {
+        is NumberNumKey -> commitText()
+        is DecimalNumKey -> if ((reboundKeyboardType == ReboundKeyboardType.WEIGHT || reboundKeyboardType == ReboundKeyboardType.DISTANCE) && !currentText.contains(
+                "."
+            )
         ) {
-            if (keyboardType == KeyboardType.WEIGHT) {
-                IconButton(onClick = {
-                    mCurrentMode = if (currentMode == KeyboardModeType.NUMBERS) {
-                        KeyboardModeType.PLATE_CALCULATOR
-                    } else {
-                        KeyboardModeType.NUMBERS
-                    }
-                }) {
-                    Icon(imageVector = Icons.Outlined.ChangeCircle, contentDescription = null)
-                }
+            commitText()
+        }
+        is ClearNumKey -> {
+            val selectedText = inputConnection?.getSelectedText(0)
+
+            if (TextUtils.isEmpty(selectedText)) {
+                inputConnection?.deleteSurroundingText(1, 0)
+            } else {
+                inputConnection?.commitText("", 1)
             }
         }
     }
 }
+
+
+private fun InputConnection.getText() = getExtractedText(
+    ExtractedTextRequest(),
+    0
+)?.text.toString()

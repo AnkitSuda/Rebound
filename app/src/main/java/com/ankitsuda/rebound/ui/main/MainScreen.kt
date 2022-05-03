@@ -15,7 +15,6 @@
 package com.ankitsuda.rebound.ui.main
 
 import android.view.inputmethod.InputConnection
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -59,7 +58,7 @@ import com.ankitsuda.rebound.ui.ThemeViewModel
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboardComponent
-import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
+import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.navigation.AppNavigation
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -140,7 +139,7 @@ private fun MainLayout(
 
 
     var reboundSetKeyboardType by remember {
-        mutableStateOf(KeyboardType.WEIGHT)
+        mutableStateOf(ReboundKeyboardType.WEIGHT)
     }
     var reboundSetKeyboardVisible by remember {
         mutableStateOf(false)
@@ -277,8 +276,11 @@ private fun MainLayout(
                         ) {
                             Box(modifier = Modifier.navigationBarsPadding()) {
                                 ReboundSetKeyboardComponent(
-                                    keyboardType = reboundSetKeyboardType,
-                                    inputConnection = reboundSetKeyboardInputConnection
+                                    reboundKeyboardType = reboundSetKeyboardType,
+                                    inputConnection = reboundSetKeyboardInputConnection,
+                                    onHideKeyboard = {
+                                        reboundSetKeyboard.hide()
+                                    }
                                 )
                             }
                         }

@@ -16,13 +16,10 @@ package com.ankitsuda.rebound.ui.keyboard
 
 import android.view.inputmethod.InputConnection
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
-import com.ankitsuda.rebound.ui.keyboard.models.NumKey
+import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 
 class ReboundSetKeyboard(
-    private val onChangeKeyboardType: (KeyboardType) -> Unit,
+    private val onChangeKeyboardType: (ReboundKeyboardType) -> Unit,
     private val onChangeVisibility: (Boolean) -> Unit,
     private val onChangeInputConnection: (InputConnection) -> Unit
 ) {
@@ -33,7 +30,7 @@ class ReboundSetKeyboard(
         onChangeInputConnection(ic)
     }
 
-    fun setKeyboardType(type: KeyboardType) {
+    fun setKeyboardType(type: ReboundKeyboardType) {
         onChangeKeyboardType(type)
     }
 

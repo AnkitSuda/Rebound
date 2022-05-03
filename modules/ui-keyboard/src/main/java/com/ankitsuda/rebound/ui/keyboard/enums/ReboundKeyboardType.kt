@@ -14,7 +14,9 @@
 
 package com.ankitsuda.rebound.ui.keyboard.enums
 
-enum class KeyboardType {
+enum class ReboundKeyboardType {
     WEIGHT,
-    REPS;
+    REPS,
+    DISTANCE,
+    TIME;
 }

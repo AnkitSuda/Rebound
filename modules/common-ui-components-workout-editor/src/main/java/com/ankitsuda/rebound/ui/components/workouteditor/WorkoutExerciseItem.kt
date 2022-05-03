@@ -16,7 +16,6 @@ package com.ankitsuda.rebound.ui.components.workouteditor
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -27,9 +26,6 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -37,11 +33,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,11 +47,10 @@ import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
-import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, right ->
     left.setNumber?.compareTo(right.setNumber ?: 0) ?: 0
@@ -521,7 +513,10 @@ private fun SetItemLayout(
                     onValueChange = mOnValueChange,
                     contentColor = contentColor,
                     bgColor = bgColor,
-                    keyboardType = com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType.WEIGHT
+                    reboundKeyboardType = getReboundKeyboardType(
+                        category = exercise.category,
+                        isLeft = true
+                    )
                 )
             } else {
                 SetTextField(
@@ -560,7 +555,10 @@ private fun SetItemLayout(
                 onValueChange = mOnValueChange,
                 contentColor = contentColor,
                 bgColor = bgColor,
-                keyboardType = com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType.REPS
+                reboundKeyboardType = getReboundKeyboardType(
+                    category = exercise.category,
+                    isLeft = false
+                )
             )
         } else {
             SetTextField(
@@ -598,5 +596,13 @@ private fun SetItemLayout(
             }
         }
     }
-
 }
+
+private fun getReboundKeyboardType(category: ExerciseCategory, isLeft: Boolean) =
+    when (category) {
+        ExerciseCategory.WEIGHTS_AND_REPS -> if (isLeft) ReboundKeyboardType.WEIGHT else ReboundKeyboardType.REPS
+        ExerciseCategory.REPS -> ReboundKeyboardType.REPS
+        ExerciseCategory.DISTANCE_AND_TIME -> if (isLeft) ReboundKeyboardType.DISTANCE else ReboundKeyboardType.TIME
+        ExerciseCategory.TIME -> ReboundKeyboardType.TIME
+        ExerciseCategory.UNKNOWN -> ReboundKeyboardType.REPS
+    }

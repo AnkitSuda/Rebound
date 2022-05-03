@@ -18,37 +18,29 @@ import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import android.widget.TextView
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.widget.addTextChangedListener
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toLegacyInt
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
-import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
-import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 
 @Composable
 fun RowScope.ReboundSetTextField(
     value: String,
     contentColor: Color,
     bgColor: Color,
-    keyboardType: KeyboardType,
+    reboundKeyboardType: ReboundKeyboardType,
     onValueChange: (String) -> Unit
 ) {
     val keyboard = LocalReboundSetKeyboard.current
@@ -87,13 +79,13 @@ fun RowScope.ReboundSetTextField(
                     val ic = onCreateInputConnection(EditorInfo())
 
                     setOnClickListener {
-                        keyboard.setKeyboardType(keyboardType)
+                        keyboard.setKeyboardType(reboundKeyboardType)
                         keyboard.show()
                     }
 
                     onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
                         if (p1) {
-                            keyboard.setKeyboardType(keyboardType)
+                            keyboard.setKeyboardType(reboundKeyboardType)
                             keyboard.show()
                             keyboard.setInputConnection(ic)
                         } else {

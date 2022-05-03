@@ -18,13 +18,10 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardType
+import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.DecimalNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumKey
@@ -36,11 +33,11 @@ import com.google.accompanist.flowlayout.SizeMode
 @Composable
 internal fun NumKeysContainerComponent(
     modifier: Modifier = Modifier,
-    keyboardType: KeyboardType,
+    reboundKeyboardType: ReboundKeyboardType,
     onClickNumKey: (NumKey) -> Unit
 ) {
-    val allKeys by remember(key1 = keyboardType) {
-        mutableStateOf(getAllKeys(keyboardType))
+    var allKeys by remember(reboundKeyboardType) {
+        mutableStateOf(getAllKeys(reboundKeyboardType))
     }
 
     BoxWithConstraints(modifier = modifier) {
@@ -76,14 +73,17 @@ internal fun NumKeysContainerComponent(
     }
 }
 
-private fun getAllKeys(keyboardType: KeyboardType): List<NumKey?> {
+private fun getAllKeys(
+    reboundKeyboardType: ReboundKeyboardType,
+): List<NumKey?> {
+
     val keys = arrayListOf<NumKey?>()
 
     for (i in 1..9) {
         keys.add(NumberNumKey(value = i))
     }
 
-    if (keyboardType == KeyboardType.WEIGHT) {
+    if (reboundKeyboardType == ReboundKeyboardType.WEIGHT || reboundKeyboardType == ReboundKeyboardType.DISTANCE) {
         keys.add(DecimalNumKey)
     } else {
         keys.add(null)
