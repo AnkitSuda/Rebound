@@ -64,20 +64,15 @@ fun HistoryScreen(
         ?.savedStateHandle
         ?.getLiveData<Long>(DATE_KEY)?.observeAsState()
 
-    val localDate = LocalDate.now()
-    var date = LocalDate.now()
-
-    argumentsDate?.value?.let {
-        date = it.toLocalDate()
+    LaunchedEffect(key1 = argumentsDate?.value) {
+        viewModel.setSelectedDate(argumentsDate?.value)
     }
+
+    val localDate = LocalDate.now()
+    val date by viewModel.selectedDate.collectAsState()
 
     val isSameYear = localDate.year == date.year
     val isToday = localDate == date
-
-    Timber.d(date.toString())
-
-//    val dayFormatter =
-//        SimpleDateFormat(if (isSameYear) "EEE, MMM d" else "MMM d, yyyy", Locale.getDefault())
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
@@ -91,8 +86,7 @@ fun HistoryScreen(
         }
     }
 
-    val workouts by viewModel.getWorkoutsOnDate(date)
-        .collectAsState(initial = emptyList())
+    val workouts by viewModel.workouts.collectAsState(initial = emptyList())
 
     val isWeekHeaderVisible = week.any { it == date }
 

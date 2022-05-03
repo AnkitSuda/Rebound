@@ -16,14 +16,20 @@ package com.ankitsuda.rebound.ui.history
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.utils.extensions.getStateFlow
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.base.utils.getCurrentWeekOfMonth
+import com.ankitsuda.base.utils.toEpochMillis
+import com.ankitsuda.base.utils.toLocalDate
+import com.ankitsuda.navigation.DATE_KEY
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.domain.entities.WorkoutWithExtraInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -39,10 +45,22 @@ import java.util.stream.IntStream
 import javax.inject.Inject
 
 @HiltViewModel
-class HistoryScreenViewModel @Inject constructor(private val workoutsRepository: WorkoutsRepository) :
-    ViewModel() {
+class HistoryScreenViewModel @Inject constructor(
+    private val workoutsRepository: WorkoutsRepository,
+    private val handle: SavedStateHandle,
+) : ViewModel() {
+    private var _selectedDate: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
+    val selectedDate = _selectedDate.asStateFlow()
+
+    private var _workouts: MutableStateFlow<List<WorkoutWithExtraInfo>> = MutableStateFlow(
+        emptyList()
+    )
+    val workouts = _workouts.asStateFlow()
+
     private var _week: SnapshotStateList<LocalDate> = mutableStateListOf()
     val week = _week
+
+    private var job: Job? = null
 
     fun getCurrentWeek() {
         val newList = getCurrentWeekOfMonth()
@@ -50,7 +68,22 @@ class HistoryScreenViewModel @Inject constructor(private val workoutsRepository:
         week.addAll(newList)
     }
 
-    fun getWorkoutsOnDate(date: LocalDate): SharedFlow<List<WorkoutWithExtraInfo>> =
-        workoutsRepository.getWorkoutsWithExtraInfo(date).distinctUntilChanged()
-            .shareWhileObserved(viewModelScope)
+    fun setSelectedDate(newDate: Long?) {
+        viewModelScope.launch {
+            (newDate?.toLocalDate() ?: LocalDate.now()).let {
+                _workouts.value = emptyList()
+                _selectedDate.value = it
+                getWorkoutsOnDate(it)
+            }
+        }
+    }
+
+    private fun getWorkoutsOnDate(date: LocalDate) {
+        job?.cancel()
+        job = viewModelScope.launch {
+            workoutsRepository.getWorkoutsWithExtraInfo(date).collectLatest {
+                _workouts.value = it
+            }
+        }
+    }
 }
