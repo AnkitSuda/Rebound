@@ -120,13 +120,14 @@ private fun BarbellComponent(
 
         Box(
             modifier = Modifier
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .padding(end = 32.dp),
             contentAlignment = Alignment.CenterStart
         ) {
             var platesRowWidth by rememberSaveable {
                 mutableStateOf(0F)
             }
-            val minimumBarWidth = 100.dp
+            val minimumBarWidth = 150.dp
 
             Box(
                 modifier = Modifier
