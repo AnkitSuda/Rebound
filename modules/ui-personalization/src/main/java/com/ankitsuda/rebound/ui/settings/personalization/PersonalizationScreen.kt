@@ -70,6 +70,15 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
+                    text = "Theme Presets",
+                    onClick = {
+                        navigator.navigate(LeafScreen.ThemePresetsPersonalization().createRoute())
+                    })
+            }
+            item {
+                MoreItemCard(
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     text = "Main Colors",
                     onClick = {
                         navigator.navigate(LeafScreen.MainColorsPersonalization().createRoute())

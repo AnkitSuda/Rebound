@@ -202,6 +202,12 @@ sealed class LeafScreen(
     ) :
         LeafScreen(route, root)
 
+    data class ThemePresetsPersonalization(
+        override val route: String = "personalization/presets",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) :
+        LeafScreen(route, root)
+
     data class ColorPickerDemo(override val route: String = "demo/color_picker_demo") :
         LeafScreen(route)
 

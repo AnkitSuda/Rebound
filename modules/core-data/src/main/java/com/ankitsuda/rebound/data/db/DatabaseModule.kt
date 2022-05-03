@@ -55,4 +55,8 @@ class DatabaseModule {
     @Provides
     fun providePlatesDao(db: AppDatabase) = db.platesDao()
 
+    @Singleton
+    @Provides
+    fun provideThemePresetsDao(db: AppDatabase) = db.themePresetsDao()
+
 }

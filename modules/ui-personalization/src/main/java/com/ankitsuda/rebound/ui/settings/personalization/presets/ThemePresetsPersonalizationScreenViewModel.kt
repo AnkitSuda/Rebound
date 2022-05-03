@@ -12,47 +12,43 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.rebound.ui
+package com.ankitsuda.rebound.ui.settings.personalization.presets
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.ui.ThemeState
-import com.ankitsuda.domain.models.DEFAULT_JSON_FORMAT
-import com.ankitsuda.rebound.data.datastore.PrefStorage
+import com.ankitsuda.base.utils.extensions.lazyAsync
+import com.ankitsuda.base.utils.extensions.shareWhileObserved
+import com.ankitsuda.rebound.data.repositories.ThemePresetsRepository
 import com.ankitsuda.rebound.domain.entities.ThemePreset
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.launch
-
-object PreferenceKeys {
-    const val THEME_STATE_KEY = "theme_state"
-}
+import java.time.LocalDateTime
+import java.util.*
+import javax.inject.Inject
 
 @HiltViewModel
-class ThemeViewModel @Inject constructor(
-    private val handle: SavedStateHandle,
-    private val preferences: PrefStorage,
+class ThemePresetsPersonalizationScreenViewModel @Inject constructor(
+    private val presetsRepository: ThemePresetsRepository
 ) : ViewModel() {
 
-    val themeState = preferences.themeState
+    val presets = presetsRepository.getPresets()
+        .shareWhileObserved(viewModelScope)
 
-    fun applyThemeState(themeState: ThemeState) {
+    fun addPreset(themeState: ThemeState) {
         viewModelScope.launch {
-            preferences.setThemeState(themeState)
+            presetsRepository.addPreset(
+                themeState = themeState,
+                title = Date().time.toString(),
+                description = null
+            )
         }
     }
 
-    fun applyThemePreset(preset: ThemePreset) {
+    fun deletePreset(preset: ThemePreset) {
         viewModelScope.launch {
-            try {
-                preset.themeJson?.let {
-                    val newState = DEFAULT_JSON_FORMAT.decodeFromString(ThemeState.serializer(), it)
-                    preferences.setThemeState(newState)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            presetsRepository.deletePreset(preset)
         }
     }
+
 }

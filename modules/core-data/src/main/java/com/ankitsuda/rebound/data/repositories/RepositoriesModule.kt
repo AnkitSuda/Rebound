@@ -56,4 +56,11 @@ class RepositoriesModule {
         workoutsDao: WorkoutsDao
     ) =
         WorkoutTemplatesRepository(workoutTemplatesDao, workoutsDao)
+
+    @Singleton
+    @Provides
+    fun provideThemePresetsRepository(
+        presetsDao: ThemePresetsDao
+    ) =
+        ThemePresetsRepository(presetsDao)
 }
