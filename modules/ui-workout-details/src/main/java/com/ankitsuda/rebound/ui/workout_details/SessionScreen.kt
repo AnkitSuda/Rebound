@@ -139,6 +139,15 @@ fun SessionScreen(
                 .background(MaterialTheme.colors.background),
             contentPadding = PaddingValues(16.dp)
         ) {
+            if (!workout?.personalRecords.isNullOrEmpty()) {
+                item {
+                    PersonalRecordsRowComponent(
+                        modifier = Modifier,
+                        prs = workout?.personalRecords!!
+                    )
+                }
+            }
+
             item {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,

@@ -19,6 +19,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ankitsuda.rebound.domain.LogSetType
+import com.ankitsuda.rebound.domain.PersonalRecord
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 import java.util.*
@@ -61,12 +62,20 @@ data class ExerciseLogEntry(
     @ColumnInfo(name = "distance_unit")
     var distance_unit: String? = null,
 
+    @ColumnInfo(name = "personal_records")
+    var personalRecords: String? = null,
 
     @ColumnInfo(name = "created_at")
     var createdAt: LocalDateTime? = null,
     @ColumnInfo(name = "update_at")
     var updatedAt: LocalDateTime? = null,
-) : Parcelable
+) : Parcelable {
+    fun getPRs(): List<PersonalRecord> = if (!personalRecords.isNullOrEmpty()) {
+        PersonalRecord.fromCommaSpString(personalRecords!!)
+    } else {
+        emptyList()
+    }
+}
 
 fun List<ExerciseLogEntry>.calculateTotalVolume(): Double {
     var volume = 0.0

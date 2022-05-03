@@ -18,10 +18,8 @@ import androidx.room.TypeConverter
 import com.ankitsuda.base.util.C
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toLocalDateTime
-import com.ankitsuda.rebound.domain.ExerciseCategory
-import com.ankitsuda.rebound.domain.LogSetType
+import com.ankitsuda.rebound.domain.*
 import com.ankitsuda.rebound.domain.entities.BodyPartUnitType
-import com.ankitsuda.rebound.domain.parseToExerciseCategory
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -106,5 +104,15 @@ object Converters {
     @TypeConverter
     fun fromLocalDateTime(value: LocalDateTime?): Long? {
         return value?.toEpochMillis()
+    }
+
+    @TypeConverter
+    fun fromListOfPersonalRecords(list: List<PersonalRecord>?): String? {
+        return list?.toCommaSpString()
+    }
+
+    @TypeConverter
+    fun toListOfPersonalRecords(str: String?): List<PersonalRecord>? {
+        return if (str != null) PersonalRecord.fromCommaSpString(str) else null
     }
 }

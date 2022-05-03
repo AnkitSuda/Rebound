@@ -156,4 +156,10 @@ interface WorkoutsDao {
 
     @Query("SELECT (completed_at - start_at) as duration FROM workouts WHERE is_hidden = 0 AND in_progress = 0")
     fun getWorkoutsDurationsOnly(): Flow<List<Long>>
+
+    @Query("SELECT e.weight FROM exercise_log_entries e JOIN exercise_logs j ON j.id = e.log_id JOIN workouts w ON w.id = j.workout_id JOIN exercise_workout_junctions ewj ON w.id = ewj.workout_id WHERE ewj.exercise_id = :exerciseId AND w.is_hidden = 0 AND w.in_progress = 0 ORDER BY e.weight DESC LIMIT 1")
+    fun getMaxWeightLiftedInExercise(exerciseId: String): Flow<Double?>
+
+    @Query("SELECT completed_at - start_at as duration FROM workouts WHERE is_hidden = 0 AND in_progress = 0 ORDER BY duration DESC LIMIT 1")
+    fun getLongestWorkoutDuration(): Flow<Long?>
 }

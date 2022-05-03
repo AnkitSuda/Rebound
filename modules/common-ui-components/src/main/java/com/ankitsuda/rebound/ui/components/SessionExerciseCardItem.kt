@@ -16,8 +16,15 @@ package com.ankitsuda.rebound.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Chip
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,12 +35,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toReadableString
-import com.ankitsuda.rebound.domain.LogSetType
+import com.ankitsuda.rebound.domain.*
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -119,41 +128,121 @@ fun SessionExerciseSetItem(
     entry: ExerciseLogEntry,
     revisedSetText: Pair<String, Color?>,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(28.dp)
-                .clip(CircleShape)
-                .background(ReboundTheme.colors.card.lighterOrDarkerColor(0.10f)),
-            contentAlignment = Alignment.Center,
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = revisedSetText.first,
-                style = ReboundTheme.typography.caption,
-                color = revisedSetText.second ?: LocalThemeState.current.onBackgroundColor,
-                textAlign = TextAlign.Center,
-            )
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .background(ReboundTheme.colors.card.lighterOrDarkerColor(0.10f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = revisedSetText.first,
+                    style = ReboundTheme.typography.caption,
+                    color = revisedSetText.second ?: LocalThemeState.current.onBackgroundColor,
+                    textAlign = TextAlign.Center,
+                )
+            }
+
+            RSpacer(16.dp)
+            Text(text = buildAnnotatedString {
+                withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
+                    append((entry.weight ?: 0.0).toReadableString())
+                }
+                withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
+                    append(" kg")
+                }
+            })
+            RSpacer(20.dp)
+            Text(text = buildAnnotatedString {
+                withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
+                    append((entry.reps ?: 0).toString())
+                }
+                withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
+                    append(" reps")
+                }
+            })
         }
 
-        RSpacer(16.dp)
-        Text(text = buildAnnotatedString {
-            withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
-                append((entry.weight ?: 0.0).toReadableString())
-            }
-            withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
-                append(" kg")
-            }
-        })
-        RSpacer(20.dp)
-        Text(text = buildAnnotatedString {
-            withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
-                append((entry.reps ?: 0).toString())
-            }
-            withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
-                append(" reps")
-            }
-        })
+        if (!entry.personalRecords.isNullOrEmpty()) {
+            PersonalRecordsRowComponent(
+                modifier = Modifier
+                    .padding(top = 8.dp),
+                paddingValues = PaddingValues(start = 32.dp, end = 16.dp),
+                prs = PersonalRecord.fromCommaSpString(entry.personalRecords!!)
+            )
+        }
+    }
+}
+
+@Composable
+fun PersonalRecordsRowComponent(
+    modifier: Modifier,
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    prs: List<PersonalRecord>
+) {
+    LazyRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = paddingValues
+    ) {
+        items(prs.size) {
+            val pr = prs[it]
+            PersonalRecordComponent(
+                pr = pr
+            )
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun PersonalRecordComponent(
+    pr: PersonalRecord
+) {
+    val readableText = when (pr) {
+        is BestPacePR -> "Best Pace"
+        is MaxDistancePR -> "Max Distance"
+        is MaxDurationPR -> "Max Duration"
+        is MaxOneRmPR -> "Max One RM"
+        is MaxRepsPR -> "Max Reps"
+        is MaxVolumeAddedPR -> "Max Volume Added"
+        is MaxVolumePR -> "Max Volume"
+        is MaxWeightAddedPR -> "Max Weight Added"
+        is MaxWeightPR -> "Max Weight"
+        else -> pr.value
+    }
+
+    val contentColor = ReboundTheme.colors.primary
+    val bgColor = contentColor.copy(0.2f)
+
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(50))
+            .background(bgColor)
+    ) {
+        Row(
+            modifier = Modifier.padding(vertical = 6.dp, horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier.size(16.dp),
+                imageVector = Icons.Outlined.EmojiEvents,
+                tint = contentColor,
+                contentDescription = null
+            )
+            RSpacer(space = 4.dp)
+            Text(
+                text = readableText,
+                color = contentColor,
+                fontWeight = FontWeight.Medium,
+                style = ReboundTheme.typography.body1,
+                fontSize = 14.sp,
+            )
+        }
     }
 }

@@ -19,6 +19,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.ankitsuda.base.utils.toEpochMillis
+import com.ankitsuda.rebound.domain.PersonalRecord
 import java.time.LocalDateTime
 import java.util.*
 
@@ -42,6 +43,9 @@ data class Workout(
     var startAt: LocalDateTime? = null,
     @ColumnInfo(name = "completed_at")
     var completedAt: LocalDateTime? = null,
+
+    @ColumnInfo(name = "personal_records")
+    var personalRecords: List<PersonalRecord>? = null,
 
     @ColumnInfo(name = "created_at")
     var createdAt: LocalDateTime? = null,

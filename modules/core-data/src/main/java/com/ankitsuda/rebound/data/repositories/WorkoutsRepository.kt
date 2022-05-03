@@ -21,6 +21,10 @@ import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
+import com.ankitsuda.rebound.domain.MaxDurationPR
+import com.ankitsuda.rebound.domain.MaxWeightPR
+import com.ankitsuda.rebound.domain.PersonalRecord
+import com.ankitsuda.rebound.domain.addIfNot
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
@@ -168,13 +172,37 @@ class WorkoutsRepository @Inject constructor(
         val updatedWorkout = workout?.copy(
             inProgress = false,
             isHidden = false,
+            personalRecords = null,
             completedAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now()
-        )
+        ) ?: return
 
-        if (updatedWorkout != null) {
-            updateWorkout(updatedWorkout)
+        val prs = arrayListOf<PersonalRecord>()
+
+        val lastMaxDuration = workoutsDao.getLongestWorkoutDuration().firstOrNull()
+
+        if (lastMaxDuration == null || (updatedWorkout.getDuration() ?: 0) > lastMaxDuration) {
+            prs.addIfNot(MaxDurationPR())
         }
+
+        val junctions = getLogEntriesWithExerciseJunction(workoutId).first()
+
+        for (j in junctions) {
+            val lastMaxWeightInExercise =
+                getMaxWeightLiftedInExercise(j.exercise.exerciseId).firstOrNull() ?: 0.0
+
+            j.logEntries.sortedByDescending { it.weight }.getOrNull(0)?.let { maxWeightEntry ->
+                if (maxWeightEntry.weight ?: 0.0 > lastMaxWeightInExercise) {
+                    updateExerciseLogEntry(
+                        maxWeightEntry.copy(
+                            personalRecords = MaxWeightPR().value
+                        )
+                    )
+                }
+            }
+        }
+
+        updateWorkout(updatedWorkout)
     }
 
     fun getExercisesCountByWorkoutId(workoutId: String) =
@@ -297,6 +325,8 @@ class WorkoutsRepository @Inject constructor(
 
                 val newEntry = entry.copy(
                     entryId = newEntryId,
+                    personalRecords = null,
+                    completed = false,
                     logId = newLogId,
                     junctionId = newJunctionId,
                     createdAt = currentDateTime,
@@ -332,6 +362,9 @@ class WorkoutsRepository @Inject constructor(
     fun getTotalWorkoutsCount(): Flow<Long> = workoutsDao.getTotalWorkoutsCount()
 
     fun getMaxWeightLifted(): Flow<Double?> = workoutsDao.getMaxWeightLifted()
+
+    fun getMaxWeightLiftedInExercise(exerciseId: String): Flow<Double?> =
+        workoutsDao.getMaxWeightLiftedInExercise(exerciseId)
 
     fun getNonHiddenExerciseLogEntries(): Flow<List<ExerciseLogEntry>?> =
         workoutsDao.getNonHiddenExerciseLogEntries()
