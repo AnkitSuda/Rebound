@@ -29,7 +29,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ankitsuda.base.util.toRedableString
+import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -54,12 +54,12 @@ fun PlateCalculatorComponent(
             Column(modifier = Modifier.height(comHeight * 0.35F)) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-                    text = "${weight.toRedableString()} kg"
+                    text = "${weight.toReadableString()} kg"
                 )
                 if (remainingWeight > 0f) {
                     Text(
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp),
-                        text = "Remaining weight: ${remainingWeight.toRedableString()} kg",
+                        text = "Remaining weight: ${remainingWeight.toReadableString()} kg",
                         style = ReboundTheme.typography.caption,
                         color = ReboundTheme.colors.onBackground.copy(alpha = 0.75f)
                     )
@@ -104,7 +104,7 @@ private fun BarbellComponent(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "${barbellWeight.toRedableString()} kg",
+                text = "${barbellWeight.toReadableString()} kg",
                 fontSize = 12.sp,
                 color = onBarbellColor
             )

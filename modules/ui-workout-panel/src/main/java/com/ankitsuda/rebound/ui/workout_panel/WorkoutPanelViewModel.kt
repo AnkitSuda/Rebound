@@ -14,14 +14,11 @@
 
 package com.ankitsuda.rebound.ui.workout_panel
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
-import com.ankitsuda.base.util.toRedableString
+import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.base.utils.extensions.toArrayList
-import com.ankitsuda.base.utils.toEpochMillis
-import com.ankitsuda.base.utils.toReadableDuration
 import com.ankitsuda.base.utils.toReadableDurationStyle2
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.ExerciseCategory
@@ -32,8 +29,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -130,7 +125,7 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     }
 
     private suspend fun refreshHeaderValues(entries: List<ExerciseLogEntry>) {
-        _currentVolumeStr.value = "${entries.calculateTotalVolume().toRedableString()}kg"
+        _currentVolumeStr.value = "${entries.calculateTotalVolume().toReadableString()}kg"
         _currentSetsStr.value = "${entries.size}"
     }
 

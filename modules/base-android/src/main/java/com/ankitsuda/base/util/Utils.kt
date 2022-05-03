@@ -23,4 +23,5 @@ fun Int.cmprs(min: Float, max: Float) = this.toFloat().cmprs(min, max)
 
 const val NONE_WORKOUT_ID = "none"
 
-fun Float.toRedableString() = DecimalFormat("#.###").format(this)
+fun Float.toReadableString() = DecimalFormat("#.###").format(this)
+fun Double.toReadableString() = DecimalFormat("#.###").format(this)

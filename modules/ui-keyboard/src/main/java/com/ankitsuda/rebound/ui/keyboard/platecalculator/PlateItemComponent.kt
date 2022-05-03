@@ -25,13 +25,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.isDark
 import com.ankitsuda.base.util.toColor
-import com.ankitsuda.base.util.toRedableString
+import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import timber.log.Timber
@@ -46,7 +45,7 @@ internal fun PlateItemComponent(maxHeightF: Float, plate: Plate) {
 
     val textColor = if (bgColor.isDark()) Color.White else Color.Black
 
-    val text = plate.weight?.toRedableString() ?: ""
+    val text = plate.weight?.toReadableString() ?: ""
 
     Timber.d("width $width height $height")
 
