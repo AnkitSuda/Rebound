@@ -16,8 +16,8 @@ package com.ankitsuda.rebound.ui.home.models
 
 data class OverallInfo(
     var totalWorkouts: Long? = null,
-    var totalVolumeLifted: Float? = null,
-    var maxWeight: Float? = null,
+    var totalVolumeLifted: Double? = null,
+    var maxWeight: Double? = null,
     var totalWorkoutsDuration: Long? = null,
     var averageWorkoutDuration: Long? = null,
     var longestWorkoutDuration: Long? = null,

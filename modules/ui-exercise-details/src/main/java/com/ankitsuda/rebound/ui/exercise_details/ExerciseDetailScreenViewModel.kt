@@ -70,14 +70,14 @@ class ExerciseDetailScreenViewModel @Inject constructor(
 
                 maxWeights.add(
                     LineChartData.Point(
-                        value = entries.maxOfOrNull { it.weight ?: 0f } ?: 0f,
+                        value = entries.maxOfOrNull { (it.weight ?: 0.0).toFloat() } ?: 0F,
                         label = label
                     )
                 )
 
                 totalVolumes.add(
                     LineChartData.Point(
-                        value = entries.calculateTotalVolume(),
+                        value = entries.calculateTotalVolume().toFloat(),
                         label = label
                     )
                 )

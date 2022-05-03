@@ -183,7 +183,7 @@ class WorkoutsRepository @Inject constructor(
 //    fun getTotalVolumeLiftedByWorkoutId(workoutId: String) =
 //        workoutsDao.getTotalVolumeOfWorkout(workoutId = workoutId)
 
-    fun getTotalVolumeLiftedByWorkoutId(workoutId: String): Flow<Float> =
+    fun getTotalVolumeLiftedByWorkoutId(workoutId: String): Flow<Double> =
         workoutsDao.getLogEntriesByWorkoutId(workoutId).map {
             it.calculateTotalVolume()
         }
@@ -331,7 +331,7 @@ class WorkoutsRepository @Inject constructor(
 
     fun getTotalWorkoutsCount(): Flow<Long> = workoutsDao.getTotalWorkoutsCount()
 
-    fun getMaxWeightLifted(): Flow<Float?> = workoutsDao.getMaxWeightLifted()
+    fun getMaxWeightLifted(): Flow<Double?> = workoutsDao.getMaxWeightLifted()
 
     fun getNonHiddenExerciseLogEntries(): Flow<List<ExerciseLogEntry>?> =
         workoutsDao.getNonHiddenExerciseLogEntries()

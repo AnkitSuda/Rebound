@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "83ad6f6bb089ab66c3ec920fe14d86a1",
+    "identityHash": "43ba85f6b1f56422faa02d3a5ed3393f",
     "entities": [
       {
         "tableName": "body_parts",
@@ -298,7 +298,7 @@
       },
       {
         "tableName": "exercise_log_entries",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`entry_id` TEXT NOT NULL, `log_id` TEXT, `junction_id` TEXT, `set_number` INTEGER, `set_type` TEXT, `weight` REAL, `reps` INTEGER, `completed` INTEGER NOT NULL, `time_recorded` INTEGER, `distance` INTEGER, `weight_unit` TEXT, `distance_unit` TEXT, `created_at` INTEGER, `update_at` INTEGER, PRIMARY KEY(`entry_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`entry_id` TEXT NOT NULL, `log_id` TEXT, `junction_id` TEXT, `set_number` INTEGER, `set_type` TEXT, `weight` REAL, `reps` INTEGER, `completed` INTEGER NOT NULL, `time_recorded` INTEGER, `distance` REAL, `weight_unit` TEXT, `distance_unit` TEXT, `created_at` INTEGER, `update_at` INTEGER, PRIMARY KEY(`entry_id`))",
         "fields": [
           {
             "fieldPath": "entryId",
@@ -357,7 +357,7 @@
           {
             "fieldPath": "distance",
             "columnName": "distance",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": false
           },
           {
@@ -678,7 +678,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '83ad6f6bb089ab66c3ec920fe14d86a1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '43ba85f6b1f56422faa02d3a5ed3393f')"
     ]
   }
 }

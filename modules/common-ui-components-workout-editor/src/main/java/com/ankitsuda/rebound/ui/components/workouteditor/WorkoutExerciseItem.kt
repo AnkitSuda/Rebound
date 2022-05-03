@@ -441,9 +441,9 @@ private fun SetItemLayout(
     exercise: Exercise,
     exerciseLogEntry: ExerciseLogEntry,
     revisedSetText: Pair<String, Color?>,
-    onWeightChange: (ExerciseLogEntry, Float?) -> Unit,
+    onWeightChange: (ExerciseLogEntry, Double?) -> Unit,
     onRepsChange: (ExerciseLogEntry, Int?) -> Unit,
-    onDistanceChange: (ExerciseLogEntry, Long?) -> Unit,
+    onDistanceChange: (ExerciseLogEntry, Double?) -> Unit,
     onTimeChange: (ExerciseLogEntry, Long?) -> Unit,
     onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
     onSetTypeChange: (ExerciseLogEntry, LogSetType) -> Unit,
@@ -505,12 +505,12 @@ private fun SetItemLayout(
                 if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
                     val newValue =
                         (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
-                            .toFloat())
+                            .toDoubleOrNull())
                     onWeightChange(exerciseLogEntry, newValue)
                 } else {
                     val newValue =
                         (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
-                            .toLong())
+                            .toDoubleOrNull())
                     onDistanceChange(exerciseLogEntry, newValue)
                 }
             }

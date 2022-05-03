@@ -39,10 +39,6 @@ class SessionScreenViewModel @Inject constructor(
         workoutsRepository.getLogEntriesWithExerciseJunction(
             workoutId = workoutId
         ).distinctUntilChanged()
-            .map {
-                calculateTotalVolumeLifted(it)
-                it
-            }
             .shareWhileObserved(viewModelScope)
 
     val workout: SharedFlow<Workout?> = workoutsRepository.getWorkout(
@@ -50,31 +46,10 @@ class SessionScreenViewModel @Inject constructor(
     ).distinctUntilChanged()
         .shareWhileObserved(viewModelScope)
 
-    val totalVolume: SharedFlow<Float> = workoutsRepository.getTotalVolumeLiftedByWorkoutId(
+    val totalVolume: SharedFlow<Double> = workoutsRepository.getTotalVolumeLiftedByWorkoutId(
         workoutId = workoutId
     ).distinctUntilChanged()
         .shareWhileObserved(viewModelScope)
-//
-//    private var _totalVolume: MutableStateFlow<Double> = MutableStateFlow(0.0)
-//    val totalVolume = _totalVolume.asStateFlow()
-
-    private fun calculateTotalVolumeLifted(mLogs: List<LogEntriesWithExerciseJunction>) {
-//        viewModelScope.launch {
-//            var volume = (0.0).toDouble()
-//            for (log in mLogs) {
-//                for (entry in log.logEntries) {
-//                    if (entry.setType != LogSetType.WARM_UP) {
-//                        volume += (entry.weight?.toDouble()
-//                            ?: (0).toDouble()) * (entry.reps?.toDouble()
-//                            ?: (0).toDouble())
-//                    }
-//                }
-//            }
-//
-//            _totalVolume.value = volume
-//        }
-    }
-
 
     fun startWorkout(
         discardActive: Boolean,

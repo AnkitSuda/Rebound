@@ -146,7 +146,7 @@ interface WorkoutsDao {
     fun getTotalWorkoutsCount(): Flow<Long>
 
     @Query("SELECT e.weight FROM exercise_log_entries e JOIN exercise_logs j ON j.id = e.log_id JOIN workouts w ON w.id = j.workout_id WHERE w.is_hidden = 0 AND w.in_progress = 0 ORDER BY e.weight DESC LIMIT 1")
-    fun getMaxWeightLifted(): Flow<Float?>
+    fun getMaxWeightLifted(): Flow<Double?>
 
     @Query("SELECT e.* FROM exercise_log_entries e JOIN exercise_logs j ON j.id = e.log_id JOIN workouts w ON w.id = j.workout_id WHERE w.is_hidden = 0 AND w.in_progress = 0 ORDER BY w.start_at")
     fun getNonHiddenExerciseLogEntries(): Flow<List<ExerciseLogEntry>?>

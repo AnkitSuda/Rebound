@@ -21,6 +21,6 @@ import java.util.*
 
 data class WorkoutWithExtraInfo(
     var workout: Workout? = null,
-    var totalVolume: Float? = null,
+    var totalVolume: Double? = null,
     var totalExercises: Int? = null,
 )

@@ -96,7 +96,7 @@ class HomeScreenViewModel @Inject constructor(private val workoutsRepository: Wo
                         totalVolumeLifted = try {
                             it?.calculateTotalVolume()
                         } catch (e: Exception) {
-                            0f
+                            0.0
                         }
                     )
             }

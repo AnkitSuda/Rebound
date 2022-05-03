@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.base.util.lighterOrDarkerColor
+import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
@@ -139,7 +140,7 @@ fun SessionExerciseSetItem(
         RSpacer(16.dp)
         Text(text = buildAnnotatedString {
             withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
-                append((entry.weight ?: 0).toString())
+                append((entry.weight ?: 0.0).toReadableString())
             }
             withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
                 append(" kg")

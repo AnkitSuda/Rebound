@@ -42,7 +42,7 @@ data class ExerciseLogEntry(
     var setType: LogSetType? = null,
 
     @ColumnInfo(name = "weight")
-    var weight: Float? = null,
+    var weight: Double? = null,
     @ColumnInfo(name = "reps")
     var reps: Int? = null,
 
@@ -54,7 +54,7 @@ data class ExerciseLogEntry(
     var timeRecorded: Long? = null,
 
     @ColumnInfo(name = "distance")
-    var distance: Long? = null,
+    var distance: Double? = null,
 
     @ColumnInfo(name = "weight_unit")
     var weight_unit: String? = null,
@@ -68,10 +68,10 @@ data class ExerciseLogEntry(
     var updatedAt: LocalDateTime? = null,
 ) : Parcelable
 
-fun List<ExerciseLogEntry>.calculateTotalVolume(): Float {
-    var volume = 0F
+fun List<ExerciseLogEntry>.calculateTotalVolume(): Double {
+    var volume = 0.0
     for (entry in this) {
-        volume += ((entry.weight ?: 0f) * (entry.reps ?: 0).toFloat())
+        volume += ((entry.weight ?: 0.0) * (entry.reps ?: 0).toDouble())
     }
     return volume
 }
