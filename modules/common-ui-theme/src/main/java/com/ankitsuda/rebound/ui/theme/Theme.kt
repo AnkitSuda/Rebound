@@ -46,7 +46,7 @@ fun ReboundThemeWrapper(
     content: @Composable () -> Unit
 ) {
     // Animated colors
-    val animatedBackgroundColor by animateColorAsState(targetValue = themeState.backgroundColor)
+//    val animatedBackgroundColor by animateColorAsState(targetValue = themeState.backgroundColor)
 
     val colors = lightReboundColors(
         isLight = themeState.isLightTheme,
@@ -55,7 +55,7 @@ fun ReboundThemeWrapper(
         primary = themeState.primaryColor,
         onPrimary = themeState.onPrimaryColor,
         onBackground = themeState.onBackgroundColor,
-        background = animatedBackgroundColor,
+        background = themeState.backgroundColor,
         card = themeState.cardColor,
         cardBorder = themeState.cardBorderColor,
         topBar = themeState.topBarBackgroundColor,
