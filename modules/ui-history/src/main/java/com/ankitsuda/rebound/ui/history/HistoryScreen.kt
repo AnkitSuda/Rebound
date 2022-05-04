@@ -204,7 +204,7 @@ fun HistoryScreen(
                             totalExercises = workout.totalExercises ?: 0,
                             duration = workout.workout?.getDuration(),
                             volume = "${workout.totalVolume?.toReadableString()} kg",
-                            prs = 2
+                            prs = workout.totalPRs ?: 0
                         )
                     }
 

@@ -56,6 +56,7 @@ fun SessionScreen(
     val logs by viewModel.logs.collectAsState(emptyList())
     val workout by viewModel.workout.collectAsState(null)
     val totalVolume by viewModel.totalVolume.collectAsState(0.0)
+    val totalPRs by viewModel.totalPRs.collectAsState(0)
 
     var menuExpanded by remember {
         mutableStateOf(false)
@@ -142,7 +143,8 @@ fun SessionScreen(
             if (!workout?.personalRecords.isNullOrEmpty()) {
                 item {
                     PersonalRecordsRowComponent(
-                        modifier = Modifier,
+                        modifier = Modifier
+                            .padding(bottom = 8.dp),
                         prs = workout?.personalRecords!!
                     )
                 }
@@ -165,7 +167,7 @@ fun SessionScreen(
                         SessionCompleteQuickInfo(
                             time = workout?.getDuration()?.toDurationStr() ?: "NA",
                             volume = "${totalVolume.toReadableString()} kg",
-                            prs = 2
+                            prs = totalPRs
                         )
                     }
                     IconButton(onClick = {

@@ -129,6 +129,17 @@ interface WorkoutsDao {
     @Query("SELECT COUNT(*) FROM exercise_workout_junctions WHERE workout_id = :workoutId")
     fun getExercisesCountByWorkoutId(workoutId: String): Flow<Int>
 
+    @Query(
+        """WITH split(entry_id, personal_records, str) AS (
+    SELECT  entry_id, '', personal_records||',' FROM exercise_log_entries JOIN exercise_logs el ON el.id = log_id AND workout_id = :workoutId 
+    UNION ALL SELECT  entry_id,
+    substr(str, 0, instr(str, ',')),
+    substr(str, instr(str, ',')+1)
+    FROM split WHERE str !='' 
+) SELECT COUNT(personal_records) as PRs FROM split WHERE  personal_records != '';"""
+    )
+    fun getPRsCountOfEntriesByWorkoutId(workoutId: String): Flow<Int>
+
     @RawQuery(observedEntities = [Workout::class, ExerciseLogEntry::class, ExerciseWorkoutJunction::class])
     fun getAllWorkoutsRawQuery(query: SupportSQLiteQuery): Flow<List<Workout>>
 

@@ -46,6 +46,9 @@ import com.ankitsuda.rebound.domain.*
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.MainAxisAlignment
+import com.google.accompanist.flowlayout.SizeMode
 
 
 private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, right ->
@@ -170,9 +173,8 @@ fun SessionExerciseSetItem(
         if (!entry.personalRecords.isNullOrEmpty()) {
             PersonalRecordsRowComponent(
                 modifier = Modifier
-                    .padding(top = 8.dp),
-                paddingValues = PaddingValues(start = 32.dp, end = 16.dp),
-                prs = PersonalRecord.fromCommaSpString(entry.personalRecords!!)
+                    .padding(top = 8.dp, start = 32.dp, end = 16.dp),
+                prs = entry.personalRecords!!
             )
         }
     }
@@ -181,21 +183,21 @@ fun SessionExerciseSetItem(
 @Composable
 fun PersonalRecordsRowComponent(
     modifier: Modifier,
-    paddingValues: PaddingValues = PaddingValues(0.dp),
     prs: List<PersonalRecord>
 ) {
-    LazyRow(
+    FlowRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = paddingValues
-    ) {
-        items(prs.size) {
-            val pr = prs[it]
-            PersonalRecordComponent(
-                pr = pr
-            )
+        mainAxisSpacing = 8.dp,
+        crossAxisSpacing = 8.dp,
+        mainAxisSize = SizeMode.Expand,
+        content = {
+            for (pr in prs) {
+                PersonalRecordComponent(
+                    pr = pr
+                )
+            }
         }
-    }
+    )
 }
 
 
@@ -218,7 +220,7 @@ fun PersonalRecordComponent(
     }
 
     val contentColor = ReboundTheme.colors.primary
-    val bgColor = contentColor.copy(0.2f)
+    val bgColor = contentColor.copy(0.1f)
 
     Box(
         modifier = Modifier

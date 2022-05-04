@@ -14,6 +14,9 @@
 
 package com.ankitsuda.rebound.domain
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 
 val allPRs = listOf(
     MaxRepsPR(),
@@ -27,7 +30,7 @@ val allPRs = listOf(
     BestPacePR(),
 )
 
-sealed class PersonalRecord(open val value: String) {
+sealed class PersonalRecord(open val value: String) : Parcelable {
     companion object {
 
         fun fromCommaSpString(str: String): List<PersonalRecord> {
@@ -43,19 +46,43 @@ sealed class PersonalRecord(open val value: String) {
     }
 }
 
+@Parcelize
 class MaxRepsPR : PersonalRecord(value = "MAX_REPS")
+
+@Parcelize
 class MaxVolumePR : PersonalRecord(value = "MAX_VOLUME")
+
+@Parcelize
 class MaxVolumeAddedPR : PersonalRecord(value = "MAX_VOLUME_ADDED")
+
+@Parcelize
 class MaxWeightPR : PersonalRecord(value = "MAX_WEIGHT")
+
+@Parcelize
 class MaxOneRmPR : PersonalRecord(value = "MAX_ONE_RM")
+
+@Parcelize
 class MaxDurationPR : PersonalRecord(value = "MAX_DURATION")
+
+@Parcelize
 class MaxDistancePR : PersonalRecord(value = "MAX_DISTANCE")
+
+@Parcelize
 class MaxWeightAddedPR : PersonalRecord(value = "MAX_WEIGHT_ADDED")
+
+@Parcelize
 class BestPacePR : PersonalRecord(value = "BEST_PACE")
+
+@Parcelize
 class UnknownPR(override val value: String) : PersonalRecord(value = value)
 
 fun List<PersonalRecord>.toCommaSpString(): String? {
-    return if (isNotEmpty()) joinToString(separator = ",") else null
+    return if (isNotEmpty()) joinToString(
+        separator = ",",
+        transform = {
+            it.value
+        }
+    ) else null
 }
 
 fun ArrayList<PersonalRecord>.addIfNot(pr: PersonalRecord) {

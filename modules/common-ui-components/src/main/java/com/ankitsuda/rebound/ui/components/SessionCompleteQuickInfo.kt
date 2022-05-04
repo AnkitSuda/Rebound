@@ -34,7 +34,12 @@ import com.ankitsuda.rebound.ui.icons.Weight
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
-fun SessionCompleteQuickInfo(modifier: Modifier = Modifier, time: String, volume: String, prs: Int) {
+fun SessionCompleteQuickInfo(
+    modifier: Modifier = Modifier,
+    time: String,
+    volume: String,
+    prs: Int
+) {
     Row(modifier = modifier) {
         SessionQuickInfoRowItem(
             icon = Icons.Outlined.Timer,

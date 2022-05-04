@@ -23,4 +23,5 @@ data class WorkoutWithExtraInfo(
     var workout: Workout? = null,
     var totalVolume: Double? = null,
     var totalExercises: Int? = null,
+    var totalPRs: Int? = null,
 )

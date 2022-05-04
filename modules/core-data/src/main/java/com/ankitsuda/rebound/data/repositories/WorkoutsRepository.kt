@@ -185,6 +185,8 @@ class WorkoutsRepository @Inject constructor(
             prs.addIfNot(MaxDurationPR())
         }
 
+        updatedWorkout.personalRecords = prs
+
         val junctions = getLogEntriesWithExerciseJunction(workoutId).first()
 
         for (j in junctions) {
@@ -193,9 +195,12 @@ class WorkoutsRepository @Inject constructor(
 
             j.logEntries.sortedByDescending { it.weight }.getOrNull(0)?.let { maxWeightEntry ->
                 if (maxWeightEntry.weight ?: 0.0 > lastMaxWeightInExercise) {
+                    val entryPrs = arrayListOf<PersonalRecord>()
+                    maxWeightEntry.personalRecords?.let { entryPrs.addAll(it) }
+                    entryPrs.add(MaxWeightPR())
                     updateExerciseLogEntry(
                         maxWeightEntry.copy(
-                            personalRecords = MaxWeightPR().value
+                            personalRecords = entryPrs
                         )
                     )
                 }
@@ -207,6 +212,9 @@ class WorkoutsRepository @Inject constructor(
 
     fun getExercisesCountByWorkoutId(workoutId: String) =
         workoutsDao.getExercisesCountByWorkoutId(workoutId)
+
+    fun getPRsCountOfEntriesByWorkoutId(workoutId: String) =
+        workoutsDao.getPRsCountOfEntriesByWorkoutId(workoutId)
 
 //    fun getTotalVolumeLiftedByWorkoutId(workoutId: String) =
 //        workoutsDao.getTotalVolumeOfWorkout(workoutId = workoutId)
@@ -228,14 +236,24 @@ class WorkoutsRepository @Inject constructor(
             for (workout in it) {
                 val totalVolume =
                     getTotalVolumeLiftedByWorkoutId(workoutId = workout.id).firstOrNull()
+
                 val totalExercises =
                     getExercisesCountByWorkoutId(workoutId = workout.id).firstOrNull()
+
+                var totalPRs = 0
+
+                val totalPRsOfEntries =
+                    getPRsCountOfEntriesByWorkoutId(workoutId = workout.id).firstOrNull()
+
+                totalPRs += workout.personalRecords?.size ?: 0
+                totalPRs += totalPRsOfEntries ?: 0
 
                 mWorkouts.add(
                     WorkoutWithExtraInfo(
                         workout = workout,
                         totalVolume = totalVolume,
-                        totalExercises = totalExercises
+                        totalExercises = totalExercises,
+                        totalPRs = totalPRs
                     )
                 )
             }

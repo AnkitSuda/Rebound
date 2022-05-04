@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.workout_details
 
+import androidx.compose.ui.util.fastSumBy
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -51,6 +52,27 @@ class SessionScreenViewModel @Inject constructor(
     ).distinctUntilChanged()
         .shareWhileObserved(viewModelScope)
 
+    private var _totalPRs = MutableStateFlow(0)
+    val totalPRs = _totalPRs.asStateFlow()
+
+    private var _lastWorkout: Workout? = null
+    private var _lastLogs: List<LogEntriesWithExerciseJunction>? = null
+
+    init {
+        viewModelScope.launch {
+            logs.collectLatest {
+                _lastLogs = it
+                calculatePRs()
+            }
+        }
+        viewModelScope.launch {
+            workout.collectLatest {
+                _lastWorkout = it
+                calculatePRs()
+            }
+        }
+    }
+
     fun startWorkout(
         discardActive: Boolean,
         onWorkoutAlreadyActive: () -> Unit
@@ -70,5 +92,15 @@ class SessionScreenViewModel @Inject constructor(
             workoutsRepository.deleteWorkoutWithEverything(workoutId)
             onDeleted()
         }
+    }
+
+    private fun calculatePRs() {
+        var prs = 0
+
+        prs += _lastWorkout?.personalRecords?.size ?: 0
+        prs += _lastLogs?.flatMap { it.logEntries }?.fastSumBy { it.personalRecords?.size ?: 0 }
+            ?: 0
+
+        _totalPRs.value = prs
     }
 }
