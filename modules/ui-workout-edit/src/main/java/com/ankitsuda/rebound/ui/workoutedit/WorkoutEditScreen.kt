@@ -120,7 +120,10 @@ fun WorkoutEditScreen(
                 onUpdateLogEntry = {
                     viewModel.updateLogEntry(it)
                 },
-                onCancelCurrentWorkout = {}
+                onCancelCurrentWorkout = {},
+                onUpdateWarmUpSets = { j, s ->
+                    viewModel.updateWarmUpSets(j, s)
+                }
             )
         }
     }

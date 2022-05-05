@@ -41,6 +41,8 @@ import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.components.AppTextField
+import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpSet
+import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.toExerciseLogEntries
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboard
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -65,6 +67,7 @@ fun WorkoutEditorComponent(
     onAddEmptySetToExercise: (setNumber: Int, exerciseWorkoutJunction: ExerciseWorkoutJunction) -> Unit,
     onDeleteLogEntry: (ExerciseLogEntry) -> Unit,
     onUpdateLogEntry: (ExerciseLogEntry) -> Unit,
+    onUpdateWarmUpSets: (LogEntriesWithExerciseJunction, List<ExerciseLogEntry>) -> Unit,
     layoutAtTop: @Composable LazyItemScope.() -> Unit = {}
 ) {
     // Observes results when ExercisesScreen changes value of arg
@@ -147,6 +150,9 @@ fun WorkoutEditorComponent(
                 },
                 onDeleteExercise = {
                     onDeleteExerciseFromWorkout(logEntriesWithJunctionItem)
+                },
+                onUpdateWarmUpSets = {
+                    onUpdateWarmUpSets(logEntriesWithJunctionItem, it.toExerciseLogEntries())
                 }
             )
         }

@@ -173,4 +173,9 @@ class WorkoutEditScreenViewModel @Inject constructor(
         }
     }
 
+    fun updateWarmUpSets(junction: LogEntriesWithExerciseJunction, sets: List<ExerciseLogEntry>) {
+        viewModelScope.launch {
+            workoutsRepository.updateWarmUpSets(junction, sets)
+        }
+    }
 }

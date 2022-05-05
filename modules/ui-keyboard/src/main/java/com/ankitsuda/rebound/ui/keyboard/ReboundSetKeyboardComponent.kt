@@ -20,15 +20,9 @@ import android.view.inputmethod.InputConnection
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ChangeCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardModeType
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
@@ -36,6 +30,7 @@ import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.DecimalNumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumberNumKey
+import com.ankitsuda.rebound.ui.keyboard.picker.WarmUpListPickerComponent
 import com.ankitsuda.rebound.ui.keyboard.platecalculator.PlateCalculatorComponent
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import timber.log.Timber
@@ -50,10 +45,10 @@ fun ReboundSetKeyboardComponent(
         mutableStateOf(KeyboardModeType.NUMBERS)
     }
 
-    val currentMode = if (reboundKeyboardType == ReboundKeyboardType.WEIGHT) {
-        mCurrentMode
-    } else {
-        KeyboardModeType.NUMBERS
+    val currentMode = when (reboundKeyboardType) {
+        ReboundKeyboardType.WEIGHT -> mCurrentMode
+        ReboundKeyboardType.WARMUP_SET -> KeyboardModeType.WARMUP_PICKER
+        else -> KeyboardModeType.NUMBERS
     }
 
     var rightButtonsWidth by remember {
@@ -98,6 +93,26 @@ fun ReboundSetKeyboardComponent(
                             height = 250.dp,
                         ),
                     weight = inputConnection?.getText()?.toDoubleOrNull() ?: 0.0
+                )
+            }
+            KeyboardModeType.WARMUP_PICKER -> {
+                WarmUpListPickerComponent(
+                    onSetText = {
+                        val currentText = inputConnection?.getText() ?: ""
+                        val beforCursorText =
+                            inputConnection?.getTextBeforeCursor(currentText.length, 0) ?: ""
+                        val afterCursorText =
+                            inputConnection?.getTextAfterCursor(currentText.length, 0) ?: ""
+                        inputConnection?.deleteSurroundingText(
+                            beforCursorText.length,
+                            afterCursorText.length
+                        )
+                        inputConnection?.commitText(
+                            it,
+                            1
+                        )
+                    },
+                    startingText = inputConnection?.getText()
                 )
             }
         }
@@ -151,8 +166,7 @@ private fun handleOnClickNumKey(
     }
 }
 
-
-private fun InputConnection.getText() = getExtractedText(
+fun InputConnection.getText() = getExtractedText(
     ExtractedTextRequest(),
     0
 )?.text.toString()

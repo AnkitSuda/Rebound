@@ -16,10 +16,10 @@ package com.ankitsuda.rebound.data.db.daos
 
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.ankitsuda.base.utils.generateId
+import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
-import timber.log.Timber
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Dao
@@ -173,4 +173,92 @@ interface WorkoutsDao {
 
     @Query("SELECT completed_at - start_at as duration FROM workouts WHERE is_hidden = 0 AND in_progress = 0 ORDER BY duration DESC LIMIT 1")
     fun getLongestWorkoutDuration(): Flow<Long?>
+
+
+    @Transaction
+    suspend fun updateWarmUpSets(
+        junction: LogEntriesWithExerciseJunction,
+        warmUpSets: List<ExerciseLogEntry>
+    ) {
+        val time = LocalDateTime.now()
+
+        val junctionId = junction.junction.id
+
+        val sortedEntries = junction.logEntries.sortedWith { left, right ->
+            left.setNumber?.compareTo(right.setNumber ?: 0) ?: 0
+        }
+//        val newEntries = arrayListOf<ExerciseLogEntry>()
+        val logsToAdd = arrayListOf<ExerciseLog>()
+        val entriesToAdd = arrayListOf<ExerciseLogEntry>()
+        val entriesToDelete = arrayListOf<ExerciseLogEntry>()
+        val entriesToUpdate = arrayListOf<ExerciseLogEntry>()
+
+        var mSetNumber = 0
+
+        for (set in warmUpSets) {
+            val entryId = generateId()
+            val logId = generateId()
+
+            val newEntry =
+                set.copy(
+                    entryId = entryId,
+                    logId = logId,
+                    junctionId = junctionId,
+                    setNumber = mSetNumber + 1,
+                    createdAt = time,
+                    updatedAt = time,
+                )
+
+//            newEntries.add(
+//                newEntry
+//            )
+            entriesToAdd.add(newEntry)
+            logsToAdd.add(
+                ExerciseLog(
+                    id = logId,
+                    workoutId = junction.junction.workoutId,
+                    createdAt = time,
+                    updatedAt = time,
+                )
+            )
+            mSetNumber++
+        }
+
+        for (entry in sortedEntries) {
+            if (entry.setType == LogSetType.WARM_UP) {
+                entriesToDelete.add(
+                    entry
+                )
+            } else {
+                val updatedEntry = entry.copy(
+                    setNumber = mSetNumber + 1,
+                    updatedAt = time
+                )
+
+//                newEntries.add(updatedEntry)
+
+                entriesToUpdate.add(
+                    updatedEntry
+                )
+                mSetNumber++
+            }
+        }
+
+
+
+        deleteExerciseLogEntries(entriesToDelete.map { it.entryId })
+        deleteExerciseLogs(entriesToDelete.filter { it.logId != null }.map { it.logId!! })
+
+        for (logToAdd in logsToAdd) {
+            insertExerciseLog(logToAdd)
+        }
+
+        for (entryToAdd in entriesToAdd) {
+            insertExerciseLogEntry(entryToAdd)
+        }
+
+        for (entryToUpdate in entriesToUpdate) {
+            updateExerciseLogEntry(entryToUpdate)
+        }
+    }
 }

@@ -22,6 +22,7 @@ import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.base.utils.toReadableDurationStyle2
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.ExerciseCategory
+import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.entities.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -255,5 +256,11 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
             }
         }
         return true
+    }
+
+    fun updateWarmUpSets(junction: LogEntriesWithExerciseJunction, sets: List<ExerciseLogEntry>) {
+        viewModelScope.launch {
+            workoutsRepository.updateWarmUpSets(junction, sets)
+        }
     }
 }

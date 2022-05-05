@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -55,6 +56,7 @@ import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded
 import com.ankitsuda.rebound.ui.ThemeViewModel
+import com.ankitsuda.rebound.ui.components.workouteditor.ReboundKeyboardHost
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboardComponent
@@ -137,152 +139,99 @@ private fun MainLayout(
         swipeableState = swipeableState
     )
 
-
-    var reboundSetKeyboardType by remember {
-        mutableStateOf(ReboundKeyboardType.WEIGHT)
-    }
-    var reboundSetKeyboardVisible by remember {
-        mutableStateOf(false)
-    }
-    var reboundSetKeyboardInputConnection: InputConnection? by remember {
-        mutableStateOf(null)
-    }
-
-    val reboundSetKeyboard by remember {
-        mutableStateOf(
-            ReboundSetKeyboard(
-                onChangeKeyboardType = {
-                    reboundSetKeyboardType = it
-                },
-                onChangeVisibility = {
-                    reboundSetKeyboardVisible = it
-                },
-                onChangeInputConnection = {
-                    reboundSetKeyboardInputConnection = it
-                }
-            )
-        )
-    }
-
     ReboundThemeWrapper(themeState = themeState) {
         NavigatorHost {
-            CompositionLocalProvider(
-                LocalDialog provides dialog,
-                LocalPanel provides mainPanel,
-                LocalReboundSetKeyboard provides reboundSetKeyboard
-            ) {
-
-                Box() {
-                    /**
-                     * Temporary using ModalBottomSheetLayout
-                     * will create a custom implementation later in MainScreenScaffold with proper status bar padding
-                     * and auto corner radius
-                     */
-                    com.google.accompanist.navigation.material.ModalBottomSheetLayout(
-                        sheetElevation = 0.dp,
-                        sheetBackgroundColor = Color.Transparent,
-                        bottomSheetNavigator = bottomSheetNavigator
-                    ) {
-                        val navigator = LocalNavigator.current
-                        MainScreenScaffold(
-                            modifier = Modifier,
-                            panelHidden = panelHidden,
-                            swipeableState = swipeableState,
-                            bottomBar = {
-                                BottomBar(
-                                    elevationEnabled = panelHidden,
-                                    navController = navController,
-                                )
-                            },
-                            panel = {
-                                WorkoutPanel(navController)
-                            },
-                            panelTopCommon = {
-                                PanelTopDragHandle()
-                            },
-                            panelTopCollapsed = {
-                                val currentTimeStr by workoutPanelViewModel.currentDurationStr.collectAsState()
-                                PanelTopCollapsed(
-                                    currentTimeStr = currentTimeStr,
-                                )
-                            },
-                            panelTopExpanded = {
-                                val restTimerElapsedTime by viewModel.restTimerElapsedTime.observeAsState(
-                                    null
-                                )
-                                val restTimerTotalTime by viewModel.restTimerTotalTime.observeAsState(
-                                    null
-                                )
-                                val restTimerTimerState by viewModel.restTimerState.observeAsState(
-                                    TimerState.EXPIRED
-                                )
-                                val restTimerTimeString by viewModel.restTimerTimeString.observeAsState(
-                                    null
-                                )
-
-                                PanelTopExpanded(
-                                    restTimerElapsedTime = restTimerElapsedTime,
-                                    restTimerTotalTime = restTimerTotalTime,
-                                    restTimerTimeString = restTimerTimeString,
-                                    isTimerRunning = restTimerTimerState != TimerState.EXPIRED,
-                                    onCollapseBtnClicked = {
-                                        coroutine.launch {
-                                            swipeableState.animateTo(0)
-                                        }
-                                    },
-                                    onTimerBtnClicked = {
-                                        navigator.navigate(LeafScreen.RestTimer.createRoute())
-                                    },
-                                    onFinishBtnClicked = {
-                                        workoutPanelViewModel.finishWorkout(onSetsIncomplete = {
-                                            context.toast(message = "Please complete all sets to finish")
-                                        })
-                                    })
-                            }) {
-                            Box(
-                                Modifier
-                                    .fillMaxSize()
-                                    .background(
-                                        color = LocalThemeState.current.backgroundColor
+            ReboundKeyboardHost {
+                CompositionLocalProvider(
+                    LocalDialog provides dialog,
+                    LocalPanel provides mainPanel,
+                ) {
+                    Box() {
+                        /**
+                         * Temporary using ModalBottomSheetLayout
+                         * will create a custom implementation later in MainScreenScaffold with proper status bar padding
+                         * and auto corner radius
+                         */
+                        com.google.accompanist.navigation.material.ModalBottomSheetLayout(
+                            sheetElevation = 0.dp,
+                            sheetBackgroundColor = Color.Transparent,
+                            bottomSheetNavigator = bottomSheetNavigator
+                        ) {
+                            val navigator = LocalNavigator.current
+                            MainScreenScaffold(
+                                modifier = Modifier,
+                                panelHidden = panelHidden,
+                                swipeableState = swipeableState,
+                                bottomBar = {
+                                    BottomBar(
+                                        elevationEnabled = panelHidden,
+                                        navController = navController,
                                     )
-                            ) {
-                                AppNavigation(navController)
+                                },
+                                panel = {
+                                    WorkoutPanel(navController)
+                                },
+                                panelTopCommon = {
+                                    PanelTopDragHandle()
+                                },
+                                panelTopCollapsed = {
+                                    val currentTimeStr by workoutPanelViewModel.currentDurationStr.collectAsState()
+                                    PanelTopCollapsed(
+                                        currentTimeStr = currentTimeStr,
+                                    )
+                                },
+                                panelTopExpanded = {
+                                    val restTimerElapsedTime by viewModel.restTimerElapsedTime.observeAsState(
+                                        null
+                                    )
+                                    val restTimerTotalTime by viewModel.restTimerTotalTime.observeAsState(
+                                        null
+                                    )
+                                    val restTimerTimerState by viewModel.restTimerState.observeAsState(
+                                        TimerState.EXPIRED
+                                    )
+                                    val restTimerTimeString by viewModel.restTimerTimeString.observeAsState(
+                                        null
+                                    )
+
+                                    PanelTopExpanded(
+                                        restTimerElapsedTime = restTimerElapsedTime,
+                                        restTimerTotalTime = restTimerTotalTime,
+                                        restTimerTimeString = restTimerTimeString,
+                                        isTimerRunning = restTimerTimerState != TimerState.EXPIRED,
+                                        onCollapseBtnClicked = {
+                                            coroutine.launch {
+                                                swipeableState.animateTo(0)
+                                            }
+                                        },
+                                        onTimerBtnClicked = {
+                                            navigator.navigate(LeafScreen.RestTimer.createRoute())
+                                        },
+                                        onFinishBtnClicked = {
+                                            workoutPanelViewModel.finishWorkout(onSetsIncomplete = {
+                                                context.toast(message = "Please complete all sets to finish")
+                                            })
+                                        })
+                                }) {
+                                Box(
+                                    Modifier
+                                        .fillMaxSize()
+                                        .background(
+                                            color = LocalThemeState.current.backgroundColor
+                                        )
+                                ) {
+                                    AppNavigation(navController)
+                                }
                             }
                         }
-                    }
 
-                    if (dialogVisible) {
-                        AlertDialog(onDismissRequest = {
-                            dialogVisible = false
-                        },
-                            buttons = {
-                                dialogContent()
-                            })
-                    }
-
-                    AnimatedVisibility(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter),
-                        enter = slideInVertically { it },
-                        exit = slideOutVertically { it },
-                        visible = reboundSetKeyboardVisible && reboundSetKeyboardInputConnection != null
-                    ) {
-                        Surface(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            elevation = 8.dp,
-                            shape = RoundedCornerShape(0.dp)
-                        ) {
-                            Box(modifier = Modifier.navigationBarsPadding()) {
-                                ReboundSetKeyboardComponent(
-                                    reboundKeyboardType = reboundSetKeyboardType,
-                                    inputConnection = reboundSetKeyboardInputConnection,
-                                    onHideKeyboard = {
-                                        reboundSetKeyboard.hide()
-                                    }
-                                )
-                            }
+                        if (dialogVisible) {
+                            AlertDialog(onDismissRequest = {
+                                dialogVisible = false
+                            },
+                                buttons = {
+                                    dialogContent()
+                                })
                         }
                     }
                 }

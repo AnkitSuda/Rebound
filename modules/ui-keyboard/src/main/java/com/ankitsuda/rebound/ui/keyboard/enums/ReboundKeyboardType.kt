@@ -18,5 +18,6 @@ enum class ReboundKeyboardType {
     WEIGHT,
     REPS,
     DISTANCE,
-    TIME;
+    TIME,
+    WARMUP_SET;
 }

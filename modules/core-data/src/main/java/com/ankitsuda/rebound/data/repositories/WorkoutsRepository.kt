@@ -393,4 +393,10 @@ class WorkoutsRepository @Inject constructor(
     fun getWorkoutsDurationsOnly(): Flow<List<Long>> =
         workoutsDao.getWorkoutsDurationsOnly()
 
+    suspend fun updateWarmUpSets(
+        junction: LogEntriesWithExerciseJunction,
+        sets: List<ExerciseLogEntry>
+    ) {
+        workoutsDao.updateWarmUpSets(junction, sets)
+    }
 }

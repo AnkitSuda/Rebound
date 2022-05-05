@@ -111,6 +111,7 @@ fun WorkoutPanel2(
         for (logEntriesWithJunctionItem in logEntriesWithJunction) {
             workoutExerciseItemAlt(
                 logEntriesWithJunction = logEntriesWithJunctionItem,
+                onUpdateWarmUpSets = {},
                 onValuesUpdated = { updatedEntry ->
                     viewModel.updateLogEntry(updatedEntry)
                 },

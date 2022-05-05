@@ -47,6 +47,8 @@ import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpCalculatorDialog
+import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpSet
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
 import kotlinx.coroutines.delay
@@ -60,6 +62,7 @@ private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, ri
 fun LazyListScope.workoutExerciseItemAlt(
     useReboundKeyboard: Boolean = false,
     logEntriesWithJunction: LogEntriesWithExerciseJunction,
+    onUpdateWarmUpSets: (List<WarmUpSet>) -> Unit,
     onValuesUpdated: (updatedEntry: ExerciseLogEntry) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
     onAddSet: () -> Unit,
@@ -68,13 +71,49 @@ fun LazyListScope.workoutExerciseItemAlt(
 
     val exercise = logEntriesWithJunction.exercise
     val logEntries = logEntriesWithJunction.logEntries
-
+    val sortedEntries = logEntries.sortedWith(ExerciseLogEntryComparator)
 
     // Exercise info
     item() {
         val contentColor = ReboundTheme.colors.primary
         var popupMenuExpanded by remember {
             mutableStateOf(false)
+        }
+        var warmUpSetsDialogVisible by rememberSaveable {
+            mutableStateOf(false)
+        }
+
+        var dialogWarmUpSets by remember {
+            mutableStateOf<List<WarmUpSet>>(emptyList())
+        }
+        var warmUpWorkSetWeight by rememberSaveable {
+            mutableStateOf<Double?>(0.0)
+        }
+
+        fun updateWarmUpSets(newWarmUpWorkSetWeight: Double, newWarmUpSets: List<WarmUpSet>) {
+            dialogWarmUpSets = newWarmUpSets
+            warmUpWorkSetWeight = newWarmUpWorkSetWeight
+            onUpdateWarmUpSets(newWarmUpSets)
+        }
+
+        LaunchedEffect(key1 = sortedEntries) {
+            warmUpWorkSetWeight = (sortedEntries.filter { it.setType != LogSetType.WARM_UP }
+                .getOrNull(0)?.weight ?: warmUpWorkSetWeight)
+//            warmUpWorkSetWeight = newWarmUpWorkSetWeight
+//            warmUpSets = WarmUpSet.fromLogEntries(warmUpWorkSetWeight, sortedEntries)
+        }
+
+        if (warmUpSetsDialogVisible) {
+            WarmUpCalculatorDialog(
+                startingWorkSetWeight = warmUpWorkSetWeight,
+                startingSets = dialogWarmUpSets,
+                onInsert = { newWarmUpWorkSetWeight, newWarmUpSets ->
+                    updateWarmUpSets(newWarmUpWorkSetWeight, newWarmUpSets)
+                },
+                onDismissRequest = {
+                    warmUpSetsDialogVisible = false
+                }
+            )
         }
 
         Row(
@@ -105,6 +144,9 @@ fun LazyListScope.workoutExerciseItemAlt(
                     expanded = popupMenuExpanded,
                     onDismissRequest = { popupMenuExpanded = false },
                     onDeleteExercise = onDeleteExercise,
+                    onAddWarmUpSets = {
+                        warmUpSetsDialogVisible = true
+                    }
                 )
             }
 
@@ -168,10 +210,6 @@ fun LazyListScope.workoutExerciseItemAlt(
             }
         }
     }
-
-    // Sets
-    val sortedEntries = logEntries.sortedWith(ExerciseLogEntryComparator)
-
 
     fun getRevisedSetNumbers(): List<Pair<String, Color?>> {
         var counter = 0
@@ -275,26 +313,6 @@ private fun LazyItemScope.SetItem(
         }
     )
 
-    val coroutine = rememberCoroutineScope()
-
-    fun handleOnSwiped() {
-        coroutine.launch {
-            delay(125)
-            onSwipeDelete(exerciseLogEntry)
-        }
-    }
-
-    val dismissState = rememberDismissState(
-        confirmStateChange = {
-            if (it != DismissValue.Default) {
-                handleOnSwiped()
-                true
-            } else {
-                false
-            }
-        }
-    )
-
     fun handleOnChange(updatedEntry: ExerciseLogEntry) {
         if (updatedEntry.completed) {
             isScaleAnimRunning = false
@@ -341,23 +359,13 @@ private fun LazyItemScope.SetItem(
         onChange(updatedEntry)
     }
 
-    SwipeToDismiss(
+    SetSwipeWrapperComponent(
         modifier = Modifier
             .scale(scale),
-        state = dismissState,
-        directions = setOf(
-//            DismissDirection.StartToEnd,
-            DismissDirection.EndToStart
-        ),
-        dismissThresholds = {
-            FractionalThreshold(0.5f)
-        },
-        background = {
-            SetItemBgLayout(
-                bgColor = bgColor,
-                dismissState = dismissState
-            )
-        },
+        bgColor = bgColor,
+        onSwipeDelete = {
+            onSwipeDelete(exerciseLogEntry)
+        }
     ) {
         SetItemLayout(
             bgColor = bgColor,
@@ -385,43 +393,6 @@ private fun LazyItemScope.SetItem(
                 handleOnChange(mLogEntry.copy(setType = value))
             },
         )
-    }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun SetItemBgLayout(
-    bgColor: Color,
-    dismissState: DismissState
-) {
-    val direction =
-        dismissState.dismissDirection ?: DismissDirection.EndToStart
-
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(
-                if (direction == DismissDirection.EndToStart) ReboundTheme.colors.error.copy(
-                    alpha = 0.10f
-                ) else bgColor
-            )
-            .padding(horizontal = 20.dp),
-    ) {
-        val alignment = Alignment.CenterEnd
-
-        val scale by animateFloatAsState(
-            if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
-        )
-
-        Icon(
-            Icons.Outlined.Delete,
-            tint = ReboundTheme.colors.error,
-            contentDescription = "Delete",
-            modifier = Modifier
-                .scale(scale)
-                .align(alignment)
-        )
-
     }
 }
 

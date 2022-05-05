@@ -116,6 +116,9 @@ fun WorkoutPanel1(
             onUpdateLogEntry = {
                 viewModel.updateLogEntry(it)
             },
+            onUpdateWarmUpSets = { j, s ->
+                viewModel.updateWarmUpSets(j, s)
+            },
             layoutAtTop = {
                 Column {
                     WorkoutQuickInfo(

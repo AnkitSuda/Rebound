@@ -14,48 +14,226 @@
 
 package com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.ankitsuda.rebound.ui.components.AppTextField
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.base.util.lighterOrDarkerColor
+import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.rebound.ui.components.RButton
+import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.components.workouteditor.ReboundKeyboardHost
+import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
+import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun WarmUpCalculatorDialog(onDismissRequest: () -> Unit) {
+fun WarmUpCalculatorDialog(
+    startingWorkSetWeight: Double?,
+    startingSets: List<WarmUpSet>,
+    onInsert: (workSet: Double, sets: List<WarmUpSet>) -> Unit,
+    onDismissRequest: () -> Unit,
+    viewModel: WarmUpCalculatorDialogViewModel = hiltViewModel()
+) {
+
+    LaunchedEffect(startingSets) {
+        viewModel.setSets(startingSets)
+    }
+
     Dialog(
         onDismissRequest = onDismissRequest,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
         content = {
-            WarmUpCalculatorDialogLayout()
+            ReboundKeyboardHost {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    val sets by viewModel.sets.collectAsState()
+                    WarmUpCalculatorDialogLayout(
+                        sets = sets,
+                        startingWorkSetWeight = startingWorkSetWeight,
+                        onClickCancel = onDismissRequest,
+                        onUpdateWorkSet = { barWeight, workSet ->
+                            viewModel.updateWorkSet(barWeight, workSet)
+                        },
+                        onUpdateSet = {
+                            viewModel.updateSet(it)
+                        },
+                        onAddSet = {
+                            viewModel.addEmptySet(barWeight = it)
+                        },
+                        onClickInsert = {
+                            onInsert(it, sets)
+                            onDismissRequest()
+                        },
+                        onDeleteSet = {
+                            viewModel.deleteSet(it)
+                        }
+                    )
+                }
+            }
         }
     )
+
 }
 
 @Composable
-private fun WarmUpCalculatorDialogLayout() {
+private fun WarmUpCalculatorDialogLayout(
+    sets: List<WarmUpSet>,
+    startingWorkSetWeight: Double?,
+    onUpdateWorkSet: (barWight: Double, workSet: Double) -> Unit,
+    onUpdateSet: (WarmUpSet) -> Unit,
+    onDeleteSet: (WarmUpSet) -> Unit,
+    onAddSet: (barWight: Double) -> Unit,
+    onClickInsert: (workSet: Double) -> Unit,
+    onClickCancel: () -> Unit
+) {
     var workSetStr by remember {
-        mutableStateOf("")
+        mutableStateOf(startingWorkSetWeight?.toReadableString() ?: "")
     }
 
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "Work set (kg)")
-        AppTextField(
-            value = workSetStr,
-            placeholderValue = "",
-            onValueChange = {
-                workSetStr = it
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            singleLine = true,
-        )
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp),
+        color = ReboundTheme.colors.background,
+        shape = ReboundTheme.shapes.large
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Column(
+                modifier =
+                Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+            ) {
+                Text(
+                    text = "Work up sets",
+                    style = ReboundTheme.typography.h6,
+                    color = ReboundTheme.colors.onBackground
+                )
+                RSpacer(space = 12.dp)
 
+                Text(
+                    text = "Work set (kg)",
+                    style = ReboundTheme.typography.caption,
+                    color = ReboundTheme.colors.onBackground.copy(0.75f)
+                )
+            }
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            ) {
+                ReboundSetTextField(
+                    bgColor = ReboundTheme.colors.background,
+                    contentColor = ReboundTheme.colors.onBackground,
+                    value = workSetStr,
+                    onValueChange = {
+                        workSetStr = it
+                        onUpdateWorkSet(20.0, it.toDoubleOrNull() ?: 0.0)
+                    },
+                    reboundKeyboardType = ReboundKeyboardType.WEIGHT,
+                )
+            }
+
+            RSpacer(space = 16.dp)
+
+            WarmUpSetsTitlesComponent(
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentPadding = PaddingValues(top = 8.dp)
+            ) {
+
+                items(items = sets, key = { it.id }) { set ->
+                    WarmUpSetComponent(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        workSetWeight = workSetStr.toDoubleOrNull() ?: 0.0,
+                        barWeight = 20.0,
+                        startingSet = set,
+                        onChangeValue = onUpdateSet,
+                        onDeleteSet = {
+                            onDeleteSet(set)
+                        }
+                    )
+
+                }
+
+                item {
+                    RButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = ReboundTheme.colors.background.lighterOrDarkerColor(
+                                0.05f
+                            ),
+                            contentColor = ReboundTheme.colors.onBackground
+                        ),
+                        onClick = {
+                            onAddSet(20.0)
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Outlined.Add, contentDescription = null)
+                        RSpacer(space = 8.dp)
+                        Text(text = "Add set")
+                    }
+                }
+            }
+
+            DialogButtonsRow(
+                onClickInsert = {
+                    onClickInsert(workSetStr.toDoubleOrNull() ?: 0.0)
+                },
+                onClickCancel = onClickCancel
+            )
+        }
+    }
+}
+
+@Composable
+private fun ColumnScope.DialogButtonsRow(
+    onClickInsert: () -> Unit,
+    onClickCancel: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .align(Alignment.End)
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 6.dp
+            ),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        TextButton(onClick = onClickCancel) {
+            Text("CANCEL")
+        }
+        TextButton(onClick = onClickInsert) {
+            Text("INSERT")
+        }
     }
 }
