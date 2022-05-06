@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2022 Ankit Suda.
+ *
+ * Licensed under the GNU General Public License v3
+ *
+ * This is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ */
+
+import com.ankitsuda.rebound.buildSrc.App
+import com.ankitsuda.rebound.buildSrc.Deps
+
+plugins {
+    id "com.android.library"
+    id "dagger.hilt.android.plugin"
+    id "kotlin-android"
+    id "kotlin-kapt"
+    id "kotlin-parcelize"
+}
+
+android {
+    compileSdkVersion App.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion App.minSdkVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion Deps.Android.Compose.version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api project(":modules:common-ui-compose")
+    api project(":modules:common-ui-theme")
+    api project(":modules:common-ui-components")
+    api project(":modules:core-data")
+    api project(":modules:navigation")
+
+    implementation Deps.Dagger.hilt
+    kapt Deps.Dagger.hiltCompiler
+}

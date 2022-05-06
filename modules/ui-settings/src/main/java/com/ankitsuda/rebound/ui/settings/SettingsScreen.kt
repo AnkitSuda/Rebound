@@ -76,6 +76,17 @@ fun SettingsScreen(
                     })
             }
             item {
+                MoreItemCard(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    icon = Icons.Outlined.BubbleChart,
+                    text = "Plates",
+                    description = "Customize barbell plates",
+                    onClick = {
+                        navigator.navigate(LeafScreen.Plates().createRoute())
+                    })
+            }
+            item {
                 MoreSectionHeader(text = "Defaults")
             }
             item {

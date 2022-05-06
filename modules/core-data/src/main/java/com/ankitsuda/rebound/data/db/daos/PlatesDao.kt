@@ -30,7 +30,13 @@ interface PlatesDao {
     @Query("SELECT * FROM plates")
     fun getPlates(): Flow<List<Plate>>
 
+    @Query("SELECT * FROM plates WHERE is_active = 1")
+    fun getActivePlates(): Flow<List<Plate>>
+
+    @Query("UPDATE plates SET is_active = :isActive WHERE id = :plateId")
+    suspend fun updateIsActive(plateId: String, isActive: Boolean)
+
     @Insert
-    fun insertPlates(plates: List<Plate>)
+    suspend fun insertPlates(plates: List<Plate>)
 
 }

@@ -161,6 +161,11 @@ sealed class LeafScreen(
         override val root: TabRootScreen = TabRootScreen.MoreTab
     ) : LeafScreen(route, root)
 
+    data class Plates(
+        override val route: String = "plates",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) : LeafScreen(route, root)
+
     data class Personalization(
         override val route: String = "personalization",
         override val root: TabRootScreen = TabRootScreen.MoreTab

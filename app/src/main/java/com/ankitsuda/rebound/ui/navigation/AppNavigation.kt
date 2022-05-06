@@ -29,6 +29,7 @@ import com.ankitsuda.rebound.ui.exercise_details.ExerciseDetailScreen
 import com.ankitsuda.rebound.ui.exercises.ExercisesScreen
 import com.ankitsuda.rebound.ui.calendar.CalendarScreen
 import com.ankitsuda.rebound.ui.create_exercise.CreateExerciseScreen
+import com.ankitsuda.rebound.ui.customizeplates.CustomizePlatesScreen
 import com.ankitsuda.rebound.ui.history.HistoryScreen
 import com.ankitsuda.rebound.ui.home.HomeScreen
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboardDemoScreen
@@ -182,6 +183,7 @@ private fun NavGraphBuilder.addMoreRoot(navController: NavController) {
         addMeasureScreen(navController)
         addPartMeasurementsScreen(navController)
         addSettingsScreen(navController)
+        addCustomizePlatesScreen(navController)
         addPersonalizationScreen(navController)
         addMainColorsPersonalizationScreen(navController)
         addShapesPersonalizationScreen(navController)
@@ -274,6 +276,12 @@ private fun NavGraphBuilder.addPartMeasurementsScreen(navController: NavControll
 private fun NavGraphBuilder.addSettingsScreen(navController: NavController) {
     composableScreen(LeafScreen.Settings()) {
         SettingsScreen(navController)
+    }
+}
+
+private fun NavGraphBuilder.addCustomizePlatesScreen(navController: NavController) {
+    composableScreen(LeafScreen.Plates()) {
+        CustomizePlatesScreen()
     }
 }
 

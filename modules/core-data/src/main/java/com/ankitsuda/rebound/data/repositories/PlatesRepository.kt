@@ -22,4 +22,7 @@ class PlatesRepository @Inject constructor(private val platesDao: PlatesDao) {
 
     fun getPlates() = platesDao.getPlates()
 
+    suspend fun updateIsActive(plateId: String, isActive: Boolean) {
+        platesDao.updateIsActive(plateId, isActive)
+    }
 }
