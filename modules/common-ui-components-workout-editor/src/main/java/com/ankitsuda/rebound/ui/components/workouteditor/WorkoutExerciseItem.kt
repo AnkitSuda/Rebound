@@ -15,9 +15,7 @@
 package com.ankitsuda.rebound.ui.components.workouteditor
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.lighterOrDarkerColor
+import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.entities.Exercise
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
@@ -292,13 +291,25 @@ private fun LazyItemScope.SetItem(
         mutableStateOf(exerciseLogEntry)
     }
 
+    val completionAnimDuration = 200
+    val completionAnimSpecFloat =
+        tween<Float>(
+            durationMillis = completionAnimDuration,
+            easing = CubicBezierEasing(0.22f, 1f, 0.36f, 1f)
+        )
+    val completionAnimSpecColor =
+        tween<Color>(
+            durationMillis = completionAnimDuration,
+            easing = LinearEasing//CubicBezierEasing(0.5f, 1f, 0.89f, 1f)
+        )
+
     val bgColor by animateColorAsState(
         targetValue = if (mLogEntry.completed) ReboundTheme.colors.primary else ReboundTheme.colors.background,
-        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+        animationSpec = completionAnimSpecColor
     )
     val contentColor by animateColorAsState(
         targetValue = if (mLogEntry.completed) ReboundTheme.colors.onPrimary else ReboundTheme.colors.onBackground,
-        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+        animationSpec = completionAnimSpecColor
     )
 
     var isScaleAnimRunning by rememberSaveable {
@@ -307,7 +318,7 @@ private fun LazyItemScope.SetItem(
 
     val scale by animateFloatAsState(
         targetValue = if (isScaleAnimRunning) 1.05f else 1f,
-//        animationSpec = tween(durationMillis = 300),
+        animationSpec = completionAnimSpecFloat,
         finishedListener = {
             isScaleAnimRunning = false
         }
@@ -459,9 +470,9 @@ private fun SetItemLayout(
 
         if (exercise.category == ExerciseCategory.DISTANCE_AND_TIME || exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
             val fieldValue = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
-                (exerciseLogEntry.weight ?: "").toString()
+                exerciseLogEntry.weight?.toReadableString() ?: ""
             } else {
-                (exerciseLogEntry.distance ?: "").toString()
+                exerciseLogEntry.distance?.toReadableString() ?: ""
             }
 
             val mOnValueChange: (String) -> Unit = {
@@ -510,12 +521,12 @@ private fun SetItemLayout(
             if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS || exercise.category == ExerciseCategory.REPS) {
                 val newValue =
                     (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
-                        .toInt())
+                        .toIntOrNull())
                 onRepsChange(exerciseLogEntry, newValue)
             } else {
                 val newValue =
                     (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
-                        .toLong())
+                        .toLongOrNull())
                 onTimeChange(exerciseLogEntry, newValue)
             }
         }

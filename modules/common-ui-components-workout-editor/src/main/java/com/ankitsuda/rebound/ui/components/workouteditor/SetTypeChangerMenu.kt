@@ -47,7 +47,6 @@ fun SetTypeChangerMenu(
         modifier = modifier,
         expanded = expanded,
         onDismissRequest = onDismissRequest,
-        properties = PopupProperties(usePlatformDefaultWidth = false)
     ) {
         for (type in allTypes) {
             with(type) {
