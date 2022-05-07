@@ -193,7 +193,7 @@ object DataGenerator {
     fun getPlates(): List<Plate> = listOf(
         Plate(
             id = generateId(),
-            weight = 25F,
+            weight = 25.0,
             isActive = true,
             height = 1F,
             width = 1F,
@@ -202,7 +202,7 @@ object DataGenerator {
         ),
         Plate(
             id = generateId(),
-            weight = 20F,
+            weight = 20.0,
             isActive = true,
             height = 1F,
             width = 0.8500000238418579F,
@@ -211,7 +211,7 @@ object DataGenerator {
         ),
         Plate(
             id = generateId(),
-            weight = 15F,
+            weight = 15.0,
             isActive = true,
             height = 1F,
             width = 0.699999988079071F,
@@ -220,7 +220,7 @@ object DataGenerator {
         ),
         Plate(
             id = generateId(),
-            weight = 10F,
+            weight = 10.0,
             isActive = true,
             height = 1F,
             width = 0.550000011920929F,
@@ -229,7 +229,7 @@ object DataGenerator {
         ),
         Plate(
             id = generateId(),
-            weight = 5F,
+            weight = 5.0,
             isActive = true,
             height = 0.6000000238418579F,
             width = 0.6000000238418579F,
@@ -238,7 +238,7 @@ object DataGenerator {
         ),
         Plate(
             id = generateId(),
-            weight = 2.5F,
+            weight = 2.5,
             isActive = true,
             height = 0.550000011920929F,
             width = 0.5F,
@@ -247,7 +247,7 @@ object DataGenerator {
         ),
         Plate(
             id = generateId(),
-            weight = 2F,
+            weight = 2.0,
             isActive = true,
             height = 0.5F,
             width = 0.5F,
@@ -256,7 +256,7 @@ object DataGenerator {
         ),
         Plate(
             id = generateId(),
-            weight = 1.25F,
+            weight = 1.25,
             isActive = true,
             height = 0.4000000059604645F,
             width = 0.5F,
@@ -265,7 +265,7 @@ object DataGenerator {
         ),
         Plate(
             id = generateId(),
-            weight = 1F,
+            weight = 1.0,
             isActive = true,
             height = 0.30000001192092896F,
             width = 0.5F,
@@ -274,7 +274,7 @@ object DataGenerator {
         ),
         Plate(
             id = generateId(),
-            weight = 0.5F,
+            weight = 0.5,
             isActive = true,
             height = 0.20000000298023224F,
             width = 0.5F,

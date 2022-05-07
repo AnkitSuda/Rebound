@@ -12,23 +12,23 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.rebound.ui.components.workouteditor
+package com.ankitsuda.rebound.ui.customizeplates.components
 
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-
 @Composable
-fun ExercisePopupMenu(
+internal fun PlateMenuComponent(
     modifier: Modifier = Modifier,
     expanded: Boolean,
     onDismissRequest: () -> Unit,
-    onDeleteExercise: () -> Unit,
-    onAddWarmUpSets: () -> Unit,
+    onEditPlate: () -> Unit,
+    onDeletePlate: () -> Unit,
 ) {
+
     DropdownMenu(
         modifier = modifier,
         expanded = expanded,
@@ -36,15 +36,15 @@ fun ExercisePopupMenu(
     ) {
         DropdownMenuItem(onClick = {
             onDismissRequest()
-            onAddWarmUpSets()
+            onEditPlate()
         }) {
-            Text("Warm up sets")
+            Text("Edit")
         }
         DropdownMenuItem(onClick = {
             onDismissRequest()
-            onDeleteExercise()
+            onDeletePlate()
         }) {
-            Text("Delete exercise")
+            Text("Delete")
         }
     }
 }

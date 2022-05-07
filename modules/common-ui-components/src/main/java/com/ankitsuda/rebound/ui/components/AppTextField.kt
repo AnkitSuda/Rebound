@@ -32,7 +32,8 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 fun AppTextField(
     modifier: Modifier = Modifier,
     value: String,
-    placeholderValue: String,
+    labelValue: String? = null,
+    placeholderValue: String? = null,
     backgroundColor: Color = ReboundTheme.colors.background.lighterOrDarkerColor(0.1f),
     singleLine: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -56,7 +57,16 @@ fun AppTextField(
         keyboardActions = keyboardActions,
         keyboardOptions = keyboardOptions,
         shape = MaterialTheme.shapes.medium,
-        placeholder = { Text(text = placeholderValue) }
+        label = if (labelValue != null) {
+            { Text(text = labelValue) }
+        } else {
+            null
+        },
+        placeholder = if (placeholderValue != null) {
+            { Text(text = placeholderValue) }
+        } else {
+            null
+        }
     )
 
 }

@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.domain.entities.Plate
@@ -50,6 +51,9 @@ fun CustomizePlatesScreen(
         plates = plates,
         onUpdateIsActive = { id, isActive ->
             viewModel.updateIsActive(id, isActive)
+        },
+        onDeletePlate = {
+            viewModel.deletePlate(it)
         }
     )
 }
@@ -58,7 +62,8 @@ fun CustomizePlatesScreen(
 private fun CustomizePlatesScreenLayout(
     navigator: Navigator,
     plates: List<Plate>,
-    onUpdateIsActive: (id: String, isActive: Boolean) -> Unit
+    onUpdateIsActive: (id: String, isActive: Boolean) -> Unit,
+    onDeletePlate: (id: String) -> Unit,
 ) {
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
@@ -80,7 +85,7 @@ private fun CustomizePlatesScreenLayout(
                         icon = Icons.Outlined.Add,
                         title = "Add plate",
                         onClick = {
-
+                            navigator.navigate(LeafScreen.PlateEdit.createRoute())
                         }
                     )
                 })
@@ -97,6 +102,12 @@ private fun CustomizePlatesScreenLayout(
                     plate = it,
                     onUpdateIsActive = { newIsActive ->
                         onUpdateIsActive(it.id, newIsActive)
+                    },
+                    onEditPlate = {
+                        navigator.navigate(LeafScreen.PlateEdit.createRoute(it.id))
+                    },
+                    onDeletePlate = {
+                        onDeletePlate(it.id)
                     }
                 )
             }

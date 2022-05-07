@@ -30,6 +30,7 @@ import com.ankitsuda.rebound.ui.exercises.ExercisesScreen
 import com.ankitsuda.rebound.ui.calendar.CalendarScreen
 import com.ankitsuda.rebound.ui.create_exercise.CreateExerciseScreen
 import com.ankitsuda.rebound.ui.customizeplates.CustomizePlatesScreen
+import com.ankitsuda.rebound.ui.customizeplates.edit.PlateEditBottomSheet
 import com.ankitsuda.rebound.ui.history.HistoryScreen
 import com.ankitsuda.rebound.ui.home.HomeScreen
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboardDemoScreen
@@ -196,6 +197,7 @@ private fun NavGraphBuilder.addMoreRoot(navController: NavController) {
         addReboundSetKeyboardDemo(navController)
 
         addAddPartMeasurementBottomSheet(navController)
+        addPlateEditBottomSheet(navController)
     }
 }
 
@@ -360,6 +362,12 @@ private fun NavGraphBuilder.addExercisesBottomSheet(navController: NavController
 private fun NavGraphBuilder.addAddPartMeasurementBottomSheet(navController: NavController) {
     bottomSheetScreen(LeafScreen.AddPartMeasurement()) {
         AddPartMeasurementBottomSheet(navController)
+    }
+}
+
+private fun NavGraphBuilder.addPlateEditBottomSheet(navController: NavController) {
+    bottomSheetScreen(LeafScreen.PlateEdit()) {
+        PlateEditBottomSheet()
     }
 }
 

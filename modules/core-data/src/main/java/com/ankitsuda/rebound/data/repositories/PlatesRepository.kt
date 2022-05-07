@@ -16,13 +16,24 @@ package com.ankitsuda.rebound.data.repositories
 
 import com.ankitsuda.rebound.data.db.daos.MusclesDao
 import com.ankitsuda.rebound.data.db.daos.PlatesDao
+import com.ankitsuda.rebound.domain.entities.Plate
 import javax.inject.Inject
 
 class PlatesRepository @Inject constructor(private val platesDao: PlatesDao) {
 
     fun getPlates() = platesDao.getPlates()
 
+    fun getActivePlates() = platesDao.getActivePlates()
+
+    fun getPlate(plateId: String) = platesDao.getPlate(plateId)
+
+    suspend fun upsertPlate(plate: Plate) = platesDao.insertPlate(plate)
+
     suspend fun updateIsActive(plateId: String, isActive: Boolean) {
         platesDao.updateIsActive(plateId, isActive)
+    }
+
+    suspend fun deletePlate(plateId: String) {
+        platesDao.deletePlate(plateId)
     }
 }

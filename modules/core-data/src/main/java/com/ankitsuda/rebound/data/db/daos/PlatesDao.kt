@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.data.db.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ankitsuda.rebound.domain.entities.Muscle
 import com.ankitsuda.rebound.domain.entities.Plate
@@ -27,7 +28,7 @@ interface PlatesDao {
     @Query("SELECT * FROM plates WHERE id = :id")
     fun getPlate(id: String): Flow<Plate>
 
-    @Query("SELECT * FROM plates")
+    @Query("SELECT * FROM plates ORDER BY weight")
     fun getPlates(): Flow<List<Plate>>
 
     @Query("SELECT * FROM plates WHERE is_active = 1")
@@ -39,4 +40,10 @@ interface PlatesDao {
     @Insert
     suspend fun insertPlates(plates: List<Plate>)
 
+    @Query("DELETE FROM plates WHERE id = :plateId")
+    suspend fun deletePlate(plateId: String)
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPlate(plate: Plate)
 }

@@ -28,15 +28,22 @@ import androidx.compose.ui.unit.dp
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
 internal fun PlateListItemComponent(
     modifier: Modifier = Modifier.fillMaxWidth(),
     plate: Plate,
-    onUpdateIsActive: (Boolean) -> Unit
+    onUpdateIsActive: (Boolean) -> Unit,
+    onDeletePlate: () -> Unit,
+    onEditPlate: () -> Unit
 ) {
     var isActive by remember(plate.isActive) {
         mutableStateOf(plate.isActive ?: false)
+    }
+
+    var menuExpanded by remember {
+        mutableStateOf(false)
     }
 
     fun updateIsActive(active: Boolean) {
@@ -54,6 +61,7 @@ internal fun PlateListItemComponent(
         ) {
             Text(
                 text = "${plate.weight?.toReadableString()} kg",
+                color = ReboundTheme.colors.onBackground
             )
             Spacer(modifier = Modifier.weight(1f))
             Switch(
@@ -63,9 +71,28 @@ internal fun PlateListItemComponent(
                 }
             )
             RSpacer(space = 4.dp)
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = "More")
+            IconButton(onClick = {
+                menuExpanded = true
+            }) {
+                Icon(
+                    imageVector = Icons.Outlined.MoreVert,
+                    contentDescription = "More",
+                    tint = ReboundTheme.colors.onBackground
+                )
+
+                if (menuExpanded) {
+                    PlateMenuComponent(
+                        expanded = menuExpanded,
+                        onDismissRequest = {
+                            menuExpanded = false
+                        },
+                        onEditPlate = onEditPlate,
+                        onDeletePlate = onDeletePlate
+                    )
+                }
+
             }
         }
+
     }
 }

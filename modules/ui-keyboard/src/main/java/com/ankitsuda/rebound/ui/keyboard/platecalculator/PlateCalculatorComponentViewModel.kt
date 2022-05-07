@@ -39,14 +39,18 @@ class PlateCalculatorComponentViewModel @Inject constructor(
     val remainingWeight = _remainingWeight.asStateFlow()
 
     private var platesJob: Job? = null
+    private var lastWeight: Double? = null
 
     private val _allPlates = arrayListOf<Plate>()
 
     init {
         viewModelScope.launch {
-            platesRepository.getPlates().collectLatest {
+            platesRepository.getActivePlates().collectLatest {
                 _allPlates.clear()
                 _allPlates.addAll(it)
+                if (lastWeight != null) {
+                    refreshPlates(lastWeight!!)
+                }
             }
         }
     }
@@ -55,12 +59,12 @@ class PlateCalculatorComponentViewModel @Inject constructor(
         platesJob?.cancel()
         platesJob = viewModelScope.launch {
             if (_allPlates.isEmpty()) {
-                val availablePlates = platesRepository.getPlates().first()
+                val availablePlates = platesRepository.getActivePlates().first()
                 _allPlates.clear()
                 _allPlates.addAll(availablePlates)
             }
             val platesNeeded = calculatePlates(newWeight, _allPlates)
-            val sumOfPlates = platesNeeded.sumOf { it.weight?.toDouble() ?: 0.toDouble() }.toFloat()
+            val sumOfPlates = platesNeeded.sumOf { it.weight ?: 0.0 }
             _plates.value = platesNeeded
             _remainingWeight.value = try {
                 newWeight - sumOfPlates * 2
@@ -82,7 +86,7 @@ class PlateCalculatorComponentViewModel @Inject constructor(
             // Null limitation == infinite
             if (currentWeight < targetWeight) {
                 // The weight we're testing to see if it will fit
-                var testWeight = plate.weight ?: 0F
+                var testWeight = plate.weight ?: 0.0
 
                 // Check if we can add this weight to the bar
                 if (testWeight <= targetWeight - currentWeight) {

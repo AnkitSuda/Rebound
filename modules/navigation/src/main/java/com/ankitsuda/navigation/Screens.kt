@@ -40,6 +40,7 @@ const val EXERCISE_ID_KEY = "exercise_id"
 const val WORKOUT_TEMPLATE_ID_KEY = "workout_template_id"
 const val PART_ID_KEY = "part_id"
 const val LOG_ID_KEY = "log_id"
+const val PLATE_ID_KEY = "plate_id"
 
 interface Screen {
     val route: String
@@ -166,6 +167,33 @@ sealed class LeafScreen(
         override val root: TabRootScreen = TabRootScreen.MoreTab
     ) : LeafScreen(route, root)
 
+    data class PlateEdit(
+        override val route: String = "plates/edit?${PLATE_ID_KEY}={${PLATE_ID_KEY}}",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) : LeafScreen(
+        route = route,
+        root = root,
+        arguments = listOf(
+            navArgument(PLATE_ID_KEY) {
+                type = NavType.StringType
+                nullable = true
+            },
+        ),
+    ) {
+        companion object {
+            fun createRoute(
+                plateId: String? = null,
+                root: TabRootScreen = TabRootScreen.MoreTab
+            ): String {
+                var str = "${root.route}/plates/edit"
+                plateId?.let {
+                    str += "?${PLATE_ID_KEY}=$it"
+                }
+                return str;
+            }
+        }
+    }
+
     data class Personalization(
         override val route: String = "personalization",
         override val root: TabRootScreen = TabRootScreen.MoreTab
@@ -219,7 +247,9 @@ sealed class LeafScreen(
     data class ReboundSetKeyboardDemo(override val route: String = "demo/rebound_set_keyboard_demo_screen") :
         LeafScreen(route)
 
-    data class CreateExercise(override val route: String = "create_exercise") : LeafScreen(route)
+    data class CreateExercise(override val route: String = "create_exercise") :
+        LeafScreen(route)
+
     data class AddPartMeasurement(override val route: String = "add_part_measurement?${PART_ID_KEY}={${PART_ID_KEY}}&${LOG_ID_KEY}={${LOG_ID_KEY}}") :
         LeafScreen(
             route = route,
@@ -316,7 +346,10 @@ sealed class LeafScreen(
             )
         ) {
         companion object {
-            fun createRoute(exerciseId: String, root: TabRootScreen = TabRootScreen.ExercisesTab) =
+            fun createRoute(
+                exerciseId: String,
+                root: TabRootScreen = TabRootScreen.ExercisesTab
+            ) =
                 "${root.route}/exercises/$exerciseId"
         }
     }
@@ -335,7 +368,10 @@ sealed class LeafScreen(
             ),
         ) {
         companion object {
-            fun createRoute(templateId: String, root: TabRootScreen = TabRootScreen.WorkoutTab) =
+            fun createRoute(
+                templateId: String,
+                root: TabRootScreen = TabRootScreen.WorkoutTab
+            ) =
                 "${root.route}/workout_template/$templateId/preview"
         }
     }

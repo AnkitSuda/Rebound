@@ -28,7 +28,7 @@ data class Plate(
     val id: String,
 
     @ColumnInfo(name = "weight")
-    var weight: Float? = null,
+    var weight: Double? = null,
     @ColumnInfo(name = "weight_unit")
     var weightUnit: String? = null,
 

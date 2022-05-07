@@ -34,4 +34,10 @@ class CustomizePlatesScreenViewModel @Inject constructor(
             platesRepository.updateIsActive(plateId, isActive)
         }
     }
+
+    fun deletePlate(plateId: String) {
+        viewModelScope.launch {
+            platesRepository.deletePlate(plateId)
+        }
+    }
 }

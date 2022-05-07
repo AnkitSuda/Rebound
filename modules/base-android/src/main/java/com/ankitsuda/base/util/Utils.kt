@@ -25,3 +25,4 @@ const val NONE_WORKOUT_ID = "none"
 
 fun Float.toReadableString() = DecimalFormat("#.###").format(this)
 fun Double.toReadableString() = DecimalFormat("#.###").format(this)
+fun Float.toStringP15() = DecimalFormat("#.###############").format(this)
