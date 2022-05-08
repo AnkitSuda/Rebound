@@ -38,6 +38,7 @@ import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
+import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.components.AppTextField
@@ -68,6 +69,9 @@ fun WorkoutEditorComponent(
     onDeleteLogEntry: (ExerciseLogEntry) -> Unit,
     onUpdateLogEntry: (ExerciseLogEntry) -> Unit,
     onUpdateWarmUpSets: (LogEntriesWithExerciseJunction, List<ExerciseLogEntry>) -> Unit,
+    onAddEmptyNote: (LogEntriesWithExerciseJunction) -> Unit,
+    onDeleteNote: (ExerciseSetGroupNote) -> Unit,
+    onChangeNote: (ExerciseSetGroupNote) -> Unit,
     layoutAtTop: @Composable LazyItemScope.() -> Unit = {}
 ) {
     // Observes results when ExercisesScreen changes value of arg
@@ -153,7 +157,12 @@ fun WorkoutEditorComponent(
                 },
                 onUpdateWarmUpSets = {
                     onUpdateWarmUpSets(logEntriesWithJunctionItem, it.toExerciseLogEntries())
-                }
+                },
+                onAddEmptyNote = {
+                    onAddEmptyNote(logEntriesWithJunctionItem)
+                },
+                onChangeNote = onChangeNote,
+                onDeleteNote = onDeleteNote
             )
         }
 

@@ -14,26 +14,25 @@
 
 package com.ankitsuda.rebound.domain.entities
 
-import androidx.room.Embedded
-import androidx.room.Junction
-import androidx.room.Relation
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.time.LocalDateTime
 
-data class LogEntriesWithExerciseJunction(
-    @Embedded val junction: ExerciseWorkoutJunction,
+@Entity(tableName = "exercise_set_group_notes")
+data class ExerciseSetGroupNote(
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    val id: String,
 
-    @Relation(
-        parentColumn = "exercise_id",
-        entityColumn = "exercise_id"
-    )
-    val exercise: Exercise,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "junction_id",
-    )
-    var logEntries: List<ExerciseLogEntry>,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "exercise_workout_junction_id",
-    )
-    var notes: List<ExerciseSetGroupNote>? = null
+    @ColumnInfo(name = "note")
+    var note: String? = null,
+
+    @ColumnInfo(name = "exercise_workout_junction_id")
+    var exerciseWorkoutJunctionId: String? = null,
+
+    @ColumnInfo(name = "created_at")
+    var createdAt: LocalDateTime? = null,
+    @ColumnInfo(name = "update_at")
+    var updatedAt: LocalDateTime? = null,
 )

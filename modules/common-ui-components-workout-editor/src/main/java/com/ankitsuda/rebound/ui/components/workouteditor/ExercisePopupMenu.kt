@@ -28,12 +28,19 @@ fun ExercisePopupMenu(
     onDismissRequest: () -> Unit,
     onDeleteExercise: () -> Unit,
     onAddWarmUpSets: () -> Unit,
+    onAddNote: () -> Unit,
 ) {
     DropdownMenu(
         modifier = modifier,
         expanded = expanded,
         onDismissRequest = onDismissRequest
     ) {
+        DropdownMenuItem(onClick = {
+            onDismissRequest()
+            onAddNote()
+        }) {
+            Text("Add note")
+        }
         DropdownMenuItem(onClick = {
             onDismissRequest()
             onAddWarmUpSets()

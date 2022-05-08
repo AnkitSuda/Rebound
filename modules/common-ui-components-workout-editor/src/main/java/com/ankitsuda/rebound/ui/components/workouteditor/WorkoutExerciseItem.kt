@@ -44,6 +44,7 @@ import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
+import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpCalculatorDialog
@@ -65,11 +66,15 @@ fun LazyListScope.workoutExerciseItemAlt(
     onValuesUpdated: (updatedEntry: ExerciseLogEntry) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
     onAddSet: () -> Unit,
-    onDeleteExercise: () -> Unit
+    onDeleteExercise: () -> Unit,
+    onAddEmptyNote: () -> Unit,
+    onDeleteNote: (ExerciseSetGroupNote) -> Unit,
+    onChangeNote: (ExerciseSetGroupNote) -> Unit
 ) {
 
     val exercise = logEntriesWithJunction.exercise
     val logEntries = logEntriesWithJunction.logEntries
+    val notes = logEntriesWithJunction.notes ?: emptyList()
     val sortedEntries = logEntries.sortedWith(ExerciseLogEntryComparator)
 
     // Exercise info
@@ -145,11 +150,21 @@ fun LazyListScope.workoutExerciseItemAlt(
                     onDeleteExercise = onDeleteExercise,
                     onAddWarmUpSets = {
                         warmUpSetsDialogVisible = true
-                    }
+                    },
+                    onAddNote = onAddEmptyNote
                 )
             }
 
         }
+    }
+
+    items(items = notes, key = { it.id }) {
+        SetGroupNoteComponent(
+            note = it,
+            onDeleteNote = { onDeleteNote(it) },
+            onChangeValue = { newValue ->
+                onChangeNote(it.copy(note = newValue))
+            })
     }
 
     // Titles

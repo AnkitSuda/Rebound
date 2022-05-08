@@ -89,6 +89,16 @@ fun WorkoutPanel1(
             addNavigationBarPadding = true,
             cancelWorkoutButtonVisible = true,
             logEntriesWithJunction = logEntriesWithJunction,
+            layoutAtTop = {
+                Column {
+                    WorkoutQuickInfo(
+                        currentDurationStr = currentDurationStr,
+                        currentVolumeStr = currentVolumeStr,
+                        currentSetsStr = currentSetsStr
+                    )
+                    Divider()
+                }
+            },
             onChangeWorkoutName = {
                 viewModel.updateWorkoutName(it)
             },
@@ -119,16 +129,9 @@ fun WorkoutPanel1(
             onUpdateWarmUpSets = { j, s ->
                 viewModel.updateWarmUpSets(j, s)
             },
-            layoutAtTop = {
-                Column {
-                    WorkoutQuickInfo(
-                        currentDurationStr = currentDurationStr,
-                        currentVolumeStr = currentVolumeStr,
-                        currentSetsStr = currentSetsStr
-                    )
-                    Divider()
-                }
-            }
+            onAddEmptyNote = viewModel::addEmptyNote,
+            onChangeNote = viewModel::changeNote,
+            onDeleteNote = viewModel::deleteNote
         )
     }
 }

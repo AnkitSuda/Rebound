@@ -37,7 +37,8 @@ import java.util.concurrent.Executors
         Workout::class,
         WorkoutTemplate::class,
         Plate::class,
-        ThemePreset::class
+        ThemePreset::class,
+        ExerciseSetGroupNote::class,
     ],
     version = 1,
     exportSchema = true

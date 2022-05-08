@@ -19,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.base.utils.extensions.toArrayList
+import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toReadableDurationStyle2
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.ExerciseCategory
@@ -261,6 +262,32 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     fun updateWarmUpSets(junction: LogEntriesWithExerciseJunction, sets: List<ExerciseLogEntry>) {
         viewModelScope.launch {
             workoutsRepository.updateWarmUpSets(junction, sets)
+        }
+    }
+
+    fun addEmptyNote(junction: LogEntriesWithExerciseJunction) {
+        viewModelScope.launch {
+            val time = LocalDateTime.now()
+            workoutsRepository.addExerciseSetGroupNote(
+                ExerciseSetGroupNote(
+                    id = generateId(),
+                    exerciseWorkoutJunctionId = junction.junction.id,
+                    createdAt = time,
+                    updatedAt = time
+                )
+            )
+        }
+    }
+
+    fun deleteNote(note: ExerciseSetGroupNote) {
+        viewModelScope.launch {
+            workoutsRepository.deleteExerciseSetGroupNote(note.id)
+        }
+    }
+
+    fun changeNote(note: ExerciseSetGroupNote) {
+        viewModelScope.launch {
+            workoutsRepository.updateExerciseSetGroupNote(note)
         }
     }
 }

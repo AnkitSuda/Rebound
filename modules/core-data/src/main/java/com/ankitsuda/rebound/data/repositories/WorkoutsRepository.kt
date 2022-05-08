@@ -399,4 +399,16 @@ class WorkoutsRepository @Inject constructor(
     ) {
         workoutsDao.updateWarmUpSets(junction, sets)
     }
+
+    suspend fun addExerciseSetGroupNote(exerciseSetGroupNote: ExerciseSetGroupNote) {
+        workoutsDao.insertExerciseSetGroupNote(exerciseSetGroupNote)
+    }
+
+    suspend fun deleteExerciseSetGroupNote(exerciseSetGroupNoteId: String) {
+        workoutsDao.deleteExerciseSetGroupNote(exerciseSetGroupNoteId)
+    }
+
+    suspend fun updateExerciseSetGroupNote(exerciseSetGroupNote: ExerciseSetGroupNote) {
+        workoutsDao.updateExerciseSetGroupNote(exerciseSetGroupNote)
+    }
 }

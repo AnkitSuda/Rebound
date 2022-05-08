@@ -109,30 +109,30 @@ fun WorkoutPanel2(
         }
 
         for (logEntriesWithJunctionItem in logEntriesWithJunction) {
-            workoutExerciseItemAlt(
-                logEntriesWithJunction = logEntriesWithJunctionItem,
-                onUpdateWarmUpSets = {},
-                onValuesUpdated = { updatedEntry ->
-                    viewModel.updateLogEntry(updatedEntry)
-                },
-                onSwipeDelete = { entryToDelete ->
-                    Timber.d("Swiped entry $entryToDelete")
-                    viewModel.deleteLogEntry(entryToDelete)
-                },
-                onAddSet = {
-                    viewModel.addEmptySetToExercise(
-                        try {
-                            logEntriesWithJunctionItem.logEntries[logEntriesWithJunctionItem.logEntries.size - 1].setNumber!! + 1
-                        } catch (e: Exception) {
-                            1
-                        },
-                        logEntriesWithJunctionItem.junction
-                    )
-                },
-                onDeleteExercise = {
-                    viewModel.deleteExerciseFromWorkout(logEntriesWithJunctionItem)
-                }
-            )
+//            workoutExerciseItemAlt(
+//                logEntriesWithJunction = logEntriesWithJunctionItem,
+//                onUpdateWarmUpSets = {},
+//                onValuesUpdated = { updatedEntry ->
+//                    viewModel.updateLogEntry(updatedEntry)
+//                },
+//                onSwipeDelete = { entryToDelete ->
+//                    Timber.d("Swiped entry $entryToDelete")
+//                    viewModel.deleteLogEntry(entryToDelete)
+//                },
+//                onAddSet = {
+//                    viewModel.addEmptySetToExercise(
+//                        try {
+//                            logEntriesWithJunctionItem.logEntries[logEntriesWithJunctionItem.logEntries.size - 1].setNumber!! + 1
+//                        } catch (e: Exception) {
+//                            1
+//                        },
+//                        logEntriesWithJunctionItem.junction
+//                    )
+//                },
+//                onDeleteExercise = {
+//                    viewModel.deleteExerciseFromWorkout(logEntriesWithJunctionItem)
+//                }
+//            )
         }
 
         item {

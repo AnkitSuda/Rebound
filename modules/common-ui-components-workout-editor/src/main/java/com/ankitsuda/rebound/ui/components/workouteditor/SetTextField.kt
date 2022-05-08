@@ -15,10 +15,7 @@
 package com.ankitsuda.rebound.ui.components.workouteditor
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.lighterOrDarkerColor
@@ -43,9 +41,16 @@ import com.ankitsuda.base.util.lighterOrDarkerColor
 @Composable
 fun RowScope.SetTextField(
     value: String,
-    onValueChange: (String) -> Unit,
     contentColor: Color,
-    bgColor: Color
+    bgColor: Color,
+    minHeight: Dp = 32.dp,
+    singleLine: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Number,
+        imeAction = ImeAction.Done
+    ),
+    textAlign: TextAlign = TextAlign.Center,
+    onValueChange: (String) -> Unit
 ) {
     var mValue by rememberSaveable {
         mutableStateOf(value)
@@ -59,19 +64,23 @@ fun RowScope.SetTextField(
     BasicTextField(
         modifier = Modifier
 //            .width(64.dp)
-            .height(32.dp)
-            .padding(start = 8.dp, end = 8.dp)
+            .defaultMinSize(minHeight = minHeight)
             .weight(1.25f)
             .clip(RoundedCornerShape(12.dp))
-            .background(bgColor.lighterOrDarkerColor(0.10f)),
+            .background(bgColor.lighterOrDarkerColor(0.10f))
+            .padding(start = 8.dp, end = 8.dp),
         textStyle = LocalTextStyle.current.copy(
-            textAlign = TextAlign.Center,
+            textAlign = textAlign,
             fontSize = 14.sp,
             color = contentColor
         ),
         decorationBox = { innerTextField ->
             Box(
-                contentAlignment = Alignment.Center
+                contentAlignment = if (textAlign == TextAlign.Center) {
+                    Alignment.Center
+                } else {
+                    Alignment.CenterStart
+                }
             ) {
                 innerTextField()
             }
@@ -80,10 +89,7 @@ fun RowScope.SetTextField(
         onValueChange = {
             updateValue(it)
         },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done
-        ),
-        singleLine = true,
+        keyboardOptions = keyboardOptions,
+        singleLine = singleLine,
     )
 }

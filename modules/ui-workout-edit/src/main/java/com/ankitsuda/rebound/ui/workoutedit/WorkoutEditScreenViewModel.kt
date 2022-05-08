@@ -20,14 +20,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.utils.extensions.toArrayList
+import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toReadableDuration
 import com.ankitsuda.navigation.WORKOUT_ID_KEY
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
-import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
-import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
-import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
-import com.ankitsuda.rebound.domain.entities.Workout
+import com.ankitsuda.rebound.domain.entities.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -176,6 +174,33 @@ class WorkoutEditScreenViewModel @Inject constructor(
     fun updateWarmUpSets(junction: LogEntriesWithExerciseJunction, sets: List<ExerciseLogEntry>) {
         viewModelScope.launch {
             workoutsRepository.updateWarmUpSets(junction, sets)
+        }
+    }
+
+
+    fun addEmptyNote(junction: LogEntriesWithExerciseJunction) {
+        viewModelScope.launch {
+            val time = LocalDateTime.now()
+            workoutsRepository.addExerciseSetGroupNote(
+                ExerciseSetGroupNote(
+                    id = generateId(),
+                    exerciseWorkoutJunctionId = junction.junction.workoutId,
+                    createdAt = time,
+                    updatedAt = time
+                )
+            )
+        }
+    }
+
+    fun deleteNote(note: ExerciseSetGroupNote) {
+        viewModelScope.launch {
+            workoutsRepository.deleteExerciseSetGroupNote(note.id)
+        }
+    }
+
+    fun changeNote(note: ExerciseSetGroupNote) {
+        viewModelScope.launch {
+            workoutsRepository.updateExerciseSetGroupNote(note)
         }
     }
 }

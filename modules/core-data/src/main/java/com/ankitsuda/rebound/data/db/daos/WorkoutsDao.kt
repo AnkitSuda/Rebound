@@ -174,6 +174,14 @@ interface WorkoutsDao {
     @Query("SELECT completed_at - start_at as duration FROM workouts WHERE is_hidden = 0 AND in_progress = 0 ORDER BY duration DESC LIMIT 1")
     fun getLongestWorkoutDuration(): Flow<Long?>
 
+    @Insert
+    suspend fun insertExerciseSetGroupNote(exerciseSetGroupNote: ExerciseSetGroupNote)
+
+    @Query("DELETE FROM exercise_set_group_notes WHERE id = :exerciseSetGroupNoteId")
+    suspend fun deleteExerciseSetGroupNote(exerciseSetGroupNoteId: String)
+
+    @Update
+    suspend fun updateExerciseSetGroupNote(exerciseSetGroupNote: ExerciseSetGroupNote)
 
     @Transaction
     suspend fun updateWarmUpSets(

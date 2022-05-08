@@ -123,7 +123,10 @@ fun WorkoutEditScreen(
                 onCancelCurrentWorkout = {},
                 onUpdateWarmUpSets = { j, s ->
                     viewModel.updateWarmUpSets(j, s)
-                }
+                },
+                onAddEmptyNote = viewModel::addEmptyNote,
+                onChangeNote = viewModel::changeNote,
+                onDeleteNote = viewModel::deleteNote
             )
         }
     }
