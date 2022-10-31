@@ -90,7 +90,9 @@ fun WorkoutPanel1(
             cancelWorkoutButtonVisible = true,
             logEntriesWithJunction = logEntriesWithJunction,
             layoutAtTop = {
-                Column {
+                Column(
+                    modifier = Modifier.animateItemPlacement()
+                ) {
                     WorkoutQuickInfo(
                         currentDurationStr = currentDurationStr,
                         currentVolumeStr = currentVolumeStr,

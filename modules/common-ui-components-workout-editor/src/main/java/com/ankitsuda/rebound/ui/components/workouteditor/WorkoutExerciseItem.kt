@@ -123,7 +123,8 @@ fun LazyListScope.workoutExerciseItemAlt(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 8.dp),
+                .padding(start = 16.dp, end = 8.dp)
+                .animateItemPlacement(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -160,6 +161,7 @@ fun LazyListScope.workoutExerciseItemAlt(
 
     items(items = notes, key = { it.id }) {
         SetGroupNoteComponent(
+            modifier = Modifier.animateItemPlacement(),
             note = it,
             onDeleteNote = { onDeleteNote(it) },
             onChangeValue = { newValue ->
@@ -173,7 +175,8 @@ fun LazyListScope.workoutExerciseItemAlt(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp),
+                .padding(start = 8.dp, end = 8.dp)
+                .animateItemPlacement(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -250,9 +253,10 @@ fun LazyListScope.workoutExerciseItemAlt(
 
     val revisedSetsTexts = getRevisedSetNumbers()
 
-    items(items = sortedEntries, key = { "${it.entryId}_${it.setNumber}" }) { entry ->
-
-
+    items(items = sortedEntries, key = {
+//        "${it.entryId}_${it.setNumber}"
+        it.entryId
+    }) { entry ->
         SetItem(
             useReboundKeyboard = useReboundKeyboard,
             revisedSetText = revisedSetsTexts[sortedEntries.indexOf(entry)],
@@ -272,7 +276,8 @@ fun LazyListScope.workoutExerciseItemAlt(
         RButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                .animateItemPlacement(),
             elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = ReboundTheme.colors.background.lighterOrDarkerColor(0.05f),
@@ -387,7 +392,8 @@ private fun LazyItemScope.SetItem(
 
     SetSwipeWrapperComponent(
         modifier = Modifier
-            .scale(scale),
+            .scale(scale)
+            .animateItemPlacement(),
         bgColor = bgColor,
         onSwipeDelete = {
             onSwipeDelete(exerciseLogEntry)

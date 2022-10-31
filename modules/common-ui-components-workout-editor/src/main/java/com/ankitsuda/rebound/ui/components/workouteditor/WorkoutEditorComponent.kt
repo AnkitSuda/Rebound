@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.components.workouteditor
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,9 +23,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,7 +33,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.common.compose.SAFE_RS_KEYBOARD_HEIGHT
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
@@ -42,14 +42,12 @@ import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.components.AppTextField
-import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpSet
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.toExerciseLogEntries
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
-import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboard
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.insets.LocalWindowInsets
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun WorkoutEditorComponent(
     navController: NavController,
@@ -108,26 +106,33 @@ fun WorkoutEditorComponent(
         modifier = Modifier
             .fillMaxSize()
             .background(ReboundTheme.colors.background),
-        contentPadding = PaddingValues(bottom = SAFE_RS_KEYBOARD_HEIGHT + navigationBarHeight)
+        contentPadding = PaddingValues(
+            bottom =
+            SAFE_RS_KEYBOARD_HEIGHT + navigationBarHeight
+        )
     ) {
         item {
             layoutAtTop()
         }
         item {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .animateItemPlacement(),
+            ) {
                 AppTextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = workoutName ?: "",
                     onValueChange = { onChangeWorkoutName(it) },
-                    placeholderValue = "Workout name",
-                    modifier = Modifier.fillMaxWidth()
+                    placeholderValue = "Workout name"
                 )
                 AppTextField(
-                    value = workoutNote ?: "",
-                    onValueChange = { onChangeWorkoutNote(it) },
-                    placeholderValue = "Workout note",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
+                        .padding(top = 8.dp),
+                    value = workoutNote ?: "",
+                    onValueChange = { onChangeWorkoutNote(it) },
+                    placeholderValue = "Workout note"
                 )
             }
         }
@@ -170,7 +175,8 @@ fun WorkoutEditorComponent(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                    .animateItemPlacement(),
                 onClick = {
                     hideKeyboard()
                     navigator.navigate(LeafScreen.ExercisesBottomSheet().route)
@@ -191,7 +197,8 @@ fun WorkoutEditorComponent(
                 TextButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        .animateItemPlacement(),
                     onClick = {
                         hideKeyboard()
                         onCancelCurrentWorkout()
