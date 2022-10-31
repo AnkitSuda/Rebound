@@ -140,13 +140,13 @@ fun WorkoutScreen(
                 .background(MaterialTheme.colors.background),
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
-
             if (currentWorkout != null) {
                 item("current_workout_overview") {
                     AppCard(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp),
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
+                            .animateItemPlacement(),
                         backgroundColor = ReboundTheme.colors.primary,
                         onClick = {
                             expandPanel()
@@ -188,7 +188,9 @@ fun WorkoutScreen(
             }
 
             item(key = "plans_row") {
-                Column {
+                Column(
+                    modifier = Modifier.animateItemPlacement(),
+                ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
