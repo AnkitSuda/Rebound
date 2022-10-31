@@ -20,9 +20,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -144,7 +142,7 @@ fun WorkoutScreen(
         ) {
 
             if (currentWorkout != null) {
-                item {
+                item("current_workout_overview") {
                     AppCard(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -189,7 +187,7 @@ fun WorkoutScreen(
                 }
             }
 
-            item {
+            item(key = "plans_row") {
                 Column {
                     Row(
                         modifier = Modifier
@@ -232,9 +230,12 @@ fun WorkoutScreen(
                     }
                 }
             }
-            item {
+            item(key = "templates_header") {
 
-                Column() {
+                Column(
+                    modifier = Modifier
+                        .animateItemPlacement()
+                ) {
 
 
                     Row(
@@ -269,11 +270,12 @@ fun WorkoutScreen(
 
             if (archivedTemplates.isNotEmpty()) {
                 if (areArchivedTemplatesVisible) {
-                    item {
+                    item(key = "archived_templates_count_text") {
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 16.dp),
+                                .padding(bottom = 16.dp)
+                                .animateItemPlacement(),
                             text = "${archivedTemplates.size} archived template${if (archivedTemplates.size > 1) "s" else ""}",
                             textAlign = TextAlign.Center,
                             style = ReboundTheme.typography.caption,
@@ -286,10 +288,11 @@ fun WorkoutScreen(
                     }
                 }
 
-                item {
+                item(key = "archived_templates_visibility_button") {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .animateItemPlacement()
                             .clickable {
                                 areArchivedTemplatesVisible = !areArchivedTemplatesVisible
                             },
@@ -320,13 +323,18 @@ fun WorkoutScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun TemplateListItem(navigator: Navigator, templateWithWorkout: TemplateWithWorkout) {
+private fun LazyItemScope.TemplateListItem(
+    navigator: Navigator,
+    templateWithWorkout: TemplateWithWorkout
+) {
     with(templateWithWorkout) {
         TemplateItemCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .animateItemPlacement(),
             name = workout.name ?: template.id,
             totalExercises = exerciseWorkoutJunctions.size,
             onClick = {
