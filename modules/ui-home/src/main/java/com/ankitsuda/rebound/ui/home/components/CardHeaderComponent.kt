@@ -26,6 +26,9 @@ fun CardHeaderComponent(modifier: Modifier = Modifier, text: String) {
     Text(
         modifier = modifier,
         text = text,
-        style = ReboundTheme.typography.h6.copy(fontSize = 16.sp)
+        style = ReboundTheme.typography.h6.copy(
+            fontSize = 16.sp,
+            color = ReboundTheme.colors.onBackground
+        )
     )
 }
