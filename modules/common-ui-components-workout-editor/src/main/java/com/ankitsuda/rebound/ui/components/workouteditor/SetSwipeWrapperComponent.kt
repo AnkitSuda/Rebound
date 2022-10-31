@@ -15,14 +15,14 @@
 package com.ankitsuda.rebound.ui.components.workouteditor
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -44,24 +44,34 @@ internal fun SetSwipeWrapperComponent(
 ) {
     val coroutine = rememberCoroutineScope()
 
-    fun handleOnSwiped() {
-        coroutine.launch {
-            delay(125)
+    var deletingAnimStarted by remember() {
+        mutableStateOf(false);
+    }
+
+    val alphaAnim: Float by animateFloatAsState(
+        if (deletingAnimStarted) 0f else 1f,
+        animationSpec = tween(250),
+        finishedListener = {
             onSwipeDelete()
         }
+    )
+
+
+    fun startDeletingAnimation() {
+        deletingAnimStarted = true;
     }
 
     val dismissState = rememberDismissState(
         confirmStateChange = {
             if (it != DismissValue.Default) {
-                handleOnSwiped()
+//                handleOnSwiped()
+                startDeletingAnimation();
                 true
             } else {
                 false
             }
         }
     )
-
 
     SwipeToDismiss(
         modifier = modifier,
@@ -76,11 +86,11 @@ internal fun SetSwipeWrapperComponent(
         background = {
             SetItemBgLayout(
                 bgColor = bgColor,
-                dismissState = dismissState
+                dismissState = dismissState,
+                alpha = alphaAnim,
             )
         },
         dismissContent = {
-            Timber.d(dismissState.progress.toString());
             Row(
                 modifier = Modifier.alpha(
                     1f - (with(dismissState.progress) {
@@ -102,6 +112,7 @@ internal fun SetSwipeWrapperComponent(
 @Composable
 internal fun SetItemBgLayout(
     bgColor: Color,
+    alpha: Float,
     dismissState: DismissState,
 ) {
     val direction =
@@ -110,6 +121,7 @@ internal fun SetItemBgLayout(
     Box(
         Modifier
             .fillMaxSize()
+            .alpha(alpha)
             .background(
                 if (direction == DismissDirection.EndToStart) ReboundTheme.colors.error.copy(
                     alpha = 0.10f
