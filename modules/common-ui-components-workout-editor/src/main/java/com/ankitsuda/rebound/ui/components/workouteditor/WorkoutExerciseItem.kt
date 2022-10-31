@@ -38,21 +38,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toReadableString
-import com.ankitsuda.rebound.domain.entities.Exercise
-import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
-import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
+import com.ankitsuda.rebound.domain.entities.Exercise
+import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
+import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpCalculatorDialog
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpSet
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, right ->
     left.setNumber?.compareTo(right.setNumber ?: 0) ?: 0
@@ -78,7 +76,7 @@ fun LazyListScope.workoutExerciseItemAlt(
     val sortedEntries = logEntries.sortedWith(ExerciseLogEntryComparator)
 
     // Exercise info
-    item() {
+    item(key = "${logEntriesWithJunction.junction.id}_exercise_info") {
         val contentColor = ReboundTheme.colors.primary
         var popupMenuExpanded by remember {
             mutableStateOf(false)
@@ -166,15 +164,17 @@ fun LazyListScope.workoutExerciseItemAlt(
             onDeleteNote = { onDeleteNote(it) },
             onChangeValue = { newValue ->
                 onChangeNote(it.copy(note = newValue))
-            })
+            }
+        )
     }
 
     // Titles
-    item {
+    item(key = "${logEntriesWithJunction.junction.id}_titles") {
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(ReboundTheme.colors.background)
                 .padding(start = 8.dp, end = 8.dp)
                 .animateItemPlacement(),
             verticalAlignment = Alignment.CenterVertically,
@@ -272,7 +272,7 @@ fun LazyListScope.workoutExerciseItemAlt(
     }
 
     // Add set button
-    item {
+    item(key = "${logEntriesWithJunction.junction.id}_add_set_button") {
         RButton(
             modifier = Modifier
                 .fillMaxWidth()
@@ -292,7 +292,7 @@ fun LazyListScope.workoutExerciseItemAlt(
     }
 
     // Space
-    item {
+    item(key = "${logEntriesWithJunction.junction.id}_bottom_space") {
         Spacer(modifier = Modifier.height(16.dp))
     }
 }

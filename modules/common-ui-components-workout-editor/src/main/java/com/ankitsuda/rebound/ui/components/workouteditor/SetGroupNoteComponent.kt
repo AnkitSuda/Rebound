@@ -16,14 +16,18 @@ package com.ankitsuda.rebound.ui.components.workouteditor
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
+import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
@@ -56,12 +60,27 @@ internal fun SetGroupNoteComponent(
                     vertical = 8.dp
                 )
         ) {
-            SetTextField(
+//            SetTextField(
+//                value = mNoteText,
+//                contentColor = ReboundTheme.colors.onBackground,
+//                bgColor = ReboundTheme.colors.background,
+//                textAlign = TextAlign.Start,
+//                minHeight = 48.dp,
+//                singleLine = false,
+//                keyboardOptions = KeyboardOptions(
+//                    keyboardType = KeyboardType.Text,
+//                    imeAction = ImeAction.Done
+//                ),
+//                onValueChange = {
+//                    handleTextChange(it)
+//                }
+//            )
+            AppTextField(
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 48.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(ReboundTheme.colors.background.lighterOrDarkerColor(0.10f)),
                 value = mNoteText,
-                contentColor = ReboundTheme.colors.onBackground,
-                bgColor = ReboundTheme.colors.background,
-                textAlign = TextAlign.Start,
-                minHeight = 48.dp,
                 singleLine = false,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,

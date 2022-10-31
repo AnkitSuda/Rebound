@@ -16,10 +16,7 @@ package com.ankitsuda.rebound.ui.components.workouteditor
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -28,12 +25,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -80,7 +79,22 @@ internal fun SetSwipeWrapperComponent(
                 dismissState = dismissState
             )
         },
-        dismissContent = content
+        dismissContent = {
+            Timber.d(dismissState.progress.toString());
+            Row(
+                modifier = Modifier.alpha(
+                    1f - (with(dismissState.progress) {
+                        if (from == DismissValue.Default && to != DismissValue.Default) {
+                            fraction
+                        } else {
+                            0f
+                        }
+                    })
+                )
+            ) {
+                content()
+            }
+        }
     )
 }
 
@@ -88,7 +102,7 @@ internal fun SetSwipeWrapperComponent(
 @Composable
 internal fun SetItemBgLayout(
     bgColor: Color,
-    dismissState: DismissState
+    dismissState: DismissState,
 ) {
     val direction =
         dismissState.dismissDirection ?: DismissDirection.EndToStart

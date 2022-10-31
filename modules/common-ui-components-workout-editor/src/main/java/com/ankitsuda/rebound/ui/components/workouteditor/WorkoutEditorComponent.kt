@@ -111,10 +111,10 @@ fun WorkoutEditorComponent(
             SAFE_RS_KEYBOARD_HEIGHT + navigationBarHeight
         )
     ) {
-        item {
+        item(key = "workout_panel_layout_at_top") {
             layoutAtTop()
         }
-        item {
+        item(key = "workout_panel_basic_text_fields") {
             Column(
                 modifier = Modifier
                     .padding(16.dp)
@@ -171,7 +171,7 @@ fun WorkoutEditorComponent(
             )
         }
 
-        item {
+        item(key = "workout_panel_add_exercise_button") {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -193,7 +193,7 @@ fun WorkoutEditorComponent(
         }
 
         if (cancelWorkoutButtonVisible) {
-            item {
+            item(key = "workout_panel_cancel_workout_button") {
                 TextButton(
                     modifier = Modifier
                         .fillMaxWidth()
