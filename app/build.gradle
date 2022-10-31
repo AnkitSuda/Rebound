@@ -62,13 +62,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        useIR = true
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion Deps.Android.Compose.version
+        kotlinCompilerExtensionVersion Deps.Android.Compose.compilerVersion
 //        kotlinCompilerVersion '1.5.31'
     }
     packagingOptions {
@@ -76,6 +75,7 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    namespace 'com.ankitsuda.rebound'
 }
 repositories {
     mavenCentral()

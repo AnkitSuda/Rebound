@@ -30,9 +30,6 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    lintOptions {
-        disable "GradleCompatible"
-    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -44,8 +41,12 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion Deps.Android.Compose.version
+        kotlinCompilerExtensionVersion Deps.Android.Compose.compilerVersion
     }
+    lint {
+        disable 'GradleCompatible'
+    }
+    namespace 'com.ankitsuda.common.compose'
 }
 
 repositories {

@@ -17,6 +17,7 @@ package com.ankitsuda.base.ui
 import android.os.Parcelable
 import androidx.compose.ui.graphics.Color
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -64,28 +65,28 @@ data class ThemeState(
 
     @SerialName("primaryColor")
     @Serializable(with = ColorSerializer::class)
-    var primaryColor: Color = Color(41, 121, 255),
+    var primaryColor: @RawValue Color = Color(41, 121, 255),
     @SerialName("backgroundColor")
     @Serializable(with = ColorSerializer::class)
-    var backgroundColor: Color = Color.White,
+    var backgroundColor: @RawValue Color = Color.White,
     @SerialName("onPrimaryColor")
     @Serializable(with = ColorSerializer::class)
-    var onPrimaryColor: Color = Color.White,
+    var onPrimaryColor: @RawValue Color = Color.White,
     @SerialName("onBackgroundColor")
     @Serializable(with = ColorSerializer::class)
-    var onBackgroundColor: Color = Color.Black,
+    var onBackgroundColor: @RawValue Color = Color.Black,
     @SerialName("cardBorderColor")
     @Serializable(with = ColorSerializer::class)
-    var cardBorderColor: Color = Color.Gray,
+    var cardBorderColor: @RawValue Color = Color.Gray,
     @SerialName("topBarContentColor")
     @Serializable(with = ColorSerializer::class)
-    var topBarContentColor: Color = Color.Black,
+    var topBarContentColor: @RawValue Color = Color.Black,
     @SerialName("topBarBackgroundColor")
     @Serializable(with = ColorSerializer::class)
-    var topBarBackgroundColor: Color = Color.White,
+    var topBarBackgroundColor: @RawValue Color = Color.White,
     @SerialName("cardColor")
     @Serializable(with = ColorSerializer::class)
-    var cardColor: Color = Color(248, 248, 248),
+    var cardColor: @RawValue Color = Color(248, 248, 248),
 
     @SerialName("topBarTitleAlignment")
     var topBarTitleAlignment: String = "center",

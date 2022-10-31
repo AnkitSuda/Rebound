@@ -19,15 +19,15 @@ object Deps {
     }
 
     object Kotlin {
-        const val version = "1.6.10"
+        const val version = "1.7.20"
 
         const val gradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version"
 
         const val serialization = "org.jetbrains.kotlin:kotlin-serialization:$version"
-        const val serializationRuntime = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
+        const val serializationRuntime = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
 
-        const val coroutinesVersion = "1.6.1"
+        const val coroutinesVersion = "1.6.4"
         const val coroutinesCore =
             "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
         const val coroutinesAndroid =
@@ -35,13 +35,13 @@ object Deps {
     }
 
     object Android {
-        private const val gradleVersion = "7.0.4"
+        private const val gradleVersion = "7.3.1"
 
         const val gradle = "com.android.tools.build:gradle:$gradleVersion"
 
         const val desugaring = "com.android.tools:desugar_jdk_libs:1.1.5"
 
-        const val activityVersion = "1.4.0"
+        const val activityVersion = "1.6.0"
         const val activityCompose = "androidx.activity:activity-compose:$activityVersion"
 
         private const val navigationVersion = "2.5.0-alpha04"
@@ -53,7 +53,8 @@ object Deps {
         const val dataStore = "androidx.datastore:datastore-preferences:1.0.0"
 
         object Compose {
-            const val version = "1.2.0-alpha07"
+            const val version = "1.4.0-alpha01"
+            const val compilerVersion = "1.3.2"
 
             const val ui = "androidx.compose.ui:ui:$version"
             const val uiUtil = "androidx.compose.ui:ui-util:$version"
@@ -63,7 +64,7 @@ object Deps {
             const val materialDesignIcons = "androidx.compose.material:material-icons-core:$version"
             const val materialDesignIconsExtended =
                 "androidx.compose.material:material-icons-extended:$version"
-            const val constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.0.0"
+            const val constraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha04"
             const val liveData = "androidx.compose.runtime:runtime-livedata:$version"
             const val activity = "androidx.activity:activity-compose:$activityVersion"
             const val viewModels = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
@@ -79,7 +80,7 @@ object Deps {
         }
 
         object Accompanist {
-            private const val version = "0.24.6-alpha"
+            private const val version = "0.27.0"
 
             const val insets = "com.google.accompanist:accompanist-insets:$version"
             const val insetsUi = "com.google.accompanist:accompanist-insets-ui:$version"
@@ -104,8 +105,8 @@ object Deps {
         }
 
         object Lifecycle {
-            private const val version = "2.4.0"
-            private const val vmSavedStateVersion = "2.4.0"
+            private const val version = "2.5.1"
+            private const val vmSavedStateVersion = "2.5.1"
 
             const val runtime = "androidx.lifecycle:lifecycle-runtime:$version"
             const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version"
@@ -146,7 +147,7 @@ object Deps {
 
 
     object Dagger {
-        private const val version = "2.41"
+        private const val version = "2.44"
 
         const val hilt = "com.google.dagger:hilt-android:$version"
         const val hiltCompiler = "com.google.dagger:hilt-compiler:$version"

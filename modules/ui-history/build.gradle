@@ -40,8 +40,9 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion Deps.Android.Compose.version
+        kotlinCompilerExtensionVersion Deps.Android.Compose.compilerVersion
     }
+    namespace 'com.ankitsuda.rebound.ui.history'
 }
 
 repositories {
