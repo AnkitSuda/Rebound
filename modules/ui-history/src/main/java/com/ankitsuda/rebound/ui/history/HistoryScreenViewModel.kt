@@ -14,76 +14,25 @@
 
 package com.ankitsuda.rebound.ui.history
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.base.utils.extensions.getStateFlow
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
-import com.ankitsuda.base.utils.getCurrentWeekOfMonth
-import com.ankitsuda.base.utils.toEpochMillis
-import com.ankitsuda.base.utils.toLocalDate
-import com.ankitsuda.navigation.DATE_KEY
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
-import com.ankitsuda.rebound.domain.entities.Workout
-import com.ankitsuda.rebound.domain.entities.WorkoutWithExtraInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.time.DayOfWeek.MONDAY
-import java.time.DayOfWeek.SUNDAY
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
-import java.time.temporal.TemporalAdjusters.nextOrSame
-import java.time.temporal.TemporalAdjusters.previousOrSame
-import java.util.*
-import java.util.stream.Collectors
-import java.util.stream.IntStream
+import java.time.temporal.TemporalAdjusters
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryScreenViewModel @Inject constructor(
     private val workoutsRepository: WorkoutsRepository,
-    private val handle: SavedStateHandle,
 ) : ViewModel() {
-    private var _selectedDate: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
-    val selectedDate = _selectedDate.asStateFlow()
-
-    private var _workouts: MutableStateFlow<List<WorkoutWithExtraInfo>> = MutableStateFlow(
-        emptyList()
-    )
-    val workouts = _workouts.asStateFlow()
-
-    private var _week: SnapshotStateList<LocalDate> = mutableStateListOf()
-    val week = _week
-
-    private var job: Job? = null
-
-    fun getCurrentWeek() {
-        val newList = getCurrentWeekOfMonth()
-        week.clear()
-        week.addAll(newList)
-    }
-
-    fun setSelectedDate(newDate: Long?) {
-        viewModelScope.launch {
-            (newDate?.toLocalDate() ?: LocalDate.now()).let {
-                _workouts.value = emptyList()
-                _selectedDate.value = it
-                getWorkoutsOnDate(it)
+    val workouts = workoutsRepository.getWorkoutsWithExtraInfo()
+        .map {
+            it.groupBy { w ->
+                w.workout?.completedAt?.toLocalDate()?.with(TemporalAdjusters.firstDayOfMonth())
             }
         }
-    }
-
-    private fun getWorkoutsOnDate(date: LocalDate) {
-        job?.cancel()
-        job = viewModelScope.launch {
-            workoutsRepository.getWorkoutsWithExtraInfo(date).collectLatest {
-                _workouts.value = it
-            }
-        }
-    }
+        .shareWhileObserved(viewModelScope);
 }

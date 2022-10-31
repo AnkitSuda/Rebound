@@ -73,10 +73,15 @@ fun SessionQuickInfoRowItem(
             modifier = Modifier.size(16.dp),
             imageVector = icon,
             contentDescription = contentDescription,
-            tint = Color(117, 117, 117)
+            tint = ReboundTheme.colors.onBackground.copy(0.75f)
         )
         Spacer(Modifier.width(4.dp))
-        Text(text = text, style = ReboundTheme.typography.caption, color = Color(117, 117, 117))
+        Text(
+            text = text,
+            style = ReboundTheme.typography.caption.copy(
+                color = ReboundTheme.colors.onBackground.copy(0.75f)
+            )
+        )
     }
 
 }

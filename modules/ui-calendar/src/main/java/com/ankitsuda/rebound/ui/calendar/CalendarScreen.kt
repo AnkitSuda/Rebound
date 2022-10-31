@@ -52,9 +52,9 @@ fun CalendarScreen(
     viewModel: CalendarScreenViewModel = hiltViewModel()
 ) {
     val selectedDate =
-        navController.currentBackStackEntry?.arguments?.getString(SELECTED_DATE_KEY)?.let {
-            it.toLong().toLocalDate()
-        } ?: LocalDate.now()
+        navController.currentBackStackEntry?.arguments?.getString(SELECTED_DATE_KEY)?.toLong()
+            ?.toLocalDate()
+            ?: LocalDate.now()
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberLazyListState()

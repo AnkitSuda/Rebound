@@ -14,10 +14,7 @@
 
 package com.ankitsuda.rebound.ui.history.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,15 +27,16 @@ import com.ankitsuda.base.utils.toDurationStr
 import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.SessionCompleteQuickInfo
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-/**
- * Dummy content
- */
 @Composable
 fun HistorySessionItemCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     title: String,
+    date: LocalDateTime?,
     totalExercises: Int,
     duration: Long?,
     volume: String,
@@ -48,12 +46,32 @@ fun HistorySessionItemCard(
         mutableStateOf(duration?.toDurationStr() ?: "NA")
     }
 
+    val isSameYear = LocalDate.now().year == date?.year
+    val dateFormatter = DateTimeFormatter.ofPattern(if (isSameYear) "EEE, MMM d" else "MMM d, yyyy")
+
+
     AppCard(modifier = modifier, onClick = onClick) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = title, style = ReboundTheme.typography.body1)
-            Spacer(Modifier.height(4.dp))
-            Text(text = "$totalExercises Exercises", style = ReboundTheme.typography.caption)
-            Spacer(Modifier.height(4.dp))
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = title, style = ReboundTheme.typography.body1.copy(
+                    color = ReboundTheme.colors.onBackground
+                )
+            )
+            if (date != null) {
+                Text(
+                    text = dateFormatter.format(date), style = ReboundTheme.typography.caption.copy(
+                        color = ReboundTheme.colors.onBackground.copy(0.75f)
+                    )
+                )
+            }
+            Text(
+                text = "$totalExercises Exercises", style = ReboundTheme.typography.caption.copy(
+                    color = ReboundTheme.colors.onBackground.copy(0.75f)
+                )
+            )
             SessionCompleteQuickInfo(time = durationStr, volume = volume, prs = prs)
         }
     }

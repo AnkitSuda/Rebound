@@ -14,44 +14,44 @@
 
 package com.ankitsuda.rebound.ui.history
 
-import androidx.compose.animation.*
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
-import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
-import com.google.accompanist.insets.statusBarsHeight
-import timber.log.Timber
-import java.util.*
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.util.toReadableString
-import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toLocalDate
-import com.ankitsuda.navigation.DATE_KEY
-import com.ankitsuda.navigation.LeafScreen
-import com.ankitsuda.navigation.LocalNavigator
-import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.navigation.*
+import com.ankitsuda.rebound.ui.components.TopBar2
+import com.ankitsuda.rebound.ui.components.TopBarIconButton
+import com.ankitsuda.rebound.ui.history.components.HistoryHeader
 import com.ankitsuda.rebound.ui.history.components.HistorySessionItemCard
-import com.ankitsuda.rebound.ui.history.components.WeekDay
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import kotlinx.coroutines.delay
+import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
-import java.text.SimpleDateFormat
+import me.onebone.toolbar.ToolbarWithFabScaffold
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
+import timber.log.Timber
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
@@ -60,156 +60,115 @@ fun HistoryScreen(
     navigator: Navigator = LocalNavigator.current,
     viewModel: HistoryScreenViewModel = hiltViewModel()
 ) {
+    val scrollState = rememberLazyListState()
+
     val argumentsDate = navController.currentBackStackEntry
         ?.savedStateHandle
         ?.getLiveData<Long>(DATE_KEY)?.observeAsState()
 
-    LaunchedEffect(key1 = argumentsDate?.value) {
-        viewModel.setSelectedDate(argumentsDate?.value)
-    }
-
-    val localDate = LocalDate.now()
-    val date by viewModel.selectedDate.collectAsState()
-
-    val isSameYear = localDate.year == date.year
-    val isToday = localDate == date
-
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
-    val week = viewModel.week
+    val workoutsMap by viewModel.workouts.collectAsState(initial = emptyMap())
 
-    val dateFormatter = DateTimeFormatter.ofPattern(if (isSameYear) "EEE, MMM d" else "MMM d, yyyy")
+    LaunchedEffect(key1 = argumentsDate?.value) {
+        if (argumentsDate?.value == null) return@LaunchedEffect;
 
-    LaunchedEffect(key1 = Unit) {
-        if (week.isEmpty()) {
-            viewModel.getCurrentWeek()
+        try {
+            val mDate = argumentsDate.value?.toLocalDate();
+            var index = -1;
+
+            var loopIndex = 0;
+            for (map in workoutsMap) {
+                if (map.key?.month == mDate?.month && map.key?.year == mDate?.year) {
+                    index = loopIndex;
+                    break;
+                } else {
+                    loopIndex += 1 + map.value.size
+                }
+            }
+
+            if (index > -1) {
+                delay(100)
+                scrollState.animateScrollToItem(
+                    index
+                )
+            }
+
+            navController.currentBackStackEntry
+                ?.savedStateHandle?.remove(DATE_KEY)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    val workouts by viewModel.workouts.collectAsState(initial = emptyList())
-
-    val isWeekHeaderVisible = week.any { it == date }
-
-    Surface() {
-        // History
-
-        Column() {
-            Box(
-                modifier = Modifier
-                    .statusBarsHeight()
-                    .fillMaxWidth()
-                    .zIndex(2f)
-                    .background(ReboundTheme.colors.topBar)
-            )
-
-            CollapsingToolbarScaffold(
-                scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
-                state = collapsingState,
-                toolbar = {
-                    TopBar2(
-                        title = if (isToday) "Today" else date.format(dateFormatter),
-                        toolbarState = collapsingState.toolbarState,
-                        elevationEnabled = false,
-                        statusBarEnabled = false,
-                        navigationIcon = {
-                            TopBarIconButton(
-                                icon = Icons.Outlined.DateRange,
-                                title = "Show calendar",
-                                onClick = {
-                                    navigator.navigate(LeafScreen.Calendar.createRoute(selectedDate = date))
-                                }
-                            )
-                        },
-                        actions = {
-                            TopBarIconButton(
-                                icon = Icons.Outlined.MoreVert,
-                                title = "Open menu",
-                                onClick = {
-
-                                }
-                            )
+    CollapsingToolbarScaffold(
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+        state = collapsingState,
+        toolbar = {
+            TopBar2(
+                title = "History",
+                toolbarState = collapsingState.toolbarState,
+                navigationIcon = {
+                    TopBarIconButton(
+                        icon = Icons.Outlined.DateRange,
+                        title = "Show calendar",
+                        onClick = {
+                            navigator.navigate(LeafScreen.Calendar.createRoute(selectedDate = LocalDate.now()))
                         }
                     )
                 },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(ReboundTheme.colors.topBar)
-            ) {
-
-
-                // User routines
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colors.background),
-                ) {
-                    // Sticky Calendar
-
-                    if (isWeekHeaderVisible) {
-                        stickyHeader {
-                            // For testing only
-
-                            Card(
-                                shape = RoundedCornerShape(0),
-                                elevation = 2.dp,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-
-                                Row(
-                                    modifier = Modifier
-                                        .background(ReboundTheme.colors.topBar)
-//                                        .padding(start = 8.dp, end = 8.dp)
-                                ) {
-                                    for (day in week) {
-                                        WeekDay(
-                                            modifier = Modifier.weight(1f / 7f),
-                                            day = day,
-                                            isSelected = day == date,
-                                            onClick = {
-                                                navController.currentBackStackEntry?.savedStateHandle?.set(
-                                                    DATE_KEY,
-                                                    day.toEpochMillis()
-                                                )
-                                            }
-                                        )
-                                    }
-                                }
-
-
-                            }
+                actions = {
+                    TopBarIconButton(
+                        icon = Icons.Outlined.MoreVert,
+                        title = "Open menu",
+                        onClick = {
 
                         }
-                    }
-
-
-                    items(workouts.size) {
-                        val workout = workouts[it]
-                        HistorySessionItemCard(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    top = if (it == 0) 16.dp else 0.dp,
-                                    start = 16.dp,
-                                    end = 16.dp,
-                                    bottom = 16.dp
-                                ),
-                            onClick = {
-                                navigator.navigate(
-                                    LeafScreen.Session.createRoute(
-                                        workoutId = workout.workout?.id!!
-                                    )
-                                )
-                            },
-                            title = workout.workout?.name.toString(),
-                            totalExercises = workout.totalExercises ?: 0,
-                            duration = workout.workout?.getDuration(),
-                            volume = "${workout.totalVolume?.toReadableString()} kg",
-                            prs = workout.totalPRs ?: 0
+                    )
+                }
+            )
+        },
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ReboundTheme.colors.topBar)
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background),
+            state = scrollState,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            for (map in workoutsMap) {
+                if (map.key != null) {
+                    item(key = "${map.key}") {
+                        HistoryHeader(
+                            date = map.key!!,
+                            totalWorkouts = map.value.size
                         )
                     }
-
                 }
-
+                items(map.value, key = { it.workout!!.id }) {
+                    HistorySessionItemCard(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        onClick = {
+                            navigator.navigate(
+                                LeafScreen.Session.createRoute(
+                                    workoutId = it.workout?.id!!
+                                )
+                            )
+                        },
+                        title = it.workout?.name.toString(),
+                        totalExercises = it.totalExercises ?: 0,
+                        duration = it.workout?.getDuration(),
+                        volume = "${it.totalVolume?.toReadableString()} kg",
+                        prs = it.totalPRs ?: 0,
+                        date = it.workout?.startAt ?: it.workout?.completedAt
+                        ?: it.workout?.createdAt,
+                    )
+                }
             }
         }
 

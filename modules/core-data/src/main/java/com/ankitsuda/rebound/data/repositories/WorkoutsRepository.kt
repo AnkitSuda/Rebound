@@ -225,11 +225,11 @@ class WorkoutsRepository @Inject constructor(
         }
 
 
-    fun getWorkoutsWithExtraInfo(date: LocalDate) =
+    fun getWorkoutsWithExtraInfo(date: LocalDate? = null) =
         workoutsDao.getAllWorkoutsRawQuery(
             SimpleSQLiteQuery(
-                "SELECT * FROM workouts WHERE date(created_at / 1000,'unixepoch') = date(? / 1000,'unixepoch') AND is_hidden = 0 AND in_progress = 0",
-                arrayOf<Any>(date.toEpochMillis())
+                "SELECT * FROM workouts WHERE ${if (date != null) "date(created_at / 1000,'unixepoch') = date(? / 1000,'unixepoch') AND" else ""} is_hidden = 0 AND in_progress = 0 ORDER BY completed_at DESC",
+                if (date != null) arrayOf<Any>(date.toEpochMillis()) else arrayOf()
             )
         ).map {
             val mWorkouts = arrayListOf<WorkoutWithExtraInfo>()
