@@ -117,4 +117,17 @@ class WorkoutScreenViewModel @Inject constructor(
         }
     }
 
+    fun startWorkoutFromTemplateId(
+        templateId: String,
+        discardActive: Boolean,
+        onWorkoutAlreadyActive: () -> Unit
+    ) {
+        viewModelScope.launch {
+            workoutsRepository.startWorkoutFromTemplate(
+                templateId = templateId,
+                discardActive = discardActive,
+                onWorkoutAlreadyActive = onWorkoutAlreadyActive
+            )
+        }
+    }
 }

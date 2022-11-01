@@ -16,6 +16,7 @@ package com.ankitsuda.base.utils
 
 import timber.log.Timber
 import java.time.*
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.util.concurrent.TimeUnit
@@ -127,3 +128,6 @@ fun getCurrentWeekOfMonth(): ArrayList<LocalDate> {
 
     return tempList
 }
+
+fun LocalDateTime.toString(pattern: String): String =
+    this.format(DateTimeFormatter.ofPattern(pattern))

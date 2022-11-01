@@ -21,6 +21,7 @@ import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
 import com.ankitsuda.rebound.data.datastore.PrefStorage
+import com.ankitsuda.rebound.data.db.daos.WorkoutTemplatesDao
 import com.ankitsuda.rebound.domain.MaxDurationPR
 import com.ankitsuda.rebound.domain.MaxWeightPR
 import com.ankitsuda.rebound.domain.PersonalRecord
@@ -37,6 +38,7 @@ import javax.inject.Inject
 
 class WorkoutsRepository @Inject constructor(
     private val workoutsDao: WorkoutsDao,
+    private val templatesDao: WorkoutTemplatesDao,
     private val prefStorage: PrefStorage
 ) {
     fun getCurrentWorkoutId() = prefStorage.currentWorkoutId
@@ -269,24 +271,59 @@ class WorkoutsRepository @Inject constructor(
 
     fun getExerciseLogByLogId(logId: String) = workoutsDao.getExerciseLogByLogId(logId)
 
+    private suspend fun checkIfWorkoutIsActive(discardActive: Boolean): Boolean {
+        val activeWorkoutId = getCurrentWorkoutId().firstOrNull()
+        return if (activeWorkoutId == null || activeWorkoutId == NONE_WORKOUT_ID) {
+            false
+        } else {
+            if (discardActive) {
+                setCurrentWorkoutId(NONE_WORKOUT_ID)
+                deleteWorkoutWithEverything(activeWorkoutId)
+                false
+            } else {
+                true
+            }
+        }
+    }
+
+    suspend fun startWorkoutFromTemplate(
+        templateId: String,
+        discardActive: Boolean,
+        onWorkoutAlreadyActive: () -> Unit
+    ) {
+        val isActive = checkIfWorkoutIsActive(discardActive = discardActive);
+
+        if (isActive) {
+            onWorkoutAlreadyActive()
+            return
+        }
+
+        val template = templatesDao.getTemplate(templateId).firstOrNull() ?: return;
+
+        if (template.workoutId == null) return
+
+        templatesDao.updateTemplate(
+            template.copy(
+                lastPerformedAt = LocalDateTime.now()
+            )
+        )
+
+        startWorkoutFromWorkout(template.workoutId!!)
+    }
 
     suspend fun startWorkoutFromWorkout(
         workoutId: String,
         discardActive: Boolean,
         onWorkoutAlreadyActive: () -> Unit
     ) {
-        val activeWorkoutId = getCurrentWorkoutId().firstOrNull()
-        if (activeWorkoutId == null || activeWorkoutId == NONE_WORKOUT_ID) {
-            startWorkoutFromWorkout(workoutId)
-        } else {
-            if (discardActive) {
-                setCurrentWorkoutId(NONE_WORKOUT_ID)
-                deleteWorkoutWithEverything(activeWorkoutId)
-                startWorkoutFromWorkout(workoutId)
-            } else {
-                onWorkoutAlreadyActive()
-            }
+        val isActive = checkIfWorkoutIsActive(discardActive = discardActive);
+
+        if (isActive) {
+            onWorkoutAlreadyActive();
+            return;
         }
+
+        startWorkoutFromWorkout(workoutId)
     }
 
     private suspend fun startWorkoutFromWorkout(workoutId: String) {

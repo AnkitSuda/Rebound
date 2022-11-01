@@ -110,13 +110,11 @@ class WorkoutTemplatePreviewScreenViewModel @Inject constructor(
         onWorkoutAlreadyActive: () -> Unit
     ) {
         viewModelScope.launch {
-            _workoutId?.let {
-                workoutsRepository.startWorkoutFromWorkout(
-                    workoutId = it,
-                    discardActive = discardActive,
-                    onWorkoutAlreadyActive = onWorkoutAlreadyActive
-                )
-            }
+            workoutsRepository.startWorkoutFromTemplate(
+                templateId = templateId,
+                discardActive = discardActive,
+                onWorkoutAlreadyActive = onWorkoutAlreadyActive
+            )
         }
     }
 

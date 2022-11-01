@@ -28,11 +28,6 @@ import com.google.accompanist.navigation.material.bottomSheet
 import java.time.LocalDate
 import java.util.*
 
-const val QUERY_KEY = "query"
-const val SEARCH_BACKENDS_KEY = "backends"
-const val ARTIST_ID_KEY = "artist_id"
-const val ALBUM_ID_KEY = "album_id"
-const val PLAYLIST_ID_KEY = "playlist_id"
 const val DATE_KEY = "date"
 const val SELECTED_DATE_KEY = "selected_date"
 const val WORKOUT_ID_KEY = "workout_id"
@@ -41,6 +36,7 @@ const val WORKOUT_TEMPLATE_ID_KEY = "workout_template_id"
 const val PART_ID_KEY = "part_id"
 const val LOG_ID_KEY = "log_id"
 const val PLATE_ID_KEY = "plate_id"
+const val IS_TEMPLATE_KEY = "is_template"
 
 interface Screen {
     val route: String
@@ -313,7 +309,7 @@ sealed class LeafScreen(
     }
 
     data class WorkoutEdit(
-        override val route: String = "workout_edit/{${WORKOUT_ID_KEY}}",
+        override val route: String = "workout_edit/{${WORKOUT_ID_KEY}}?$IS_TEMPLATE_KEY={$IS_TEMPLATE_KEY}",
         override val root: TabRootScreen = TabRootScreen.HistoryTab
     ) : LeafScreen(
         route = route,
@@ -321,13 +317,20 @@ sealed class LeafScreen(
         arguments = listOf(
             navArgument(WORKOUT_ID_KEY) {
                 type = NavType.StringType
-            }
+            },
+            navArgument(IS_TEMPLATE_KEY) {
+                type = NavType.BoolType
+            },
         ),
     ) {
         companion object {
 
-            fun createRoute(workoutId: String, root: TabRootScreen = TabRootScreen.HistoryTab) =
-                "${root.route}/workout_edit/$workoutId"
+            fun createRoute(
+                workoutId: String,
+                isTemplate: Boolean,
+                root: TabRootScreen = TabRootScreen.HistoryTab
+            ) =
+                "${root.route}/workout_edit/$workoutId?$IS_TEMPLATE_KEY=$isTemplate"
 
         }
     }

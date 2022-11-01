@@ -39,6 +39,9 @@ interface WorkoutTemplatesDao {
     @Insert
     suspend fun insertTemplate(workoutTemplate: WorkoutTemplate)
 
+    @Update
+    suspend fun updateTemplate(workoutTemplate: WorkoutTemplate)
+
     @Query("DELETE FROM workout_templates WHERE id = :templateId")
     suspend fun deleteTemplate(templateId: String)
 

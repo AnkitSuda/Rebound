@@ -14,11 +14,8 @@
 
 package com.ankitsuda.rebound.ui.workouttemplate.preview
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -27,12 +24,9 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ankitsuda.base.utils.toReadableDuration
-import com.ankitsuda.common.compose.toast
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
@@ -46,7 +40,8 @@ import com.ankitsuda.rebound.ui.workouttemplate.preview.components.TemplateExerc
 import com.ankitsuda.rebound.ui.workouttemplate.preview.components.TemplateMenuComponent
 import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
-import kotlin.random.Random
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @OptIn(ExperimentalToolbarApi::class)
 @Composable
@@ -67,7 +62,12 @@ fun WorkoutTemplatePreviewScreen(
     }
 
     val templateName = workout?.name ?: ""
-    val lastPerformedStr = template?.lastPerformedAt?.toString()
+    val lastPerformedStr = template?.lastPerformedAt?.format(
+        DateTimeFormatter.ofLocalizedDateTime(
+            FormatStyle.MEDIUM,
+            FormatStyle.SHORT
+        )
+    )
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
@@ -91,7 +91,8 @@ fun WorkoutTemplatePreviewScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = templateName,
+                title = templateName.ifBlank { "Unnamed Template" },
+                italicTitle = templateName.isBlank(),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -104,7 +105,8 @@ fun WorkoutTemplatePreviewScreen(
                             navigator.navigate(
                                 LeafScreen.WorkoutEdit.createRoute(
                                     workoutId = it,
-                                    TabRootScreen.WorkoutTab
+                                    isTemplate = true,
+                                    root = TabRootScreen.WorkoutTab
                                 )
                             )
                         }
@@ -150,13 +152,25 @@ fun WorkoutTemplatePreviewScreen(
         ) {
             lastPerformedStr?.let {
                 item {
-                    Text(
+                    Column(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        text = it,
-                        style = ReboundTheme.typography.caption,
-                        fontSize = 14.sp,
-                        color = Color(158, 158, 158)
-                    )
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        Text(
+                            text = "Last performed at",
+                            style = ReboundTheme.typography.caption.copy(
+                                color = ReboundTheme.colors.onBackground.copy(
+                                    0.75f
+                                )
+                            ),
+                            fontSize = 14.sp,
+                        )
+                        Text(
+                            text = it,
+                            style = ReboundTheme.typography.caption.copy(color = ReboundTheme.colors.onBackground),
+                            fontSize = 14.sp,
+                        )
+                    }
                 }
             }
             items(entriesInfo) {

@@ -55,6 +55,7 @@ fun WorkoutEditScreen(
     viewModel: WorkoutEditScreenViewModel = hiltViewModel()
 ) {
     val workout by viewModel.workout.collectAsState(null)
+    val isTemplate = viewModel.isTemplate
     val logEntriesWithJunction by viewModel.logEntriesWithExerciseJunction.collectAsState()
 
     val workoutName = workout?.name
@@ -73,7 +74,7 @@ fun WorkoutEditScreen(
             scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
             toolbar = {
                 TopBar2(
-                    title = "Edit workout",
+                    title = "Edit ${if (isTemplate) "Template" else "Workout"}",
                     toolbarState = collapsingState.toolbarState,
                     navigationIcon = {
                         TopBarBackIconButton {

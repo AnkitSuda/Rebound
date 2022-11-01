@@ -172,7 +172,12 @@ fun SessionScreen(
                     }
                     IconButton(onClick = {
                         workout?.id?.let {
-                            navigator.navigate(LeafScreen.WorkoutEdit.createRoute(workoutId = it))
+                            navigator.navigate(
+                                LeafScreen.WorkoutEdit.createRoute(
+                                    workoutId = it,
+                                    isTemplate = false
+                                )
+                            )
                         }
                     }) {
                         Icon(

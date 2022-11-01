@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -55,6 +56,7 @@ import me.onebone.toolbar.CollapsingToolbarState
 @Composable
 fun CollapsingToolbarScope.TopBar2(
     title: String,
+    italicTitle: Boolean = false,
     toolbarState: CollapsingToolbarState? = null,
     statusBarEnabled: Boolean = true,
     navigationIcon: (@Composable BoxScope.() -> Unit)? = null,
@@ -174,7 +176,9 @@ fun CollapsingToolbarScope.TopBar2(
                 modifier = Modifier
                     .padding(top = statusBarHeight),
                 text = title,
-                style = ReboundTheme.typography.h6,
+                style = ReboundTheme.typography.h6.copy(
+                    fontStyle = if (italicTitle) FontStyle.Italic else FontStyle.Normal
+                ),
                 fontWeight = FontWeight.Bold,
                 fontSize = titleSize,
                 textAlign = TextAlign.Start,

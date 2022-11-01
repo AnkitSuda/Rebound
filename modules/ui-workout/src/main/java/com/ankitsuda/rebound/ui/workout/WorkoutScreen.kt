@@ -14,7 +14,6 @@
 
 package com.ankitsuda.rebound.ui.workout
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -34,11 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.ankitsuda.base.util.NONE_WORKOUT_ID
-import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.common.compose.LocalPanel
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
@@ -46,13 +42,12 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.navigation.TabRootScreen
 import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.components.dialogs.DiscardActiveWorkoutDialog
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
-import timber.log.Timber
-import kotlin.math.exp
 
 @OptIn(
     ExperimentalFoundationApi::class,
@@ -65,6 +60,12 @@ fun WorkoutScreen(
     navigator: Navigator = LocalNavigator.current,
     viewModel: WorkoutScreenViewModel = hiltViewModel(),
 ) {
+    var isDiscardActiveWorkoutDialogVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var isDiscardActiveWorkoutDialogTemplateId: String? by rememberSaveable {
+        mutableStateOf(null)
+    }
     var areArchivedTemplatesVisible by rememberSaveable {
         mutableStateOf(false)
     }
@@ -87,12 +88,24 @@ fun WorkoutScreen(
             if (it.workoutId != null) {
                 navigator.navigate(
                     LeafScreen.WorkoutEdit.createRoute(
-                        it.workoutId!!,
-                        TabRootScreen.WorkoutTab
+                        workoutId = it.workoutId!!,
+                        isTemplate = false,
+                        root = TabRootScreen.WorkoutTab
                     )
                 )
             }
         }
+    }
+
+    fun startWorkoutFromTemplateId(templateId: String, discardActive: Boolean) {
+        viewModel.startWorkoutFromTemplateId(
+            templateId = templateId,
+            discardActive = discardActive,
+            onWorkoutAlreadyActive = {
+                isDiscardActiveWorkoutDialogTemplateId = templateId
+                isDiscardActiveWorkoutDialogVisible = true
+            }
+        )
     }
 
     ToolbarWithFabScaffold(
@@ -267,7 +280,9 @@ fun WorkoutScreen(
             }
 
             items(unarchivedTemplates, key = { it.template.id }) {
-                TemplateListItem(navigator = navigator, templateWithWorkout = it)
+                TemplateListItem(navigator = navigator, templateWithWorkout = it, onClickPlay = {
+                    startWorkoutFromTemplateId(templateId = it.template.id, discardActive = false)
+                })
             }
 
             if (archivedTemplates.isNotEmpty()) {
@@ -286,7 +301,15 @@ fun WorkoutScreen(
                     }
 
                     items(archivedTemplates, key = { it.template.id }) {
-                        TemplateListItem(navigator = navigator, templateWithWorkout = it)
+                        TemplateListItem(
+                            navigator = navigator,
+                            templateWithWorkout = it,
+                            onClickPlay = {
+                                startWorkoutFromTemplateId(
+                                    templateId = it.template.id,
+                                    discardActive = false
+                                )
+                            })
                     }
                 }
 
@@ -323,13 +346,30 @@ fun WorkoutScreen(
         }
 
     }
+
+    if (isDiscardActiveWorkoutDialogVisible && isDiscardActiveWorkoutDialogTemplateId != null) {
+        DiscardActiveWorkoutDialog(
+            onClickDiscard = {
+                isDiscardActiveWorkoutDialogVisible = false
+                startWorkoutFromTemplateId(
+                    discardActive = true,
+                    templateId = isDiscardActiveWorkoutDialogTemplateId!!
+                );
+            },
+            onDismissRequest = {
+                isDiscardActiveWorkoutDialogTemplateId = null
+                isDiscardActiveWorkoutDialogVisible = false
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun LazyItemScope.TemplateListItem(
     navigator: Navigator,
-    templateWithWorkout: TemplateWithWorkout
+    templateWithWorkout: TemplateWithWorkout,
+    onClickPlay: () -> Unit,
 ) {
     with(templateWithWorkout) {
         TemplateItemCard(
@@ -337,11 +377,13 @@ private fun LazyItemScope.TemplateListItem(
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                 .animateItemPlacement(),
-            name = workout.name ?: template.id,
+            name = (workout.name ?: "").ifBlank { "Unnamed Template" },
+            italicName = (workout.name ?: "").isBlank(),
             totalExercises = exerciseWorkoutJunctions.size,
             onClick = {
                 navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(template.id))
-            }
+            },
+            onClickPlay = onClickPlay
         )
     }
 }

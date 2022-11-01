@@ -23,6 +23,7 @@ import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toReadableDuration
+import com.ankitsuda.navigation.IS_TEMPLATE_KEY
 import com.ankitsuda.navigation.WORKOUT_ID_KEY
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.*
@@ -41,8 +42,9 @@ class WorkoutEditScreenViewModel @Inject constructor(
     private val handle: SavedStateHandle,
 ) : ViewModel() {
     private val workoutId = requireNotNull(handle.get<String>(WORKOUT_ID_KEY))
+    val isTemplate = requireNotNull(handle.get<Boolean>(IS_TEMPLATE_KEY))
 
-    var mWorkout: Workout? = null
+    private var mWorkout: Workout? = null
 
     private var _currentDurationStr = MutableStateFlow<String>("")
     val currentDurationStr = _currentDurationStr.asStateFlow()

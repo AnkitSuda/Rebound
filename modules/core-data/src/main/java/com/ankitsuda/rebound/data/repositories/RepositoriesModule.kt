@@ -33,8 +33,12 @@ class RepositoriesModule {
 
     @Singleton
     @Provides
-    fun provideWorkoutsRepository(workoutsDao: WorkoutsDao, prefStorage: PrefStorage) =
-        WorkoutsRepository(workoutsDao, prefStorage)
+    fun provideWorkoutsRepository(
+        workoutsDao: WorkoutsDao,
+        templatesDao: WorkoutTemplatesDao,
+        prefStorage: PrefStorage
+    ) =
+        WorkoutsRepository(workoutsDao, templatesDao, prefStorage)
 
     @Singleton
     @Provides
