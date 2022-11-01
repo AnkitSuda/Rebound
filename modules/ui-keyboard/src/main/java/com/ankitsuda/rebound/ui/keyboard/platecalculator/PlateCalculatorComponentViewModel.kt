@@ -63,7 +63,7 @@ class PlateCalculatorComponentViewModel @Inject constructor(
                 _allPlates.clear()
                 _allPlates.addAll(availablePlates)
             }
-            val platesNeeded = calculatePlates(newWeight, _allPlates)
+            val platesNeeded = calculatePlates(newWeight, _allPlates.sortedByDescending { it.weight })
             val sumOfPlates = platesNeeded.sumOf { it.weight ?: 0.0 }
             _plates.value = platesNeeded
             _remainingWeight.value = try {
@@ -73,6 +73,7 @@ class PlateCalculatorComponentViewModel @Inject constructor(
                 0.0
             }
         }
+        lastWeight = newWeight
     }
 
     private fun calculatePlates(targetWeight: Double, allPlates: List<Plate>): List<Plate> {
