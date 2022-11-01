@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -90,6 +91,7 @@ fun WarmUpCalculatorDialog(
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun WarmUpCalculatorDialogLayout(
     sets: List<WarmUpSet>,
@@ -121,7 +123,7 @@ private fun WarmUpCalculatorDialogLayout(
                 Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
             ) {
                 Text(
-                    text = "Work up sets",
+                    text = "Warm up sets",
                     style = ReboundTheme.typography.h6,
                     color = ReboundTheme.colors.onBackground
                 )
@@ -141,7 +143,11 @@ private fun WarmUpCalculatorDialogLayout(
                     .padding(horizontal = 8.dp)
             ) {
                 ReboundSetTextField(
-                    bgColor = ReboundTheme.colors.background,
+                    bgColor = LocalElevationOverlay.current?.apply(
+                        color = ReboundTheme.colors.background,
+                        elevation = LocalAbsoluteElevation.current
+                    )
+                        ?: ReboundTheme.colors.background,
                     contentColor = ReboundTheme.colors.onBackground,
                     value = workSetStr,
                     onValueChange = {
@@ -154,11 +160,6 @@ private fun WarmUpCalculatorDialogLayout(
 
             RSpacer(space = 16.dp)
 
-            WarmUpSetsTitlesComponent(
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -166,10 +167,19 @@ private fun WarmUpCalculatorDialogLayout(
                 contentPadding = PaddingValues(top = 8.dp)
             ) {
 
+                item(key = "warm_up_titles") {
+                    WarmUpSetsTitlesComponent(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateItemPlacement()
+                    )
+                }
+
                 items(items = sets, key = { it.id }) { set ->
                     WarmUpSetComponent(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .animateItemPlacement(),
                         workSetWeight = workSetStr.toDoubleOrNull() ?: 0.0,
                         barWeight = 20.0,
                         startingSet = set,
@@ -181,11 +191,12 @@ private fun WarmUpCalculatorDialogLayout(
 
                 }
 
-                item {
+                item(key = "warm_up_add_set_button") {
                     RButton(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp)
+                            .animateItemPlacement(),
                         elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = ReboundTheme.colors.background.lighterOrDarkerColor(

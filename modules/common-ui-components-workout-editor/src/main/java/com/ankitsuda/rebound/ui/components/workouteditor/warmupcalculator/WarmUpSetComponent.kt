@@ -14,29 +14,23 @@
 
 package com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.LocalAbsoluteElevation
+import androidx.compose.material.LocalElevationOverlay
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.base.util.toReadableString
-import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.ui.components.workouteditor.SetSwipeWrapperComponent
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
-import com.ankitsuda.rebound.ui.keyboard.picker.getAllWarmUpReps
 import com.ankitsuda.rebound.ui.keyboard.picker.getAllWarmUpWeights
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
@@ -49,7 +43,6 @@ internal fun WarmUpSetComponent(
     onDeleteSet: () -> Unit,
     onChangeValue: (WarmUpSet) -> Unit
 ) {
-    val fieldBgColor = ReboundTheme.colors.background
     val fieldContentColor = ReboundTheme.colors.onBackground
 
     val setWeight =
@@ -59,9 +52,16 @@ internal fun WarmUpSetComponent(
             workSetWeight * startingSet.weightPercentage!! / 100
         }
 
+    val bgColor =
+        LocalElevationOverlay.current?.apply(
+            color = ReboundTheme.colors.background,
+            elevation = LocalAbsoluteElevation.current
+        )
+            ?: ReboundTheme.colors.background
+
     SetSwipeWrapperComponent(
         modifier = modifier,
-        bgColor = ReboundTheme.colors.background,
+        bgColor = bgColor,
         onSwipeDelete = {
             onDeleteSet()
         }
@@ -69,7 +69,7 @@ internal fun WarmUpSetComponent(
         Row(
             modifier = Modifier
                 .background(
-                    color = ReboundTheme.colors.background
+                    color = bgColor
                 )
                 .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -85,7 +85,7 @@ internal fun WarmUpSetComponent(
             ReboundSetTextField(
                 value = startingSet.findFormula(),
                 contentColor = fieldContentColor,
-                bgColor = fieldBgColor,
+                bgColor = bgColor,
                 reboundKeyboardType = ReboundKeyboardType.WARMUP_SET,
                 onValueChange = {
                     val arr = it.split(" x ")
@@ -112,7 +112,7 @@ internal fun WarmUpSetComponent(
                 }
             )
             Text(
-                text = "${setWeight.toReadableString()} x ${startingSet.reps ?: 0}",
+                text = "${setWeight.toReadableString()}kg x ${startingSet.reps ?: 0}",
                 style = ReboundTheme.typography.caption,
                 color = ReboundTheme.colors.onBackground,
                 textAlign = TextAlign.Center,
