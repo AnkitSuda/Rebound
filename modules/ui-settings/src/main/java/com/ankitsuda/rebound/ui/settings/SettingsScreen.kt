@@ -33,6 +33,7 @@ import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.icons.Plates
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
@@ -79,7 +80,7 @@ fun SettingsScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    icon = Icons.Outlined.BubbleChart,
+                    icon = Icons.Filled.Plates,
                     text = "Plates",
                     description = "Customize barbell plates",
                     onClick = {
