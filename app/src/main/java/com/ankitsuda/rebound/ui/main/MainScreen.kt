@@ -14,20 +14,14 @@
 
 package com.ankitsuda.rebound.ui.main
 
-import android.view.inputmethod.InputConnection
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,7 +29,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -56,11 +49,7 @@ import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopCollapsed
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopDragHandle
 import com.ankitsuda.rebound.ui.components.panel_tops.PanelTopExpanded
 import com.ankitsuda.rebound.ui.ThemeViewModel
-import com.ankitsuda.rebound.ui.components.workouteditor.ReboundKeyboardHost
-import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
-import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboard
-import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboardComponent
-import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
+import com.ankitsuda.rebound.ui.keyboard.ReboundKeyboardHost
 import com.ankitsuda.rebound.ui.navigation.AppNavigation
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -147,6 +136,11 @@ private fun MainLayout(
                     LocalPanel provides mainPanel,
                 ) {
                     Box() {
+                        /**
+                         * Temporary using ModalBottomSheetLayout
+                         * will create a custom implementation later in MainScreenScaffold with proper status bar padding
+                         * and auto corner radius
+                         */
                         /**
                          * Temporary using ModalBottomSheetLayout
                          * will create a custom implementation later in MainScreenScaffold with proper status bar padding

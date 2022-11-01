@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import timber.log.Timber
 
@@ -44,6 +45,8 @@ fun PlateCalculatorComponent(
     val plates by viewModel.plates.collectAsState(emptyList())
     val remainingWeight by viewModel.remainingWeight.collectAsState()
 
+    val theme = LocalThemeState.current
+
     LaunchedEffect(key1 = weight) {
         viewModel.refreshPlates(weight)
     }
@@ -55,14 +58,15 @@ fun PlateCalculatorComponent(
             Column(modifier = Modifier.height(comHeight * 0.35F)) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-                    text = "${weight.toReadableString()} kg"
+                    text = "${weight.toReadableString()} kg",
+                    color = theme.keyboardContentColor
                 )
                 if (remainingWeight > 0.0) {
                     Text(
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp),
                         text = "Remaining weight: ${remainingWeight.toReadableString()} kg",
                         style = ReboundTheme.typography.caption,
-                        color = ReboundTheme.colors.onBackground.copy(alpha = 0.75f)
+                        color = theme.keyboardContentColor.copy(alpha = 0.75f)
                     )
                 }
             }
@@ -84,9 +88,11 @@ private fun BarbellComponent(
     modifier: Modifier,
     plates: List<Plate>
 ) {
+    val theme = LocalThemeState.current
+
     val barbellHeight = 22.dp
-    val barbellColor = Color.Gray
-    val onBarbellColor = Color.White
+    val barbellColor = theme.keyboardBarbellColor
+    val onBarbellColor = theme.keyboardOnBarbellColor
 
     val barbellWeight = 0F
 

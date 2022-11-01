@@ -33,7 +33,7 @@ import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
-import com.ankitsuda.rebound.ui.components.workouteditor.ReboundKeyboardHost
+import com.ankitsuda.rebound.ui.keyboard.ReboundKeyboardHost
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
 import com.ankitsuda.rebound.ui.theme.ReboundTheme

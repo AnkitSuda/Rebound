@@ -231,6 +231,12 @@ sealed class LeafScreen(
     ) :
         LeafScreen(route, root)
 
+    data class KeyboardPersonalization(
+        override val route: String = "personalization/keyboard",
+        override val root: TabRootScreen = TabRootScreen.MoreTab
+    ) :
+        LeafScreen(route, root)
+
     data class ThemePresetsPersonalization(
         override val route: String = "personalization/presets",
         override val root: TabRootScreen = TabRootScreen.MoreTab

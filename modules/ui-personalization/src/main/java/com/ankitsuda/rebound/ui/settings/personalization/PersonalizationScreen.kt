@@ -129,6 +129,16 @@ fun PersonalizationScreen(
                         navigator.navigate(LeafScreen.ChartsPersonalization().createRoute())
                     })
             }
+
+            item {
+                MoreItemCard(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = "Keyboard",
+                    onClick = {
+                        navigator.navigate(LeafScreen.KeyboardPersonalization().createRoute())
+                    })
+            }
             item {
                 MoreItemCard(
                     modifier = Modifier

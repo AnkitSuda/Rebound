@@ -18,6 +18,8 @@ import android.text.TextUtils
 import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputConnection
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -32,15 +34,17 @@ import com.ankitsuda.rebound.ui.keyboard.models.NumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumberNumKey
 import com.ankitsuda.rebound.ui.keyboard.picker.WarmUpListPickerComponent
 import com.ankitsuda.rebound.ui.keyboard.platecalculator.PlateCalculatorComponent
-import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import timber.log.Timber
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ReboundSetKeyboardComponent(
     reboundKeyboardType: ReboundKeyboardType,
     inputConnection: InputConnection?,
     onHideKeyboard: () -> Unit
 ) {
+    val theme = LocalThemeState.current
+
     var mCurrentMode by remember {
         mutableStateOf(KeyboardModeType.NUMBERS)
     }
@@ -68,52 +72,53 @@ fun ReboundSetKeyboardComponent(
     }
 
     Box {
-        when (currentMode) {
-            KeyboardModeType.NUMBERS -> {
-                NumKeysContainerComponent(
-                    modifier = Modifier
-                        .fillMaxWidth(1f)
-                        .height(
-                            height = 250.dp,
-                        )
-                        .padding(end = rightButtonsWidth)
-                        .background(ReboundTheme.colors.background),
-                    reboundKeyboardType = reboundKeyboardType,
-                    onClickNumKey = {
-                        Timber.d(it.toString())
-                        onClickNumKey(it)
-                    }
-                )
-            }
-            KeyboardModeType.PLATE_CALCULATOR -> {
-                PlateCalculatorComponent(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(
-                            height = 250.dp,
-                        ),
-                    weight = inputConnection?.getText()?.toDoubleOrNull() ?: 0.0
-                )
-            }
-            KeyboardModeType.WARMUP_PICKER -> {
-                WarmUpListPickerComponent(
-                    onSetText = {
-                        val currentText = inputConnection?.getText() ?: ""
-                        val beforCursorText =
-                            inputConnection?.getTextBeforeCursor(currentText.length, 0) ?: ""
-                        val afterCursorText =
-                            inputConnection?.getTextAfterCursor(currentText.length, 0) ?: ""
-                        inputConnection?.deleteSurroundingText(
-                            beforCursorText.length,
-                            afterCursorText.length
-                        )
-                        inputConnection?.commitText(
-                            it,
-                            1
-                        )
-                    },
-                    startingText = inputConnection?.getText()
-                )
+        AnimatedContent(targetState = currentMode) { mCurrentMode ->
+            when (mCurrentMode) {
+                KeyboardModeType.NUMBERS -> {
+                    NumKeysContainerComponent(
+                        modifier = Modifier
+                            .fillMaxWidth(1f)
+                            .height(
+                                height = 250.dp,
+                            )
+                            .padding(end = rightButtonsWidth)
+                            .background(theme.keyboardBackgroundColor),
+                        reboundKeyboardType = reboundKeyboardType,
+                        onClickNumKey = { numKey ->
+                            onClickNumKey(numKey)
+                        }
+                    )
+                }
+                KeyboardModeType.PLATE_CALCULATOR -> {
+                    PlateCalculatorComponent(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(
+                                height = 250.dp,
+                            ),
+                        weight = inputConnection?.getText()?.toDoubleOrNull() ?: 0.0
+                    )
+                }
+                KeyboardModeType.WARMUP_PICKER -> {
+                    WarmUpListPickerComponent(
+                        onSetText = {
+                            val currentText = inputConnection?.getText() ?: ""
+                            val beforeCursorText =
+                                inputConnection?.getTextBeforeCursor(currentText.length, 0) ?: ""
+                            val afterCursorText =
+                                inputConnection?.getTextAfterCursor(currentText.length, 0) ?: ""
+                            inputConnection?.deleteSurroundingText(
+                                beforeCursorText.length,
+                                afterCursorText.length
+                            )
+                            inputConnection?.commitText(
+                                it,
+                                1
+                            )
+                        },
+                        startingText = inputConnection?.getText()
+                    )
+                }
             }
         }
 

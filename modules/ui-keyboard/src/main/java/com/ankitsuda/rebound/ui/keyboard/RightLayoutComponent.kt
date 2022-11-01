@@ -18,15 +18,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ChangeCircle
+import androidx.compose.material.icons.outlined.Dialpad
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import com.ankitsuda.rebound.ui.icons.Plates
 import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardModeType
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 
 @Composable
 internal fun RightLayoutComponent(
@@ -36,6 +37,8 @@ internal fun RightLayoutComponent(
     onChangeWidth: (Dp) -> Unit,
     onChangeLayoutMode: (KeyboardModeType) -> Unit,
 ) {
+    val theme = LocalThemeState.current
+
     val density = LocalDensity.current
 
     Column(
@@ -56,7 +59,18 @@ internal fun RightLayoutComponent(
                     }
                 )
             }) {
-                Icon(imageVector = Icons.Outlined.ChangeCircle, contentDescription = null)
+                Icon(
+                    imageVector = if (currentLayoutMode == KeyboardModeType.NUMBERS) {
+                        Icons.Filled.Plates
+                    } else {
+                        Icons.Outlined.Dialpad
+                    }, contentDescription = if (currentLayoutMode == KeyboardModeType.NUMBERS) {
+                        "Plate calculator"
+                    } else {
+                        "Keyboard"
+                    },
+                    tint = theme.keyboardContentColor
+                )
             }
         }
     }

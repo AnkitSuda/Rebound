@@ -87,6 +87,18 @@ data class ThemeState(
     @SerialName("cardColor")
     @Serializable(with = ColorSerializer::class)
     var cardColor: @RawValue Color = Color(248, 248, 248),
+    @SerialName("keyboardBackgroundColor")
+    @Serializable(with = ColorSerializer::class)
+    var keyboardBackgroundColor: @RawValue Color = Color.White,
+    @SerialName("keyboardContentColor")
+    @Serializable(with = ColorSerializer::class)
+    var keyboardContentColor: @RawValue Color = Color.Black,
+    @SerialName("keyboardBarbellColor")
+    @Serializable(with = ColorSerializer::class)
+    var keyboardBarbellColor: @RawValue Color = Color.Gray,
+    @SerialName("keyboardOnBarbellColor")
+    @Serializable(with = ColorSerializer::class)
+    var keyboardOnBarbellColor: @RawValue Color = Color.White,
 
     @SerialName("topBarTitleAlignment")
     var topBarTitleAlignment: String = "center",

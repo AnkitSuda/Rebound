@@ -12,15 +12,17 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.rebound.ui.components.workouteditor
+package com.ankitsuda.rebound.ui.keyboard
 
 import android.view.inputmethod.InputConnection
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
@@ -32,10 +34,14 @@ import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboardComponent
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.insets.navigationBarsPadding
 
 @Composable
 fun ReboundKeyboardHost(content: @Composable () -> Unit) {
+    val theme = LocalThemeState.current
+
     var reboundSetKeyboardType by remember {
         mutableStateOf(ReboundKeyboardType.WEIGHT)
     }
@@ -85,7 +91,11 @@ fun ReboundKeyboardHost(content: @Composable () -> Unit) {
                 elevation = 8.dp,
                 shape = RoundedCornerShape(0.dp)
             ) {
-                Box(modifier = Modifier.navigationBarsPadding()) {
+                Box(
+                    modifier = Modifier
+                        .background(theme.keyboardBackgroundColor)
+                        .navigationBarsPadding()
+                ) {
                     ReboundSetKeyboardComponent(
                         reboundKeyboardType = reboundSetKeyboardType,
                         inputConnection = reboundSetKeyboardInputConnection,
