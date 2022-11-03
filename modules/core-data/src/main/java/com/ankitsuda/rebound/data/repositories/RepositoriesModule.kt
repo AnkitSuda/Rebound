@@ -57,9 +57,10 @@ class RepositoriesModule {
     @Provides
     fun provideWorkoutTemplatesRepository(
         workoutTemplatesDao: WorkoutTemplatesDao,
-        workoutsDao: WorkoutsDao
+        foldersDao: WorkoutFoldersFoldersDao,
+        workoutsDao: WorkoutsDao,
     ) =
-        WorkoutTemplatesRepository(workoutTemplatesDao, workoutsDao)
+        WorkoutTemplatesRepository(workoutTemplatesDao, foldersDao, workoutsDao)
 
     @Singleton
     @Provides

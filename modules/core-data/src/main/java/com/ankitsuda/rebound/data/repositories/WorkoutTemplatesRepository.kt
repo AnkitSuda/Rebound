@@ -14,29 +14,29 @@
 
 package com.ankitsuda.rebound.data.repositories
 
-import androidx.room.Transaction
 import com.ankitsuda.base.utils.generateId
+import com.ankitsuda.rebound.data.db.daos.WorkoutFoldersFoldersDao
 import com.ankitsuda.rebound.data.db.daos.WorkoutTemplatesDao
 import com.ankitsuda.rebound.data.db.daos.WorkoutsDao
-import com.ankitsuda.rebound.domain.entities.WorkoutTemplate
 import com.ankitsuda.rebound.domain.entities.Workout
-import kotlinx.coroutines.flow.Flow
+import com.ankitsuda.rebound.domain.entities.WorkoutTemplate
+import com.ankitsuda.rebound.domain.entities.WorkoutTemplatesFolder
 import kotlinx.coroutines.flow.firstOrNull
 import java.time.LocalDateTime
-import java.util.*
 import javax.inject.Inject
 
 class WorkoutTemplatesRepository @Inject constructor(
     private val workoutTemplatesDao: WorkoutTemplatesDao,
+    private val foldersDao: WorkoutFoldersFoldersDao,
     private val workoutsDao: WorkoutsDao
 ) {
 
     fun getTemplate(templateId: String) = workoutTemplatesDao.getTemplate(templateId = templateId)
 
-    fun getNonHiddenTemplatesWithWorkouts() =
-        workoutTemplatesDao.getNonHiddenTemplatesWithWorkouts()
+    fun getVisibleTemplatesWithWorkouts(archived: Boolean) =
+        workoutTemplatesDao.getVisibleTemplatesWithWorkouts(archived)
 
-    suspend fun createTemplate(): WorkoutTemplate {
+    suspend fun createTemplate(folderId: String? = null): WorkoutTemplate {
         val workoutId = generateId()
         workoutsDao.insertWorkout(
             Workout(
@@ -57,6 +57,7 @@ class WorkoutTemplatesRepository @Inject constructor(
                 workoutId = workoutId,
                 isArchived = false,
                 isHidden = false,
+                folderId = folderId,
                 listOrder = lastListOrder + 1,
                 createdAt = LocalDateTime.now(),
                 updatedAt = LocalDateTime.now()
@@ -85,5 +86,32 @@ class WorkoutTemplatesRepository @Inject constructor(
             templateId = templateId,
             isArchived = !(isArchived ?: false)
         )
+    }
+
+    fun getFolders() =
+        foldersDao.getFolders()
+
+    fun getFolder(folderId: String) =
+        foldersDao.getFolder(folderId)
+
+    suspend fun deleteFolder(folderId: String) {
+        foldersDao.deleteFolder(folderId);
+        workoutTemplatesDao.deleteFolderIdFromTemplates(folderId)
+    }
+
+    suspend fun updateFolder(folder: WorkoutTemplatesFolder) {
+        foldersDao.updateFolder(folder);
+    }
+
+    suspend fun addFolder(name: String) {
+        val date = LocalDateTime.now()
+        foldersDao.insertFolder(
+            WorkoutTemplatesFolder(
+                id = generateId(),
+                name = name,
+                createdAt = date,
+                updatedAt = date,
+            )
+        );
     }
 }

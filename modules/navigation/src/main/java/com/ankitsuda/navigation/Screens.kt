@@ -37,6 +37,7 @@ const val PART_ID_KEY = "part_id"
 const val LOG_ID_KEY = "log_id"
 const val PLATE_ID_KEY = "plate_id"
 const val IS_TEMPLATE_KEY = "is_template"
+const val FOLDER_ID_KEY = "folder_id"
 
 interface Screen {
     val route: String
@@ -382,6 +383,27 @@ sealed class LeafScreen(
                 root: TabRootScreen = TabRootScreen.WorkoutTab
             ) =
                 "${root.route}/workout_template/$templateId/preview"
+        }
+    }
+
+    data class TemplatesFolderEdit(override val route: String = "edit_templates_folder?${FOLDER_ID_KEY}={${FOLDER_ID_KEY}}") :
+        LeafScreen(
+            route = route,
+            arguments = listOf(
+                navArgument(FOLDER_ID_KEY) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+            ),
+        ) {
+        companion object {
+            fun createRoute(folderId: String? = null): String {
+                var str = "edit_templates_folder?"
+                folderId?.let {
+                    str = "$str${FOLDER_ID_KEY}=$it"
+                }
+                return str;
+            }
         }
     }
 

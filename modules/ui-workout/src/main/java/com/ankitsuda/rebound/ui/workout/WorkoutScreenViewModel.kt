@@ -21,10 +21,11 @@ import com.ankitsuda.base.utils.TimePeriod
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.base.utils.toReadableDuration
 import com.ankitsuda.rebound.data.repositories.WorkoutTemplatesRepository
-import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
+import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.domain.entities.WorkoutTemplate
+import com.ankitsuda.rebound.domain.entities.WorkoutTemplatesFolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -47,11 +48,32 @@ class WorkoutScreenViewModel @Inject constructor(
     val currentWorkoutDurationStr = _currentWorkoutDurationStr
         .shareWhileObserved(viewModelScope)
 
-    private var _unarchivedTemplates = MutableStateFlow<List<TemplateWithWorkout>>(emptyList())
-    val unarchivedTemplates = _unarchivedTemplates.asStateFlow()
+    private val unarchivedTemplates =
+        workoutTemplatesRepository.getVisibleTemplatesWithWorkouts(archived = false)
+            .shareWhileObserved(viewModelScope)
 
-    private var _archivedTemplates = MutableStateFlow<List<TemplateWithWorkout>>(emptyList())
-    val archivedTemplates = _archivedTemplates.asStateFlow()
+    private val folders =
+        workoutTemplatesRepository.getFolders().shareWhileObserved(viewModelScope);
+
+    val groupedTemplates: Flow<List<Pair<WorkoutTemplatesFolder?, List<TemplateWithWorkout>>>> =
+        folders.combine(unarchivedTemplates) { mFolders, mTempWithWorkouts ->
+            val list = arrayListOf<Pair<WorkoutTemplatesFolder?, List<TemplateWithWorkout>>>();
+            list.addAll(mFolders.map { f ->
+                Pair(f, mTempWithWorkouts.filter { t -> t.template.folderId == f?.id })
+            })
+            list.add(
+                Pair(
+                    if (list.isEmpty()) null else WorkoutTemplatesFolder(
+                        id = "my_templates",
+                        name = "My Templates"
+                    ),
+                    mTempWithWorkouts.filter { t -> t.template.folderId == null })
+            )
+            list
+        }.shareWhileObserved(viewModelScope)
+
+    private var _foldersExpandedStatus = MutableStateFlow<Map<String, Boolean>>(emptyMap());
+    val foldersExpandedStatus = _foldersExpandedStatus.asStateFlow()
 
     private var durationJob: Job? = null
 
@@ -61,17 +83,11 @@ class WorkoutScreenViewModel @Inject constructor(
                 refreshCurrentWorkout(it)
             }
         }
-        viewModelScope.launch {
-            workoutTemplatesRepository.getNonHiddenTemplatesWithWorkouts().collectLatest {
-                _unarchivedTemplates.value = it.filter { t -> t.template.isArchived == false }
-                _archivedTemplates.value = it.filter { t -> t.template.isArchived == true }
-            }
-        }
     }
 
     private fun refreshCurrentWorkout(workoutId: String) {
         viewModelScope.launch {
-            var workout = if (workoutId != NONE_WORKOUT_ID) {
+            val workout = if (workoutId != NONE_WORKOUT_ID) {
                 workoutsRepository.getWorkout(workoutId = workoutId).firstOrNull()
             } else {
                 null
@@ -82,7 +98,6 @@ class WorkoutScreenViewModel @Inject constructor(
         }
     }
 
-
     private fun setupDurationUpdater(inProgress: Boolean, startAt: LocalDateTime?) {
         durationJob?.cancel()
         durationJob = viewModelScope.launch {
@@ -92,7 +107,6 @@ class WorkoutScreenViewModel @Inject constructor(
             }
         }
     }
-
 
     fun startEmptyWorkout() {
         viewModelScope.launch {
@@ -110,9 +124,9 @@ class WorkoutScreenViewModel @Inject constructor(
         }
     }
 
-    fun createTemplate(onCreated: (WorkoutTemplate) -> Unit) {
+    fun createTemplate(folderId: String?, onCreated: (WorkoutTemplate) -> Unit) {
         viewModelScope.launch {
-            val template = workoutTemplatesRepository.createTemplate()
+            val template = workoutTemplatesRepository.createTemplate(folderId = folderId)
             onCreated(template)
         }
     }
@@ -130,4 +144,17 @@ class WorkoutScreenViewModel @Inject constructor(
             )
         }
     }
+
+    fun deleteFolder(folderId: String) {
+        viewModelScope.launch {
+            workoutTemplatesRepository.deleteFolder(folderId)
+        }
+    }
+
+    fun changeIsFolderExpanded(folderId: String, isExpanded: Boolean) {
+        val newMap = _foldersExpandedStatus.value.toMutableMap()
+        newMap[folderId] = isExpanded
+        _foldersExpandedStatus.value = newMap
+    }
+
 }

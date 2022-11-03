@@ -59,4 +59,7 @@ class DatabaseModule {
     @Provides
     fun provideThemePresetsDao(db: AppDatabase) = db.themePresetsDao()
 
+    @Provides
+    fun provideWorkoutFoldersFoldersDao(db: AppDatabase) = db.workoutFoldersFoldersDao()
+
 }

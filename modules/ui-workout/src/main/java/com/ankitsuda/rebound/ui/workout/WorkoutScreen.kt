@@ -14,24 +14,21 @@
 
 package com.ankitsuda.rebound.ui.workout
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.CreateNewFolder
 import androidx.compose.material.icons.outlined.OpenInFull
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -40,18 +37,17 @@ import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.navigation.TabRootScreen
-import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.dialogs.DiscardActiveWorkoutDialog
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.ui.workout.components.folderSection
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
 
 @OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalAnimationApi::class,
     ExperimentalToolbarApi::class
 )
 @Composable
@@ -66,14 +62,11 @@ fun WorkoutScreen(
     var isDiscardActiveWorkoutDialogTemplateId: String? by rememberSaveable {
         mutableStateOf(null)
     }
-    var areArchivedTemplatesVisible by rememberSaveable {
-        mutableStateOf(false)
-    }
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val currentWorkout by viewModel.currentWorkout.collectAsState(initial = null)
     val currentWorkoutDurationStr by viewModel.currentWorkoutDurationStr.collectAsState(initial = null)
-    val archivedTemplates by viewModel.archivedTemplates.collectAsState(emptyList())
-    val unarchivedTemplates by viewModel.unarchivedTemplates.collectAsState(emptyList())
+    val groupedTemplates by viewModel.groupedTemplates.collectAsState(emptyList())
+    val foldersExpandedStatus by viewModel.foldersExpandedStatus.collectAsState(emptyMap())
     val coroutine = rememberCoroutineScope()
     val mainPanel = LocalPanel.current
 
@@ -83,8 +76,8 @@ fun WorkoutScreen(
         }
     }
 
-    fun createAndNavigateToTemplate() {
-        viewModel.createTemplate {
+    fun createAndNavigateToTemplate(folderId: String? = null) {
+        viewModel.createTemplate(folderId) {
             if (it.workoutId != null) {
                 navigator.navigate(
                     LeafScreen.WorkoutEdit.createRoute(
@@ -246,17 +239,14 @@ fun WorkoutScreen(
                 }
             }
             item(key = "templates_header") {
-
                 Column(
                     modifier = Modifier
                         .animateItemPlacement()
                 ) {
-
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -264,85 +254,73 @@ fun WorkoutScreen(
                             text = "Templates", style = MaterialTheme.typography.body1,
                             color = LocalThemeState.current.onBackgroundColor
                         )
-                        TextButton(onClick = {
-                            createAndNavigateToTemplate()
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Add,
-                                contentDescription = "New Template"
-                            )
-                            Text(text = "NEW", style = MaterialTheme.typography.button)
-                        }
                     }
-
-
-                }
-            }
-
-            items(unarchivedTemplates, key = { it.template.id }) {
-                TemplateListItem(navigator = navigator, templateWithWorkout = it, onClickPlay = {
-                    startWorkoutFromTemplateId(templateId = it.template.id, discardActive = false)
-                })
-            }
-
-            if (archivedTemplates.isNotEmpty()) {
-                if (areArchivedTemplatesVisible) {
-                    item(key = "archived_templates_count_text") {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 16.dp)
-                                .animateItemPlacement(),
-                            text = "${archivedTemplates.size} archived template${if (archivedTemplates.size > 1) "s" else ""}",
-                            textAlign = TextAlign.Center,
-                            style = ReboundTheme.typography.caption,
-                            color = ReboundTheme.colors.onBackground.copy(alpha = 0.7f)
-                        )
-                    }
-
-                    items(archivedTemplates, key = { it.template.id }) {
-                        TemplateListItem(
-                            navigator = navigator,
-                            templateWithWorkout = it,
-                            onClickPlay = {
-                                startWorkoutFromTemplateId(
-                                    templateId = it.template.id,
-                                    discardActive = false
-                                )
-                            })
-                    }
-                }
-
-                item(key = "archived_templates_visibility_button") {
-                    Box(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .animateItemPlacement()
-                            .clickable {
-                                areArchivedTemplatesVisible = !areArchivedTemplatesVisible
-                            },
-                        contentAlignment = Alignment.Center
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Row(modifier = Modifier.padding(12.dp)) {
-                            Icon(
-                                modifier = Modifier.size(18.dp),
-                                imageVector = if (areArchivedTemplatesVisible) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown,
-                                contentDescription = null,
-                                tint = ReboundTheme.colors.onBackground.copy(alpha = 0.7f)
-                            )
-                            RSpacer(space = 4.dp)
-                            Text(
-                                textAlign = TextAlign.Center,
-                                style = ReboundTheme.typography.caption,
-                                color = ReboundTheme.colors.onBackground.copy(alpha = 0.7f),
-                                text = if (areArchivedTemplatesVisible) "Hide archived" else "Show archived"
+                        RButtonStyle2(
+                            modifier = Modifier.weight(1f),
+                            text = "Folder",
+                            icon = Icons.Outlined.CreateNewFolder,
+                            onClick = {
+                                navigator.navigate(
+                                    LeafScreen.TemplatesFolderEdit.createRoute()
+                                )
+                            },
+                        )
+                        RButtonStyle2(
+                            modifier = Modifier.weight(1f),
+                            text = "Template",
+                            icon = Icons.Outlined.Add,
+                            onClick = {
+                                createAndNavigateToTemplate()
+                            },
+                        )
+                    }
+                }
+            }
+
+            for (pair in groupedTemplates) {
+                val folderId = pair.first?.id ?: "my_templates"
+                val isNullFolder = folderId == "my_templates"
+                folderSection(
+                    folder = pair.first,
+                    templates = pair.second,
+                    isExpanded = foldersExpandedStatus.getOrDefault(folderId, true),
+                    onChangeExpanded = {
+                        viewModel.changeIsFolderExpanded(folderId, it)
+                    },
+                    onClickPlay = {
+                        startWorkoutFromTemplateId(
+                            templateId = it,
+                            discardActive = false
+                        )
+                    },
+                    onClickTemplate = {
+                        navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(it))
+                    },
+                    onAddTemplate = {
+                        if (!isNullFolder) {
+                            createAndNavigateToTemplate(folderId = folderId)
+                        }
+                    },
+                    onDeleteFolder = {
+                        if (!isNullFolder) {
+                            viewModel.deleteFolder(folderId!!)
+                        }
+                    },
+                    onRenameFolder = {
+                        if (!isNullFolder) {
+                            navigator.navigate(
+                                LeafScreen.TemplatesFolderEdit.createRoute(folderId)
                             )
                         }
                     }
-                }
-
+                )
             }
-
         }
 
     }
@@ -354,36 +332,12 @@ fun WorkoutScreen(
                 startWorkoutFromTemplateId(
                     discardActive = true,
                     templateId = isDiscardActiveWorkoutDialogTemplateId!!
-                );
+                )
             },
             onDismissRequest = {
                 isDiscardActiveWorkoutDialogTemplateId = null
                 isDiscardActiveWorkoutDialogVisible = false
             }
-        )
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun LazyItemScope.TemplateListItem(
-    navigator: Navigator,
-    templateWithWorkout: TemplateWithWorkout,
-    onClickPlay: () -> Unit,
-) {
-    with(templateWithWorkout) {
-        TemplateItemCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                .animateItemPlacement(),
-            name = (workout.name ?: "").ifBlank { "Unnamed Template" },
-            italicName = (workout.name ?: "").isBlank(),
-            totalExercises = exerciseWorkoutJunctions.size,
-            onClick = {
-                navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(template.id))
-            },
-            onClickPlay = onClickPlay
         )
     }
 }

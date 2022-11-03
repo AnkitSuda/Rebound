@@ -39,6 +39,7 @@ import java.util.concurrent.Executors
         Plate::class,
         ThemePreset::class,
         ExerciseSetGroupNote::class,
+        WorkoutTemplatesFolder::class,
     ],
     version = 1,
     exportSchema = true
@@ -53,6 +54,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun workoutTemplatesDao(): WorkoutTemplatesDao
     abstract fun platesDao(): PlatesDao
     abstract fun themePresetsDao(): ThemePresetsDao
+    abstract fun workoutFoldersFoldersDao(): WorkoutFoldersFoldersDao
 
     companion object {
         @Volatile

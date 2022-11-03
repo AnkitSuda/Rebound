@@ -50,6 +50,7 @@ import com.ankitsuda.rebound.ui.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.settings.personalization.keyboard.KeyboardPersonalizationScreen
 import com.ankitsuda.rebound.ui.settings.personalization.presets.ThemePresetsPersonalizationScreen
 import com.ankitsuda.rebound.ui.workout.WorkoutScreen
+import com.ankitsuda.rebound.ui.workout.addfolder.TemplatesFolderEditBottomSheet
 import com.ankitsuda.rebound.ui.workout_details.SessionScreen
 import com.ankitsuda.rebound.ui.workoutedit.WorkoutEditScreen
 import com.ankitsuda.rebound.ui.workouttemplate.preview.WorkoutTemplatePreviewScreen
@@ -160,6 +161,7 @@ private fun NavGraphBuilder.addWorkoutRoot(navController: NavController) {
         addWorkoutTemplatePreview(navController)
         addExerciseDetail(navController, TabRootScreen.WorkoutTab)
         addWorkoutEdit(navController, TabRootScreen.WorkoutTab)
+        addTemplatesFolderEditBottomSheet(navController);
     }
 }
 
@@ -376,6 +378,12 @@ private fun NavGraphBuilder.addAddPartMeasurementBottomSheet(navController: NavC
 private fun NavGraphBuilder.addPlateEditBottomSheet(navController: NavController) {
     bottomSheetScreen(LeafScreen.PlateEdit()) {
         PlateEditBottomSheet()
+    }
+}
+
+private fun NavGraphBuilder.addTemplatesFolderEditBottomSheet(navController: NavController) {
+    bottomSheetScreen(LeafScreen.TemplatesFolderEdit()) {
+        TemplatesFolderEditBottomSheet()
     }
 }
 
