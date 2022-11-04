@@ -258,7 +258,12 @@ fun WorkoutScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+                            .padding(
+                                start = 16.dp,
+                                end = 16.dp,
+                                top = 16.dp,
+                                bottom = if (groupedTemplates.size > 1) 4.dp else 8.dp
+                            ),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         RButtonStyle2(
@@ -284,14 +289,18 @@ fun WorkoutScreen(
             }
 
             for (pair in groupedTemplates) {
-                val folderId = pair.first?.id ?: "my_templates"
-                val isNullFolder = folderId == "my_templates"
+                val folderId = pair.first?.id
+                val folderIdSafe = folderId ?: UNORGANIZED_FOLDERS_ID
+                val isNullFolder = folderIdSafe == UNORGANIZED_FOLDERS_ID
                 folderSection(
                     folder = pair.first,
                     templates = pair.second,
-                    isExpanded = foldersExpandedStatus.getOrDefault(folderId, true),
+                    isExpanded = if (pair.first?.id == null) true else foldersExpandedStatus.getOrDefault(
+                        folderIdSafe,
+                        true
+                    ),
                     onChangeExpanded = {
-                        viewModel.changeIsFolderExpanded(folderId, it)
+                        viewModel.changeIsFolderExpanded(folderIdSafe, it)
                     },
                     onClickPlay = {
                         startWorkoutFromTemplateId(
@@ -303,9 +312,7 @@ fun WorkoutScreen(
                         navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(it))
                     },
                     onAddTemplate = {
-                        if (!isNullFolder) {
-                            createAndNavigateToTemplate(folderId = folderId)
-                        }
+                        createAndNavigateToTemplate(folderId = if (folderId == UNORGANIZED_FOLDERS_ID) null else folderId)
                     },
                     onDeleteFolder = {
                         if (!isNullFolder) {
@@ -315,7 +322,7 @@ fun WorkoutScreen(
                     onRenameFolder = {
                         if (!isNullFolder) {
                             navigator.navigate(
-                                LeafScreen.TemplatesFolderEdit.createRoute(folderId)
+                                LeafScreen.TemplatesFolderEdit.createRoute(folderId!!)
                             )
                         }
                     }

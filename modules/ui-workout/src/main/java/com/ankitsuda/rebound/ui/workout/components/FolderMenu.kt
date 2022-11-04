@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 internal fun FolderMenu(
     modifier: Modifier = Modifier,
     expanded: Boolean,
+    isForUnorganized: Boolean,
     onDismissRequest: () -> Unit,
     onAddTemplate: () -> Unit,
     onRename: () -> Unit,
@@ -41,17 +42,19 @@ internal fun FolderMenu(
         }) {
             Text("Add Template")
         }
-        DropdownMenuItem(onClick = {
-            onDismissRequest()
-            onRename()
-        }) {
-            Text("Rename")
-        }
-        DropdownMenuItem(onClick = {
-            onDismissRequest()
-            onDelete()
-        }) {
-            Text("Delete")
+        if (!isForUnorganized) {
+            DropdownMenuItem(onClick = {
+                onDismissRequest()
+                onRename()
+            }) {
+                Text("Rename")
+            }
+            DropdownMenuItem(onClick = {
+                onDismissRequest()
+                onDelete()
+            }) {
+                Text("Delete")
+            }
         }
     }
 }

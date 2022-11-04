@@ -34,6 +34,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
+const val UNORGANIZED_FOLDERS_ID = "my_templates"
+
 @HiltViewModel
 class WorkoutScreenViewModel @Inject constructor(
     private val workoutsRepository: WorkoutsRepository,
@@ -64,7 +66,7 @@ class WorkoutScreenViewModel @Inject constructor(
             list.add(
                 Pair(
                     if (list.isEmpty()) null else WorkoutTemplatesFolder(
-                        id = "my_templates",
+                        id = UNORGANIZED_FOLDERS_ID,
                         name = "My Templates"
                     ),
                     mTempWithWorkouts.filter { t -> t.template.folderId == null })
