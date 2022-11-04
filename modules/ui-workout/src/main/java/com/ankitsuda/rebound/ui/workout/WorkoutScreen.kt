@@ -87,19 +87,13 @@ fun WorkoutScreen(
         isIndexDraggable = {
             val item = items[it]
             if (item is WorkoutScreenListItemFolderHeaderModel) {
+                viewModel.collapseAllFolders()
                 item.folder.id != UNORGANIZED_FOLDERS_ID
             } else {
                 false
             }
         },
-        canBeDroppedAtIndex = {
-            val item = items[it]
-            if (item is WorkoutScreenListItemFolderHeaderModel) {
-                item.folder.id != UNORGANIZED_FOLDERS_ID
-            } else {
-                false
-            }
-        })
+    )
 
     fun expandPanel() {
         coroutineScope.launch {

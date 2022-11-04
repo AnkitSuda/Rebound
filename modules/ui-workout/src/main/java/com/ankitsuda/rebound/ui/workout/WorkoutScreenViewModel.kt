@@ -94,6 +94,12 @@ class WorkoutScreenViewModel @Inject constructor(
         }
         viewModelScope.launch {
             workoutTemplatesRepository.getFolders().collect {
+                val newExpandedStatusMap = _foldersExpandedStatus.value.toMutableMap()
+                for (folder in it) {
+                    newExpandedStatusMap.putIfAbsent(folder!!.id, true)
+                }
+                newExpandedStatusMap.putIfAbsent(UNORGANIZED_FOLDERS_ID, true)
+                _foldersExpandedStatus.value = newExpandedStatusMap
                 _folders.value = it
             }
         }
@@ -193,8 +199,10 @@ class WorkoutScreenViewModel @Inject constructor(
 
     fun moveFolder(from: Int, to: Int) {
         viewModelScope.launch {
-            val folderIndex1 = _folders.value.indexOfFirst { it?.id == (_items.value[from] as WorkoutScreenListItemFolderHeaderModel).folder.id }
-            val folderIndex2 = _folders.value.indexOfFirst { it?.id == (_items.value[to] as WorkoutScreenListItemFolderHeaderModel).folder.id }
+            val folderIndex1 =
+                _folders.value.indexOfFirst { it?.id == (_items.value[from] as WorkoutScreenListItemFolderHeaderModel).folder.id }
+            val folderIndex2 =
+                _folders.value.indexOfFirst { it?.id == (_items.value[to] as WorkoutScreenListItemFolderHeaderModel).folder.id }
 
             try {
                 val newList = _folders.value.toArrayList()
@@ -286,6 +294,14 @@ class WorkoutScreenViewModel @Inject constructor(
         Timber.d("newItems $newItems")
         _items.value = newItems
 
+    }
+
+    fun collapseAllFolders() {
+        val newMap = _foldersExpandedStatus.value.toMutableMap()
+        newMap.replaceAll { _, _ ->
+            false
+        }
+        _foldersExpandedStatus.value = newMap
     }
 
 }
