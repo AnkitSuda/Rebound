@@ -193,51 +193,6 @@ fun WorkoutScreen(
                 }
             }
 
-            item(key = "plans_row") {
-                Column(
-                    modifier = Modifier.animateItemPlacement(),
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Plans", style = MaterialTheme.typography.body1,
-                            color = LocalThemeState.current.onBackgroundColor
-                        )
-                        TextButton(onClick = {
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Add,
-                                contentDescription = "New Plan"
-                            )
-                            RSpacer(space = 4.dp)
-                            Text(text = "NEW", style = MaterialTheme.typography.button)
-                        }
-                    }
-
-                    LazyRow() {
-                        items(5) {
-                            RoutineItemCard(
-                                name = "Push",
-                                date = "2 Aug 2021",
-                                totalExercises = 7,
-                                modifier = Modifier
-                                    .width(((LocalConfiguration.current.screenWidthDp / 2) - 24).dp)
-                                    .padding(
-                                        start = if (it == 0) 16.dp else 0.dp,
-                                        end = 16.dp
-                                    )
-                            ) {
-
-                            }
-                        }
-                    }
-                }
-            }
             item(key = "templates_header") {
                 Column(
                     modifier = Modifier
