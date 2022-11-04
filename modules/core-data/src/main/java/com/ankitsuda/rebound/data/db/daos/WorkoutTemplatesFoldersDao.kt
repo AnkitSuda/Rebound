@@ -39,4 +39,6 @@ interface WorkoutFoldersFoldersDao {
     @Query("DELETE FROM workout_templates_folders WHERE id = :folderId")
     suspend fun deleteFolder(folderId: String)
 
+    @Query("UPDATE workout_templates_folders SET list_order = :listOrder WHERE id = :folderId")
+    suspend fun updateFolderListOrder(folderId: String, listOrder: Int)
 }

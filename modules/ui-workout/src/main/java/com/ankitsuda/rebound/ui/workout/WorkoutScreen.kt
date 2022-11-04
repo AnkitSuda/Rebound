@@ -16,9 +16,12 @@ package com.ankitsuda.rebound.ui.workout
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -28,7 +31,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -39,12 +43,17 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.navigation.TabRootScreen
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.dialogs.DiscardActiveWorkoutDialog
+import com.ankitsuda.rebound.ui.components.dragdrop.rememberDragDropListState
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.ui.workout.components.FolderSection
 import com.ankitsuda.rebound.ui.workout.components.folderSection
+import com.ankitsuda.rebound.ui.workout.models.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
+import timber.log.Timber
 
 @OptIn(
     ExperimentalFoundationApi::class,
@@ -63,15 +72,37 @@ fun WorkoutScreen(
         mutableStateOf(null)
     }
     val collapsingState = rememberCollapsingToolbarScaffoldState()
-    val currentWorkout by viewModel.currentWorkout.collectAsState(initial = null)
-    val currentWorkoutDurationStr by viewModel.currentWorkoutDurationStr.collectAsState(initial = null)
-    val groupedTemplates by viewModel.groupedTemplates.collectAsState(emptyList())
+    val currentWorkout by viewModel.currentWorkout.collectAsState(null)
+    val items by viewModel.items.collectAsState(emptyList())
     val foldersExpandedStatus by viewModel.foldersExpandedStatus.collectAsState(emptyMap())
-    val coroutine = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     val mainPanel = LocalPanel.current
 
+    var overscrollJob by remember { mutableStateOf<Job?>(null) }
+
+    val dragDropListState = rememberDragDropListState(
+        onMove = { i1, i2 ->
+            viewModel.moveFolder(i1, i2)
+        },
+        isIndexDraggable = {
+            val item = items[it]
+            if (item is WorkoutScreenListItemFolderHeaderModel) {
+                item.folder.id != UNORGANIZED_FOLDERS_ID
+            } else {
+                false
+            }
+        },
+        canBeDroppedAtIndex = {
+            val item = items[it]
+            if (item is WorkoutScreenListItemFolderHeaderModel) {
+                item.folder.id != UNORGANIZED_FOLDERS_ID
+            } else {
+                false
+            }
+        })
+
     fun expandPanel() {
-        coroutine.launch {
+        coroutineScope.launch {
             mainPanel.expand()
         }
     }
@@ -143,12 +174,45 @@ fun WorkoutScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background),
+                .background(MaterialTheme.colors.background)
+                .pointerInput(Unit) {
+                    detectDragGesturesAfterLongPress(
+                        onDrag = { change, offset ->
+                            change.consumeAllChanges()
+                            dragDropListState.onDrag(offset)
+
+                            if (overscrollJob?.isActive == true)
+                                return@detectDragGesturesAfterLongPress
+
+                            dragDropListState
+                                .checkForOverScroll()
+                                .takeIf { it != 0f }
+                                ?.let {
+                                    overscrollJob = coroutineScope.launch {
+                                        dragDropListState.lazyListState.scrollBy(it)
+                                    }
+                                }
+                                ?: run { overscrollJob?.cancel() }
+                        },
+                        onDragStart = { offset -> dragDropListState.onDragStart(offset) },
+                        onDragEnd = { dragDropListState.onDragInterrupted() },
+                        onDragCancel = { dragDropListState.onDragInterrupted() }
+                    )
+                },
+            state = dragDropListState.lazyListState,
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
-            if (currentWorkout != null) {
-                item("current_workout_overview") {
-                    AppCard(
+            itemsIndexed(items, key = { index, item ->
+                when (item) {
+                    is WorkoutScreenListItemOngoingWorkoutModel -> "$index"
+                    is WorkoutScreenListItemHeaderModel -> "$index"
+                    is WorkoutScreenListItemFolderHeaderModel -> item.folder.id
+                    is WorkoutScreenListItemAddTemplateModel -> "add_template_${item.folderId}"
+                    is WorkoutScreenListItemTemplateModel -> item.templateWithWorkout.template.id
+                }
+            }) { index, item ->
+                when (item) {
+                    is WorkoutScreenListItemOngoingWorkoutModel -> AppCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
@@ -171,7 +235,7 @@ fun WorkoutScreen(
                                     style = ReboundTheme.typography.h6,
                                     color = ReboundTheme.colors.onPrimary
                                 )
-                                currentWorkoutDurationStr?.let {
+                                item.durationStr?.let {
                                     RSpacer(space = 4.dp)
                                     Text(
                                         text = it,
@@ -190,99 +254,171 @@ fun WorkoutScreen(
                             }
                         }
                     }
-                }
-            }
-
-            item(key = "templates_header") {
-                Column(
-                    modifier = Modifier
-                        .animateItemPlacement()
-                ) {
-                    Row(
+                    is WorkoutScreenListItemHeaderModel -> Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                            .animateItemPlacement()
                     ) {
-                        Text(
-                            text = "Templates", style = MaterialTheme.typography.body1,
-                            color = LocalThemeState.current.onBackgroundColor
-                        )
-                    }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                start = 16.dp,
-                                end = 16.dp,
-                                top = 16.dp,
-                                bottom = if (groupedTemplates.size > 1) 4.dp else 8.dp
-                            ),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        RButtonStyle2(
-                            modifier = Modifier.weight(1f),
-                            text = "Folder",
-                            icon = Icons.Outlined.CreateNewFolder,
-                            onClick = {
-                                navigator.navigate(
-                                    LeafScreen.TemplatesFolderEdit.createRoute()
-                                )
-                            },
-                        )
-                        RButtonStyle2(
-                            modifier = Modifier.weight(1f),
-                            text = "Template",
-                            icon = Icons.Outlined.Add,
-                            onClick = {
-                                createAndNavigateToTemplate()
-                            },
-                        )
-                    }
-                }
-            }
-
-            for (pair in groupedTemplates) {
-                val folderId = pair.first?.id
-                val folderIdSafe = folderId ?: UNORGANIZED_FOLDERS_ID
-                val isNullFolder = folderIdSafe == UNORGANIZED_FOLDERS_ID
-                folderSection(
-                    folder = pair.first,
-                    templates = pair.second,
-                    isExpanded = if (pair.first?.id == null) true else foldersExpandedStatus.getOrDefault(
-                        folderIdSafe,
-                        true
-                    ),
-                    onChangeExpanded = {
-                        viewModel.changeIsFolderExpanded(folderIdSafe, it)
-                    },
-                    onClickPlay = {
-                        startWorkoutFromTemplateId(
-                            templateId = it,
-                            discardActive = false
-                        )
-                    },
-                    onClickTemplate = {
-                        navigator.navigate(LeafScreen.WorkoutTemplatePreview.createRoute(it))
-                    },
-                    onAddTemplate = {
-                        createAndNavigateToTemplate(folderId = if (folderId == UNORGANIZED_FOLDERS_ID) null else folderId)
-                    },
-                    onDeleteFolder = {
-                        if (!isNullFolder) {
-                            viewModel.deleteFolder(folderId!!)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Templates", style = MaterialTheme.typography.body1,
+                                color = LocalThemeState.current.onBackgroundColor
+                            )
                         }
-                    },
-                    onRenameFolder = {
-                        if (!isNullFolder) {
-                            navigator.navigate(
-                                LeafScreen.TemplatesFolderEdit.createRoute(folderId!!)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    start = 16.dp,
+                                    end = 16.dp,
+                                    top = 16.dp,
+                                    bottom = 8.dp
+//                                    bottom = if (groupedTemplates.size > 1) 4.dp else 8.dp
+                                ),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            RButtonStyle2(
+                                modifier = Modifier.weight(1f),
+                                text = "Folder",
+                                icon = Icons.Outlined.CreateNewFolder,
+                                onClick = {
+                                    navigator.navigate(
+                                        LeafScreen.TemplatesFolderEdit.createRoute()
+                                    )
+                                },
+                            )
+                            RButtonStyle2(
+                                modifier = Modifier.weight(1f),
+                                text = "Template",
+                                icon = Icons.Outlined.Add,
+                                onClick = {
+                                    createAndNavigateToTemplate()
+                                },
                             )
                         }
                     }
-                )
+                    is WorkoutScreenListItemFolderHeaderModel -> {
+                        val folderId = item.folder.id
+                        val folderIdSafe = folderId ?: UNORGANIZED_FOLDERS_ID
+                        val isNullFolder = folderIdSafe == UNORGANIZED_FOLDERS_ID
+
+                        FolderSection(
+                            folder = item.folder,
+                            index = index,
+                            dragDropListState = dragDropListState,
+                            isExpanded = foldersExpandedStatus.getOrDefault(
+                                folderIdSafe,
+                                true
+                            ),
+                            onChangeExpanded = {
+                                viewModel.changeIsFolderExpanded(folderIdSafe, it)
+                            },
+                            onAddTemplate = {
+                                createAndNavigateToTemplate(folderId = if (folderId == UNORGANIZED_FOLDERS_ID) null else folderId)
+                            },
+                            onDeleteFolder = {
+                                if (!isNullFolder) {
+                                    viewModel.deleteFolder(folderId!!)
+                                }
+                            },
+                            onRenameFolder = {
+                                if (!isNullFolder) {
+                                    navigator.navigate(
+                                        LeafScreen.TemplatesFolderEdit.createRoute(folderId)
+                                    )
+                                }
+                            }
+                        )
+                    }
+                    is WorkoutScreenListItemAddTemplateModel -> {
+                        RDashedButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .animateItemPlacement(),
+                            text = "Add Template",
+                            icon = Icons.Outlined.Add,
+                            onClick = {
+                                createAndNavigateToTemplate(folderId = item.folderId)
+                            }
+                        )
+                    }
+                    is WorkoutScreenListItemTemplateModel -> {
+                        with(item.templateWithWorkout) {
+                            TemplateItemCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .animateItemPlacement(),
+                                name = (workout.name ?: "").ifBlank { "Unnamed Template" },
+                                italicName = (workout.name ?: "").isBlank(),
+                                totalExercises = exerciseWorkoutJunctions.size,
+                                onClickPlay = {
+                                    startWorkoutFromTemplateId(
+                                        templateId = template.id,
+                                        discardActive = false
+                                    )
+                                },
+                                onClick = {
+                                    navigator.navigate(
+                                        LeafScreen.WorkoutTemplatePreview.createRoute(
+                                            template.id
+                                        )
+                                    )
+                                }
+                            )
+                        }
+                    }
+                    else -> {}
+                }
             }
+
+//            groupedTemplates.forEachIndexed { index, pair ->
+//                val folderId = pair.first?.id
+//                val folderIdSafe = folderId ?: UNORGANIZED_FOLDERS_ID
+//                val isNullFolder = folderIdSafe == UNORGANIZED_FOLDERS_ID
+//                folderSection(
+//                    folder = pair.first,
+//                    templates = pair.second,
+//                    index = index,
+//                    dragDropListState = dragDropListState,
+//                    isExpanded = if (pair.first?.id == null) true else foldersExpandedStatus.getOrDefault(
+//                        folderIdSafe,
+//                        true
+//                    ),
+//                    onChangeExpanded = {
+//                        viewModel.changeIsFolderExpanded(folderIdSafe, it)
+//                    },
+//                    onClickPlay = {
+//                        startWorkoutFromTemplateId(
+//                            templateId = it,
+//                            discardActive = false
+//                        )
+//                    },
+//                    onClickTemplate = {
+//                    },
+//                    onAddTemplate = {
+//                        createAndNavigateToTemplate(folderId = if (folderId == UNORGANIZED_FOLDERS_ID) null else folderId)
+//                    },
+//                    onDeleteFolder = {
+//                        if (!isNullFolder) {
+//                            viewModel.deleteFolder(folderId!!)
+//                        }
+//                    },
+//                    onRenameFolder = {
+//                        if (!isNullFolder) {
+//                            navigator.navigate(
+//                                LeafScreen.TemplatesFolderEdit.createRoute(folderId!!)
+//                            )
+//                        }
+//                    }
+//                )
+//            }
         }
 
     }

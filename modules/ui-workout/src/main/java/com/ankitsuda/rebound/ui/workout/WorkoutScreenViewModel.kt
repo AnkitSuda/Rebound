@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.utils.TimePeriod
-import com.ankitsuda.base.utils.extensions.shareWhileObserved
+import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.base.utils.toReadableDuration
 import com.ankitsuda.rebound.data.repositories.WorkoutTemplatesRepository
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
@@ -26,11 +26,14 @@ import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.domain.entities.WorkoutTemplate
 import com.ankitsuda.rebound.domain.entities.WorkoutTemplatesFolder
+import com.ankitsuda.rebound.ui.components.dragdrop.move
+import com.ankitsuda.rebound.ui.workout.models.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -43,47 +46,76 @@ class WorkoutScreenViewModel @Inject constructor(
 ) :
     ViewModel() {
     private var _currentWorkout = MutableStateFlow<Workout?>(null)
-    val currentWorkout = _currentWorkout
-        .shareWhileObserved(viewModelScope)
+    val currentWorkout = _currentWorkout.asStateFlow()
+//        .shareWhileObserved(viewModelScope)
 
     private var _currentWorkoutDurationStr = MutableStateFlow<String?>(null)
-    val currentWorkoutDurationStr = _currentWorkoutDurationStr
-        .shareWhileObserved(viewModelScope)
+    val currentWorkoutDurationStr = _currentWorkoutDurationStr.asStateFlow()
+//        .shareWhileObserved(viewModelScope)
 
-    private val unarchivedTemplates =
+    private val _unarchivedTemplates =
         workoutTemplatesRepository.getVisibleTemplatesWithWorkouts(archived = false)
-            .shareWhileObserved(viewModelScope)
+//            .shareWhileObserved(viewModelScope)
 
-    private val folders =
-        workoutTemplatesRepository.getFolders().shareWhileObserved(viewModelScope);
+    private val _folders = MutableStateFlow<List<WorkoutTemplatesFolder?>>(emptyList());
+    private val folders = _folders.asStateFlow()
 
-    val groupedTemplates: Flow<List<Pair<WorkoutTemplatesFolder?, List<TemplateWithWorkout>>>> =
-        folders.combine(unarchivedTemplates) { mFolders, mTempWithWorkouts ->
-            val list = arrayListOf<Pair<WorkoutTemplatesFolder?, List<TemplateWithWorkout>>>();
-            list.addAll(mFolders.map { f ->
-                Pair(f, mTempWithWorkouts.filter { t -> t.template.folderId == f?.id })
-            })
-            list.add(
-                Pair(
-                    if (list.isEmpty()) null else WorkoutTemplatesFolder(
-                        id = UNORGANIZED_FOLDERS_ID,
-                        name = "My Templates"
-                    ),
-                    mTempWithWorkouts.filter { t -> t.template.folderId == null })
-            )
-            list
-        }.shareWhileObserved(viewModelScope)
+//    val groupedTemplates: Flow<List<Pair<WorkoutTemplatesFolder?, List<TemplateWithWorkout>>>> =
+//        _unarchivedTemplates.combine(folders) { mTempWithWorkouts, mFolders ->
+//            val list = arrayListOf<Pair<WorkoutTemplatesFolder?, List<TemplateWithWorkout>>>();
+//            list.addAll(mFolders.map { f ->
+//                Pair(f, mTempWithWorkouts.filter { t -> t.template.folderId == f?.id })
+//            })
+//            list.add(
+//                Pair(
+//                    if (list.isEmpty()) null else WorkoutTemplatesFolder(
+//                        id = UNORGANIZED_FOLDERS_ID,
+//                        name = "My Templates"
+//                    ),
+//                    mTempWithWorkouts.filter { t -> t.template.folderId == null })
+//            )
+//            list
+//        }.shareWhileObserved(viewModelScope)
 
     private var _foldersExpandedStatus = MutableStateFlow<Map<String, Boolean>>(emptyMap());
     val foldersExpandedStatus = _foldersExpandedStatus.asStateFlow()
 
+    private val _items = MutableStateFlow<List<WorkoutScreenListItemModel>>(emptyList());
+    val items = _items.asStateFlow()
+
     private var durationJob: Job? = null
+    private var refreshJob: Job? = null
 
     init {
         viewModelScope.launch {
             workoutsRepository.getCurrentWorkoutId().collectLatest {
                 refreshCurrentWorkout(it)
             }
+        }
+        viewModelScope.launch {
+            workoutTemplatesRepository.getFolders().collect {
+                _folders.value = it
+            }
+        }
+
+
+        viewModelScope.launch {
+            combine(
+                _folders,
+                _unarchivedTemplates,
+                _currentWorkoutDurationStr,
+                _currentWorkout,
+                _foldersExpandedStatus
+            ) { mFolders, mTemplates, mDurationsStr, mCurrentWorkout, mFoldersExpandedStatus ->
+                refreshItems(
+                    mFolders,
+                    mTemplates,
+                    mDurationsStr,
+                    mCurrentWorkout,
+                    mFoldersExpandedStatus
+                )
+                true
+            }.collect()
         }
     }
 
@@ -157,6 +189,103 @@ class WorkoutScreenViewModel @Inject constructor(
         val newMap = _foldersExpandedStatus.value.toMutableMap()
         newMap[folderId] = isExpanded
         _foldersExpandedStatus.value = newMap
+    }
+
+    fun moveFolder(from: Int, to: Int) {
+        viewModelScope.launch {
+            val folderIndex1 = _folders.value.indexOfFirst { it?.id == (_items.value[from] as WorkoutScreenListItemFolderHeaderModel).folder.id }
+            val folderIndex2 = _folders.value.indexOfFirst { it?.id == (_items.value[to] as WorkoutScreenListItemFolderHeaderModel).folder.id }
+
+            try {
+                val newList = _folders.value.toArrayList()
+                newList.move(folderIndex1, folderIndex2)
+                _folders.value = newList
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+//            workoutTemplatesRepository.updateFolderListOrder(_folders.last()[from]!!.id, to)
+        }
+    }
+
+    private fun refreshItems(
+        mFolders: List<WorkoutTemplatesFolder?>,
+        mTemplates: List<TemplateWithWorkout>,
+        mDurationsStr: String?,
+        mCurrentWorkout: Workout?,
+        mFoldersExpandedStatus: Map<String, Boolean>
+    ) {
+        Timber.d("refreshItems")
+
+        val newItems = arrayListOf<WorkoutScreenListItemModel>()
+
+        if (mCurrentWorkout != null) {
+            newItems.add(
+                WorkoutScreenListItemOngoingWorkoutModel(
+                    durationStr = mDurationsStr
+                )
+            )
+        }
+
+        newItems.add(WorkoutScreenListItemHeaderModel)
+
+        for (folder in mFolders) {
+            if (folder == null) continue
+
+            newItems.add(
+                WorkoutScreenListItemFolderHeaderModel(
+                    folder = folder
+                )
+            )
+
+            if (!mFoldersExpandedStatus.getOrDefault(folder.id, true)) continue
+
+            val temps = mTemplates.filter { t -> t.template.folderId == folder.id }
+
+            if (temps.isEmpty()) {
+                newItems.add(
+                    WorkoutScreenListItemAddTemplateModel(
+                        folderId = folder.id
+                    )
+                )
+            } else {
+                for (template in temps) {
+                    newItems.add(
+                        WorkoutScreenListItemTemplateModel(
+                            templateWithWorkout = template
+                        )
+                    )
+                }
+            }
+        }
+
+        if (mFolders.isNotEmpty()) {
+            newItems.add(
+                WorkoutScreenListItemFolderHeaderModel(
+                    folder = WorkoutTemplatesFolder(
+                        id = UNORGANIZED_FOLDERS_ID,
+                        name = "My Templates"
+                    )
+                )
+            )
+        }
+
+        if (mFoldersExpandedStatus.getOrDefault(
+                UNORGANIZED_FOLDERS_ID,
+                true
+            ) || mFolders.isEmpty()
+        ) {
+            for (template in mTemplates.filter { t -> t.template.folderId == null }) {
+                newItems.add(
+                    WorkoutScreenListItemTemplateModel(
+                        templateWithWorkout = template
+                    )
+                )
+            }
+        }
+
+        Timber.d("newItems $newItems")
+        _items.value = newItems
+
     }
 
 }

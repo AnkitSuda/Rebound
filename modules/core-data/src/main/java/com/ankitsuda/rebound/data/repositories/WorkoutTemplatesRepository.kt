@@ -103,6 +103,10 @@ class WorkoutTemplatesRepository @Inject constructor(
         foldersDao.updateFolder(folder);
     }
 
+    suspend fun updateFolderListOrder(folderId: String, listOrder: Int) {
+        foldersDao.updateFolderListOrder(folderId, listOrder);
+    }
+
     suspend fun addFolder(name: String) {
         val date = LocalDateTime.now()
         foldersDao.insertFolder(

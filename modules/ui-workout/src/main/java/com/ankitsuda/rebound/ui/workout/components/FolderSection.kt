@@ -17,18 +17,18 @@ package com.ankitsuda.rebound.ui.workout.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.domain.entities.WorkoutTemplatesFolder
@@ -36,70 +36,91 @@ import com.ankitsuda.rebound.ui.components.RButtonStyle2
 import com.ankitsuda.rebound.ui.components.RDashedButton
 import com.ankitsuda.rebound.ui.components.RTextButton
 import com.ankitsuda.rebound.ui.components.TemplateItemCard
+import com.ankitsuda.rebound.ui.components.dragdrop.DragDropListState
 import com.ankitsuda.rebound.ui.components.modifiers.dashedBorder
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.workout.UNORGANIZED_FOLDERS_ID
 
 @OptIn(ExperimentalFoundationApi::class)
+@Composable()
+internal fun LazyItemScope.FolderSection(
+    index: Int,
+    folder: WorkoutTemplatesFolder?,
+    isExpanded: Boolean,
+    dragDropListState: DragDropListState,
+    onChangeExpanded: (Boolean) -> Unit,
+    onRenameFolder: () -> Unit,
+    onDeleteFolder: () -> Unit,
+    onAddTemplate: () -> Unit,
+) {
+    var menuExpanded by remember {
+        mutableStateOf(false)
+    }
+
+    folder?.let {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .clickable { onChangeExpanded(!isExpanded) }
+                .padding(start = 16.dp, end = 16.dp)
+                .composed {
+                    val offsetOrNull =
+                        dragDropListState.elementDisplacement.takeIf {
+                            index == dragDropListState.currentIndexOfDraggedItem
+                        }
+
+                    Modifier
+                        .graphicsLayer {
+                            translationY = offsetOrNull ?: 0f
+                        }
+                }
+                .animateItemPlacement(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = if (isExpanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                contentDescription = if (isExpanded) "Collapse" else "Expand"
+            )
+            Text(
+                modifier = Modifier.weight(1f),
+                text = it.name, style = MaterialTheme.typography.body1,
+                color = LocalThemeState.current.onBackgroundColor
+            )
+            IconButton(onClick = {
+                menuExpanded = true
+            }) {
+                Icon(
+                    imageVector = Icons.Outlined.MoreVert,
+                    contentDescription = "More"
+                )
+                FolderMenu(
+                    expanded = menuExpanded,
+                    isForUnorganized = it.id == UNORGANIZED_FOLDERS_ID,
+                    onDismissRequest = {
+                        menuExpanded = false
+                    },
+                    onAddTemplate = onAddTemplate,
+                    onRename = onRenameFolder,
+                    onDelete = onDeleteFolder
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
 internal fun LazyListScope.folderSection(
     folder: WorkoutTemplatesFolder?,
     templates: List<TemplateWithWorkout>,
     isExpanded: Boolean,
-    onChangeExpanded: (Boolean) -> Unit,
     onClickPlay: (templateId: String) -> Unit,
     onClickTemplate: (templateId: String) -> Unit,
     onAddTemplate: () -> Unit,
-    onRenameFolder: () -> Unit,
-    onDeleteFolder: () -> Unit,
 ) {
-    folder?.let {
-        item(key = "workout_templates_folder_${folder.id}") {
-
-            var menuExpanded by remember {
-                mutableStateOf(false)
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .clickable { onChangeExpanded(!isExpanded) }
-                    .padding(start = 16.dp, end = 16.dp)
-                    .animateItemPlacement(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = if (isExpanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
-                    contentDescription = if (isExpanded) "Collapse" else "Expand"
-                )
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = it.name, style = MaterialTheme.typography.body1,
-                    color = LocalThemeState.current.onBackgroundColor
-                )
-                IconButton(onClick = {
-                    menuExpanded = true
-                }) {
-                    Icon(
-                        imageVector = Icons.Outlined.MoreVert,
-                        contentDescription = "More"
-                    )
-                    FolderMenu(
-                        expanded = menuExpanded,
-                        isForUnorganized = it.id == UNORGANIZED_FOLDERS_ID,
-                        onDismissRequest = {
-                            menuExpanded = false
-                        },
-                        onAddTemplate = onAddTemplate,
-                        onRename = onRenameFolder,
-                        onDelete = onDeleteFolder
-                    )
-                }
-            }
-        }
-    }
-
     if (isExpanded) {
         if (templates.isEmpty() && folder?.id != null) {
             item(key = "add_template_${folder.id}") {
