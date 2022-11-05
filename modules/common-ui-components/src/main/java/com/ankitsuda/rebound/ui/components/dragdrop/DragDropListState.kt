@@ -25,7 +25,7 @@ import kotlinx.coroutines.Job
 fun rememberDragDropListState(
     lazyListState: LazyListState = rememberLazyListState(),
     onMove: (Int, Int) -> Unit,
-    isIndexDraggable: (Int) -> Boolean,
+    isIndexDraggable: (Int, Int) -> Boolean,
 ) =
     remember {
         DragDropListState(
@@ -38,7 +38,7 @@ fun rememberDragDropListState(
 class DragDropListState(
     val lazyListState: LazyListState,
     private val onMove: (Int, Int) -> Unit,
-    private val isIndexDraggable: (Int) -> Boolean,
+    private val isIndexDraggable: (Int, Int) -> Boolean,
 ) {
     var draggedDistance by mutableStateOf(0f)
 
@@ -68,7 +68,7 @@ class DragDropListState(
         lazyListState.layoutInfo.visibleItemsInfo
             .firstOrNull { item -> offset.y.toInt() in item.offset..(item.offset + item.size) }
             ?.also {
-                if (isIndexDraggable(it.index)) {
+                if (isIndexDraggable(it.index, it.index)) {
                     currentIndexOfDraggedItem = it.index
                     initiallyDraggedElement = it
                 }
@@ -100,14 +100,14 @@ class DragDropListState(
                         }
                     }
                     ?.also { item ->
-                        if (isIndexDraggable(item.index)) {
-                            currentIndexOfDraggedItem?.let { current ->
+                        currentIndexOfDraggedItem?.let { current ->
+                            if (isIndexDraggable(current, item.index)) {
                                 onMove.invoke(
                                     current,
                                     item.index
                                 )
+                                currentIndexOfDraggedItem = item.index
                             }
-                            currentIndexOfDraggedItem = item.index
                         }
                     }
             }

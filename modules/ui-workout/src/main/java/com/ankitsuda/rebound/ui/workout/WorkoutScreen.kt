@@ -47,7 +47,7 @@ import com.ankitsuda.rebound.ui.components.dragdrop.rememberDragDropListState
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.workout.components.FolderSection
-import com.ankitsuda.rebound.ui.workout.components.folderSection
+import com.ankitsuda.rebound.ui.workout.components.TemplateItem
 import com.ankitsuda.rebound.ui.workout.models.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -81,16 +81,54 @@ fun WorkoutScreen(
     var overscrollJob by remember { mutableStateOf<Job?>(null) }
 
     val dragDropListState = rememberDragDropListState(
-        onMove = { i1, i2 ->
-            viewModel.moveFolder(i1, i2)
+        onMove = { from, to ->
+            val fromItem = items[from]
+
+            when (val toItem = items[to]) {
+                is WorkoutScreenListItemFolderHeaderModel -> {
+                    when (fromItem) {
+                        is WorkoutScreenListItemFolderHeaderModel -> {
+                            viewModel.moveFolder(from, to)
+                        }
+                        is WorkoutScreenListItemTemplateModel -> {
+                            viewModel.moveTemplate(from, to)
+                        }
+                        else -> {}
+                    }
+                }
+                is WorkoutScreenListItemTemplateModel -> {
+                    if (fromItem is WorkoutScreenListItemTemplateModel) {
+                        viewModel.moveTemplate(from, to)
+                    }
+                }
+                else -> {}
+            }
         },
-        isIndexDraggable = {
-            val item = items[it]
-            if (item is WorkoutScreenListItemFolderHeaderModel) {
-                viewModel.collapseAllFolders()
-                item.folder.id != UNORGANIZED_FOLDERS_ID
-            } else {
-                false
+        isIndexDraggable = { from, to ->
+            val fromItem = items[from]
+
+            when (val toItem = items[to]) {
+                is WorkoutScreenListItemFolderHeaderModel -> {
+                    when (fromItem) {
+                        is WorkoutScreenListItemFolderHeaderModel -> {
+                            viewModel.collapseAllFolders()
+                            toItem.folder.id != UNORGANIZED_FOLDERS_ID
+                        }
+                        is WorkoutScreenListItemTemplateModel -> {
+                            false
+                        }
+                        else -> {
+                            false
+                        }
+                    }
+                }
+                is WorkoutScreenListItemTemplateModel -> {
+                    fromItem is WorkoutScreenListItemTemplateModel
+                }
+                else -> {
+                    false
+                }
+
             }
         },
     )
@@ -343,30 +381,23 @@ fun WorkoutScreen(
                         )
                     }
                     is WorkoutScreenListItemTemplateModel -> {
-                        with(item.templateWithWorkout) {
-                            TemplateItemCard(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .animateItemPlacement(),
-                                name = (workout.name ?: "").ifBlank { "Unnamed Template" },
-                                italicName = (workout.name ?: "").isBlank(),
-                                totalExercises = exerciseWorkoutJunctions.size,
-                                onClickPlay = {
-                                    startWorkoutFromTemplateId(
-                                        templateId = template.id,
-                                        discardActive = false
+                        TemplateItem(
+                            templateWithWorkout = item.templateWithWorkout,
+                            dragDropListState = dragDropListState,
+                            onClickPlay = {
+                                startWorkoutFromTemplateId(
+                                    templateId = item.templateWithWorkout.template.id,
+                                    discardActive = false
+                                )
+                            },
+                            onClick = {
+                                navigator.navigate(
+                                    LeafScreen.WorkoutTemplatePreview.createRoute(
+                                        item.templateWithWorkout.template.id
                                     )
-                                },
-                                onClick = {
-                                    navigator.navigate(
-                                        LeafScreen.WorkoutTemplatePreview.createRoute(
-                                            template.id
-                                        )
-                                    )
-                                }
-                            )
-                        }
+                                )
+                            }
+                        )
                     }
                     else -> {}
                 }
