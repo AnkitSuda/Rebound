@@ -49,7 +49,7 @@ class WorkoutTemplatesRepository @Inject constructor(
         )
 
         val routineId = generateId()
-        val lastListOrder = workoutTemplatesDao.getLastListOrder().firstOrNull() ?: 0
+        val lastListOrder = workoutTemplatesDao.getLastListOrder(folderId).firstOrNull() ?: 0
 
         val template =
             WorkoutTemplate(

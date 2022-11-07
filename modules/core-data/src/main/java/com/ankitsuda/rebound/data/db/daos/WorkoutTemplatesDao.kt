@@ -33,8 +33,8 @@ interface WorkoutTemplatesDao {
     @Query("UPDATE workout_templates SET is_archived = :isArchived WHERE id = :templateId")
     suspend fun updateTemplateIsArchived(templateId: String, isArchived: Boolean)
 
-    @Query("SELECT list_order FROM workout_templates ORDER BY list_order DESC LIMIT 1")
-    fun getLastListOrder(): Flow<Int>
+    @Query("SELECT list_order FROM workout_templates WHERE folder_id IS :folderId ORDER BY list_order DESC LIMIT 1")
+    fun getLastListOrder(folderId: String?): Flow<Int>
 
     @Insert
     suspend fun insertTemplate(workoutTemplate: WorkoutTemplate)

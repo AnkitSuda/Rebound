@@ -20,7 +20,6 @@ import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -50,10 +49,10 @@ import com.ankitsuda.rebound.ui.workout.components.FolderSection
 import com.ankitsuda.rebound.ui.workout.components.TemplateItem
 import com.ankitsuda.rebound.ui.workout.models.*
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
-import timber.log.Timber
 
 @OptIn(
     ExperimentalFoundationApi::class,
@@ -112,7 +111,7 @@ fun WorkoutScreen(
                     when (fromItem) {
                         is WorkoutScreenListItemFolderHeaderModel -> {
                             viewModel.collapseAllFolders()
-                            toItem.folder.id != UNORGANIZED_FOLDERS_ID
+                            toItem.folder.id != UNORGANIZED_FOLDER_ID
                         }
                         is WorkoutScreenListItemTemplateModel -> {
                             false
@@ -132,6 +131,12 @@ fun WorkoutScreen(
             }
         },
     )
+
+    LaunchedEffect(key1 = dragDropListState.currentElement) {
+        if (dragDropListState.currentElement == null) {
+            viewModel.clearDraggedItemTemplateId()
+        }
+    }
 
     fun expandPanel() {
         coroutineScope.launch {
@@ -261,14 +266,17 @@ fun WorkoutScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            val durationStr by item.durationStrFlow.collectAsState(initial = null)
+
                             Column() {
                                 Text(
                                     text = "Ongoing Workout",
                                     style = ReboundTheme.typography.h6,
                                     color = ReboundTheme.colors.onPrimary
                                 )
-                                item.durationStr?.let {
+                                durationStr?.let {
                                     RSpacer(space = 4.dp)
+
                                     Text(
                                         text = it,
                                         style = ReboundTheme.typography.body2,
@@ -336,8 +344,8 @@ fun WorkoutScreen(
                     }
                     is WorkoutScreenListItemFolderHeaderModel -> {
                         val folderId = item.folder.id
-                        val folderIdSafe = folderId ?: UNORGANIZED_FOLDERS_ID
-                        val isNullFolder = folderIdSafe == UNORGANIZED_FOLDERS_ID
+                        val folderIdSafe = folderId ?: UNORGANIZED_FOLDER_ID
+                        val isNullFolder = folderIdSafe == UNORGANIZED_FOLDER_ID
 
                         FolderSection(
                             folder = item.folder,
@@ -351,7 +359,7 @@ fun WorkoutScreen(
                                 viewModel.changeIsFolderExpanded(folderIdSafe, it)
                             },
                             onAddTemplate = {
-                                createAndNavigateToTemplate(folderId = if (folderId == UNORGANIZED_FOLDERS_ID) null else folderId)
+                                createAndNavigateToTemplate(folderId = if (folderId == UNORGANIZED_FOLDER_ID) null else folderId)
                             },
                             onDeleteFolder = {
                                 if (!isNullFolder) {

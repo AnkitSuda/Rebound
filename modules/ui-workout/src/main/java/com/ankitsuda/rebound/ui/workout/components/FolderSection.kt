@@ -17,12 +17,9 @@ package com.ankitsuda.rebound.ui.workout.components
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -30,19 +27,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.domain.entities.WorkoutTemplatesFolder
-import com.ankitsuda.rebound.ui.components.RDashedButton
-import com.ankitsuda.rebound.ui.components.TemplateItemCard
 import com.ankitsuda.rebound.ui.components.dragdrop.DragDropListState
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import com.ankitsuda.rebound.ui.workout.UNORGANIZED_FOLDERS_ID
+import com.ankitsuda.rebound.ui.workout.UNORGANIZED_FOLDER_ID
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable()
@@ -114,7 +106,7 @@ internal fun LazyItemScope.FolderSection(
                         )
                         FolderMenu(
                             expanded = menuExpanded,
-                            isForUnorganized = it.id == UNORGANIZED_FOLDERS_ID,
+                            isForUnorganized = it.id == UNORGANIZED_FOLDER_ID,
                             onDismissRequest = {
                                 menuExpanded = false
                             },

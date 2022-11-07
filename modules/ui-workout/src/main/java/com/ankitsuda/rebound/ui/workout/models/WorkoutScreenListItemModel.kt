@@ -16,11 +16,12 @@ package com.ankitsuda.rebound.ui.workout.models
 
 import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.domain.entities.WorkoutTemplatesFolder
+import kotlinx.coroutines.flow.Flow
 
 sealed class WorkoutScreenListItemModel
 
 data class WorkoutScreenListItemOngoingWorkoutModel(
-    val durationStr: String?
+    val durationStrFlow: Flow<String?>
 ) : WorkoutScreenListItemModel()
 
 object WorkoutScreenListItemHeaderModel : WorkoutScreenListItemModel()
