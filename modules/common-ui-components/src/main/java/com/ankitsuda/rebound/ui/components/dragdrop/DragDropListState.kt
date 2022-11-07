@@ -25,12 +25,16 @@ import kotlinx.coroutines.Job
 fun rememberDragDropListState(
     lazyListState: LazyListState = rememberLazyListState(),
     onMove: (Int, Int) -> Unit,
+    onDragEnd: (() -> Unit)? = null,
+    onDrag: ((offset: Offset, draggedDistance: Float) -> Unit)? = null,
     isIndexDraggable: (Int, Int) -> Boolean,
 ) =
     remember {
         DragDropListState(
             lazyListState = lazyListState,
             onMove = onMove,
+            onDragEnd = onDragEnd,
+            onDragCallback = onDrag,
             isIndexDraggable = isIndexDraggable
         )
     }
@@ -38,6 +42,8 @@ fun rememberDragDropListState(
 class DragDropListState(
     val lazyListState: LazyListState,
     private val onMove: (Int, Int) -> Unit,
+    private val onDragEnd: (() -> Unit)? = null,
+    private val onDragCallback: ((offset: Offset, draggedDistance: Float) -> Unit)?,
     private val isIndexDraggable: (Int, Int) -> Boolean,
 ) {
     var draggedDistance by mutableStateOf(0f)
@@ -80,11 +86,12 @@ class DragDropListState(
         currentIndexOfDraggedItem = null
         initiallyDraggedElement = null
         overscrollJob?.cancel()
+        onDragEnd?.invoke()
     }
 
     fun onDrag(offset: Offset) {
         draggedDistance += offset.y
-
+        onDragCallback?.invoke(offset, draggedDistance)
         initialOffsets?.let { (topOffset, bottomOffset) ->
             val startOffset = topOffset + draggedDistance
             val endOffset = bottomOffset + draggedDistance

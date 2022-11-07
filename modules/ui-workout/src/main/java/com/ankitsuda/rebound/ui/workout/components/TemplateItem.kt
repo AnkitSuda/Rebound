@@ -29,10 +29,12 @@ import androidx.compose.ui.zIndex
 import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.ui.components.TemplateItemCard
 import com.ankitsuda.rebound.ui.components.dragdrop.DragDropListState
+import com.ankitsuda.rebound.ui.workout.invisible
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyItemScope.TemplateItem(
+    invisible: Boolean,
     templateWithWorkout: TemplateWithWorkout,
     dragDropListState: DragDropListState,
     onClickPlay: () -> Unit,
@@ -51,6 +53,7 @@ fun LazyItemScope.TemplateItem(
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .offset { IntOffset(0, offsetY.toInt()) }
                 .zIndex(if (isSelectedForDrag) 10f else 0f)
+                .invisible(invisible)
                 .animateItemPlacement(),
             name = (workout.name ?: "").ifBlank { "Unnamed Template" },
             italicName = (workout.name ?: "").isBlank(),

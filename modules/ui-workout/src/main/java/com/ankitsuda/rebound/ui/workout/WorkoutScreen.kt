@@ -30,8 +30,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -49,7 +52,6 @@ import com.ankitsuda.rebound.ui.workout.components.FolderSection
 import com.ankitsuda.rebound.ui.workout.components.TemplateItem
 import com.ankitsuda.rebound.ui.workout.models.*
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
@@ -74,6 +76,9 @@ fun WorkoutScreen(
     val currentWorkout by viewModel.currentWorkout.collectAsState(null)
     val items by viewModel.items.collectAsState(emptyList())
     val foldersExpandedStatus by viewModel.foldersExpandedStatus.collectAsState(emptyMap())
+    val allItemsInvisibleExceptFolders by viewModel.allItemsInvisibleExceptFolders.collectAsState(
+        false
+    )
     val coroutineScope = rememberCoroutineScope()
     val mainPanel = LocalPanel.current
 
@@ -117,7 +122,8 @@ fun WorkoutScreen(
                 is WorkoutScreenListItemFolderHeaderModel -> {
                     when (fromItem) {
                         is WorkoutScreenListItemFolderHeaderModel -> {
-                            viewModel.collapseAllFolders()
+//                            viewModel.collapseAllFolders()
+                            viewModel.makeEverythingInvisibleExceptFolders()
                             toItem.folder.id != UNORGANIZED_FOLDER_ID
                         }
                         is WorkoutScreenListItemTemplateModel -> {
@@ -140,6 +146,9 @@ fun WorkoutScreen(
 
             }
         },
+        onDragEnd = {
+            viewModel.makeEverythingVisible()
+        }
     )
 
     LaunchedEffect(key1 = dragDropListState.currentElement) {
@@ -263,6 +272,7 @@ fun WorkoutScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
+                            .invisible(allItemsInvisibleExceptFolders)
                             .animateItemPlacement(),
                         backgroundColor = ReboundTheme.colors.primary,
                         onClick = {
@@ -306,6 +316,7 @@ fun WorkoutScreen(
                     }
                     is WorkoutScreenListItemHeaderModel -> Column(
                         modifier = Modifier
+                            .invisible(allItemsInvisibleExceptFolders)
                             .animateItemPlacement()
                     ) {
                         Row(
@@ -390,6 +401,7 @@ fun WorkoutScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .invisible(allItemsInvisibleExceptFolders)
                                 .animateItemPlacement(),
                             text = "Add Template",
                             icon = Icons.Outlined.Add,
@@ -400,6 +412,7 @@ fun WorkoutScreen(
                     }
                     is WorkoutScreenListItemTemplateModel -> {
                         TemplateItem(
+                            invisible = allItemsInvisibleExceptFolders,
                             templateWithWorkout = item.templateWithWorkout,
                             dragDropListState = dragDropListState,
                             onClickPlay = {
@@ -420,50 +433,7 @@ fun WorkoutScreen(
                     else -> {}
                 }
             }
-
-//            groupedTemplates.forEachIndexed { index, pair ->
-//                val folderId = pair.first?.id
-//                val folderIdSafe = folderId ?: UNORGANIZED_FOLDERS_ID
-//                val isNullFolder = folderIdSafe == UNORGANIZED_FOLDERS_ID
-//                folderSection(
-//                    folder = pair.first,
-//                    templates = pair.second,
-//                    index = index,
-//                    dragDropListState = dragDropListState,
-//                    isExpanded = if (pair.first?.id == null) true else foldersExpandedStatus.getOrDefault(
-//                        folderIdSafe,
-//                        true
-//                    ),
-//                    onChangeExpanded = {
-//                        viewModel.changeIsFolderExpanded(folderIdSafe, it)
-//                    },
-//                    onClickPlay = {
-//                        startWorkoutFromTemplateId(
-//                            templateId = it,
-//                            discardActive = false
-//                        )
-//                    },
-//                    onClickTemplate = {
-//                    },
-//                    onAddTemplate = {
-//                        createAndNavigateToTemplate(folderId = if (folderId == UNORGANIZED_FOLDERS_ID) null else folderId)
-//                    },
-//                    onDeleteFolder = {
-//                        if (!isNullFolder) {
-//                            viewModel.deleteFolder(folderId!!)
-//                        }
-//                    },
-//                    onRenameFolder = {
-//                        if (!isNullFolder) {
-//                            navigator.navigate(
-//                                LeafScreen.TemplatesFolderEdit.createRoute(folderId!!)
-//                            )
-//                        }
-//                    }
-//                )
-//            }
         }
-
     }
 
     if (isDiscardActiveWorkoutDialogVisible && isDiscardActiveWorkoutDialogTemplateId != null) {
@@ -482,3 +452,11 @@ fun WorkoutScreen(
         )
     }
 }
+
+internal fun Modifier.invisible(invisible: Boolean) = then(
+    if (invisible) {
+        alpha(0f)
+    } else {
+        this
+    }
+)
