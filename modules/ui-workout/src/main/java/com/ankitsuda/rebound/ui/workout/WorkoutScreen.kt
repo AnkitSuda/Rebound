@@ -90,12 +90,19 @@ fun WorkoutScreen(
                             viewModel.moveFolder(from, to)
                         }
                         is WorkoutScreenListItemTemplateModel -> {
-                            viewModel.moveTemplate(from, to)
+                            if (fromItem.templateWithWorkout.template.folderId != toItem.folder.id) {
+                                viewModel.moveTemplate(from, to)
+                            }
                         }
                         else -> {}
                     }
                 }
                 is WorkoutScreenListItemTemplateModel -> {
+                    if (fromItem is WorkoutScreenListItemTemplateModel) {
+                        viewModel.moveTemplate(from, to)
+                    }
+                }
+                is WorkoutScreenListItemAddTemplateModel -> {
                     if (fromItem is WorkoutScreenListItemTemplateModel) {
                         viewModel.moveTemplate(from, to)
                     }
@@ -114,7 +121,7 @@ fun WorkoutScreen(
                             toItem.folder.id != UNORGANIZED_FOLDER_ID
                         }
                         is WorkoutScreenListItemTemplateModel -> {
-                            false
+                            fromItem.templateWithWorkout.template.folderId != toItem.folder.id
                         }
                         else -> {
                             false
@@ -122,6 +129,9 @@ fun WorkoutScreen(
                     }
                 }
                 is WorkoutScreenListItemTemplateModel -> {
+                    fromItem is WorkoutScreenListItemTemplateModel
+                }
+                is WorkoutScreenListItemAddTemplateModel -> {
                     fromItem is WorkoutScreenListItemTemplateModel
                 }
                 else -> {
@@ -239,10 +249,10 @@ fun WorkoutScreen(
             state = dragDropListState.lazyListState,
             contentPadding = PaddingValues(bottom = 64.dp)
         ) {
-            itemsIndexed(items, key = { index, item ->
+            itemsIndexed(items, key = { _, item ->
                 when (item) {
-                    is WorkoutScreenListItemOngoingWorkoutModel -> "$index"
-                    is WorkoutScreenListItemHeaderModel -> "$index"
+                    is WorkoutScreenListItemOngoingWorkoutModel -> "ongoing_workout"
+                    is WorkoutScreenListItemHeaderModel -> "header"
                     is WorkoutScreenListItemFolderHeaderModel -> item.folder.id
                     is WorkoutScreenListItemAddTemplateModel -> "add_template_${item.folderId}"
                     is WorkoutScreenListItemTemplateModel -> item.templateWithWorkout.template.id

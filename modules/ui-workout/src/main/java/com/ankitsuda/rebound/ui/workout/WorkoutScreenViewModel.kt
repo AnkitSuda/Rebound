@@ -197,12 +197,12 @@ class WorkoutScreenViewModel @Inject constructor(
 
     fun moveFolder(from: Int, to: Int) {
         viewModelScope.launch {
-            val folderIndex1 =
-                _folders.value.indexOfFirst { it?.id == (_items.value[from] as WorkoutScreenListItemFolderHeaderModel).folder.id }
-            val folderIndex2 =
-                _folders.value.indexOfFirst { it?.id == (_items.value[to] as WorkoutScreenListItemFolderHeaderModel).folder.id }
-
             try {
+                val folderIndex1 =
+                    _folders.value.indexOfFirst { it?.id == (_items.value[from] as WorkoutScreenListItemFolderHeaderModel).folder.id }
+                val folderIndex2 =
+                    _folders.value.indexOfFirst { it?.id == (_items.value[to] as WorkoutScreenListItemFolderHeaderModel).folder.id }
+
                 val newList = _folders.value.toArrayList()
                 newList.move(folderIndex1, folderIndex2)
                 _folders.value = newList
@@ -220,35 +220,89 @@ class WorkoutScreenViewModel @Inject constructor(
                 (mItems[from] as WorkoutScreenListItemTemplateModel).templateWithWorkout.template
             when (val toItem = mItems[to]) {
                 is WorkoutScreenListItemAddTemplateModel -> {
+                    val fromFolderId = template.folderId
+                    val toFolderId = toItem.folderId
 
+                    var newList: ArrayList<TemplateWithWorkout>? = null
+
+                    val mTemplates = _unarchivedTemplates.value
+
+                    newList = mTemplates.toArrayList()
+                    newList = newList.sortedWith(
+                        compareBy(
+                            { it.template.folderId },
+                            { it.template.listOrder }
+                        )
+                    ).toArrayList()
+
+                    val fromTemplateIndex =
+                        mTemplates.indexOfFirst { it.template.id == template.id }
+                    val toTemplateIndex = mTemplates.size - 1
+
+                    newList[fromTemplateIndex].template.folderId = toFolderId
+                    newList[fromTemplateIndex].template.listOrder = 0
+
+                    newList.move(fromTemplateIndex, toTemplateIndex)
+
+                    var newListOrderFolder1 = 0
+                    var newListOrderFolder2 = 0
+                    newList.toList().forEachIndexed { index, templateWithWorkout ->
+                        if (templateWithWorkout.template.folderId == fromFolderId) {
+                            newList!![index].template.listOrder = newListOrderFolder1
+                            newListOrderFolder1++
+                        } else if (templateWithWorkout.template.folderId == toFolderId) {
+                            newList!![index].template.listOrder = newListOrderFolder2
+                            newListOrderFolder2++
+                        }
+                    }
+
+                    _unarchivedTemplates.value = newList
                 }
                 is WorkoutScreenListItemFolderHeaderModel -> {
+                    val fromFolderId = template.folderId
+                    val toFolderId = toItem.folder.id
+
+                    var newList: ArrayList<TemplateWithWorkout>? = null
+
+                    val mTemplates = _unarchivedTemplates.value
+
+                    newList = mTemplates.toArrayList()
+                    newList = newList.sortedWith(
+                        compareBy(
+                            { it.template.folderId },
+                            { it.template.listOrder }
+                        )
+                    ).toArrayList()
+
+                    val fromTemplateIndex =
+                        mTemplates.indexOfFirst { it.template.id == template.id }
+                    val toTemplateIndex = mTemplates.size - 1
+
+                    newList[fromTemplateIndex].template.folderId = toFolderId
+                    newList[fromTemplateIndex].template.listOrder = 0
+
+                    newList.move(fromTemplateIndex, toTemplateIndex)
+
+                    var newListOrderFolder1 = 0
+                    var newListOrderFolder2 = 0
+                    newList.toList().forEachIndexed { index, templateWithWorkout ->
+                        if (templateWithWorkout.template.folderId == fromFolderId) {
+                            newList!![index].template.listOrder = newListOrderFolder1
+                            newListOrderFolder1++
+                        } else if (templateWithWorkout.template.folderId == toFolderId) {
+                            newList!![index].template.listOrder = newListOrderFolder2
+                            newListOrderFolder2++
+                        }
+                    }
+
+                    _unarchivedTemplates.value = newList
                 }
                 is WorkoutScreenListItemTemplateModel -> {
                     if (template.folderId == toItem.templateWithWorkout.template.folderId) {
-//                        val newTemplates = arrayListOf<TemplateWithWorkout>()
-//
-//                        newTemplates.addAll(_unarchivedTemplates.value.sortedBy { it.template.folderId })
-
-//                        val folderTemplateStartIndex =
-//                            newTemplates.indexOfFirst { it.template.folderId == template.folderId }
-//                        val folderTemplateEndIndex =
-//                            newTemplates.indexOfLast { it.template.folderId == template.folderId }
-
-//                        val prevIndex = newTemplates.indexOfFirst { it.template.id == template.id }
-//                        val newIndex = newTemplates.indexOfFirst { it.template.id == template.id }
-
                         var newList: ArrayList<TemplateWithWorkout>? = null
 
-                        var moveFrom = from
-                        var moveTo = to
-
-                        val mFolders = _folders.value
                         val mTemplates = _unarchivedTemplates.value
 
-                        Timber.d("Before ${mTemplates.map { it.template.id }}")
-
-//                        if (mFolders.isEmpty()) {
                         newList = mTemplates.toArrayList()
                         newList = newList.sortedWith(
                             compareBy(
@@ -268,79 +322,48 @@ class WorkoutScreenViewModel @Inject constructor(
                                 newListOrder++
                             }
                         }
-//                        } else {
-//
-//                            val folderId = template.folderId ?: UNORGANIZED_FOLDER_ID
-//
-//                            val folder =
-//                                _folders.value.indexOfFirst {
-//                                    (it?.id ?: UNORGANIZED_FOLDER_ID) == folderId
-//                                }
-//
-//                            _currentDraggedTemplateId = template.id
-//
-////                        var folderIndex = -1
-////                        var folderTemplatesStartIndex = -1
-////                        var folderTemplatesEndIndex = -1
-////
-////
-////                        mItems.forEachIndexed { itemIndex, mItem ->
-////                            val nextItem = mItems.getOrNull(itemIndex + 1)
-////                            when (mItem) {
-////                                is WorkoutScreenListItemFolderHeaderModel -> {
-////                                    if (mItem.folder.id == folderId) {
-////                                        folderIndex = itemIndex
-////
-////                                        if (nextItem != null && nextItem is WorkoutScreenListItemTemplateModel
-////                                        ) {
-////                                            folderTemplatesStartIndex = itemIndex + 1
-////                                        }
-////                                    } else {
-////
-////                                    }
-////                                }
-////                                is WorkoutScreenListItemTemplateModel -> {
-////                                    if (nextItem == null) {
-////                                        folderTemplatesEndIndex = itemIndex
-////                                    }
-////                                }
-////                                else -> {}
-////                            }
-////                        }
-//
-////                        val templateForFolderStartingIndex =
-////                            mTemplates.indexOfFirst { it.template.folderId == folderId }
-////                        val templateForFolderEndingIndex =
-////                            mTemplates.indexOfLast { it.template.folderId == folderId }
-////                        val totalTemplatesInFolder =
-////                            mTemplates.count { it.template.folderId == folderId }
-//
-//                            moveFrom = mTemplates.indexOfFirst { it.template.folderId == folderId }
-//                            moveTo =
-//                                mTemplates.indexOfFirst { toItem.templateWithWorkout.template.folderId == folderId }
-//                        }
 
-                        Timber.d("moveFrom $moveFrom moveTo $moveTo")
+                        _unarchivedTemplates.value = newList
+                    } else {
+                        val fromFolderId = template.folderId
+                        val toFolderId = toItem.templateWithWorkout.template.folderId
 
-                        try {
-                            if (newList == null) {
-                                newList = mTemplates.toArrayList()
-//                            val foldersSize = _folders.value.size
-//                            newList.move(from - foldersSize - 1, to - foldersSize - 1)
-                                newList.sortBy { it.template.listOrder }
-                                newList.move(moveFrom, moveTo)
-                                newList[moveFrom].template.listOrder = moveTo
-                                newList[moveTo].template.listOrder = moveFrom
+                        var newList: ArrayList<TemplateWithWorkout>? = null
+
+                        val mTemplates = _unarchivedTemplates.value
+
+                        newList = mTemplates.toArrayList()
+                        newList = newList.sortedWith(
+                            compareBy(
+                                { it.template.folderId },
+                                { it.template.listOrder }
+                            )
+                        ).toArrayList()
+
+                        val fromTemplateIndex =
+                            mTemplates.indexOfFirst { it.template.id == template.id }
+                        val toTemplateIndex =
+                            mTemplates.indexOfFirst { it.template.id == toItem.templateWithWorkout.template.id }
+
+                        newList[fromTemplateIndex].template.folderId = toFolderId
+                        newList[fromTemplateIndex].template.listOrder =
+                            newList[toTemplateIndex].template.listOrder
+
+                        newList.move(fromTemplateIndex, toTemplateIndex)
+
+                        var newListOrderFolder1 = 0
+                        var newListOrderFolder2 = 0
+                        newList.toList().forEachIndexed { index, templateWithWorkout ->
+                            if (templateWithWorkout.template.folderId == fromFolderId) {
+                                newList[index].template.listOrder = newListOrderFolder1
+                                newListOrderFolder1++
+                            } else if (templateWithWorkout.template.folderId == toFolderId) {
+                                newList[index].template.listOrder = newListOrderFolder2
+                                newListOrderFolder2++
                             }
-//                            newList.forEachIndexed { index, _ ->
-//                                newList[index].template.listOrder = index
-//                            }
-
-                            Timber.d("After ${newList.map { it.template.id }}")
-                            _unarchivedTemplates.value = newList
-                        } catch (e: Exception) {
-                            e.printStackTrace()
                         }
+
+                        _unarchivedTemplates.value = newList
                     }
                 }
                 else -> {}

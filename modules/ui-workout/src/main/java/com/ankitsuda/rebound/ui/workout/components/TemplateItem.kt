@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.ui.components.TemplateItemCard
 import com.ankitsuda.rebound.ui.components.dragdrop.DragDropListState
@@ -49,6 +50,7 @@ fun LazyItemScope.TemplateItem(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .offset { IntOffset(0, offsetY.toInt()) }
+                .zIndex(if (isSelectedForDrag) 10f else 0f)
                 .animateItemPlacement(),
             name = (workout.name ?: "").ifBlank { "Unnamed Template" },
             italicName = (workout.name ?: "").isBlank(),
