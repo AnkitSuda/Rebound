@@ -58,8 +58,11 @@ class WorkoutScreenViewModel @Inject constructor(
     private var _foldersExpandedStatus = MutableStateFlow<Map<String, Boolean>>(emptyMap());
     val foldersExpandedStatus = _foldersExpandedStatus.asStateFlow()
 
-    private var _allItemsInvisibleExceptFolders = MutableStateFlow<Boolean>(false);
-    val allItemsInvisibleExceptFolders = _allItemsInvisibleExceptFolders.asStateFlow();
+
+    private var _currentDraggedFolderInfo = MutableStateFlow<DraggedFolderInfoModel?>(null);
+    val allItemsInvisibleExceptFolders = _currentDraggedFolderInfo.asStateFlow().map {
+        it != null
+    }
 
     private val _items = MutableStateFlow<List<WorkoutScreenListItemModel>>(emptyList());
     val items = _items.asStateFlow()
@@ -114,15 +117,15 @@ class WorkoutScreenViewModel @Inject constructor(
                 _unarchivedTemplates.shareWhileObserved(viewModelScope).distinctUntilChanged(),
                 _currentWorkout.shareWhileObserved(viewModelScope).distinctUntilChanged(),
                 _foldersExpandedStatus.shareWhileObserved(viewModelScope).distinctUntilChanged(),
-                _allItemsInvisibleExceptFolders.shareWhileObserved(viewModelScope)
-                    .distinctUntilChanged()
-            ) { mFolders, mTemplates, mCurrentWorkout, mFoldersExpandedStatus, mAllItemsInvisibleExceptFolders ->
+                _currentDraggedFolderInfo.shareWhileObserved(viewModelScope)
+                    .distinctUntilChanged(),
+            ) { mFolders, mTemplates, mCurrentWorkout, mFoldersExpandedStatus, mDraggedFolderInfo ->
                 refreshItems(
-                    mFolders,
-                    mTemplates,
-                    mCurrentWorkout,
-                    mFoldersExpandedStatus,
-                    mAllItemsInvisibleExceptFolders
+                    mFolders = mFolders,
+                    mTemplates = mTemplates,
+                    mCurrentWorkout = mCurrentWorkout,
+                    mFoldersExpandedStatus = mFoldersExpandedStatus,
+                    mDraggedFolderInfo = mDraggedFolderInfo,
                 )
                 true
             }.collect()
@@ -385,7 +388,7 @@ class WorkoutScreenViewModel @Inject constructor(
             mTemplates = _unarchivedTemplates.value,
             mCurrentWorkout = _currentWorkout.value,
             mFoldersExpandedStatus = _foldersExpandedStatus.value,
-            mAllFoldersTogether = _allItemsInvisibleExceptFolders.value
+            mDraggedFolderInfo = _currentDraggedFolderInfo.value
         )
     }
 
@@ -394,7 +397,7 @@ class WorkoutScreenViewModel @Inject constructor(
         mTemplates: List<TemplateWithWorkout>,
         mCurrentWorkout: Workout?,
         mFoldersExpandedStatus: Map<String, Boolean>,
-        mAllFoldersTogether: Boolean,
+        mDraggedFolderInfo: DraggedFolderInfoModel?,
     ) {
         Timber.d("refreshItems")
 
@@ -411,60 +414,81 @@ class WorkoutScreenViewModel @Inject constructor(
 
         newItems.add(WorkoutScreenListItemHeaderModel)
 
-        for (folder in mFolders) {
-            if (folder == null) continue
+        val mFocusFolderId = mDraggedFolderInfo?.folderId
+        val mTempFolderIdsForCurrentDragged = mDraggedFolderInfo?.allFolderIds
 
-            fun addHeader() {
+        val focusFolderIndex =
+            mFolders.indexOfFirst { it?.id == mFocusFolderId }.takeIf { mFocusFolderId != null }
+                ?: -1
+
+        fun addHeader(mFolder: WorkoutTemplatesFolder) {
+            newItems.add(
+                WorkoutScreenListItemFolderHeaderModel(
+                    folder = mFolder,
+                    completelyInvisible = mFocusFolderId != null && mFolder.id == UNORGANIZED_FOLDER_ID
+                )
+            )
+        }
+
+        fun addTemplates(mFolder: WorkoutTemplatesFolder) {
+            if (mFolder.id == UNORGANIZED_FOLDER_ID) return
+
+            val temps =
+                mTemplates.filter { t -> t.template.folderId == mFolder.id }.toArrayList()
+
+            if (!mFoldersExpandedStatus.getOrDefault(mFolder.id, true)) {
+                val templateToKeep = temps.find { it.template.id == _currentDraggedTemplateId }
+
+                if (templateToKeep != null) {
+                    temps.clear()
+                    temps.add(templateToKeep)
+                } else {
+                    return
+                }
+            }
+
+
+            if (temps.isEmpty()) {
                 newItems.add(
-                    WorkoutScreenListItemFolderHeaderModel(
-                        folder = folder
+                    WorkoutScreenListItemAddTemplateModel(
+                        folderId = mFolder.id
                     )
                 )
-            }
-
-            fun addTemplates(): Boolean {
-                if (folder.id == UNORGANIZED_FOLDER_ID) return true
-
-                val temps =
-                    mTemplates.filter { t -> t.template.folderId == folder.id }.toArrayList()
-
-                if (!mFoldersExpandedStatus.getOrDefault(folder.id, true)) {
-                    val templateToKeep = temps.find { it.template.id == _currentDraggedTemplateId }
-
-                    if (templateToKeep != null) {
-                        temps.clear()
-                        temps.add(templateToKeep)
-                    } else {
-                        return false
-                    }
-                }
-
-
-                if (temps.isEmpty()) {
+            } else {
+                for (template in temps) {
                     newItems.add(
-                        WorkoutScreenListItemAddTemplateModel(
-                            folderId = folder.id
+                        WorkoutScreenListItemTemplateModel(
+                            templateWithWorkout = template
                         )
                     )
-                } else {
-                    for (template in temps) {
-                        newItems.add(
-                            WorkoutScreenListItemTemplateModel(
-                                templateWithWorkout = template
-                            )
-                        )
+                }
+            }
+            return
+        }
+
+        if (mTempFolderIdsForCurrentDragged != null) {
+            mTempFolderIdsForCurrentDragged.forEachIndexed { index, tempFolderId ->
+                val folder = mFolders.find { it?.id == tempFolderId }
+
+                if (folder?.id == mFocusFolderId) {
+                    mTempFolderIdsForCurrentDragged.forEachIndexed { index1, _ ->
+                        val actualFolder1 = mFolders.getOrNull(index1)
+
+                        if (actualFolder1 != null) {
+                            addHeader(actualFolder1)
+                        }
                     }
                 }
-                return false
-            }
 
-            if (mAllFoldersTogether) {
-                val cont = addTemplates()
-                addHeader()
-                if (cont) continue
-            } else {
-                addHeader()
-                if (addTemplates()) continue
+                folder?.let {
+                    addTemplates(it)
+                }
+            }
+        } else {
+            for (folder in mFolders) {
+                if (folder == null) continue
+                addHeader(folder)
+                addTemplates(folder)
             }
         }
 
@@ -482,12 +506,6 @@ class WorkoutScreenViewModel @Inject constructor(
             }
         }
 
-        Timber.d(
-            "newItems templateIds ${
-                newItems.filterIsInstance<WorkoutScreenListItemTemplateModel>()
-                    .map { (it as WorkoutScreenListItemTemplateModel).templateWithWorkout.template.id }
-            }"
-        )
         Timber.d("newItems $newItems")
         _items.value = newItems
 
@@ -501,12 +519,17 @@ class WorkoutScreenViewModel @Inject constructor(
         _foldersExpandedStatus.value = newMap
     }
 
-    fun makeEverythingInvisibleExceptFolders() {
-        _allItemsInvisibleExceptFolders.value = true
+    fun makeEverythingInvisibleExceptFolders(focusFolderId: String) {
+        if (_currentDraggedFolderInfo.value?.folderId == focusFolderId) return
+
+        _currentDraggedFolderInfo.value = DraggedFolderInfoModel(
+            folderId = focusFolderId,
+            allFolderIds = _folders.value.map { it?.id },
+        )
     }
 
     fun makeEverythingVisible() {
-        _allItemsInvisibleExceptFolders.value = false
+        _currentDraggedFolderInfo.value = null
     }
 
     fun clearDraggedItemTemplateId() {

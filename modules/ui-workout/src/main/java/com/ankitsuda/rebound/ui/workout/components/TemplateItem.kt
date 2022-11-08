@@ -41,7 +41,8 @@ fun LazyItemScope.TemplateItem(
     onClick: () -> Unit
 ) {
     with(templateWithWorkout) {
-        val isSelectedForDrag = template.id == dragDropListState.initiallyDraggedElement?.key
+        val isSelectedForDrag =
+            "template_${template.id}" == dragDropListState.initiallyDraggedElement?.key
         val offsetY by animateFloatAsState(targetValue =
         dragDropListState.elementDisplacement.takeIf {
             isSelectedForDrag
@@ -50,10 +51,10 @@ fun LazyItemScope.TemplateItem(
         TemplateItemCard(
             modifier = Modifier
                 .fillMaxWidth()
+                .invisible(invisible)
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .offset { IntOffset(0, offsetY.toInt()) }
                 .zIndex(if (isSelectedForDrag) 10f else 0f)
-                .invisible(invisible)
                 .animateItemPlacement(),
             name = (workout.name ?: "").ifBlank { "Unnamed Template" },
             italicName = (workout.name ?: "").isBlank(),

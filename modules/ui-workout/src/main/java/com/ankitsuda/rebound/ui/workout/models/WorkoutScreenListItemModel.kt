@@ -27,7 +27,8 @@ data class WorkoutScreenListItemOngoingWorkoutModel(
 object WorkoutScreenListItemHeaderModel : WorkoutScreenListItemModel()
 
 data class WorkoutScreenListItemFolderHeaderModel(
-    val folder: WorkoutTemplatesFolder
+    val folder: WorkoutTemplatesFolder,
+    val completelyInvisible: Boolean
 ) : WorkoutScreenListItemModel()
 
 data class WorkoutScreenListItemAddTemplateModel(

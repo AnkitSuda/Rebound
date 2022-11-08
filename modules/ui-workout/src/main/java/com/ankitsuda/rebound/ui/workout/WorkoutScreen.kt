@@ -92,7 +92,9 @@ fun WorkoutScreen(
                 is WorkoutScreenListItemFolderHeaderModel -> {
                     when (fromItem) {
                         is WorkoutScreenListItemFolderHeaderModel -> {
-                            viewModel.moveFolder(from, to)
+                            if (fromItem.folder.id != UNORGANIZED_FOLDER_ID && toItem.folder.id != UNORGANIZED_FOLDER_ID) {
+                                viewModel.moveFolder(from, to)
+                            }
                         }
                         is WorkoutScreenListItemTemplateModel -> {
                             if (fromItem.templateWithWorkout.template.folderId != toItem.folder.id) {
@@ -123,8 +125,11 @@ fun WorkoutScreen(
                     when (fromItem) {
                         is WorkoutScreenListItemFolderHeaderModel -> {
 //                            viewModel.collapseAllFolders()
-                            viewModel.makeEverythingInvisibleExceptFolders()
-                            toItem.folder.id != UNORGANIZED_FOLDER_ID
+                            val draggable = toItem.folder.id != UNORGANIZED_FOLDER_ID
+                            if (draggable) {
+                                viewModel.makeEverythingInvisibleExceptFolders(fromItem.folder.id)
+                            }
+                            draggable
                         }
                         is WorkoutScreenListItemTemplateModel -> {
                             fromItem.templateWithWorkout.template.folderId != toItem.folder.id
@@ -262,17 +267,17 @@ fun WorkoutScreen(
                 when (item) {
                     is WorkoutScreenListItemOngoingWorkoutModel -> "ongoing_workout"
                     is WorkoutScreenListItemHeaderModel -> "header"
-                    is WorkoutScreenListItemFolderHeaderModel -> item.folder.id
+                    is WorkoutScreenListItemFolderHeaderModel -> "folder_${item.folder.id}"
                     is WorkoutScreenListItemAddTemplateModel -> "add_template_${item.folderId}"
-                    is WorkoutScreenListItemTemplateModel -> item.templateWithWorkout.template.id
+                    is WorkoutScreenListItemTemplateModel -> "template_${item.templateWithWorkout.template.id}"
                 }
             }) { index, item ->
                 when (item) {
                     is WorkoutScreenListItemOngoingWorkoutModel -> AppCard(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
                             .invisible(allItemsInvisibleExceptFolders)
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
                             .animateItemPlacement(),
                         backgroundColor = ReboundTheme.colors.primary,
                         onClick = {
@@ -370,6 +375,7 @@ fun WorkoutScreen(
 
                         FolderSection(
                             folder = item.folder,
+                            completelyInvisible = item.completelyInvisible,
                             index = index,
                             dragDropListState = dragDropListState,
                             isExpanded = foldersExpandedStatus.getOrDefault(
@@ -400,8 +406,8 @@ fun WorkoutScreen(
                         RDashedButton(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
                                 .invisible(allItemsInvisibleExceptFolders)
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
                                 .animateItemPlacement(),
                             text = "Add Template",
                             icon = Icons.Outlined.Add,
@@ -455,7 +461,7 @@ fun WorkoutScreen(
 
 internal fun Modifier.invisible(invisible: Boolean) = then(
     if (invisible) {
-        alpha(0f)
+        alpha(0f).then(this)
     } else {
         this
     }

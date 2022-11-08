@@ -35,12 +35,14 @@ import com.ankitsuda.rebound.ui.components.dragdrop.DragDropListState
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.workout.UNORGANIZED_FOLDER_ID
+import com.ankitsuda.rebound.ui.workout.invisible
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable()
 internal fun LazyItemScope.FolderSection(
     index: Int,
     folder: WorkoutTemplatesFolder?,
+    completelyInvisible: Boolean,
     isExpanded: Boolean,
     dragDropListState: DragDropListState,
     onChangeExpanded: (Boolean) -> Unit,
@@ -53,7 +55,8 @@ internal fun LazyItemScope.FolderSection(
     }
 
     folder?.let {
-        val isSelectedForDrag = folder.id == dragDropListState.initiallyDraggedElement?.key
+        val isSelectedForDrag =
+            "folder_${folder.id}" == dragDropListState.initiallyDraggedElement?.key
         val offsetY by animateFloatAsState(targetValue =
         dragDropListState.elementDisplacement.takeIf {
             isSelectedForDrag
@@ -67,6 +70,7 @@ internal fun LazyItemScope.FolderSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
+                .invisible(completelyInvisible)
                 .clickable { onChangeExpanded(!isExpanded) }
                 .zIndex(if (isSelectedForDrag) 10f else 0f)
                 .animateItemPlacement(),
