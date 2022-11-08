@@ -19,10 +19,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.common.compose.R
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RoutineItemCard(
     modifier: Modifier = Modifier,
@@ -42,7 +46,11 @@ fun RoutineItemCard(
                 color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.7f)
             )
             Text(
-                text = "$totalExercises Exercises",
+                text = pluralStringResource(
+                    id = R.plurals.number_of_exercises,
+                    totalExercises,
+                    totalExercises
+                ),
                 style = MaterialTheme.typography.body2,
                 modifier = Modifier.padding(top = 16.dp),
                 color = LocalThemeState.current.onBackgroundColor.copy(0.5f)

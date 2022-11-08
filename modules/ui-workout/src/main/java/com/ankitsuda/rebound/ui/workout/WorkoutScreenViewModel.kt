@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.workout
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
@@ -21,6 +22,7 @@ import com.ankitsuda.base.utils.TimePeriod
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.base.utils.toReadableDuration
+import com.ankitsuda.common.compose.toI18NStringForWorkout
 import com.ankitsuda.rebound.data.repositories.WorkoutTemplatesRepository
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
@@ -30,6 +32,7 @@ import com.ankitsuda.rebound.domain.entities.WorkoutTemplatesFolder
 import com.ankitsuda.rebound.ui.components.dragdrop.move
 import com.ankitsuda.rebound.ui.workout.models.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -42,6 +45,7 @@ const val UNORGANIZED_FOLDER_ID = "my_templates"
 
 @HiltViewModel
 class WorkoutScreenViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val workoutsRepository: WorkoutsRepository,
     private val workoutTemplatesRepository: WorkoutTemplatesRepository
 ) :
@@ -88,7 +92,7 @@ class WorkoutScreenViewModel @Inject constructor(
                     mFolders.add(
                         WorkoutTemplatesFolder(
                             id = UNORGANIZED_FOLDER_ID,
-                            name = "My Templates"
+                            name = context.getString(R.string.my_templates)
                         )
                     )
                 }
@@ -160,7 +164,7 @@ class WorkoutScreenViewModel @Inject constructor(
             val newWorkoutId = workoutsRepository.createWorkout(
                 Workout(
                     id = "",
-                    name = "${TimePeriod.now()} Workout",
+                    name = TimePeriod.now().toI18NStringForWorkout(context),
                     startAt = LocalDateTime.now(),
                     completedAt = null,
                     inProgress = true,

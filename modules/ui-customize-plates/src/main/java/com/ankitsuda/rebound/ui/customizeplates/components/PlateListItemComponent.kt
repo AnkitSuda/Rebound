@@ -62,7 +62,7 @@ internal fun PlateListItemComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "${plate.weight?.toReadableString()} kg",
+                text = "${plate.weight?.toReadableString()} kg", // TODO: Move to strings.xml
                 color = ReboundTheme.colors.onBackground
             )
             Spacer(modifier = Modifier.weight(1f))

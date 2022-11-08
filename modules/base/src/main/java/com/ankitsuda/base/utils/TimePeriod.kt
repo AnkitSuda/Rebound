@@ -16,18 +16,15 @@ package com.ankitsuda.base.utils
 
 import java.time.LocalDateTime
 
-enum class TimePeriod(val str: String) {
-    MORNING("Morning"),
-    AFTERNOON("Afternoon"),
-    EVENING("Evening"),
-    NIGHT("Night");
-
-    override fun toString(): String {
-        return str
-    }
+enum class TimePeriod {
+    MORNING,
+    AFTERNOON,
+    EVENING,
+    NIGHT;
 
     companion object {
         fun now() = fromDateTime(LocalDateTime.now())
+
         fun fromDateTime(localDateTime: LocalDateTime): TimePeriod {
             val hours = localDateTime.hour
             return when {

@@ -75,7 +75,9 @@ fun WorkoutEditScreen(
             scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
             toolbar = {
                 TopBar2(
-                    title = "Edit ${if (isTemplate) "Template" else "Workout"}",
+                    title = if (isTemplate) stringResource(id = R.string.edit_template_title) else stringResource(
+                        id = R.string.edit_workout_title
+                    ),
                     toolbarState = collapsingState.toolbarState,
                     navigationIcon = {
                         TopBarBackIconButton {
@@ -83,7 +85,10 @@ fun WorkoutEditScreen(
                         }
                     },
                     actions = {
-                        TopBarIconButton(icon = Icons.Outlined.MoreVert, title = stringResource(R.string.open_menu)) {
+                        TopBarIconButton(
+                            icon = Icons.Outlined.MoreVert,
+                            title = stringResource(R.string.open_menu)
+                        ) {
 
                         }
                     })

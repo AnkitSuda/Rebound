@@ -23,13 +23,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TemplateItemCard(
     modifier: Modifier = Modifier,
@@ -56,7 +59,11 @@ fun TemplateItemCard(
                 )
                 Text(
                     color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.5f),
-                    text = "$totalExercises Exercises",
+                    text = pluralStringResource(
+                        id = R.plurals.number_of_exercises,
+                        totalExercises,
+                        totalExercises,
+                    ),
                     style = MaterialTheme.typography.body2,
                 )
             }

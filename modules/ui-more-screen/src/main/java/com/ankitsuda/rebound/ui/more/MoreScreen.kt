@@ -21,7 +21,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -33,6 +35,7 @@ import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MoreScreen(
     navController: NavController, navigator: Navigator = LocalNavigator.current
@@ -72,7 +75,7 @@ fun MoreScreen(
                         .fillMaxWidth(),
                     icon = Icons.Outlined.SportsScore,
                     text = stringResource(id = R.string.achievements),
-                    description = "0 achievements",
+                    description = pluralStringResource(R.plurals.number_of_achievements, 0, 0),
                     onClick = {
                     })
             }

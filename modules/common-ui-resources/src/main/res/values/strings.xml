@@ -200,4 +200,11 @@
     <string name="width_multiplier">Width multiplier</string>
     <string name="template">Template</string>
     <string name="templates">Templates</string>
+    <string name="edit_template_title">Edit Template</string>
+    <string name="edit_workout_title">Edit Workout</string>
+    <string name="my_templates">My Templates</string>
+    <string name="morning_workout">Morning Workout</string>
+    <string name="afternoon_workout">Afternoon Workout</string>
+    <string name="evening_workout">Evening Workout</string>
+    <string name="night_workout">Night Workout</string>
 </resources>

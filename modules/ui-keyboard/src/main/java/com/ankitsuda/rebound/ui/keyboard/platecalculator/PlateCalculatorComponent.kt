@@ -58,13 +58,13 @@ fun PlateCalculatorComponent(
             Column(modifier = Modifier.height(comHeight * 0.35F)) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-                    text = "${weight.toReadableString()} kg",
+                    text = "${weight.toReadableString()} kg", // TODO: Move to strings.xml
                     color = theme.keyboardContentColor
                 )
                 if (remainingWeight > 0.0) {
                     Text(
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp),
-                        text = "Remaining weight: ${remainingWeight.toReadableString()} kg",
+                        text = "Remaining weight: ${remainingWeight.toReadableString()} kg", // TODO: Move to strings.xml
                         style = ReboundTheme.typography.caption,
                         color = theme.keyboardContentColor.copy(alpha = 0.75f)
                     )

@@ -26,14 +26,17 @@ import androidx.compose.material.icons.outlined.FitnessCenter
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.icons.Weight
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SessionCompleteQuickInfo(
     modifier: Modifier = Modifier,
@@ -56,7 +59,11 @@ fun SessionCompleteQuickInfo(
         Spacer(modifier = Modifier.width(8.dp))
         SessionQuickInfoRowItem(
             icon = Icons.Outlined.EmojiEvents,
-            text = "$prs PRs",
+            text = pluralStringResource(
+                id = R.plurals.number_of_prs,
+                prs,
+                prs
+            ),
             contentDescription = stringResource(R.string.total_volume)
         )
     }

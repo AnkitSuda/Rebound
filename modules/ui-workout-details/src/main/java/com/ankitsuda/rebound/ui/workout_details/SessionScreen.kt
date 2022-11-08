@@ -25,7 +25,9 @@ import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,6 +49,7 @@ import me.onebone.toolbar.FabPosition
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.ToolbarWithFabScaffold
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SessionScreen(
     navigator: Navigator = LocalNavigator.current,
@@ -161,13 +164,17 @@ fun SessionScreen(
                 ) {
                     Column() {
                         Text(
-                            text = "${logs.size} Exercises",
+                            text = pluralStringResource(
+                                id = R.plurals.number_of_exercises,
+                                logs.size,
+                                logs.size,
+                            ),
                             color = LocalThemeState.current.onBackgroundColor
                         )
                         RSpacer(space = 4.dp)
                         SessionCompleteQuickInfo(
                             time = workout?.getDuration()?.toDurationStr() ?: "NA",
-                            volume = "${totalVolume.toReadableString()} kg",
+                            volume = "${totalVolume.toReadableString()} kg", // TODO: Move to strings.xml
                             prs = totalPRs
                         )
                     }

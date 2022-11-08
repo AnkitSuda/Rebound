@@ -21,7 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.base.utils.toDurationStr
 import com.ankitsuda.rebound.ui.components.AppCard
@@ -30,7 +32,9 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import com.ankitsuda.common.compose.R
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HistorySessionItemCard(
     modifier: Modifier = Modifier,
@@ -68,7 +72,7 @@ fun HistorySessionItemCard(
                 )
             }
             Text(
-                text = "$totalExercises Exercises", style = ReboundTheme.typography.caption.copy(
+                text = pluralStringResource(R.plurals.number_of_exercises, totalExercises, totalExercises), style = ReboundTheme.typography.caption.copy(
                     color = ReboundTheme.colors.onBackground.copy(0.75f)
                 )
             )

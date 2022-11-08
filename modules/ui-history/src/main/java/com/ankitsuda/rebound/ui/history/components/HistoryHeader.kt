@@ -20,11 +20,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import com.ankitsuda.common.compose.R
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HistoryHeader(date: LocalDate, totalWorkouts: Int) {
     val isSameYear = LocalDate.now().year == date.year
@@ -40,7 +44,11 @@ fun HistoryHeader(date: LocalDate, totalWorkouts: Int) {
             style = ReboundTheme.typography.subtitle1.copy(color = ReboundTheme.colors.onBackground)
         )
         Text(
-            text = "$totalWorkouts workout${if (totalWorkouts > 1) "s" else ""}",
+            text = pluralStringResource(
+                id = R.plurals.number_of_workouts,
+                totalWorkouts,
+                totalWorkouts
+            ),
             style = ReboundTheme.typography.subtitle2.copy(
                 color = ReboundTheme.colors.onBackground.copy(
                     0.75f

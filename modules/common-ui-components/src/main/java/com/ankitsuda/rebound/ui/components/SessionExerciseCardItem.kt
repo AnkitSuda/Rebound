@@ -152,6 +152,7 @@ fun SessionExerciseSetItem(
             }
 
             RSpacer(16.dp)
+            // TODO: Move to strings.xml
             Text(text = buildAnnotatedString {
                 withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
                     append((entry.weight ?: 0.0).toReadableString())
