@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -64,6 +65,7 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import com.ankitsuda.common.compose.R
 
 /**
  * Root screen of the app
@@ -203,7 +205,7 @@ private fun MainLayout(
                                         },
                                         onFinishBtnClicked = {
                                             workoutPanelViewModel.finishWorkout(onSetsIncomplete = {
-                                                context.toast(message = "Please complete all sets to finish")
+                                                context.toast(message = context.getString(R.string.incomplete_sets_error))
                                             })
                                         })
                                 }) {
@@ -241,11 +243,35 @@ private fun BottomBar(
     navController: NavHostController,
 ) {
     val bottomNavigationItems = listOf(
-        BottomNavigationScreens.Home,
-        BottomNavigationScreens.History,
-        BottomNavigationScreens.Workout,
-        BottomNavigationScreens.Exercises,
-        BottomNavigationScreens.More
+            BottomNavigationScreens(
+                TabRootScreen.HomeTab.route,
+                stringResource(id = R.string.home),
+                Icons.Outlined.Home,
+                Icons.Filled.Home
+            ),
+            BottomNavigationScreens(
+                TabRootScreen.HistoryTab.route,
+                stringResource(id = R.string.history),
+                Icons.Outlined.WatchLater,
+                Icons.Filled.WatchLater
+            ),
+            BottomNavigationScreens(
+                TabRootScreen.WorkoutTab.route,
+                stringResource(id = R.string.workout),
+                Icons.Outlined.PlayArrow,
+                Icons.Filled.PlayArrow
+            ),
+            BottomNavigationScreens(
+                TabRootScreen.ExercisesTab.route,
+                stringResource(id = R.string.exercises),
+                Icons.Outlined.FitnessCenter, Icons.Filled.FitnessCenter
+            ),
+            BottomNavigationScreens(
+                TabRootScreen.MoreTab.route,
+                stringResource(id = R.string.more),
+                Icons.Outlined.Menu,
+                Icons.Filled.Menu
+            )
     )
 
     val theme = LocalThemeState.current
@@ -328,48 +354,9 @@ private fun BottomBar(
     }
 }
 
-sealed class BottomNavigationScreens(
+data class BottomNavigationScreens(
     val route: String,
     val title: String,
     val unselectedIcon: ImageVector,
     val selectedIcon: ImageVector
-) {
-    object Home :
-        BottomNavigationScreens(
-            TabRootScreen.HomeTab.route,
-            "Home",
-            Icons.Outlined.Home,
-            Icons.Filled.Home
-        )
-
-    object History :
-        BottomNavigationScreens(
-            TabRootScreen.HistoryTab.route,
-            "History",
-            Icons.Outlined.WatchLater,
-            Icons.Filled.WatchLater
-        )
-
-    object Workout :
-        BottomNavigationScreens(
-            TabRootScreen.WorkoutTab.route,
-            "Workout",
-            Icons.Outlined.PlayArrow,
-            Icons.Filled.PlayArrow
-        )
-
-    object Exercises :
-        BottomNavigationScreens(
-            TabRootScreen.ExercisesTab.route,
-            "Exercises",
-            Icons.Outlined.FitnessCenter, Icons.Filled.FitnessCenter
-        )
-
-    object More :
-        BottomNavigationScreens(
-            TabRootScreen.MoreTab.route,
-            "More",
-            Icons.Outlined.Menu,
-            Icons.Filled.Menu
-        )
-}
+)

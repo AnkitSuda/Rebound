@@ -25,6 +25,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -33,6 +34,7 @@ import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.components.workouteditor.R
 import com.ankitsuda.rebound.ui.keyboard.ReboundKeyboardHost
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
@@ -123,14 +125,14 @@ private fun WarmUpCalculatorDialogLayout(
                 Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
             ) {
                 Text(
-                    text = "Warm up sets",
+                    text = stringResource(R.string.warm_up_sets),
                     style = ReboundTheme.typography.h6,
                     color = ReboundTheme.colors.onBackground
                 )
                 RSpacer(space = 12.dp)
 
                 Text(
-                    text = "Work set (kg)",
+                    text = stringResource(R.string.work_set_kg),
                     style = ReboundTheme.typography.caption,
                     color = ReboundTheme.colors.onBackground.copy(0.75f)
                 )
@@ -210,7 +212,7 @@ private fun WarmUpCalculatorDialogLayout(
                     ) {
                         Icon(imageVector = Icons.Outlined.Add, contentDescription = null)
                         RSpacer(space = 8.dp)
-                        Text(text = "Add set")
+                        Text(text = stringResource(R.string.add_set))
                     }
                 }
             }

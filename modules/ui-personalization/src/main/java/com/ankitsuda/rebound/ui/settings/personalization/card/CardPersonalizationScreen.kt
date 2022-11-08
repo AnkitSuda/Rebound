@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -44,6 +45,7 @@ import com.ankitsuda.rebound.ui.settings.personalization.top_bar.TopBarPersonali
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.ScrollStrategy
 import kotlin.math.roundToInt
+import com.ankitsuda.common.compose.R
 
 @Composable
 fun CardPersonalizationScreen(
@@ -75,7 +77,7 @@ fun CardPersonalizationScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Cards",
+                title = stringResource(id = R.string.cards),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -83,7 +85,7 @@ fun CardPersonalizationScreen(
                     }
                 },
                 actions = {
-                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = stringResource(id = R.string.reset_to_defaults)) {
 
                     }
                 }
@@ -106,7 +108,7 @@ fun CardPersonalizationScreen(
 
                     ColorPickerCardItem(
                         modifier = itemModifier,
-                        text = "Background color",
+                        text = stringResource(id = R.string.background_color),
                         selectedColor = themeState.cardColor,
                         onNewColorSelected = {
                             setThemeState(themeState.copy(cardColor = it))
@@ -117,7 +119,7 @@ fun CardPersonalizationScreen(
 
                     ColorPickerCardItem(
                         modifier = itemModifier,
-                        text = "Border color",
+                        text = stringResource(id = R.string.border_color),
                         selectedColor = themeState.cardBorderColor,
                         onNewColorSelected = {
                             setThemeState(themeState.copy(cardBorderColor = it))
@@ -130,7 +132,7 @@ fun CardPersonalizationScreen(
 
                     SliderCardItem(
                         modifier = itemModifier,
-                        text = "Border width",
+                        text = stringResource(id = R.string.border_width),
                         value = themeState.cardBorderWidth.toFloat(),
                         steps = 25,
                         valueRange = 0f..25f,
@@ -143,7 +145,7 @@ fun CardPersonalizationScreen(
 
                     SliderCardItem(
                         modifier = itemModifier,
-                        text = "Elevation",
+                        text = stringResource(id = R.string.elevation),
                         value = themeState.cardElevation.toFloat(),
                         steps = 25,
                         valueRange = 0f..25f,

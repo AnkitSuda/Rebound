@@ -21,12 +21,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.workout.R
 
 @Composable
 fun TemplatesFolderEditBottomSheet(
@@ -45,7 +47,7 @@ fun TemplatesFolderEditBottomSheet(
         ) {
 
             TopBar(
-                title = "Folder",
+                title = stringResource(R.string.folder),
                 statusBarEnabled = false,
                 elevationEnabled = false
             )
@@ -78,7 +80,7 @@ fun TemplatesFolderEditBottomSheet(
                             viewModel.deleteFolderFromDb()
                             navigator.goBack()
                         }) {
-                        Text("Delete")
+                        Text(stringResource(R.string.delete))
                     }
                 }
 
@@ -90,7 +92,7 @@ fun TemplatesFolderEditBottomSheet(
                     },
                     modifier = Modifier.width(88.dp)
                 ) {
-                    Text(if (isUpdate) "Save" else "Add")
+                    Text(if (isUpdate) stringResource(R.string.save) else stringResource(R.string.add))
                 }
             }
         }

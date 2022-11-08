@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -71,7 +72,7 @@ internal fun NumKeyComponent(
             is ClearNumKey -> Icon(
                 modifier = Modifier,
                 imageVector = Icons.Outlined.Backspace,
-                contentDescription = "Clear",
+                contentDescription = stringResource(id = R.string.clear),
                 tint = contentColor
             )
         }

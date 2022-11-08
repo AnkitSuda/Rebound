@@ -20,6 +20,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.components.AppCard
@@ -74,7 +75,7 @@ fun ExerciseDetailChartsTab(charts: Map<String, List<LineChartData.Point>>) {
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "Not enough data",
+                                    text = stringResource(id = R.string.not_enough_data),
                                     textAlign = TextAlign.Center
                                 )
                             }
@@ -85,17 +86,4 @@ fun ExerciseDetailChartsTab(charts: Map<String, List<LineChartData.Point>>) {
         }
 
     }
-}
-
-private fun getRandomPoints(): List<LineChartData.Point> {
-    val points = arrayListOf<LineChartData.Point>()
-    repeat(6) {
-        points.add(
-            LineChartData.Point(
-                Random.nextInt(1, 50).toFloat(),
-                "Label $it"
-            )
-        )
-    }
-    return points
 }

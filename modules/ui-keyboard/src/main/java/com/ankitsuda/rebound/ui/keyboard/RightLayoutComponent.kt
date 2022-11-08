@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.ankitsuda.rebound.ui.icons.Plates
 import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardModeType
@@ -65,9 +66,9 @@ internal fun RightLayoutComponent(
                     } else {
                         Icons.Outlined.Dialpad
                     }, contentDescription = if (currentLayoutMode == KeyboardModeType.NUMBERS) {
-                        "Plate calculator"
+                        stringResource(R.string.plate_calculator)
                     } else {
-                        "Keyboard"
+                        stringResource(R.string.keyboard)
                     },
                     tint = theme.keyboardContentColor
                 )

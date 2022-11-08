@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.isSpecified
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -127,7 +128,7 @@ private fun ColumnScope.Controls(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Pick a color",
+                    text = stringResource(id = R.string.pick_a_color),
                     color = selectedColor
                 )
 
@@ -141,7 +142,7 @@ private fun ColumnScope.Controls(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Refresh,
-                        contentDescription = "Back to defaults"
+                        contentDescription = stringResource(id = R.string.reset_to_defaults)
                     )
                 }
             }

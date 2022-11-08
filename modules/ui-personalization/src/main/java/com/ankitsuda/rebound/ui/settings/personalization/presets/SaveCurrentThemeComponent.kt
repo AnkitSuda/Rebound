@@ -20,9 +20,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.RButton
+import com.ankitsuda.rebound.ui.settings.personalization.R
 
 @Composable
 internal fun SaveCurrentThemeComponent(
@@ -36,7 +38,7 @@ internal fun SaveCurrentThemeComponent(
                 .height(48.dp),
             onClick = onClick
         ) {
-            Text(text = "Save current theme")
+            Text(text = stringResource(R.string.save_current_theme))
         }
     }
 }

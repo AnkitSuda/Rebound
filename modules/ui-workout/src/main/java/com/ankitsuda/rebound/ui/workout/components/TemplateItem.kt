@@ -23,12 +23,14 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.ankitsuda.rebound.domain.entities.TemplateWithWorkout
 import com.ankitsuda.rebound.ui.components.TemplateItemCard
 import com.ankitsuda.rebound.ui.components.dragdrop.DragDropListState
+import com.ankitsuda.rebound.ui.workout.R
 import com.ankitsuda.rebound.ui.workout.invisible
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -56,7 +58,7 @@ fun LazyItemScope.TemplateItem(
                 .offset { IntOffset(0, offsetY.toInt()) }
                 .zIndex(if (isSelectedForDrag) 10f else 0f)
                 .animateItemPlacement(),
-            name = (workout.name ?: "").ifBlank { "Unnamed Template" },
+            name = (workout.name ?: "").ifBlank { stringResource(R.string.unnamed_template) },
             italicName = (workout.name ?: "").isBlank(),
             totalExercises = exerciseWorkoutJunctions.size,
             onClickPlay = onClickPlay,

@@ -21,10 +21,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.common.compose.LocalDialog
 import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker1
 import com.ankitsuda.rebound.ui.components.color_picker.ColorPickerPresets
+import com.ankitsuda.common.compose.R
 
 
 @Composable
@@ -82,7 +84,7 @@ fun ColorPickerDialog1(
                 isPresetLayout = !isPresetLayout
             }) {
                 Text(
-                    text = if (isPresetLayout) "Custom" else "Presets"
+                    text = if (isPresetLayout) stringResource(id = R.string.custom) else stringResource(id = R.string.presets)
                 )
             }
             TextButton(onClick = with(LocalDialog.current) {
@@ -91,7 +93,7 @@ fun ColorPickerDialog1(
                     colorSelected(selectedColor)
                 }
             }) {
-                Text(text = "Select")
+                Text(text = stringResource(id = R.string.select))
             }
         }
     }

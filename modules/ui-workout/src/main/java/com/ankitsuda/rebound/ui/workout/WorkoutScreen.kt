@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -198,7 +199,7 @@ fun WorkoutScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Workout",
+                title = stringResource(R.string.workout),
                 toolbarState = collapsingState.toolbarState,
             )
         },
@@ -211,7 +212,7 @@ fun WorkoutScreen(
                         defaultElevation = 2.dp,
                         pressedElevation = 4.dp
                     ),
-                    text = { Text(text = "Empty Workout") },
+                    text = { Text(text = stringResource(R.string.empty_workout)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Add,
@@ -295,7 +296,7 @@ fun WorkoutScreen(
 
                             Column() {
                                 Text(
-                                    text = "Ongoing Workout",
+                                    text = stringResource(R.string.ongoing_workout),
                                     style = ReboundTheme.typography.h6,
                                     color = ReboundTheme.colors.onPrimary
                                 )
@@ -313,7 +314,7 @@ fun WorkoutScreen(
                             IconButton(onClick = { expandPanel() }) {
                                 Icon(
                                     imageVector = Icons.Outlined.OpenInFull,
-                                    contentDescription = "Open",
+                                    contentDescription = stringResource(R.string.open),
                                     tint = ReboundTheme.colors.onPrimary
                                 )
                             }
@@ -332,7 +333,7 @@ fun WorkoutScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Templates", style = MaterialTheme.typography.body1,
+                                text = stringResource(R.string.templates), style = MaterialTheme.typography.body1,
                                 color = LocalThemeState.current.onBackgroundColor
                             )
                         }
@@ -350,7 +351,7 @@ fun WorkoutScreen(
                         ) {
                             RButtonStyle2(
                                 modifier = Modifier.weight(1f),
-                                text = "Folder",
+                                text = stringResource(R.string.folder),
                                 icon = Icons.Outlined.CreateNewFolder,
                                 onClick = {
                                     navigator.navigate(
@@ -360,7 +361,7 @@ fun WorkoutScreen(
                             )
                             RButtonStyle2(
                                 modifier = Modifier.weight(1f),
-                                text = "Template",
+                                text = stringResource(R.string.template),
                                 icon = Icons.Outlined.Add,
                                 onClick = {
                                     createAndNavigateToTemplate()
@@ -409,7 +410,7 @@ fun WorkoutScreen(
                                 .invisible(allItemsInvisibleExceptFolders)
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                                 .animateItemPlacement(),
-                            text = "Add Template",
+                            text = stringResource(R.string.add_template),
                             icon = Icons.Outlined.Add,
                             onClick = {
                                 createAndNavigateToTemplate(folderId = item.folderId)

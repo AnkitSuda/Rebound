@@ -24,6 +24,7 @@ import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
@@ -67,7 +68,7 @@ fun TemplateItemCard(
                 Icon(
                     imageVector = Icons.Outlined.PlayArrow,
                     tint = ReboundTheme.colors.primary,
-                    contentDescription = "Start workout from template"
+                    contentDescription = stringResource(R.string.start_workout_from_template)
                 )
             }
         }

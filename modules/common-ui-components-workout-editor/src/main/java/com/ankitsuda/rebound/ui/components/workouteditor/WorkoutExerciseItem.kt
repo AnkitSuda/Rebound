@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -139,7 +140,7 @@ fun LazyListScope.workoutExerciseItemAlt(
                 }) {
                     Icon(
                         imageVector = Icons.Outlined.MoreVert,
-                        contentDescription = "More",
+                        contentDescription = stringResource(R.string.more),
                         tint = contentColor
                     )
                 }
@@ -205,10 +206,13 @@ fun LazyListScope.workoutExerciseItemAlt(
                     modifier = Modifier.weight(1.25f)
                 )
             }
+            val repsString = stringResource(id = R.string.reps)
+            val timeString = stringResource(id = R.string.time)
+
             Text(
                 text = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
                     || exercise.category == ExerciseCategory.REPS
-                ) "Reps" else "Time",
+                ) repsString else timeString,
                 style = ReboundTheme.typography.caption,
                 color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center,
@@ -287,7 +291,7 @@ fun LazyListScope.workoutExerciseItemAlt(
         ) {
             Icon(imageVector = Icons.Outlined.Add, contentDescription = null)
             RSpacer(space = 8.dp)
-            Text(text = "Add set")
+            Text(text = stringResource(R.string.add_set))
         }
     }
 

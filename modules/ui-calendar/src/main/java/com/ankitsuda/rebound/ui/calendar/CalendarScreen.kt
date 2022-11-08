@@ -25,6 +25,7 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.rebound.ui.components.TopBar
@@ -86,14 +87,14 @@ fun CalendarScreen(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
-            TopBar(title = "Calendar", strictLeftIconAlignToStart = true, leftIconBtn = {
-                TopBarIconButton(icon = Icons.Outlined.Close, title = "Close calendar") {
+            TopBar(title = stringResource(id = R.string.calendar), strictLeftIconAlignToStart = true, leftIconBtn = {
+                TopBarIconButton(icon = Icons.Outlined.Close, title = stringResource(id = R.string.close_calendar)) {
                     navController.popBackStack()
                 }
             }, rightIconBtn = {
                 TopBarIconButton(
                     icon = Icons.Outlined.Today,
-                    title = "Jump to today",
+                    title = stringResource(id = R.string.jump_to_today),
                     onClick = {
                         coroutine.launch {
                             scrollState.animateScrollToItem(calendar.indexOf((calendar.filter {

@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -217,7 +218,7 @@ fun TopSearchBar(
                 }) {
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.back),
                     tint = /*if (backgroundColor.isDark()) Color.White else*/ Color.Black,
                 )
             }
@@ -260,7 +261,7 @@ fun TopSearchBar(
                     Icon(
                         tint = /*if (backgroundColor.isDark()) Color.White else*/ Color.Black,
                         imageVector = Icons.Outlined.Close,
-                        contentDescription = "Clear"
+                        contentDescription = stringResource(R.string.clear)
                     )
                 }
             }
@@ -297,5 +298,5 @@ fun TopBarIconButton(
 
 @Composable
 fun TopBarBackIconButton(onClick: () -> Unit) {
-    TopBarIconButton(icon = Icons.Outlined.ArrowBack, title = "Back", onClick = onClick)
+    TopBarIconButton(icon = Icons.Outlined.ArrowBack, title = stringResource(R.string.back), onClick = onClick)
 }

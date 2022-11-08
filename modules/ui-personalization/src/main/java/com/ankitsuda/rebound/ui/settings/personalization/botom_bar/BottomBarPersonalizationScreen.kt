@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -44,6 +45,7 @@ import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.components.settings.RadioGroupCardItem
 import com.ankitsuda.rebound.ui.components.settings.SliderCardItem
+import com.ankitsuda.rebound.ui.settings.personalization.R
 import com.ankitsuda.rebound.ui.settings.personalization.top_bar.TopBarPersonalizationScreen
 import me.onebone.toolbar.ScrollStrategy
 import kotlin.math.roundToInt
@@ -82,7 +84,7 @@ fun BottomBarPersonalizationScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Bottom Bar",
+                title = stringResource(id = R.string.bottom_bar),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -114,7 +116,7 @@ fun BottomBarPersonalizationScreen(
 
                     RadioGroupCardItem(
                         modifier = itemModifier,
-                        text = "Label visible",
+                        text = stringResource(id = R.string.label_visible),
                         onSelectionChange = { _, value ->
                             setThemeState(themeState.copy(bottomBarLabelVisible = value))
                         },
@@ -127,7 +129,7 @@ fun BottomBarPersonalizationScreen(
 
                     RadioGroupCardItem(
                         modifier = itemModifier,
-                        text = "Label weight",
+                        text = stringResource(id = R.string.label_weight),
                         onSelectionChange = { _, value ->
                             setThemeState(themeState.copy(bottomBarLabelWeight = value))
                         },
@@ -140,7 +142,7 @@ fun BottomBarPersonalizationScreen(
 
                     SliderCardItem(
                         modifier = itemModifier,
-                        text = "Icon size",
+                        text = stringResource(id = R.string.icon_size),
                         valueRange = 1f..32f,
                         steps = 32,
                         value = themeState.bottomBarIconSize.toFloat(),

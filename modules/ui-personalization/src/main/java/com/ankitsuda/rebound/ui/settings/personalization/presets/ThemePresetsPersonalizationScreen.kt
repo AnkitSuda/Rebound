@@ -27,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.common.compose.rememberFlowWithLifecycle
@@ -41,6 +42,7 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.common.compose.R
 
 @Composable
 fun ThemePresetsPersonalizationScreen(
@@ -84,7 +86,7 @@ private fun ThemePresetsPersonalizationScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Presets",
+                title = stringResource(R.string.presets),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -92,7 +94,7 @@ private fun ThemePresetsPersonalizationScreen(
                     }
                 },
                 actions = {
-                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = stringResource(R.string.reset_to_defaults)) {
 
                     }
                 }

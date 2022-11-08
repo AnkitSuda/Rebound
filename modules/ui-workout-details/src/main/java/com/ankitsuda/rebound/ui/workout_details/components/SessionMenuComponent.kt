@@ -19,6 +19,8 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.ankitsuda.common.compose.R
 
 @Composable
 internal fun SessionMenuComponent(
@@ -36,7 +38,7 @@ internal fun SessionMenuComponent(
             onDismissRequest()
             onDelete()
         }) {
-            Text("Delete")
+            Text(stringResource(R.string.delete))
         }
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +30,7 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.domain.entities.BodyPart
 import com.ankitsuda.rebound.domain.entities.BodyPartUnitType
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.measure.part.R
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.insets.navigationBarsPadding
 
@@ -51,7 +53,7 @@ fun AddPartMeasurementBottomSheet(
         ) {
 
             TopBar(
-                title = "Measurement",
+                title = stringResource(id = R.string.measurement),
                 statusBarEnabled = false,
                 elevationEnabled = false
             )
@@ -78,10 +80,10 @@ fun AddPartMeasurementBottomSheet(
                         .align(Alignment.CenterEnd)
                         .padding(16.dp),
                     text = when (bodyPart.unitType ?: BodyPartUnitType.LENGTH) {
-                        BodyPartUnitType.WEIGHT -> "kg"
-                        BodyPartUnitType.CALORIES -> "kcal"
+                        BodyPartUnitType.WEIGHT -> stringResource(id = R.string.kg)
+                        BodyPartUnitType.CALORIES -> stringResource(id = R.string.kcal)
                         BodyPartUnitType.PERCENTAGE -> "%"
-                        BodyPartUnitType.LENGTH -> "in"
+                        BodyPartUnitType.LENGTH -> stringResource(id = R.string.inch_short)
                         else -> ""
                     },
                     style = ReboundTheme.typography.caption,
@@ -101,7 +103,7 @@ fun AddPartMeasurementBottomSheet(
                             viewModel.deleteMeasurementFromDb()
                             navigator.goBack()
                         }) {
-                        Text("Delete")
+                        Text(stringResource(id = R.string.delete))
                     }
                 }
 
@@ -113,7 +115,7 @@ fun AddPartMeasurementBottomSheet(
                     },
                     modifier = Modifier.width(88.dp)
                 ) {
-                    Text(if (isUpdate) "Save" else "Add")
+                    Text(if (isUpdate) stringResource(id = R.string.save) else stringResource(id = R.string.add))
                 }
             }
         }

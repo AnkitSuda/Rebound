@@ -22,12 +22,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.customizeplates.R
 import com.google.accompanist.insets.navigationBarsPadding
 
 @Composable
@@ -98,7 +100,7 @@ private fun PlateEditBottomSheetLayout(
         ) {
 
             TopBar(
-                title = "Plate",
+                title = stringResource(R.string.plate),
                 statusBarEnabled = false,
                 elevationEnabled = false
             )
@@ -119,7 +121,7 @@ private fun PlateEditBottomSheetLayout(
                 AppTextField(
                     modifier = Modifier,
                     value = weightFieldValue,
-                    labelValue = "Weight",
+                    labelValue = stringResource(R.string.weight),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Decimal,
@@ -130,7 +132,7 @@ private fun PlateEditBottomSheetLayout(
                 AppTextField(
                     modifier = Modifier,
                     value = colorFieldValue,
-                    labelValue = "Color",
+                    labelValue = stringResource(R.string.color),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
@@ -141,7 +143,7 @@ private fun PlateEditBottomSheetLayout(
                 AppTextField(
                     modifier = Modifier,
                     value = heightFieldValue,
-                    labelValue = "Height multiplier",
+                    labelValue = stringResource(R.string.height_multiplier),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Decimal,
@@ -151,7 +153,7 @@ private fun PlateEditBottomSheetLayout(
                 AppTextField(
                     modifier = Modifier,
                     value = widthFieldValue,
-                    labelValue = "Width multiplier",
+                    labelValue = stringResource(R.string.width_multiplier),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Decimal,
@@ -171,7 +173,7 @@ private fun PlateEditBottomSheetLayout(
                     onClick = {
                         onDelete()
                     }) {
-                    Text(if (isUpdate) "Delete" else "Cancel")
+                    Text(if (isUpdate) stringResource(R.string.delete) else stringResource(R.string.cancel))
                 }
 
 
@@ -182,7 +184,7 @@ private fun PlateEditBottomSheetLayout(
                     },
                     modifier = Modifier.width(88.dp)
                 ) {
-                    Text(if (isUpdate) "Save" else "Add")
+                    Text(if (isUpdate) stringResource(R.string.save) else stringResource(R.string.add))
                 }
 
             }

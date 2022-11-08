@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -49,7 +50,7 @@ fun MeasureScreen(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
             TopBar2(
-                title = "Measure",
+                title = stringResource(id = R.string.measure),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -68,7 +69,7 @@ fun MeasureScreen(
         ) {
             for (junction in partsWithGroup) {
                 item(key = junction.group.id) {
-                    MoreSectionHeader(text = junction.group.name ?: "Group")
+                    MoreSectionHeader(text = junction.group.name ?: stringResource(id = R.string.group))
                 }
 
                 items(junction.parts.size) {
@@ -76,7 +77,7 @@ fun MeasureScreen(
                     MoreItemCard(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        text = part.name ?: "Body Part",
+                        text = part.name ?: stringResource(id = R.string.body_part),
                         onClick = {
                             part.id.let { id ->
                                 navigator.navigate(LeafScreen.PartMeasurements.createRoute(id))

@@ -26,6 +26,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -95,7 +96,7 @@ fun SessionScreen(
                     defaultElevation = 2.dp,
                     pressedElevation = 4.dp
                 ),
-                text = { Text(text = "Perform Again") },
+                text = { Text(text = stringResource(R.string.perform_again)) },
                 icon = {
                     Icon(
                         imageVector = Icons.Outlined.PlayArrow,
@@ -109,7 +110,7 @@ fun SessionScreen(
         fabPosition = FabPosition.Center,
         toolbar = {
             TopBar2(
-                title = workout?.name ?: "Workout",
+                title = workout?.name ?: stringResource(R.string.workout),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -119,7 +120,7 @@ fun SessionScreen(
                 actions = {
                     TopBarIconButton(
                         icon = Icons.Outlined.MoreVert,
-                        title = "Open Menu",
+                        title = stringResource(R.string.open_menu),
                         onClick = { menuExpanded = true }
                     )
                     SessionMenuComponent(
@@ -182,7 +183,7 @@ fun SessionScreen(
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.Edit,
-                            contentDescription = "Edit session",
+                            contentDescription = stringResource(R.string.edit_session),
                             tint = ReboundTheme.colors.primary
                         )
                     }

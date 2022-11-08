@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -109,11 +110,11 @@ private fun ExercisesScreenContent(
                         toolbarState = collapsingState.toolbarState,
                         statusBarEnabled = !isBottomSheet,
                         elevationEnabled = false,
-                        title = "Exercises",
+                        title = stringResource(id = R.string.exercises),
                         navigationIcon = {
                             TopBarIconButton(
                                 icon = Icons.Outlined.Search,
-                                title = "Search",
+                                title = stringResource(id = R.string.search),
                                 onClick = {
                                     onToggleSearchMode()
                                 })
@@ -121,7 +122,7 @@ private fun ExercisesScreenContent(
                         actions = {
                             TopBarIconButton(
                                 icon = Icons.Outlined.Add,
-                                title = "Create Exercise",
+                                title = stringResource(id = R.string.create_exercise),
                                 onClick = {
                                     navigator.navigate(LeafScreen.CreateExercise().route)
                                 })
@@ -131,7 +132,7 @@ private fun ExercisesScreenContent(
                         modifier = Modifier
                             .fillMaxWidth(),
                         statusBarEnabled = !isBottomSheet,
-                        placeholder = "Search here...",
+                        placeholder = stringResource(id = R.string.search_here),
                         value = searchTerm,
                         onBackClick = {
                             onToggleSearchMode()

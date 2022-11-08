@@ -24,10 +24,12 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.customizeplates.R
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
@@ -76,7 +78,7 @@ internal fun PlateListItemComponent(
             }) {
                 Icon(
                     imageVector = Icons.Outlined.MoreVert,
-                    contentDescription = "More",
+                    contentDescription = stringResource(R.string.more),
                     tint = ReboundTheme.colors.onBackground
                 )
 

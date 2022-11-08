@@ -24,6 +24,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -91,7 +92,7 @@ fun WorkoutTemplatePreviewScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = templateName.ifBlank { "Unnamed Template" },
+                title = templateName.ifBlank { stringResource(R.string.unnamed_template) },
                 italicTitle = templateName.isBlank(),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
@@ -100,7 +101,7 @@ fun WorkoutTemplatePreviewScreen(
                     }
                 },
                 actions = {
-                    TopBarIconButton(icon = Icons.Outlined.Edit, title = "Edit") {
+                    TopBarIconButton(icon = Icons.Outlined.Edit, title = stringResource(R.string.edit)) {
                         workout?.id?.let {
                             navigator.navigate(
                                 LeafScreen.WorkoutEdit.createRoute(
@@ -111,7 +112,7 @@ fun WorkoutTemplatePreviewScreen(
                             )
                         }
                     }
-                    TopBarIconButton(icon = Icons.Outlined.MoreVert, title = "More") {
+                    TopBarIconButton(icon = Icons.Outlined.MoreVert, title = stringResource(R.string.more)) {
                         menuExpanded = true
                     }
                     TemplateMenuComponent(
@@ -131,7 +132,7 @@ fun WorkoutTemplatePreviewScreen(
                     defaultElevation = 2.dp,
                     pressedElevation = 4.dp
                 ),
-                text = { Text(text = "Start Workout") },
+                text = { Text(text = stringResource(R.string.start_workout)) },
                 icon = {
                     Icon(
                         imageVector = Icons.Outlined.PlayArrow,
@@ -157,7 +158,7 @@ fun WorkoutTemplatePreviewScreen(
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         Text(
-                            text = "Last performed at",
+                            text = stringResource(R.string.last_performed_at),
                             style = ReboundTheme.typography.caption.copy(
                                 color = ReboundTheme.colors.onBackground.copy(
                                     0.75f

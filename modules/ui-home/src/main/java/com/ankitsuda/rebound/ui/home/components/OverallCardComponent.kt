@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.ui.components.AppCard
@@ -30,6 +31,7 @@ import com.ankitsuda.rebound.ui.home.models.WorkoutsInfo
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
+import com.ankitsuda.common.compose.R
 
 @Composable
 fun OverallCardComponent(modifier: Modifier = Modifier, overallInfo: OverallInfo) {
@@ -40,38 +42,38 @@ fun OverallCardComponent(modifier: Modifier = Modifier, overallInfo: OverallInfo
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            CardHeaderComponent(text = "Overall")
+            CardHeaderComponent(text = stringResource(id = R.string.overall))
             RSpacer(space = 16.dp)
             InfosContainerComponent {
                 with(overallInfo) {
                     InfoComponent(
                         value = (totalWorkouts ?: 0).toString(),
-                        title = "Workouts",
+                        title = stringResource(id = R.string.workouts),
                         constrains = it
                     )
                     InfoComponent(
                         value = (totalVolumeLifted ?: 0.0).toReadableString(),
-                        title = "Volume Lifted",
+                        title = stringResource(id = R.string.volume_lifted),
                         constrains = it
                     )
                     InfoComponent(
                         value = (maxWeight ?: 0.0).toReadableString(),
-                        title = "Max Weight",
+                        title = stringResource(id = R.string.max_weight),
                         constrains = it
                     )
                     InfoComponent(
                         value = totalWorkoutsDurationStr ?: "",
-                        title = "Total Duration",
+                        title = stringResource(id = R.string.total_duration),
                         constrains = it
                     )
                     InfoComponent(
                         value = averageWorkoutDurationStr ?: "",
-                        title = "Average Duration",
+                        title = stringResource(id = R.string.average_duration),
                         constrains = it
                     )
                     InfoComponent(
                         value = longestWorkoutDurationStr ?: "",
-                        title = "Longest Duration",
+                        title = stringResource(id = R.string.longest_duration),
                         constrains = it
                     )
                 }

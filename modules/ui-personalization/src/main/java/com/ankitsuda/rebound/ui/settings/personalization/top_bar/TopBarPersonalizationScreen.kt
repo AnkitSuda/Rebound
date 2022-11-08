@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -45,6 +46,7 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.components.settings.ColorPickerCardItem
 import com.ankitsuda.rebound.ui.components.settings.RadioGroupCardItem
 import com.ankitsuda.rebound.ui.components.settings.SliderCardItem
+import com.ankitsuda.rebound.ui.settings.personalization.R
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -89,7 +91,7 @@ private fun TopBarPersonalizationScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Top Bar",
+                title = stringResource(R.string.top_bar),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -97,7 +99,7 @@ private fun TopBarPersonalizationScreen(
                     }
                 },
                 actions = {
-                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = stringResource(R.string.reset_to_defaults)) {
 
                     }
                 }
@@ -120,7 +122,7 @@ private fun TopBarPersonalizationScreen(
 
                     RadioGroupCardItem(
                         modifier = itemModifier,
-                        text = "Title alignment",
+                        text = stringResource(R.string.title_alignment),
                         onSelectionChange = { _, value ->
                             setThemeState(themeState.copy(topBarTitleAlignment = value))
                         },
@@ -132,7 +134,7 @@ private fun TopBarPersonalizationScreen(
                 item {
                     ColorPickerCardItem(
                         modifier = itemModifier,
-                        text = "Background color",
+                        text = stringResource(R.string.background_color),
                         selectedColor = themeState.topBarBackgroundColor,
                         onNewColorSelected = {
                             setThemeState(themeState.copy(topBarBackgroundColor = it))
@@ -143,7 +145,7 @@ private fun TopBarPersonalizationScreen(
                 item {
                     ColorPickerCardItem(
                         modifier = itemModifier,
-                        text = "Content color",
+                        text = stringResource(R.string.content_color),
                         selectedColor = themeState.topBarContentColor,
                         onNewColorSelected = {
                             setThemeState(themeState.copy(topBarContentColor = it))
@@ -155,7 +157,7 @@ private fun TopBarPersonalizationScreen(
 
                     SliderCardItem(
                         modifier = itemModifier,
-                        text = "Elevation",
+                        text = stringResource(R.string.elevation),
                         value = themeState.topBarElevation,
                         steps = 50,
                         valueRange = 0f..50f,

@@ -19,6 +19,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.ankitsuda.common.compose.R
 
 @Composable
 fun DiscardActiveWorkoutDialog(
@@ -28,17 +30,17 @@ fun DiscardActiveWorkoutDialog(
 ) {
     AlertDialog(
         modifier = modifier,
-        title = { Text("Workout in progress") },
-        text = { Text("You are currently performing a workout. Would you like to discard it?") },
+        title = { Text(stringResource(id = R.string.workout_in_progress)) },
+        text = { Text(stringResource(id = R.string.workout_in_progress_description)) },
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = onClickDiscard) {
-                Text("Discard")
+                Text(stringResource(id = R.string.discard))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = "Cancel")
+                Text(text = stringResource(id = R.string.cancel))
             }
         })
 }

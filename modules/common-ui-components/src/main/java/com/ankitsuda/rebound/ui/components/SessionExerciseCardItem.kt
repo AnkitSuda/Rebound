@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -207,15 +208,15 @@ fun PersonalRecordComponent(
     pr: PersonalRecord
 ) {
     val readableText = when (pr) {
-        is BestPacePR -> "Best Pace"
-        is MaxDistancePR -> "Max Distance"
-        is MaxDurationPR -> "Max Duration"
-        is MaxOneRmPR -> "Max One RM"
-        is MaxRepsPR -> "Max Reps"
-        is MaxVolumeAddedPR -> "Max Volume Added"
-        is MaxVolumePR -> "Max Volume"
-        is MaxWeightAddedPR -> "Max Weight Added"
-        is MaxWeightPR -> "Max Weight"
+        is BestPacePR -> stringResource(R.string.best_pace)
+        is MaxDistancePR -> stringResource(R.string.max_distance)
+        is MaxDurationPR -> stringResource(R.string.max_duration)
+        is MaxOneRmPR -> stringResource(R.string.max_one_rm)
+        is MaxRepsPR -> stringResource(R.string.max_reps)
+        is MaxVolumeAddedPR -> stringResource(R.string.max_volume_added)
+        is MaxVolumePR -> stringResource(R.string.max_volume)
+        is MaxWeightAddedPR -> stringResource(R.string.max_weight_added)
+        is MaxWeightPR -> stringResource(R.string.max_weight)
         else -> pr.value
     }
 

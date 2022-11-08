@@ -22,9 +22,11 @@ import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.domain.ExerciseCategory
+import com.ankitsuda.rebound.ui.components.workouteditor.R
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
@@ -35,21 +37,21 @@ internal fun WarmUpSetsTitlesComponent(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            text = "Set",
+            text = stringResource(R.string.set),
             style = ReboundTheme.typography.caption,
             color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
             textAlign = TextAlign.Center,
             modifier = Modifier.weight(0.5f)
         )
         Text(
-            text = "Formula",
+            text = stringResource(R.string.formula),
             style = ReboundTheme.typography.caption,
             color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
             textAlign = TextAlign.Center,
             modifier = Modifier.weight(1.25f)
         )
         Text(
-            text = "Warm up",
+            text = stringResource(R.string.warm_up),
             style = ReboundTheme.typography.caption,
             color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
             textAlign = TextAlign.Center,

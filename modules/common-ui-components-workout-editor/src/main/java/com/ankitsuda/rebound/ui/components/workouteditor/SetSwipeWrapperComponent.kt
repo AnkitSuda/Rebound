@@ -28,7 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.ui.keyboard.R
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -138,7 +140,7 @@ internal fun SetItemBgLayout(
         Icon(
             Icons.Outlined.Delete,
             tint = ReboundTheme.colors.error,
-            contentDescription = "Delete",
+            contentDescription = stringResource(R.string.delete),
             modifier = Modifier
                 .scale(scale)
                 .align(alignment)

@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -47,6 +48,7 @@ import com.ankitsuda.rebound.ui.components.settings.ColorPickerCardItem
 import com.ankitsuda.rebound.ui.components.settings.SliderCardItem
 import com.ankitsuda.rebound.ui.components.settings.SwitchCardItem
 import me.onebone.toolbar.ScrollStrategy
+import com.ankitsuda.common.compose.R
 
 @Composable
 fun ChartsPersonalizationScreen(
@@ -78,7 +80,7 @@ fun ChartsPersonalizationScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Charts",
+                title = stringResource(id = R.string.charts),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -86,7 +88,7 @@ fun ChartsPersonalizationScreen(
                     }
                 },
                 actions = {
-                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = stringResource(id = R.string.reset_to_defaults)) {
 
                     }
                 }
@@ -109,7 +111,7 @@ fun ChartsPersonalizationScreen(
 
                     SwitchCardItem(
                         modifier = itemModifier,
-                        text = "Shader enabled",
+                        text = stringResource(id = R.string.shader_enabled),
                         checked = themeState.chartsShaderEnabled,
                         onChange = {
                             setThemeState(themeState.copy(chartsShaderEnabled = it))
@@ -122,7 +124,7 @@ fun ChartsPersonalizationScreen(
 
                     SliderCardItem(
                         modifier = itemModifier,
-                        text = "Line thickness",
+                        text = stringResource(id = R.string.line_thickness),
                         value = themeState.chartsLineThickness,
                         steps = 16,
                         valueRange = 0f..16f,
@@ -137,7 +139,7 @@ fun ChartsPersonalizationScreen(
 
                     SliderCardItem(
                         modifier = itemModifier,
-                        text = "Point diameter",
+                        text = stringResource(id = R.string.point_diameter),
                         value = themeState.chartsPointDiameter,
                         steps = 16,
                         valueRange = 0f..16f,
@@ -152,7 +154,7 @@ fun ChartsPersonalizationScreen(
 
                     SliderCardItem(
                         modifier = itemModifier,
-                        text = "Point line thickness",
+                        text = stringResource(id = R.string.point_line_thickness),
                         value = themeState.chartsPointLineThickness,
                         steps = 16,
                         valueRange = 0f..16f,

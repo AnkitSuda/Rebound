@@ -20,10 +20,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.charts.themed.ReboundChart
+import com.ankitsuda.rebound.ui.home.R
 import com.ankitsuda.rebound.ui.home.models.WorkoutsInfo
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
@@ -38,22 +40,22 @@ fun WorkoutsCardComponent(modifier: Modifier = Modifier, workoutsInfo: WorkoutsI
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            CardHeaderComponent(text = "Workouts")
+            CardHeaderComponent(text = stringResource(R.string.workouts))
             RSpacer(space = 16.dp)
             InfosContainerComponent {
                 InfoComponent(
                     value = workoutsInfo.workoutsThisWeek.toString(),
-                    title = "This Week",
+                    title = stringResource(R.string.this_week),
                     constrains = it
                 )
                 InfoComponent(
                     value = workoutsInfo.workoutsThisMonth.toString(),
-                    title = "This Month",
+                    title = stringResource(R.string.this_month),
                     constrains = it
                 )
                 InfoComponent(
                     value = workoutsInfo.workoutsLastMonth.toString(),
-                    title = "Last Month",
+                    title = stringResource(R.string.last_month),
                     constrains = it
                 )
             }

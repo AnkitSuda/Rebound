@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.rebound.ui.components.TopBar
@@ -50,7 +51,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel = hiltViewModel()) {
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
             TopBar2(
-                title = "Home",
+                title = stringResource(id = R.string.home),
                 toolbarState = collapsingState.toolbarState,
             )
         },

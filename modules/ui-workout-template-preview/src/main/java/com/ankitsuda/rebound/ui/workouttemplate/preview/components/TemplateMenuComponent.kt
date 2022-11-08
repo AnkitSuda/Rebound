@@ -19,6 +19,8 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.ankitsuda.rebound.ui.workouttemplate.preview.R
 
 @Composable
 internal fun TemplateMenuComponent(
@@ -39,13 +41,13 @@ internal fun TemplateMenuComponent(
             onDismissRequest()
             onToggleArchiveTemplate()
         }) {
-            Text(if (isArchived) "Unarchive" else "Archive")
+            Text(if (isArchived) stringResource(R.string.unarchive) else stringResource(R.string.archive))
         }
         DropdownMenuItem(onClick = {
             onDismissRequest()
             onDeleteTemplate()
         }) {
-            Text("Delete")
+            Text(stringResource(R.string.delete))
         }
     }
 }

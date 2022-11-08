@@ -27,6 +27,7 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +42,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import com.ankitsuda.common.compose.R
 
 const val WEIGHT_7DAY_WEEK = 1f / 7f
 
@@ -51,7 +53,15 @@ fun CalendarMonthItem(
     selectedDate: LocalDate,
     onClickOnDay: (CalendarDay) -> Unit
 ) {
-    val dayNames = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+    val dayNames = listOf(
+        stringResource(id = R.string.mon),
+        stringResource(id = R.string.tue),
+        stringResource(id = R.string.wed),
+        stringResource(id = R.string.thu),
+        stringResource(id = R.string.fri),
+        stringResource(id = R.string.sat),
+        stringResource(id = R.string.sun)
+    )
 
     val monthFormatter = DateTimeFormatter.ofPattern("LLLL yyyy")
     val dayFormatter = DateTimeFormatter.ofPattern("d")

@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
@@ -73,7 +74,7 @@ private fun CustomizePlatesScreenLayout(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Plates",
+                title = stringResource(id = R.string.plates),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -83,7 +84,7 @@ private fun CustomizePlatesScreenLayout(
                 actions = {
                     TopBarIconButton(
                         icon = Icons.Outlined.Add,
-                        title = "Add plate",
+                        title = stringResource(id = R.string.add_plate),
                         onClick = {
                             navigator.navigate(LeafScreen.PlateEdit.createRoute())
                         }

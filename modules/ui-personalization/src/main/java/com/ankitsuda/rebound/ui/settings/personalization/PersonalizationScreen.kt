@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
@@ -46,7 +47,7 @@ fun PersonalizationScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Personalization",
+                title = stringResource(id = R.string.personalization),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -54,7 +55,7 @@ fun PersonalizationScreen(
                     }
                 },
                 actions = {
-                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = stringResource(id = R.string.reset_to_defaults)) {
 
                     }
                 })
@@ -70,7 +71,7 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "Theme Presets",
+                    text = stringResource(id = R.string.theme_presets),
                     onClick = {
                         navigator.navigate(LeafScreen.ThemePresetsPersonalization().createRoute())
                     })
@@ -79,7 +80,7 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "Main Colors",
+                    text = stringResource(R.string.main_colors),
                     onClick = {
                         navigator.navigate(LeafScreen.MainColorsPersonalization().createRoute())
                     })
@@ -88,7 +89,7 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "Shapes",
+                    text = stringResource(R.string.shapes),
                     onClick = {
                         navigator.navigate(LeafScreen.ShapesPersonalization().createRoute())
                     })
@@ -97,7 +98,7 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "Cards",
+                    text = stringResource(R.string.cards),
                     onClick = {
                         navigator.navigate(LeafScreen.CardsPersonalization().createRoute())
                     })
@@ -106,7 +107,7 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "Top Bar",
+                    text = stringResource(R.string.top_bar),
                     onClick = {
                         navigator.navigate(LeafScreen.TopBarPersonalization().createRoute())
                     })
@@ -115,7 +116,7 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "Bottom Bar",
+                    text = stringResource(R.string.bottom_bar),
                     onClick = {
                         navigator.navigate(LeafScreen.BottomBarPersonalization().createRoute())
                     })
@@ -124,7 +125,7 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "Charts",
+                    text = stringResource(R.string.charts),
                     onClick = {
                         navigator.navigate(LeafScreen.ChartsPersonalization().createRoute())
                     })
@@ -134,7 +135,7 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "Keyboard",
+                    text = stringResource(R.string.keyboard),
                     onClick = {
                         navigator.navigate(LeafScreen.KeyboardPersonalization().createRoute())
                     })
@@ -143,7 +144,7 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "Color Picker Demo",
+                    text = stringResource(R.string.color_picker_demo),
                     onClick = {
                         navigator.navigate(LeafScreen.ColorPickerDemo().createRoute())
                     })
@@ -152,7 +153,7 @@ fun PersonalizationScreen(
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "Set Keyboard Demo",
+                    text = stringResource(R.string.set_keyboard_demo),
                     onClick = {
                         navigator.navigate(LeafScreen.ReboundSetKeyboardDemo().createRoute())
                     })

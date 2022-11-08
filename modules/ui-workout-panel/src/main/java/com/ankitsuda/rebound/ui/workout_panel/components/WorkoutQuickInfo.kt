@@ -22,9 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.ui.workout_panel.R
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
@@ -43,9 +45,9 @@ fun WorkoutQuickInfo(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
     ) {
-        InfoItem(value = currentDurationStr, title = "Duration")
-        InfoItem(value = currentVolumeStr, title = "Volume")
-        InfoItem(value = currentSetsStr, title = "Sets")
+        InfoItem(value = currentDurationStr, title = stringResource(R.string.duration))
+        InfoItem(value = currentVolumeStr, title = stringResource(R.string.volume))
+        InfoItem(value = currentSetsStr, title = stringResource(R.string.sets))
     }
 }
 

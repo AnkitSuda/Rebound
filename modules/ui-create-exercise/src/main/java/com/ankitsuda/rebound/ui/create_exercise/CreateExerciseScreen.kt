@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.navigation.LocalNavigator
@@ -69,17 +70,17 @@ fun CreateExerciseScreen(
             TopBar(
                 statusBarEnabled = false,
                 elevationEnabled = false,
-                title = "New Exercise",
+                title = stringResource(id = R.string.new_exercise),
                 strictLeftIconAlignToStart = true,
                 leftIconBtn = {
-                    TopBarIconButton(icon = Icons.Outlined.Close, title = "Back", onClick = {
+                    TopBarIconButton(icon = Icons.Outlined.Close, title = stringResource(id = R.string.back), onClick = {
                         navigator.goBack()
                     })
                 },
                 rightIconBtn = {
                     TopBarIconButton(
                         icon = Icons.Outlined.Done,
-                        title = "Create",
+                        title = stringResource(id = R.string.create),
                         enabled = isCreateBtnEnabled,
                         customTint = MaterialTheme.colors.primary
                     ) {
@@ -100,14 +101,14 @@ fun CreateExerciseScreen(
                         .padding(bottom = 8.dp)
                 ) {
                     Text(
-                        text = "Name",
+                        text = stringResource(id = R.string.name),
                         style = MaterialTheme.typography.caption,
                         color = Color(117, 117, 117)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     AppTextField(
                         value = nameValue,
-                        placeholderValue = "Exercise name",
+                        placeholderValue = stringResource(id = R.string.exercise_name),
                         singleLine = true,
                         onValueChange = {
                             viewModel.setName(it)
@@ -120,14 +121,14 @@ fun CreateExerciseScreen(
                 ) {
 
                     Text(
-                        text = "Notes",
+                        text = stringResource(id = R.string.notes),
                         style = MaterialTheme.typography.caption,
                         color = Color(117, 117, 117)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     AppTextField(
                         value = noteValue,
-                        placeholderValue = "Exercise notes",
+                        placeholderValue = stringResource(id = R.string.exercise_notes),
                         onValueChange = {
                             viewModel.setNote(it)
                         })
@@ -139,7 +140,7 @@ fun CreateExerciseScreen(
 
                 ) {
                     Text(
-                        text = "Category",
+                        text = stringResource(id = R.string.category),
                         style = MaterialTheme.typography.caption,
                         color = Color(117, 117, 117)
                     )
@@ -175,7 +176,7 @@ fun CreateExerciseScreen(
 
                 ) {
                     Text(
-                        text = "Primary Muscle",
+                        text = stringResource(id = R.string.primary_muscle),
                         style = MaterialTheme.typography.caption,
                         color = Color(117, 117, 117)
                     )

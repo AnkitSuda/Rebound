@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -45,6 +46,7 @@ import com.ankitsuda.rebound.ui.components.settings.SliderCardItem
 import com.ankitsuda.rebound.ui.components.settings.SwitchCardItem
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.ScrollStrategy
+import com.ankitsuda.common.compose.R
 
 @Composable
 fun MainColorsPersonalizationScreen(
@@ -76,7 +78,7 @@ fun MainColorsPersonalizationScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Main Colors",
+                title = stringResource(id = R.string.main_colors),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -84,7 +86,7 @@ fun MainColorsPersonalizationScreen(
                     }
                 },
                 actions = {
-                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = stringResource(id = R.string.reset_to_defaults)) {
 
                     }
                 }
@@ -107,7 +109,7 @@ fun MainColorsPersonalizationScreen(
 
                     ColorPickerCardItem(
                         modifier = itemModifier,
-                        text = "Primary Color",
+                        text = stringResource(id = R.string.primary_color),
                         selectedColor = themeState.primaryColor,
                         onNewColorSelected = {
                             setThemeState(themeState.copy(primaryColor = it))
@@ -120,7 +122,7 @@ fun MainColorsPersonalizationScreen(
 
                     ColorPickerCardItem(
                         modifier = itemModifier,
-                        text = "Background Color",
+                        text = stringResource(id = R.string.background_color),
                         selectedColor = themeState.backgroundColor,
                         onNewColorSelected = {
                             setThemeState(themeState.copy(backgroundColor = it))
@@ -132,7 +134,7 @@ fun MainColorsPersonalizationScreen(
                 item {
                     ColorPickerCardItem(
                         modifier = itemModifier,
-                        text = "On Primary Color",
+                        text = stringResource(id = R.string.on_primary_color),
                         selectedColor = themeState.onPrimaryColor,
                         useAltColorPicker = true,
                         onNewColorSelected = {
@@ -142,7 +144,7 @@ fun MainColorsPersonalizationScreen(
                 item {
                     ColorPickerCardItem(
                         modifier = itemModifier,
-                        text = "On Background Color",
+                        text = stringResource(id = R.string.on_background_color),
                         selectedColor = themeState.onBackgroundColor,
                         onNewColorSelected = {
                             setThemeState(themeState.copy(onBackgroundColor = it))
@@ -153,7 +155,7 @@ fun MainColorsPersonalizationScreen(
 
                     SwitchCardItem(
                         modifier = itemModifier,
-                        text = "Is Light Theme",
+                        text = stringResource(id = R.string.is_light_theme),
                         checked = themeState.isLightTheme,
                         onChange = {
                             setThemeState(themeState.copy(isLightTheme = it))
@@ -166,7 +168,7 @@ fun MainColorsPersonalizationScreen(
 
                     SwitchCardItem(
                         modifier = itemModifier,
-                        text = "Dark status bar icons",
+                        text = stringResource(id = R.string.dark_status_bar_icons),
                         checked = themeState.isDarkStatusBarIcons,
                         onChange = {
                             setThemeState(themeState.copy(isDarkStatusBarIcons = it))
@@ -178,7 +180,7 @@ fun MainColorsPersonalizationScreen(
 
                     SwitchCardItem(
                         modifier = itemModifier,
-                        text = "Dark navigation bar icons",
+                        text = stringResource(id = R.string.dark_navigation_bar_icons),
                         checked = themeState.isDarkNavigationBarIcons,
                         onChange = {
                             setThemeState(themeState.copy(isDarkNavigationBarIcons = it))

@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
@@ -43,7 +44,7 @@ fun MoreScreen(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         toolbar = {
             TopBar2(
-                title = "More",
+                title = stringResource(id = R.string.more),
                 toolbarState = collapsingState.toolbarState,
             )
         },
@@ -59,8 +60,8 @@ fun MoreScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.Straighten,
-                    text = "Measure",
-                    description = "Body measurements",
+                    text = stringResource(id = R.string.measure),
+                    description = stringResource(id = R.string.body_measurements),
                     onClick = {
                         navigator.navigate(LeafScreen.Measure().createRoute())
                     })
@@ -70,21 +71,21 @@ fun MoreScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.SportsScore,
-                    text = "Achievements",
+                    text = stringResource(id = R.string.achievements),
                     description = "0 achievements",
                     onClick = {
                     })
             }
             item {
-                MoreSectionHeader(text = "Settings")
+                MoreSectionHeader(text = stringResource(id = R.string.settings))
             }
             item {
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.BubbleChart,
-                    text = "Personalization",
-                    description = "Make rebound yours",
+                    text = stringResource(id = R.string.personalization),
+                    description = stringResource(id = R.string.make_rebound_yours),
                     onClick = {
                         navigator.navigate(LeafScreen.Personalization().createRoute())
                     })
@@ -94,8 +95,8 @@ fun MoreScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.Settings,
-                    text = "Settings",
-                    description = "Units, backups etc.",
+                    text = stringResource(id = R.string.settings),
+                    description = stringResource(id = R.string.settings_description),
                     onClick = {
                         navigator.navigate(LeafScreen.Settings().createRoute())
                     })

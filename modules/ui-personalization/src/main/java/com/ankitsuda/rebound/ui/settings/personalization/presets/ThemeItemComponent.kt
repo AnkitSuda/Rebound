@@ -26,11 +26,13 @@ import androidx.compose.material.icons.outlined.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.domain.entities.ThemePreset
 import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.settings.personalization.R
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
@@ -67,13 +69,13 @@ internal fun ThemeItemComponent(
 
             Row(modifier = Modifier.align(Alignment.End)) {
                 TextButton(onClick = onClickDelete) {
-                    Text(text = "Delete")
+                    Text(text = stringResource(R.string.delete))
                 }
                 RSpacer(space = 8.dp)
                 RButton(onClick = onClickApply) {
                     Icon(imageVector = Icons.Outlined.Check, contentDescription = null)
                     RSpacer(space = 4.dp)
-                    Text(text = "Apply")
+                    Text(text = stringResource(R.string.apply))
                 }
             }
 

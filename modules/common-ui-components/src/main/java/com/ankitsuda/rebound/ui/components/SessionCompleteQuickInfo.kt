@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.icons.Weight
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -44,19 +45,19 @@ fun SessionCompleteQuickInfo(
         SessionQuickInfoRowItem(
             icon = Icons.Outlined.Timer,
             text = time,
-            contentDescription = "Duration"
+            contentDescription = stringResource(R.string.duration)
         )
         Spacer(modifier = Modifier.width(8.dp))
         SessionQuickInfoRowItem(
             icon = Icons.Filled.Weight,
             text = volume,
-            contentDescription = "Total volume"
+            contentDescription = stringResource(R.string.total_volume)
         )
         Spacer(modifier = Modifier.width(8.dp))
         SessionQuickInfoRowItem(
             icon = Icons.Outlined.EmojiEvents,
             text = "$prs PRs",
-            contentDescription = "Total volume"
+            contentDescription = stringResource(R.string.total_volume)
         )
     }
 }

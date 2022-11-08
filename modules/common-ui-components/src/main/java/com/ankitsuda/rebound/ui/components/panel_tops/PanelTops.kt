@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,6 +40,7 @@ import com.ankitsuda.rebound.domain.entities.Workout
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import timber.log.Timber
+import com.ankitsuda.common.compose.R
 
 @Composable
 fun PanelTopDragHandle(modifier: Modifier = Modifier) {
@@ -116,7 +118,7 @@ fun PanelTopExpanded(
             IconButton(onClick = onCollapseBtnClicked) {
                 Icon(
                     imageVector = Icons.Outlined.KeyboardArrowDown,
-                    contentDescription = "Collapse panel"
+                    contentDescription = stringResource(id = R.string.collapse_panel)
                 )
             }
             RestTimerButton(
@@ -131,7 +133,7 @@ fun PanelTopExpanded(
                 onClick = onFinishBtnClicked,
                 elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp)
             ) {
-                Text(text = "Finish", style = MaterialTheme.typography.button)
+                Text(text = stringResource(id = R.string.finish), style = MaterialTheme.typography.button)
             }
         }
     }
@@ -196,7 +198,7 @@ private fun RestTimerButton(
                 modifier = iconModifier
                     .align(Alignment.CenterStart),
                 imageVector = Icons.Outlined.Timer,
-                contentDescription = "Rest timer",
+                contentDescription = stringResource(id = R.string.rest_timer),
                 tint = contentColor
             )
 

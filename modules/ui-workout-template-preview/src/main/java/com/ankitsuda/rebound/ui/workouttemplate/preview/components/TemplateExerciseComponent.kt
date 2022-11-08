@@ -25,10 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.ankitsuda.rebound.ui.workouttemplate.preview.R
 
 @Composable
 fun TemplateExerciseComponent(
@@ -62,7 +64,7 @@ fun TemplateExerciseComponent(
             IconButton(onClick = onClickInfo) {
                 Icon(
                     imageVector = Icons.Outlined.Info,
-                    contentDescription = "About exercise",
+                    contentDescription = stringResource(R.string.about_exercise),
                     tint = ReboundTheme.colors.onBackground.copy(alpha = 0.75f)
                 )
             }

@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
@@ -82,7 +83,7 @@ fun WorkoutEditScreen(
                         }
                     },
                     actions = {
-                        TopBarIconButton(icon = Icons.Outlined.MoreVert, title = "Open Menu") {
+                        TopBarIconButton(icon = Icons.Outlined.MoreVert, title = stringResource(R.string.open_menu)) {
 
                         }
                     })

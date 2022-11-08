@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.ui.ThemeState
@@ -38,6 +39,7 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
+import com.ankitsuda.common.compose.R
 
 @Composable
 fun KeyboardPersonalizationScreen(
@@ -70,7 +72,7 @@ private fun KeyboardPersonalizationScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Keyboard",
+                title = stringResource(id = R.string.keyboard),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -78,7 +80,7 @@ private fun KeyboardPersonalizationScreen(
                     }
                 },
                 actions = {
-                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = stringResource(id = R.string.reset_to_defaults)) {
 
                     }
                 }
@@ -98,7 +100,7 @@ private fun KeyboardPersonalizationScreen(
             item {
                 ColorPickerCardItem(
                     modifier = itemModifier,
-                    text = "Background color",
+                    text = stringResource(id = R.string.background_color),
                     selectedColor = themeState.keyboardBackgroundColor,
                     onNewColorSelected = {
                         setThemeState(themeState.copy(keyboardBackgroundColor = it))
@@ -109,7 +111,7 @@ private fun KeyboardPersonalizationScreen(
             item {
                 ColorPickerCardItem(
                     modifier = itemModifier,
-                    text = "Content color",
+                    text = stringResource(id = R.string.content_color),
                     selectedColor = themeState.keyboardContentColor,
                     onNewColorSelected = {
                         setThemeState(themeState.copy(keyboardContentColor = it))
@@ -119,7 +121,7 @@ private fun KeyboardPersonalizationScreen(
             item {
                 ColorPickerCardItem(
                     modifier = itemModifier,
-                    text = "Barbell color",
+                    text = stringResource(id = R.string.barbell_color),
                     selectedColor = themeState.keyboardBarbellColor,
                     onNewColorSelected = {
                         setThemeState(themeState.copy(keyboardBarbellColor = it))
@@ -129,7 +131,7 @@ private fun KeyboardPersonalizationScreen(
             item {
                 ColorPickerCardItem(
                     modifier = itemModifier,
-                    text = "On barbell color",
+                    text = stringResource(id = R.string.on_barbell_color),
                     selectedColor = themeState.keyboardBarbellColor,
                     onNewColorSelected = {
                         setThemeState(themeState.copy(keyboardBarbellColor = it))

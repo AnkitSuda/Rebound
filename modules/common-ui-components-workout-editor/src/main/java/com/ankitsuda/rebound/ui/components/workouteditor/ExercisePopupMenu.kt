@@ -19,6 +19,7 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 
 
 @Composable
@@ -39,19 +40,19 @@ fun ExercisePopupMenu(
             onDismissRequest()
             onAddNote()
         }) {
-            Text("Add note")
+            Text(stringResource(id = R.string.add_note))
         }
         DropdownMenuItem(onClick = {
             onDismissRequest()
             onAddWarmUpSets()
         }) {
-            Text("Warm up sets")
+            Text(stringResource(id = R.string.warm_up_sets))
         }
         DropdownMenuItem(onClick = {
             onDismissRequest()
             onDeleteExercise()
         }) {
-            Text("Delete exercise")
+            Text(stringResource(id = R.string.delete_exercise))
         }
     }
 }

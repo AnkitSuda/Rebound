@@ -34,6 +34,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -106,12 +107,12 @@ fun HistoryScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "History",
+                title = stringResource(id = R.string.history),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarIconButton(
                         icon = Icons.Outlined.DateRange,
-                        title = "Show calendar",
+                        title = stringResource(id = R.string.show_calendar),
                         onClick = {
                             navigator.navigate(LeafScreen.Calendar.createRoute(selectedDate = LocalDate.now()))
                         }
@@ -120,7 +121,7 @@ fun HistoryScreen(
                 actions = {
                     TopBarIconButton(
                         icon = Icons.Outlined.MoreVert,
-                        title = "Open menu",
+                        title = stringResource(id = R.string.open_menu),
                         onClick = {
 
                         }

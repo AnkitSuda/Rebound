@@ -27,6 +27,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -36,6 +37,7 @@ import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.workout.UNORGANIZED_FOLDER_ID
 import com.ankitsuda.rebound.ui.workout.invisible
+import com.ankitsuda.common.compose.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable()
@@ -94,7 +96,7 @@ internal fun LazyItemScope.FolderSection(
                     Icon(
                         modifier = Modifier.scale(1f, iconScaleY),
                         imageVector = Icons.Outlined.ExpandLess,// else Icons.Outlined.ExpandMore,
-                        contentDescription = if (isExpanded) "Collapse" else "Expand"
+                        contentDescription = if (isExpanded) stringResource(id = R.string.collapse) else stringResource(id = R.string.expand)
                     )
                     Text(
                         modifier = Modifier.weight(1f),
@@ -106,7 +108,7 @@ internal fun LazyItemScope.FolderSection(
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.MoreVert,
-                            contentDescription = "More"
+                            contentDescription = stringResource(id = R.string.more)
                         )
                         FolderMenu(
                             expanded = menuExpanded,

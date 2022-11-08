@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -49,7 +50,7 @@ fun SettingsScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Settings",
+                title = stringResource(R.string.settings),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -70,8 +71,8 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.BubbleChart,
-                    text = "Personalization",
-                    description = "Make rebound yours",
+                    text = stringResource(R.string.personalization),
+                    description = stringResource(R.string.make_rebound_yours),
                     onClick = {
                         navigator.navigate(LeafScreen.Personalization().createRoute())
                     })
@@ -81,22 +82,22 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Filled.Plates,
-                    text = "Plates",
-                    description = "Customize barbell plates",
+                    text = stringResource(R.string.plates),
+                    description = stringResource(R.string.customize_barbell_plates),
                     onClick = {
                         navigator.navigate(LeafScreen.Plates().createRoute())
                     })
             }
             item {
-                MoreSectionHeader(text = "Defaults")
+                MoreSectionHeader(text = stringResource(R.string.defaults))
             }
             item {
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.FitnessCenter,
-                    text = "Weight Unit",
-                    description = "Metric (kg)",
+                    text = stringResource(R.string.weight_unit),
+                    description = stringResource(R.string.metric_kg),
                     onClick = {
 
                     })
@@ -106,8 +107,8 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.DirectionsRun,
-                    text = "Distance Unit",
-                    description = "Metric (m/km)",
+                    text = stringResource(R.string.distance_unit),
+                    description = stringResource(R.string.metric_m_km),
                     onClick = {
 
                     })
@@ -117,22 +118,22 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.Event,
-                    text = "First Day of The Week",
-                    description = "Sunday",
+                    text = stringResource(R.string.first_day_of_the_week),
+                    description = stringResource(R.string.sunday),
                     onClick = {
 
                     })
             }
             item {
-                MoreSectionHeader(text = "Your Data")
+                MoreSectionHeader(text = stringResource(R.string.your_data))
             }
             item {
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.Folder,
-                    text = "Backup Data",
-                    description = "To JSON",
+                    text = stringResource(R.string.backup_data),
+                    description = stringResource(R.string.to_json),
                     onClick = {
 
                     })
@@ -142,23 +143,23 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.Restore,
-                    text = "Restore Data",
-                    description = "From a previous backup",
+                    text = stringResource(R.string.restore_data),
+                    description = stringResource(R.string.from_a_previous_backup),
                     onClick = {
 
                     })
             }
 
             item {
-                MoreSectionHeader(text = "Feedback")
+                MoreSectionHeader(text = stringResource(R.string.feedback))
             }
             item {
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.ThumbsUpDown,
-                    text = "Write a Review",
-                    description = "It will motivate us to make rebound more better.",
+                    text = stringResource(R.string.write_a_review),
+                    description = stringResource(R.string.write_review_description),
                     onClick = {
 
                     })
@@ -168,21 +169,21 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.BugReport,
-                    text = "Suggestions & Bug Report",
-                    description = "You can open an issue in Github repository",
+                    text = stringResource(R.string.suggestions_and_bug_report),
+                    description = stringResource(R.string.suggestions_and_bug_report_description),
                     onClick = {
 
                     })
             }
             item {
-                MoreSectionHeader(text = "About")
+                MoreSectionHeader(text = stringResource(R.string.about))
             }
             item {
                 MoreItemCard(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.Info,
-                    text = "About app",
+                    text = stringResource(R.string.about_app),
                     onClick = {
 
                     })

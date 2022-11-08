@@ -19,6 +19,8 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.ankitsuda.rebound.ui.customizeplates.R
 
 @Composable
 internal fun PlateMenuComponent(
@@ -38,13 +40,13 @@ internal fun PlateMenuComponent(
             onDismissRequest()
             onEditPlate()
         }) {
-            Text("Edit")
+            Text(stringResource(R.string.edit))
         }
         DropdownMenuItem(onClick = {
             onDismissRequest()
             onDeletePlate()
         }) {
-            Text("Delete")
+            Text(stringResource(id = R.string.delete))
         }
     }
 }

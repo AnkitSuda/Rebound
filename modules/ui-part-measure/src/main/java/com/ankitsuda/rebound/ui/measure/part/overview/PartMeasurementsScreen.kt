@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -38,6 +39,7 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.*
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import com.ankitsuda.common.compose.R
 
 @OptIn(ExperimentalToolbarApi::class)
 @Composable
@@ -80,7 +82,7 @@ fun PartMeasurementsScreen(
                 }
 //
             }) {
-                Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add measurement")
+                Icon(imageVector = Icons.Outlined.Add, contentDescription = stringResource(id = R.string.add_measurement))
             }
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
@@ -112,7 +114,7 @@ fun PartMeasurementsScreen(
 
             item {
                 Text(
-                    text = "History",
+                    text = stringResource(id = R.string.history),
                     style = ReboundTheme.typography.h6,
                     color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)

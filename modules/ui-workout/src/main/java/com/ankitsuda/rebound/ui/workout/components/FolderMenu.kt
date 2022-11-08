@@ -19,6 +19,8 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.ankitsuda.rebound.ui.workout.R
 
 @Composable
 internal fun FolderMenu(
@@ -40,20 +42,20 @@ internal fun FolderMenu(
             onDismissRequest()
             onAddTemplate()
         }) {
-            Text("Add Template")
+            Text(stringResource(id = R.string.add_template))
         }
         if (!isForUnorganized) {
             DropdownMenuItem(onClick = {
                 onDismissRequest()
                 onRename()
             }) {
-                Text("Rename")
+                Text(stringResource(id = R.string.rename))
             }
             DropdownMenuItem(onClick = {
                 onDismissRequest()
                 onDelete()
             }) {
-                Text("Delete")
+                Text(stringResource(id = R.string.delete))
             }
         }
     }

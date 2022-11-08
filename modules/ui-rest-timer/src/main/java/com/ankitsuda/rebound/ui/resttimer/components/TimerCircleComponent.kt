@@ -38,10 +38,12 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.resttimer.TimerState
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.resttimer.R
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import kotlin.math.min
 
@@ -110,7 +112,7 @@ fun TimerCircleComponent(
                                     Icon(
                                         modifier = Modifier.size(32.dp),
                                         imageVector = Icons.Outlined.Pause,
-                                        contentDescription = "Pause"
+                                        contentDescription = stringResource(R.string.pause)
                                     )
                                 }
                             } else if (timerState == TimerState.PAUSED) {
@@ -120,7 +122,7 @@ fun TimerCircleComponent(
                                     Icon(
                                         modifier = Modifier.size(32.dp),
                                         imageVector = Icons.Outlined.PlayArrow,
-                                        contentDescription = "Resume"
+                                        contentDescription = stringResource(R.string.resume)
                                     )
                                 }
                             }
@@ -131,7 +133,7 @@ fun TimerCircleComponent(
                                 Icon(
                                     modifier = Modifier.size(32.dp),
                                     imageVector = Icons.Outlined.Close,
-                                    contentDescription = "Cancel"
+                                    contentDescription = stringResource(R.string.cancel)
                                 )
                             }
                         }

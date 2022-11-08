@@ -24,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -57,9 +58,9 @@ fun ExerciseDetailScreen(
     val charts by viewModel.charts.collectAsState(initial = emptyMap())
 
     val tabData = listOf(
-        "Statistics",
-        "History",
-        "About"
+        stringResource(id = R.string.statistics),
+        stringResource(id = R.string.history),
+        stringResource(id = R.string.about)
     )
     val pagerState = rememberPagerState(
         initialPage = 0,
@@ -85,7 +86,7 @@ fun ExerciseDetailScreen(
                 actions = {
                     TopBarIconButton(
                         icon = Icons.Outlined.StarBorder,
-                        title = "Favorite",
+                        title = stringResource(id = R.string.favorite),
                         onClick = {
 
                         })

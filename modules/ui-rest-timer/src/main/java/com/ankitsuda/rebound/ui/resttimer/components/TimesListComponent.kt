@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.resttimer.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,8 +29,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.resttimer.getFormattedStopWatchTime
+import com.ankitsuda.rebound.ui.resttimer.R
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -38,8 +41,9 @@ internal fun TimesListComponent(
     contentPadding: PaddingValues,
     onClickStart: (Long) -> Unit,
 ) {
+    val context = LocalContext.current
     val times by remember {
-        mutableStateOf(getTimes())
+        mutableStateOf(getTimes(context))
     }
 
     LazyColumn(
@@ -64,17 +68,17 @@ internal fun TimesListComponent(
         })
 }
 
-fun getTimes(): List<Any> {
+fun getTimes(context: Context): List<Any> {
     val list = arrayListOf<Any>()
 
-    list.add("Select time")
+    list.add(context.getString(R.string.select_time))
 
     list.add(TimeUnit.MINUTES.toMillis(1))
     list.add(TimeUnit.SECONDS.toMillis(105))
     list.add(TimeUnit.SECONDS.toMillis(110))
     list.add(TimeUnit.MINUTES.toMillis(5))
 
-    list.add("All")
+    list.add(context.getString(R.string.all))
 
     var lastI = 0
     for (i in 5..600) {

@@ -16,34 +16,32 @@ package com.ankitsuda.rebound.ui.settings.personalization.shapes
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Restore
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.ui.ThemeState
 import com.ankitsuda.common.compose.LocalDialog
 import com.ankitsuda.common.compose.rememberFlowWithLifecycle
 import com.ankitsuda.rebound.ui.ThemeViewModel
-
-
-import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
-import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.components.settings.ShapesEditorCardItem
+import com.ankitsuda.rebound.ui.settings.personalization.R
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.theme.ShapeValues
+import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun ShapesPersonalizationScreen(
@@ -75,7 +73,7 @@ fun ShapesPersonalizationScreen(
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = "Shapes",
+                title = stringResource(R.string.shapes),
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
                     TopBarBackIconButton {
@@ -83,7 +81,7 @@ fun ShapesPersonalizationScreen(
                     }
                 },
                 actions = {
-                    TopBarIconButton(icon = Icons.Outlined.Restore, title = "Reset to defaults") {
+                    TopBarIconButton(icon = Icons.Outlined.Restore, title = stringResource(R.string.reset_to_defaults)) {
 
                     }
                 }
@@ -108,7 +106,7 @@ fun ShapesPersonalizationScreen(
 
                     ShapesEditorCardItem(
                         modifier = itemModifier,
-                        text = "Small shape",
+                        text = stringResource(R.string.small_shape),
                         defaultValues = ShapeValues(
                             topStart = themeState.shapeSmallTopStartRadius,
                             topEnd = themeState.shapeSmallTopEndRadius,

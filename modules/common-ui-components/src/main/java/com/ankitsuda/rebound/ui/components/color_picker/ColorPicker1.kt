@@ -40,10 +40,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.ankitsuda.rebound.ui.components.AppTextField
+import com.ankitsuda.rebound.ui.components.R
 import timber.log.Timber
 
 @Composable
@@ -127,7 +129,7 @@ private fun ColorHexInfo(
         mSelectedColor = selectedColor
         text = "#" + mSelectedColor.toHexString().uppercase().drop(2)
     }
-    AppTextField(modifier = modifier, value = text, placeholderValue = "Hex", onValueChange = {
+    AppTextField(modifier = modifier, value = text, placeholderValue = stringResource(id = R.string.hex), onValueChange = {
         text = it
         try {
             onHexEdited(Color(android.graphics.Color.parseColor(it)))

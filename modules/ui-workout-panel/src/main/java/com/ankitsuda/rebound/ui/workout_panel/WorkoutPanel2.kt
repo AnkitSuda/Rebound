@@ -26,6 +26,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -94,13 +95,13 @@ fun WorkoutPanel2(
                 AppTextField(
                     value = workoutName,
                     onValueChange = { viewModel.updateWorkoutName(it) },
-                    placeholderValue = "Workout name",
+                    placeholderValue = stringResource(R.string.workout_name),
                     modifier = Modifier.fillMaxWidth()
                 )
                 AppTextField(
                     value = workoutNote,
                     onValueChange = { viewModel.updateWorkoutNote(it) },
-                    placeholderValue = "Workout note",
+                    placeholderValue = stringResource(R.string.workout_note),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp)
@@ -152,7 +153,7 @@ fun WorkoutPanel2(
                     modifier = Modifier.padding(end = 8.dp),
                     tint = MaterialTheme.colors.onPrimary
                 )
-                Text(text = "Add Exercise", style = MaterialTheme.typography.button)
+                Text(text = stringResource(R.string.add_exercise), style = MaterialTheme.typography.button)
             }
         }
 
@@ -173,7 +174,7 @@ fun WorkoutPanel2(
                     tint = Color.Red
                 )
                 Text(
-                    text = "Cancel Workout",
+                    text = stringResource(R.string.cancel_workout),
                     style = MaterialTheme.typography.button,
                     color = Color.Red
                 )
