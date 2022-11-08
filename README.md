@@ -25,7 +25,7 @@ Feature Rich & Highly Customizable Workout Log App
 ## Features
 
 As of now I am trying to implement most of the core features, but more features will be added soon.
-Most of the below features are not implement yet, but will be soon.
+Most of the below features are either not implement or not stable enough yet, but will be soon.
 
 - Highly customizable
 - Material Design
@@ -62,13 +62,10 @@ in use-
 - DataStore
 - Hilt
 
-## Thanks to
+## Contribution
 
-https://github.com/tehras/charts
-https://github.com/onebone/compose-collapsing-toolbar
-
-> App is under really heavy development, so I'll be not accepting any contributions right now.
-> Contributions will be open once the app is stable enough.
+App is under really heavy development, so I'll be not accepting any contributions right now.
+Contributions will be open once the app is stable enough.
 
 ## License
 
