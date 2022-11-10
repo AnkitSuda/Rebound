@@ -183,6 +183,9 @@ interface WorkoutsDao {
     @Update
     suspend fun updateExerciseSetGroupNote(exerciseSetGroupNote: ExerciseSetGroupNote)
 
+    @Query("UPDATE exercise_workout_junctions SET superset_id = :supersetId WHERE id = :junctionId")
+    suspend fun updateExerciseWorkoutJunctionSupersetId(junctionId: String, supersetId: Int?)
+
     @Transaction
     suspend fun updateWarmUpSets(
         junction: LogEntriesWithExerciseJunction,

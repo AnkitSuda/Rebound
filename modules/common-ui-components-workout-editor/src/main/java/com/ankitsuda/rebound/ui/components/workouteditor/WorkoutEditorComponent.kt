@@ -25,6 +25,7 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -35,9 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ankitsuda.common.compose.SAFE_RS_KEYBOARD_HEIGHT
-import com.ankitsuda.navigation.LeafScreen
-import com.ankitsuda.navigation.LocalNavigator
-import com.ankitsuda.navigation.Navigator
+import com.ankitsuda.navigation.*
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
@@ -47,6 +46,7 @@ import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.toExer
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.insets.LocalWindowInsets
+import kotlin.math.log
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -71,12 +71,20 @@ fun WorkoutEditorComponent(
     onAddEmptyNote: (LogEntriesWithExerciseJunction) -> Unit,
     onDeleteNote: (ExerciseSetGroupNote) -> Unit,
     onChangeNote: (ExerciseSetGroupNote) -> Unit,
+    onAddToSuperset: (junctionId: String, supersetId: Int) -> Unit,
+    onRemoveFromSuperset: (LogEntriesWithExerciseJunction) -> Unit,
     layoutAtTop: @Composable LazyItemScope.() -> Unit = {}
 ) {
     // Observes results when ExercisesScreen changes value of arg
     val exercisesScreenResult = navController.currentBackStackEntry
         ?.savedStateHandle
-        ?.getLiveData<String?>("result_exercises_screen_exercise_id")?.observeAsState()
+        ?.getStateFlow<String?>(RESULT_EXERCISES_SCREEN_EXERCISE_ID, null)?.collectAsState()
+
+    // Observes results when Superset Selector changes value of arg
+    val supersetSelectorResult = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<Pair<String, Int>?>(RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY, null)
+        ?.collectAsState()
 
     val navigationBarHeight =
         with(LocalDensity.current) { if (addNavigationBarPadding) LocalWindowInsets.current.navigationBars.bottom.toDp() else 0.dp }
@@ -86,7 +94,19 @@ fun WorkoutEditorComponent(
             onAddExerciseToWorkout(resultId)
 
             navController.currentBackStackEntry?.savedStateHandle?.set(
-                "result_exercises_screen_exercise_id",
+                RESULT_EXERCISES_SCREEN_EXERCISE_ID,
+                null
+            )
+        }
+    }
+
+    LaunchedEffect(key1 = supersetSelectorResult?.value) {
+        supersetSelectorResult?.value?.let { pair ->
+
+            onAddToSuperset(pair.first, pair.second)
+
+            navController.currentBackStackEntry?.savedStateHandle?.set(
+                RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY,
                 null
             )
         }
@@ -168,7 +188,18 @@ fun WorkoutEditorComponent(
                     onAddEmptyNote(logEntriesWithJunctionItem)
                 },
                 onChangeNote = onChangeNote,
-                onDeleteNote = onDeleteNote
+                onDeleteNote = onDeleteNote,
+                onRemoveFromSuperset = {
+                    onRemoveFromSuperset(logEntriesWithJunctionItem)
+                },
+                onAddToSuperset = {
+                    navigator.navigate(
+                        LeafScreen.SupersetSelector.createRoute(
+                            workoutId = logEntriesWithJunctionItem.junction.workoutId!!,
+                            junctionId = logEntriesWithJunctionItem.junction.id,
+                        )
+                    )
+                }
             )
         }
 
@@ -189,7 +220,10 @@ fun WorkoutEditorComponent(
                     modifier = Modifier.padding(end = 8.dp),
                     tint = MaterialTheme.colors.onPrimary
                 )
-                Text(text = stringResource(R.string.add_exercise), style = MaterialTheme.typography.button)
+                Text(
+                    text = stringResource(R.string.add_exercise),
+                    style = MaterialTheme.typography.button
+                )
             }
         }
 

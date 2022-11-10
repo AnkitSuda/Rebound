@@ -54,4 +54,7 @@ dependencies {
     implementation project(":modules:ui-keyboard")
     implementation project(":modules:navigation")
     implementation project(":modules:domain")
+
+    implementation Deps.Dagger.hilt
+    kapt Deps.Dagger.hiltCompiler
 }

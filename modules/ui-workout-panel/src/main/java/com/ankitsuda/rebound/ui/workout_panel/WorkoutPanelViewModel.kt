@@ -290,4 +290,21 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
             workoutsRepository.updateExerciseSetGroupNote(note)
         }
     }
+
+    fun removeFromSuperset(junction: LogEntriesWithExerciseJunction) {
+        viewModelScope.launch {
+            workoutsRepository.updateExerciseWorkoutJunctionSupersetId(
+                junction.junction.id, null
+            )
+        }
+    }
+
+    fun addToSuperset(junctionId: String, supersetId: Int) {
+        viewModelScope.launch {
+            workoutsRepository.updateExerciseWorkoutJunctionSupersetId(
+                junctionId, supersetId
+            )
+        }
+    }
+
 }

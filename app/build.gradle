@@ -107,6 +107,7 @@ dependencies {
     implementation project(":modules:ui-workout-edit")
     implementation project(":modules:ui-keyboard")
     implementation project(":modules:ui-customize-plates")
+    implementation project(":modules:common-ui-components-workout-editor")
     implementation project(":modules:stopwatch")
 
     implementation Deps.Kotlin.coroutinesAndroid

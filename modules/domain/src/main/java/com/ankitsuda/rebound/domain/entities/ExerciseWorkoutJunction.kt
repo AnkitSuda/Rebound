@@ -23,6 +23,10 @@ data class ExerciseWorkoutJunction(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
     val id: String,
+
+    @ColumnInfo(name = "superset_id")
+    var supersetId: Int? = null,
+
     @ColumnInfo(name = "exercise_id")
     var exerciseId: String? = null,
     @ColumnInfo(name = "workout_id")

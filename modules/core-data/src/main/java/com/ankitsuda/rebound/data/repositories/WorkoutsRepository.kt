@@ -196,7 +196,7 @@ class WorkoutsRepository @Inject constructor(
                 getMaxWeightLiftedInExercise(j.exercise.exerciseId).firstOrNull() ?: 0.0
 
             j.logEntries.sortedByDescending { it.weight }.getOrNull(0)?.let { maxWeightEntry ->
-                if (maxWeightEntry.weight ?: 0.0 > lastMaxWeightInExercise) {
+                if ((maxWeightEntry.weight ?: 0.0) > lastMaxWeightInExercise) {
                     val entryPrs = arrayListOf<PersonalRecord>()
                     maxWeightEntry.personalRecords?.let { entryPrs.addAll(it) }
                     entryPrs.add(MaxWeightPR())
@@ -447,5 +447,9 @@ class WorkoutsRepository @Inject constructor(
 
     suspend fun updateExerciseSetGroupNote(exerciseSetGroupNote: ExerciseSetGroupNote) {
         workoutsDao.updateExerciseSetGroupNote(exerciseSetGroupNote)
+    }
+
+    suspend fun updateExerciseWorkoutJunctionSupersetId(junctionId: String, supersetId: Int?) {
+        workoutsDao.updateExerciseWorkoutJunctionSupersetId(junctionId, supersetId)
     }
 }

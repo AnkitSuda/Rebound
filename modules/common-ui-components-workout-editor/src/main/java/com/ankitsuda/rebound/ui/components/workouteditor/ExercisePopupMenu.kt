@@ -25,15 +25,18 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun ExercisePopupMenu(
     modifier: Modifier = Modifier,
-    expanded: Boolean,
+    isExpanded: Boolean,
+    isInSuperset: Boolean,
     onDismissRequest: () -> Unit,
     onDeleteExercise: () -> Unit,
     onAddWarmUpSets: () -> Unit,
     onAddNote: () -> Unit,
+    onAddToSuperset: () -> Unit,
+    onRemoveFromSuperset: () -> Unit,
 ) {
     DropdownMenu(
         modifier = modifier,
-        expanded = expanded,
+        expanded = isExpanded,
         onDismissRequest = onDismissRequest
     ) {
         DropdownMenuItem(onClick = {
@@ -47,6 +50,16 @@ fun ExercisePopupMenu(
             onAddWarmUpSets()
         }) {
             Text(stringResource(id = R.string.warm_up_sets))
+        }
+        DropdownMenuItem(onClick = {
+            onDismissRequest()
+            if (isInSuperset) {
+                onRemoveFromSuperset()
+            } else {
+                onAddToSuperset()
+            }
+        }) {
+            Text(stringResource(id = if (isInSuperset) R.string.remove_from_superset else R.string.add_to_superset))
         }
         DropdownMenuItem(onClick = {
             onDismissRequest()

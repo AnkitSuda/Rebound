@@ -68,7 +68,9 @@ fun LazyListScope.workoutExerciseItemAlt(
     onDeleteExercise: () -> Unit,
     onAddEmptyNote: () -> Unit,
     onDeleteNote: (ExerciseSetGroupNote) -> Unit,
-    onChangeNote: (ExerciseSetGroupNote) -> Unit
+    onChangeNote: (ExerciseSetGroupNote) -> Unit,
+    onAddToSuperset: () -> Unit,
+    onRemoveFromSuperset: () -> Unit,
 ) {
 
     val exercise = logEntriesWithJunction.exercise
@@ -145,13 +147,16 @@ fun LazyListScope.workoutExerciseItemAlt(
                     )
                 }
                 ExercisePopupMenu(
-                    expanded = popupMenuExpanded,
+                    isExpanded = popupMenuExpanded,
+                    isInSuperset = logEntriesWithJunction.junction.supersetId != null,
                     onDismissRequest = { popupMenuExpanded = false },
                     onDeleteExercise = onDeleteExercise,
                     onAddWarmUpSets = {
                         warmUpSetsDialogVisible = true
                     },
-                    onAddNote = onAddEmptyNote
+                    onAddNote = onAddEmptyNote,
+                    onAddToSuperset = onAddToSuperset,
+                    onRemoveFromSuperset = onRemoveFromSuperset
                 )
             }
 

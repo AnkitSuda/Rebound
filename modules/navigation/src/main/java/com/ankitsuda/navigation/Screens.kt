@@ -38,6 +38,11 @@ const val LOG_ID_KEY = "log_id"
 const val PLATE_ID_KEY = "plate_id"
 const val IS_TEMPLATE_KEY = "is_template"
 const val FOLDER_ID_KEY = "folder_id"
+const val SUPERSET_ID_KEY = "superset_id"
+const val JUNCTION_ID_KEY = "junction_id"
+
+const val RESULT_EXERCISES_SCREEN_EXERCISE_ID = "result_exercises_screen_exercise_id"
+const val RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY = "result_superset_selector_superset_id"
 
 interface Screen {
     val route: String
@@ -411,6 +416,25 @@ sealed class LeafScreen(
         LeafScreen(route) {
         companion object {
             fun createRoute() = "rest_timer"
+        }
+    }
+
+    data class SupersetSelector(override val route: String = "superset_selector?$WORKOUT_ID_KEY={$WORKOUT_ID_KEY}&$JUNCTION_ID_KEY={$JUNCTION_ID_KEY}") :
+        LeafScreen(
+            route = route,
+            arguments = listOf(
+                navArgument(WORKOUT_ID_KEY) {
+                    type = NavType.StringType
+                    nullable = false
+                },
+                navArgument(JUNCTION_ID_KEY) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            )
+        ) {
+        companion object {
+            fun createRoute(workoutId: String, junctionId: String) = "superset_selector?$WORKOUT_ID_KEY=$workoutId&$JUNCTION_ID_KEY=$junctionId"
         }
     }
 }

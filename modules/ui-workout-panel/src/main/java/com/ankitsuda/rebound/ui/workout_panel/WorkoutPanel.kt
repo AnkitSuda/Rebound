@@ -133,7 +133,9 @@ fun WorkoutPanel1(
             },
             onAddEmptyNote = viewModel::addEmptyNote,
             onChangeNote = viewModel::changeNote,
-            onDeleteNote = viewModel::deleteNote
+            onDeleteNote = viewModel::deleteNote,
+            onAddToSuperset = viewModel::addToSuperset,
+            onRemoveFromSuperset = viewModel::removeFromSuperset,
         )
     }
 }

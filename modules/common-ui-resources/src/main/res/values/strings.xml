@@ -207,4 +207,9 @@
     <string name="afternoon_workout">Afternoon Workout</string>
     <string name="evening_workout">Evening Workout</string>
     <string name="night_workout">Night Workout</string>
+    <string name="superset">Superset</string>
+    <string name="selected">Selected</string>
+    <string name="add_to_superset">Add to superset</string>
+    <string name="remove_from_superset">Remove from superset</string>
+    <string name="unnamed_exercise">Unnamed exercise</string>
 </resources>

@@ -28,6 +28,7 @@ import com.ankitsuda.rebound.ui.measure.MeasureScreen
 import com.ankitsuda.rebound.ui.exercise_details.ExerciseDetailScreen
 import com.ankitsuda.rebound.ui.exercises.ExercisesScreen
 import com.ankitsuda.rebound.ui.calendar.CalendarScreen
+import com.ankitsuda.rebound.ui.components.workouteditor.supersetselector.SupersetSelectorBottomSheet
 import com.ankitsuda.rebound.ui.create_exercise.CreateExerciseScreen
 import com.ankitsuda.rebound.ui.customizeplates.CustomizePlatesScreen
 import com.ankitsuda.rebound.ui.customizeplates.edit.PlateEditBottomSheet
@@ -125,6 +126,7 @@ internal fun AppNavigation(
 
         addExercisesBottomSheet(navController)
         addRestTimer(navController)
+        addSupersetSelector(navController)
     }
 }
 
@@ -390,6 +392,12 @@ private fun NavGraphBuilder.addTemplatesFolderEditBottomSheet(navController: Nav
 private fun NavGraphBuilder.addRestTimer(navController: NavController) {
     bottomSheetScreen(LeafScreen.RestTimer()) {
         RestTimerScreen()
+    }
+}
+
+private fun NavGraphBuilder.addSupersetSelector(navController: NavController) {
+    bottomSheetScreen(LeafScreen.SupersetSelector()) {
+        SupersetSelectorBottomSheet(navController)
     }
 }
 
