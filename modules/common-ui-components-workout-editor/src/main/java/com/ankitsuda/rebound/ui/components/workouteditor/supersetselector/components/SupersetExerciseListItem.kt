@@ -46,7 +46,7 @@ internal fun SupersetExerciseListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(36.dp)
+                .height(52.dp)
                 .run {
                     if (isSelectedJunction) {
                         this
