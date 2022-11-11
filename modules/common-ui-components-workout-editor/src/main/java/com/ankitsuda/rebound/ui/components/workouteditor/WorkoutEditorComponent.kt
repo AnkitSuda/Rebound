@@ -140,6 +140,11 @@ fun WorkoutEditorComponent(
         }
     }
 
+    fun handleDeleteExercise(item: LogEntriesWithExerciseJunction) {
+        handleRemoveFromSuperset(item)
+        onDeleteExerciseFromWorkout(item)
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -196,7 +201,7 @@ fun WorkoutEditorComponent(
                     )
                 },
                 onDeleteExercise = {
-                    onDeleteExerciseFromWorkout(logEntriesWithJunctionItem)
+                    handleDeleteExercise(logEntriesWithJunctionItem)
                 },
                 onUpdateWarmUpSets = {
                     onUpdateWarmUpSets(logEntriesWithJunctionItem, it.toExerciseLogEntries())
