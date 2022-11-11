@@ -15,8 +15,10 @@
 package com.ankitsuda.base.util
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ExperimentalGraphicsApi
 import androidx.compose.ui.graphics.luminance
 import androidx.core.graphics.ColorUtils
+import kotlin.random.Random
 import android.graphics.Color as AndroidColor
 
 fun Color.toLegacyInt(): Int {
@@ -64,3 +66,29 @@ fun String.toColor(): Color? =
         e.printStackTrace()
         null
     }
+
+@OptIn(ExperimentalGraphicsApi::class)
+fun colorFromSeed(seed: String): Color {
+//    val s = 0.65F
+//    val l = 0.50F
+//
+//    var hash = 0
+//
+//    for (i in seed.indices) {
+//        hash = seed.codePointAt(i) + ((hash shl 5) - hash)
+//    }
+//
+//    val h = hash % 360.0F
+//
+//    return Color.hsl(alpha = 1F, hue = h, saturation = s, lightness = l)
+
+    val rand = Random(seed.hashCode())
+    val red: Int = rand.nextInt(256)
+    val green: Int = rand.nextInt(256)
+    val blue: Int = rand.nextInt(256)
+
+    return Color(red, green, blue)
+}
+
+fun colorFromSupersetId(supersetId: Int): Color = colorFromSeed("superset_$supersetId")
+

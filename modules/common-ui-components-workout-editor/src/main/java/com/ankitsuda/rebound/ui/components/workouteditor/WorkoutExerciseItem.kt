@@ -37,8 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ankitsuda.base.util.lighterOrDarkerColor
-import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.base.util.*
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.entities.Exercise
@@ -73,6 +72,7 @@ fun LazyListScope.workoutExerciseItemAlt(
     onRemoveFromSuperset: () -> Unit,
 ) {
 
+    val supersetId = logEntriesWithJunction.junction.supersetId
     val exercise = logEntriesWithJunction.exercise
     val logEntries = logEntriesWithJunction.logEntries
     val notes = logEntriesWithJunction.notes ?: emptyList()
@@ -129,12 +129,27 @@ fun LazyListScope.workoutExerciseItemAlt(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = exercise.name.toString(),
-                style = ReboundTheme.typography.body1,
-                fontSize = 18.sp,
-                color = contentColor,
+            val supersetColor by remember(supersetId) {
+                mutableStateOf(if (supersetId != null) colorFromSupersetId(supersetId) else null)
+            }
+
+            val titleBgColor by animateColorAsState(
+                targetValue = supersetColor ?: ReboundTheme.colors.background
             )
+            val titleColor by animateColorAsState(targetValue = if (supersetColor != null) if (supersetColor!!.isDark()) Color.White else Color.Black else ReboundTheme.colors.primary)
+
+            Box(
+                modifier = Modifier
+                    .background(titleBgColor, ReboundTheme.shapes.small)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                Text(
+                    text = exercise.name.toString(),
+                    style = ReboundTheme.typography.body1,
+                    fontSize = 18.sp,
+                    color = titleColor,
+                )
+            }
 
             Column() {
                 IconButton(onClick = {

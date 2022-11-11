@@ -203,7 +203,7 @@ fun SessionScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),
-                        onClick = { },
+                        supersetId = log.junction.supersetId,
                         title = log.exercise.name ?: "",
                         entries = log.logEntries
                     )

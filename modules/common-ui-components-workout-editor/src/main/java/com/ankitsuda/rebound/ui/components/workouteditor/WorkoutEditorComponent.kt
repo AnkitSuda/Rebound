@@ -42,6 +42,7 @@ import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.components.AppTextField
+import com.ankitsuda.rebound.ui.components.workouteditor.supersetselector.models.SupersetSelectorResult
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.toExerciseLogEntries
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -83,7 +84,7 @@ fun WorkoutEditorComponent(
     // Observes results when Superset Selector changes value of arg
     val supersetSelectorResult = navController.currentBackStackEntry
         ?.savedStateHandle
-        ?.getStateFlow<Pair<String, Int>?>(RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY, null)
+        ?.getStateFlow<SupersetSelectorResult?>(RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY, null)
         ?.collectAsState()
 
     val navigationBarHeight =
@@ -101,9 +102,13 @@ fun WorkoutEditorComponent(
     }
 
     LaunchedEffect(key1 = supersetSelectorResult?.value) {
-        supersetSelectorResult?.value?.let { pair ->
+        supersetSelectorResult?.value?.let { result ->
 
-            onAddToSuperset(pair.first, pair.second)
+            onAddToSuperset(result.toJunctionId, result.supersetId)
+
+            if (!logEntriesWithJunction.any { it.junction.id == result.selectedFromJunctionId && it.junction.supersetId == result.supersetId }) {
+                onAddToSuperset(result.selectedFromJunctionId, result.supersetId)
+            }
 
             navController.currentBackStackEntry?.savedStateHandle?.set(
                 RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY,
@@ -120,6 +125,18 @@ fun WorkoutEditorComponent(
             reboundKeyboard.hide()
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    fun handleRemoveFromSuperset(item: LogEntriesWithExerciseJunction) {
+        onRemoveFromSuperset(item)
+
+        val itemsWithSupersetId = logEntriesWithJunction.filter {
+            it.junction.supersetId == item.junction.supersetId && it.junction.id != item.junction.id
+        }
+
+        if (itemsWithSupersetId.size == 1) {
+            onRemoveFromSuperset(itemsWithSupersetId[0])
         }
     }
 
@@ -190,7 +207,7 @@ fun WorkoutEditorComponent(
                 onChangeNote = onChangeNote,
                 onDeleteNote = onDeleteNote,
                 onRemoveFromSuperset = {
-                    onRemoveFromSuperset(logEntriesWithJunctionItem)
+                    handleRemoveFromSuperset(logEntriesWithJunctionItem)
                 },
                 onAddToSuperset = {
                     navigator.navigate(

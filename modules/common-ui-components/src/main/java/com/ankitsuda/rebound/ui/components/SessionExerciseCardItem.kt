@@ -41,6 +41,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ankitsuda.base.util.colorFromSupersetId
+import com.ankitsuda.base.util.isDark
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.*
@@ -59,9 +61,10 @@ private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, ri
 @Composable
 fun SessionExerciseCardItem(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)? = null,
     title: String?,
     subtitle: String? = null,
+    supersetId: Int? = null,
     entries: List<ExerciseLogEntry>
 ) {
     val sortedEntries by remember(key1 = entries) {
@@ -97,6 +100,21 @@ fun SessionExerciseCardItem(
 
     AppCard(modifier = modifier, onClick = onClick) {
         Column(modifier = Modifier.padding(16.dp)) {
+            supersetId?.let {
+                val supersetColor = colorFromSupersetId(it)
+                Box(
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .background(supersetColor, ReboundTheme.shapes.small)
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.superset),
+                        style = ReboundTheme.typography.body1,
+                        color = if (supersetColor.isDark()) Color.White else Color.Black,
+                    )
+                }
+            }
             title?.let {
                 Text(
                     text = it, style = ReboundTheme.typography.body1,

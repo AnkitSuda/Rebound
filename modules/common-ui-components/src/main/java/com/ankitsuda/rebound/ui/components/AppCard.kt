@@ -60,7 +60,7 @@ fun AppCard(
 fun AppCard(
     modifier: Modifier = Modifier,
     backgroundColor: Color = ReboundTheme.colors.card,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
 
@@ -68,13 +68,28 @@ fun AppCard(
         width = ReboundTheme.dimens.cardBorderWidth,
         color = ReboundTheme.colors.cardBorder
     )
-    Card(
-        modifier = modifier,
-        elevation = ReboundTheme.dimens.cardElevation,
-        shape = MaterialTheme.shapes.medium,
-        backgroundColor = backgroundColor,
-        border = border,
-        onClick = onClick,
-        content = content
-    )
+
+    val elevation = ReboundTheme.dimens.cardElevation
+    val shape = MaterialTheme.shapes.medium
+
+    if (onClick != null) {
+        Card(
+            modifier = modifier,
+            elevation = elevation,
+            shape = shape,
+            backgroundColor = backgroundColor,
+            border = border,
+            onClick = onClick,
+            content = content
+        )
+    } else {
+        Card(
+            modifier = modifier,
+            elevation = elevation,
+            shape = shape,
+            backgroundColor = backgroundColor,
+            border = border,
+            content = content
+        )
+    }
 }

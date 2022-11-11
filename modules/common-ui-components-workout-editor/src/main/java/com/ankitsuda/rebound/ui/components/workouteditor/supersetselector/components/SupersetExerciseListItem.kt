@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.components.workouteditor.supersetselector.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -23,9 +24,12 @@ import androidx.compose.material.icons.outlined.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ankitsuda.base.util.colorFromSeed
+import com.ankitsuda.base.util.colorFromSupersetId
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.common.compose.R
@@ -42,23 +46,40 @@ internal fun SupersetExerciseListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onClick)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .height(36.dp)
+                .run {
+                    if (isSelectedJunction) {
+                        this
+                    } else {
+                        clickable(onClick = onClick)
+                    }
+                }
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
+            supersetId?.let {
+                Box(
+                    modifier = Modifier
+                        .height(28.dp)
+                        .width(4.dp)
+                        .background(colorFromSupersetId(supersetId), ReboundTheme.shapes.small)
+                )
+            }
+
             Text(
                 modifier = Modifier.weight(1f),
-                text = "$supersetId $exerciseName",
+                text = exerciseName,
                 style = ReboundTheme.typography.subtitle1,
                 fontSize = 16.sp,
-                color = LocalThemeState.current.onBackgroundColor
+                color = ReboundTheme.colors.onBackground.copy(alpha = 0.75f)
             )
 
             if (isSelectedJunction) {
                 Icon(
                     imageVector = Icons.Outlined.Check,
-                    tint = LocalThemeState.current.primaryColor,
+                    tint = ReboundTheme.colors.primary,
                     contentDescription = stringResource(id = R.string.selected)
                 )
             }

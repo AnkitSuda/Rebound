@@ -30,6 +30,7 @@ import com.ankitsuda.rebound.ui.components.BottomSheetSurface
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.workouteditor.R
 import com.ankitsuda.rebound.ui.components.workouteditor.supersetselector.components.SupersetExerciseListItem
+import com.ankitsuda.rebound.ui.components.workouteditor.supersetselector.models.SupersetSelectorResult
 
 @Composable
 fun SupersetSelectorBottomSheet(
@@ -41,11 +42,16 @@ fun SupersetSelectorBottomSheet(
 
     fun handleItemClick(junction: ExerciseWorkoutJunction) {
         val mSupersetId =
-            junction.supersetId ?: ((junctions.mapNotNull { it.junction.supersetId }.maxOrNull() ?: -1) + 1)
+            junction.supersetId ?: ((junctions.mapNotNull { it.junction.supersetId }.maxOrNull()
+                ?: -1) + 1)
 
         navController.previousBackStackEntry?.savedStateHandle?.set(
             RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY,
-            Pair(junctionId, mSupersetId)
+            SupersetSelectorResult(
+                toJunctionId = junctionId,
+                selectedFromJunctionId = junction.id,
+                supersetId = mSupersetId
+            )
         )
         navController.popBackStack()
     }
