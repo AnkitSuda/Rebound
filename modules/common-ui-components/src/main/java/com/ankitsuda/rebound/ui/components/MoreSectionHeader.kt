@@ -25,7 +25,7 @@ import com.ankitsuda.rebound.ui.theme.LocalThemeState
 @Composable
 fun MoreSectionHeader(text: String) {
     Text(
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+        modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp),
         text = text,
         style = MaterialTheme.typography.caption,
         color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.75f)

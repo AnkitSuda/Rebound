@@ -41,15 +41,12 @@ import com.ankitsuda.navigation.Screen
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.dialogs.DiscardActiveWorkoutDialog
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
-import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.ankitsuda.rebound.ui.workout_details.components.SessionMenuComponent
+import me.onebone.toolbar.*
 import me.onebone.toolbar.FabPosition
-import me.onebone.toolbar.ScrollStrategy
-import me.onebone.toolbar.ToolbarWithFabScaffold
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalToolbarApi::class)
 @Composable
 fun SessionScreen(
     navigator: Navigator = LocalNavigator.current,
@@ -86,8 +83,6 @@ fun SessionScreen(
             }
         )
     }
-
-
 
     ToolbarWithFabScaffold(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
@@ -142,13 +137,13 @@ fun SessionScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(24.dp)
         ) {
             if (!workout?.personalRecords.isNullOrEmpty()) {
                 item {
                     PersonalRecordsRowComponent(
                         modifier = Modifier
-                            .padding(bottom = 8.dp),
+                            .padding(bottom = 10.dp),
                         prs = workout?.personalRecords!!
                     )
                 }
@@ -160,7 +155,7 @@ fun SessionScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = 20.dp)
                 ) {
                     Column() {
                         Text(
@@ -202,7 +197,7 @@ fun SessionScreen(
                     SessionExerciseCardItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp),
+                            .padding(bottom = 20.dp),
                         supersetId = log.junction.supersetId,
                         title = log.exercise.name ?: "",
                         entries = log.logEntries

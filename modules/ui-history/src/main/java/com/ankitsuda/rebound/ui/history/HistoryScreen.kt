@@ -138,8 +138,8 @@ fun HistoryScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
             state = scrollState,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(16.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            contentPadding = PaddingValues(24.dp)
         ) {
             for (map in workoutsMap) {
                 if (map.key != null) {

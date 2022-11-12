@@ -278,7 +278,7 @@ fun WorkoutScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .invisible(allItemsInvisibleExceptFolders)
-                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
+                            .padding(start = 24.dp, end = 24.dp, bottom = 20.dp, top = 10.dp)
                             .animateItemPlacement(),
                         backgroundColor = ReboundTheme.colors.primary,
                         onClick = {
@@ -328,7 +328,7 @@ fun WorkoutScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
+                                .padding(start = 24.dp, end = 24.dp, top = 20.dp, bottom = 0.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -341,13 +341,13 @@ fun WorkoutScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(
-                                    start = 16.dp,
-                                    end = 16.dp,
-                                    top = 16.dp,
-                                    bottom = 8.dp
+                                    start = 24.dp,
+                                    end = 24.dp,
+                                    top = 20.dp,
+                                    bottom = 10.dp
 //                                    bottom = if (groupedTemplates.size > 1) 4.dp else 8.dp
                                 ),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            horizontalArrangement = Arrangement.spacedBy(20.dp)
                         ) {
                             RButtonStyle2(
                                 modifier = Modifier.weight(1f),
@@ -408,7 +408,7 @@ fun WorkoutScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .invisible(allItemsInvisibleExceptFolders)
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .padding(horizontal = 24.dp, vertical = 10.dp)
                                 .animateItemPlacement(),
                             text = stringResource(R.string.add_template),
                             icon = Icons.Outlined.Add,

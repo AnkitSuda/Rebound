@@ -109,8 +109,8 @@ private fun ThemePresetsPersonalizationScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(ReboundTheme.colors.background),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            contentPadding = PaddingValues(24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
 
             item {

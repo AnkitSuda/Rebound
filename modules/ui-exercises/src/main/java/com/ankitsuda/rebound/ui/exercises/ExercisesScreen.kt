@@ -155,7 +155,7 @@ private fun ExercisesScreenContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(LocalThemeState.current.backgroundColor)
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                                .padding(horizontal = 24.dp, vertical = 8.dp),
                             text = group.key,
                             style = ReboundTheme.typography.caption,
                             color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.75f)

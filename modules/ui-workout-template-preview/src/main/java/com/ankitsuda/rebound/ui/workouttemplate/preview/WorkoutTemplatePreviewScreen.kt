@@ -154,7 +154,7 @@ fun WorkoutTemplatePreviewScreen(
             lastPerformedStr?.let {
                 item {
                     Column(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 10.dp),
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         Text(

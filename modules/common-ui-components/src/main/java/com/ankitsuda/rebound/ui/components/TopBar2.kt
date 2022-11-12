@@ -78,7 +78,7 @@ fun CollapsingToolbarScope.TopBar2(
         with(LocalDensity.current) { if (statusBarEnabled) LocalWindowInsets.current.statusBars.top.toDp() else 0.dp }
 
     val maxTitleOffset = 80
-    val minTitleOffset = 16
+    val minTitleOffset = 24
     val titleOffset = if (navigationIcon != null && toolbarState != null) {
         (maxTitleOffset + (minTitleOffset - maxTitleOffset) * toolbarState.progress).dp
     } else {

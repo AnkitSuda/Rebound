@@ -58,7 +58,7 @@ internal fun PlateListItemComponent(
     ) {
         Row(
             modifier = Modifier
-                .padding(start = 16.dp),
+                .padding(start = 24.dp, end = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

@@ -49,7 +49,7 @@ fun <A> PopupItemsSettingsItem(
         isMenuExpanded = true
     })) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp),
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (icon != null) {

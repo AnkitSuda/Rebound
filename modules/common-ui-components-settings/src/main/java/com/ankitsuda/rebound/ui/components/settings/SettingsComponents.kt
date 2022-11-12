@@ -77,14 +77,14 @@ fun ColorPickerCardItem(
             }
         }) {
             Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp),
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (icon != null) {
                     Icon(
                         imageVector = icon,
                         contentDescription = text,
-                        modifier = Modifier.padding(start = 2.dp, end = 18.dp)
+                        modifier = Modifier.padding(end = 24.dp)
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
@@ -138,12 +138,12 @@ fun SwitchCardItem(
     Box(modifier = modifier.clickable {
         handleOnChange(!checked)
     }) {
-        Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp), verticalAlignment = Alignment.CenterVertically) {
             if (icon != null) {
                 Icon(
                     imageVector = icon,
                     contentDescription = text,
-                    modifier = Modifier.padding(start = 2.dp, end = 18.dp)
+                    modifier = Modifier.padding(end = 24.dp)
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
@@ -215,14 +215,14 @@ fun SliderCardItem(
     Box(modifier = modifier) {
 
         Row(
-            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
+            modifier = Modifier.padding(top = 20.dp, start = 24.dp, end = 24.dp, bottom = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (icon != null) {
                 Icon(
                     imageVector = icon,
                     contentDescription = text,
-                    modifier = Modifier.padding(start = 2.dp, end = 18.dp)
+                    modifier = Modifier.padding(end = 24.dp)
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
@@ -294,14 +294,14 @@ fun ShapesEditorCardItem(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
+                    .padding(top = 20.dp, start = 24.dp, end = 24.dp, bottom = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (icon != null) {
                     Icon(
                         imageVector = icon,
                         contentDescription = text,
-                        modifier = Modifier.padding(start = 2.dp, end = 18.dp)
+                        modifier = Modifier.padding(end = 24.dp)
                     )
                 }
                 Column(modifier = Modifier.fillMaxWidth()) {

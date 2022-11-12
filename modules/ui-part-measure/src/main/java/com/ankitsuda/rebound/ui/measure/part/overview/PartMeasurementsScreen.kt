@@ -99,7 +99,7 @@ fun PartMeasurementsScreen(
             if (showChart) {
                 item {
 
-                    AppCard(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+                    AppCard(modifier = Modifier.padding(horizontal = 24.dp)) {
                         ReboundChart(
                             points = points,
                             modifier = Modifier
@@ -117,7 +117,7 @@ fun PartMeasurementsScreen(
                     text = stringResource(id = R.string.history),
                     style = ReboundTheme.typography.h6,
                     color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
+                    modifier = Modifier.padding(start = 24.dp, top = 20.dp, bottom = 10.dp)
                 )
             }
 
@@ -133,7 +133,7 @@ fun PartMeasurementsScreen(
                                 )
                             )
                         }
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+                        .padding(horizontal = 24.dp, vertical = 20.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(

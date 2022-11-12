@@ -45,14 +45,14 @@ fun RadioGroupCardItem(
     Box(modifier = modifier) {
         Column() {
             Row(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (icon != null) {
                     Icon(
                         imageVector = icon,
                         contentDescription = text,
-                        modifier = Modifier.padding(end = 16.dp)
+                        modifier = Modifier.padding(end = 24.dp)
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
@@ -73,7 +73,7 @@ fun RadioGroupCardItem(
             FlowRow(
                 crossAxisSpacing = 8.dp,
                 mainAxisSpacing = 8.dp,
-                modifier = Modifier.padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
+                modifier = Modifier.padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
             ) {
                 for (item in items) {
                     Row(
