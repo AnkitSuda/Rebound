@@ -48,6 +48,8 @@ data class ExerciseLogEntry(
     var weight: Double? = null,
     @ColumnInfo(name = "reps")
     var reps: Int? = null,
+    @ColumnInfo(name = "rpe")
+    var rpe: Float? = null,
 
     @ColumnInfo(name = "completed")
     var completed: Boolean = false,

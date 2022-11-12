@@ -42,11 +42,13 @@ import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
 import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
 import com.ankitsuda.rebound.ui.components.AppTextField
+import com.ankitsuda.rebound.ui.components.workouteditor.rpeselector.models.RpeSelectorResult
 import com.ankitsuda.rebound.ui.components.workouteditor.supersetselector.models.SupersetSelectorResult
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.toExerciseLogEntries
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.insets.LocalWindowInsets
+import timber.log.Timber
 import kotlin.math.log
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
@@ -87,6 +89,12 @@ fun WorkoutEditorComponent(
         ?.getStateFlow<SupersetSelectorResult?>(RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY, null)
         ?.collectAsState()
 
+    // Observes results when RPE Selector changes value of arg
+    val rpeSelectorResult = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<RpeSelectorResult?>(RESULT_RPE_SELECTOR_KEY, null)
+        ?.collectAsState()
+
     val navigationBarHeight =
         with(LocalDensity.current) { if (addNavigationBarPadding) LocalWindowInsets.current.navigationBars.bottom.toDp() else 0.dp }
 
@@ -112,6 +120,26 @@ fun WorkoutEditorComponent(
 
             navController.currentBackStackEntry?.savedStateHandle?.set(
                 RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY,
+                null
+            )
+        }
+    }
+
+    LaunchedEffect(key1 = rpeSelectorResult?.value) {
+        rpeSelectorResult?.value?.let { result ->
+
+            logEntriesWithJunction.flatMap { it.logEntries }.find {
+                it.entryId == result.entryId
+            }?.let {
+                onUpdateLogEntry(
+                    it.copy(
+                        rpe = result.rpe
+                    )
+                )
+            }
+
+            navController.currentBackStackEntry?.savedStateHandle?.set(
+                RESULT_RPE_SELECTOR_KEY,
                 null
             )
         }
@@ -219,6 +247,15 @@ fun WorkoutEditorComponent(
                         LeafScreen.SupersetSelector.createRoute(
                             workoutId = logEntriesWithJunctionItem.junction.workoutId!!,
                             junctionId = logEntriesWithJunctionItem.junction.id,
+                        )
+                    )
+                },
+                onRequestRpeSelector = {
+                    hideKeyboard()
+                    navigator.navigate(
+                        LeafScreen.RpeSelector.createRoute(
+                            it.entryId,
+                            it.rpe
                         )
                     )
                 }

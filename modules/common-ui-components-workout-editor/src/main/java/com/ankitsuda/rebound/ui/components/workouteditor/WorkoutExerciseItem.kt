@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -31,6 +32,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -70,6 +72,7 @@ fun LazyListScope.workoutExerciseItemAlt(
     onChangeNote: (ExerciseSetGroupNote) -> Unit,
     onAddToSuperset: () -> Unit,
     onRemoveFromSuperset: () -> Unit,
+    onRequestRpeSelector: (ExerciseLogEntry) -> Unit,
 ) {
 
     val supersetId = logEntriesWithJunction.junction.supersetId
@@ -238,6 +241,19 @@ fun LazyListScope.workoutExerciseItemAlt(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1.25f)
             )
+
+            if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
+                || exercise.category == ExerciseCategory.REPS
+            ) {
+                Text(
+                    text = stringResource(id = R.string.rpe),
+                    style = ReboundTheme.typography.caption,
+                    color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(.75f)
+                )
+            }
+
             Box(
                 modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.Center,
@@ -278,8 +294,9 @@ fun LazyListScope.workoutExerciseItemAlt(
     val revisedSetsTexts = getRevisedSetNumbers()
 
     items(items = sortedEntries, key = {
+        "${it.entryId}_${it.rpe}"
 //        "${it.entryId}_${it.setNumber}"
-        it.entryId
+//        it.entryId
     }) { entry ->
         SetItem(
             useReboundKeyboard = useReboundKeyboard,
@@ -291,7 +308,8 @@ fun LazyListScope.workoutExerciseItemAlt(
             },
             onSwipeDelete = {
                 onSwipeDelete(it)
-            }
+            },
+            onRequestRpeSelector = onRequestRpeSelector
         )
     }
 
@@ -330,6 +348,7 @@ private fun LazyItemScope.SetItem(
     exerciseLogEntry: ExerciseLogEntry,
     onChange: (ExerciseLogEntry) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
+    onRequestRpeSelector: (ExerciseLogEntry) -> Unit,
 ) {
     var mLogEntry by rememberSaveable {
         mutableStateOf(exerciseLogEntry)
@@ -448,6 +467,7 @@ private fun LazyItemScope.SetItem(
             onSetTypeChange = { _, value ->
                 handleOnChange(mLogEntry.copy(setType = value))
             },
+            onRequestRpeSelector = onRequestRpeSelector
         )
     }
 }
@@ -466,6 +486,7 @@ private fun SetItemLayout(
     onTimeChange: (ExerciseLogEntry, Long?) -> Unit,
     onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
     onSetTypeChange: (ExerciseLogEntry, LogSetType) -> Unit,
+    onRequestRpeSelector: (ExerciseLogEntry) -> Unit,
 ) {
     val typeOfSet = exerciseLogEntry.setType ?: LogSetType.NORMAL
     var isSetTypeChangerExpanded by rememberSaveable {
@@ -594,6 +615,32 @@ private fun SetItemLayout(
                 contentColor = contentColor,
                 bgColor = bgColor,
             )
+        }
+
+        if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
+            || exercise.category == ExerciseCategory.REPS
+        ) {
+            Box(
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 32.dp)
+                    .padding(start = 8.dp, end = 8.dp)
+                    .weight(0.75f)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(bgColor.lighterOrDarkerColor(0.10f))
+                    .clickable {
+                        onRequestRpeSelector(exerciseLogEntry)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    exerciseLogEntry.rpe?.toReadableString() ?: "",
+                    style = LocalTextStyle.current.copy(
+                        textAlign = TextAlign.Center,
+                        fontSize = 14.sp,
+                        color = contentColor
+                    )
+                )
+            }
         }
 
         IconButton(

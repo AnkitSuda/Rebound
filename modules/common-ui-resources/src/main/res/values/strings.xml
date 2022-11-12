@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2022 Ankit Suda.
   ~
   ~ Licensed under the GNU General Public License v3
@@ -212,4 +211,21 @@
     <string name="add_to_superset">Add to superset</string>
     <string name="remove_from_superset">Remove from superset</string>
     <string name="unnamed_exercise">Unnamed exercise</string>
+    <string name="rpe">RPE</string>
+    <string name="rpe_6_title">Moderate Effort</string>
+    <string name="rpe_6_description">Could have done 4+ more reps</string>
+    <string name="rpe_7_title">Vigorous Effort</string>
+    <string name="rpe_7_description">Could have definitely done 3 more reps</string>
+    <string name="rpe_7_5_title">Vigorous Effort</string>
+    <string name="rpe_7_5_description">Could have maybe done 3 more reps</string>
+    <string name="rpe_8_title">Very Hard Effort</string>
+    <string name="rpe_8_description">Could have definitely done 2 more reps</string>
+    <string name="rpe_8_5_title">Very Hard Effort</string>
+    <string name="rpe_8_5_description">Could have maybe done 2 more reps</string>
+    <string name="rpe_9_title">Extremely Hard Effort</string>
+    <string name="rpe_9_description">Could have definitely done 1 more reps</string>
+    <string name="rpe_9_5_title">Extremely Hard Effort</string>
+    <string name="rpe_9_5_description">Could have maybe done 1 more reps</string>
+    <string name="rpe_10_title">Max Effort</string>
+    <string name="rpe_10_description">No more reps possible</string>
 </resources>
