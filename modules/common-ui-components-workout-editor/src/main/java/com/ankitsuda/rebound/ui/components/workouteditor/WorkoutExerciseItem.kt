@@ -294,9 +294,9 @@ fun LazyListScope.workoutExerciseItemAlt(
     val revisedSetsTexts = getRevisedSetNumbers()
 
     items(items = sortedEntries, key = {
-        "${it.entryId}_${it.rpe}"
+//        "${it.entryId}_${it.rpe}"
 //        "${it.entryId}_${it.setNumber}"
-//        it.entryId
+        it.entryId
     }) { entry ->
         SetItem(
             useReboundKeyboard = useReboundKeyboard,
@@ -339,7 +339,7 @@ fun LazyListScope.workoutExerciseItemAlt(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun LazyItemScope.SetItem(
     exercise: Exercise,
@@ -352,6 +352,14 @@ private fun LazyItemScope.SetItem(
 ) {
     var mLogEntry by rememberSaveable {
         mutableStateOf(exerciseLogEntry)
+    }
+
+    LaunchedEffect(key1 = exerciseLogEntry) {
+        // We have to change saved rpe manually because
+        // main rpe change is not handled by SetItem function
+        if (exerciseLogEntry.rpe != mLogEntry.rpe) {
+            mLogEntry = mLogEntry.copy(rpe = exerciseLogEntry.rpe)
+        }
     }
 
     val completionAnimDuration = 200

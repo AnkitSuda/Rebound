@@ -223,9 +223,9 @@
     <string name="rpe_8_5_title">Very Hard Effort</string>
     <string name="rpe_8_5_description">Could have maybe done 2 more reps</string>
     <string name="rpe_9_title">Extremely Hard Effort</string>
-    <string name="rpe_9_description">Could have definitely done 1 more reps</string>
+    <string name="rpe_9_description">Could have definitely done 1 more rep</string>
     <string name="rpe_9_5_title">Extremely Hard Effort</string>
-    <string name="rpe_9_5_description">Could have maybe done 1 more reps</string>
+    <string name="rpe_9_5_description">Could have maybe done 1 more rep</string>
     <string name="rpe_10_title">Max Effort</string>
     <string name="rpe_10_description">No more reps possible</string>
 </resources>
