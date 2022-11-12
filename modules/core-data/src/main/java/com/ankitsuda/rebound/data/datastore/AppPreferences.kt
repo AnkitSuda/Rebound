@@ -19,6 +19,10 @@ import androidx.datastore.preferences.core.*
 import com.ankitsuda.base.ui.ThemeState
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.domain.models.Optional
+import com.ankitsuda.rebound.domain.DistanceUnit
+import com.ankitsuda.rebound.domain.DistanceUnitSerializer
+import com.ankitsuda.rebound.domain.WeightUnit
+import com.ankitsuda.rebound.domain.WeightUnitSerializer
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -39,21 +43,19 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
 
     companion object {
         val THEME_STATE_KEY = stringPreferencesKey(name = "theme_state")
-
-
-        // Current workout id
         val CURRENT_WORKOUT_ID_KEY = stringPreferencesKey(name = "current_workout_id")
+        val WEIGHT_UNIT_KEY = stringPreferencesKey(name = "weight_unit")
+        val DISTANCE_UNIT_KEY = stringPreferencesKey(name = "distance_unit")
+        val FIRST_DAY_OF_WEEK_KEY = intPreferencesKey(name = "first_day_of_week")
     }
 
     override val themeState: Flow<ThemeState>
         get() = getValue(THEME_STATE_KEY, ThemeState.serializer(), ThemeState())
 
-
     override suspend fun setThemeState(value: ThemeState) {
         setValue(THEME_STATE_KEY, value, ThemeState.serializer())
 
     }
-
 
     override val currentWorkoutId: Flow<String>
         get() = getValue(CURRENT_WORKOUT_ID_KEY, NONE_WORKOUT_ID)
@@ -61,7 +63,27 @@ class AppPreferences @Inject constructor(@ApplicationContext private val context
     override suspend fun setCurrentWorkoutId(value: String) {
         setValue(CURRENT_WORKOUT_ID_KEY, value)
     }
-    // SMALL SHAPE ENDS
+
+    override val weightUnit: Flow<WeightUnit>
+        get() = getValue(WEIGHT_UNIT_KEY, WeightUnitSerializer, WeightUnit.KG)
+
+    override suspend fun setWeightUnit(value: WeightUnit) {
+        setValue(WEIGHT_UNIT_KEY, value, WeightUnitSerializer)
+    }
+
+    override val distanceUnit: Flow<DistanceUnit>
+        get() = getValue(DISTANCE_UNIT_KEY, DistanceUnitSerializer, DistanceUnit.KM)
+
+    override suspend fun setDistanceUnit(value: DistanceUnit) {
+        setValue(DISTANCE_UNIT_KEY, value, DistanceUnitSerializer)
+    }
+
+    override val firstDayOfWeek: Flow<Int>
+        get() = getValue(FIRST_DAY_OF_WEEK_KEY, 1)
+
+    override suspend fun setFirstDayOfWeek(value: Int) {
+        setValue(FIRST_DAY_OF_WEEK_KEY, value)
+    }
 
     override suspend fun clearPreferenceStorage() {
         datastoreUtils.clearPreferenceStorage()

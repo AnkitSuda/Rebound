@@ -15,6 +15,8 @@
 package com.ankitsuda.rebound.data.datastore
 
 import com.ankitsuda.base.ui.ThemeState
+import com.ankitsuda.rebound.domain.DistanceUnit
+import com.ankitsuda.rebound.domain.WeightUnit
 import kotlinx.coroutines.flow.Flow
 
 interface PrefStorage {
@@ -25,6 +27,14 @@ interface PrefStorage {
     val currentWorkoutId: Flow<String>
     suspend fun setCurrentWorkoutId(value: String)
 
+    val weightUnit: Flow<WeightUnit>
+    suspend fun setWeightUnit(value: WeightUnit)
+
+    val distanceUnit: Flow<DistanceUnit>
+    suspend fun setDistanceUnit(value: DistanceUnit)
+
+    val firstDayOfWeek: Flow<Int>
+    suspend fun setFirstDayOfWeek(value: Int)
 
     /***
      * clears all the stored data

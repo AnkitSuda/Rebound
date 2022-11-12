@@ -15,35 +15,49 @@
 package com.ankitsuda.rebound.ui.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.domain.DistanceUnit
+import com.ankitsuda.rebound.domain.WeightUnit
+import com.ankitsuda.rebound.ui.components.MoreItemCard
+import com.ankitsuda.rebound.ui.components.MoreSectionHeader
+import com.ankitsuda.rebound.ui.components.TopBar2
+import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
+import com.ankitsuda.rebound.ui.components.settings.PopupItemsSettingsItem
 import com.ankitsuda.rebound.ui.icons.Plates
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Locale
 
 @Composable
 fun SettingsScreen(
-    navController: NavController, navigator: Navigator = LocalNavigator.current,
+    navController: NavController,
+    navigator: Navigator = LocalNavigator.current,
+    viewModel: SettingsScreenViewModel = hiltViewModel()
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
+
+    val weightUnit by viewModel.weightUnit.collectAsState(initial = WeightUnit.KG)
+    val distanceUnit by viewModel.distanceUnit.collectAsState(initial = DistanceUnit.KM)
+    val firstDayOfWeek by viewModel.firstDayOfWeek.collectAsState(initial = 1)
 
     CollapsingToolbarScaffold(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
@@ -92,37 +106,71 @@ fun SettingsScreen(
                 MoreSectionHeader(text = stringResource(R.string.defaults))
             }
             item {
-                MoreItemCard(
+                val getStringByWeightUnit: @Composable ((WeightUnit) -> String) = {
+                    when (it) {
+                        WeightUnit.KG -> stringResource(R.string.metric_kg)
+                        WeightUnit.LBS -> stringResource(R.string.imperial_lbs)
+                    }
+                }
+
+                PopupItemsSettingsItem(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.FitnessCenter,
                     text = stringResource(R.string.weight_unit),
-                    description = stringResource(R.string.metric_kg),
-                    onClick = {
-
-                    })
+                    description = getStringByWeightUnit(weightUnit),
+                    selectedItem = weightUnit,
+                    items = WeightUnit.values().map {
+                        Pair(
+                            it, getStringByWeightUnit(it)
+                        )
+                    },
+                    onItemSelected = {
+                        viewModel.setWeightUnit(it)
+                    }
+                )
             }
             item {
-                MoreItemCard(
+                val getStringByDistanceUnit: @Composable ((DistanceUnit) -> String) = {
+                    when (it) {
+                        DistanceUnit.KM -> stringResource(R.string.metric_m_km)
+                        DistanceUnit.MILES -> stringResource(R.string.imperial_ft_miles)
+                    }
+                }
+
+                PopupItemsSettingsItem(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.DirectionsRun,
                     text = stringResource(R.string.distance_unit),
-                    description = stringResource(R.string.metric_m_km),
-                    onClick = {
-
-                    })
+                    description = getStringByDistanceUnit(distanceUnit),
+                    selectedItem = distanceUnit,
+                    items = DistanceUnit.values().map {
+                        Pair(
+                            it, getStringByDistanceUnit(it)
+                        )
+                    },
+                    onItemSelected = {
+                        viewModel.setDistanceUnit(it)
+                    }
+                )
             }
             item {
-                MoreItemCard(
+                fun getDayName(day: Int) =
+                    DayOfWeek.of(day).getDisplayName(TextStyle.FULL, Locale.getDefault())
+
+                PopupItemsSettingsItem(
                     modifier = Modifier
                         .fillMaxWidth(),
                     icon = Icons.Outlined.Event,
                     text = stringResource(R.string.first_day_of_the_week),
-                    description = stringResource(R.string.sunday),
-                    onClick = {
-
-                    })
+                    description = getDayName(firstDayOfWeek),
+                    selectedItem = firstDayOfWeek,
+                    items = DayOfWeek.values().map { Pair(it.value, getDayName(it.value)) },
+                    onItemSelected = {
+                        viewModel.setFirstDayOfWeek(it)
+                    }
+                )
             }
             item {
                 MoreSectionHeader(text = stringResource(R.string.your_data))
