@@ -66,6 +66,7 @@ import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import com.ankitsuda.common.compose.R
+import java.time.DayOfWeek
 
 /**
  * Root screen of the app
@@ -103,6 +104,9 @@ private fun MainLayout(
 
 
     val currentWorkoutId by viewModel.currentWorkoutId.collectAsState(initial = NONE_WORKOUT_ID)
+    val appSettings by viewModel.appSettings.collectAsState(
+        initial = AppSettings.defValues()
+    )
 
     val panelHidden = currentWorkoutId == NONE_WORKOUT_ID
 
@@ -136,6 +140,7 @@ private fun MainLayout(
                 CompositionLocalProvider(
                     LocalDialog provides dialog,
                     LocalPanel provides mainPanel,
+                    LocalAppSettings provides appSettings
                 ) {
                     Box() {
                         /**
@@ -243,35 +248,35 @@ private fun BottomBar(
     navController: NavHostController,
 ) {
     val bottomNavigationItems = listOf(
-            BottomNavigationScreens(
-                TabRootScreen.HomeTab.route,
-                stringResource(id = R.string.home),
-                Icons.Outlined.Home,
-                Icons.Filled.Home
-            ),
-            BottomNavigationScreens(
-                TabRootScreen.HistoryTab.route,
-                stringResource(id = R.string.history),
-                Icons.Outlined.WatchLater,
-                Icons.Filled.WatchLater
-            ),
-            BottomNavigationScreens(
-                TabRootScreen.WorkoutTab.route,
-                stringResource(id = R.string.workout),
-                Icons.Outlined.PlayArrow,
-                Icons.Filled.PlayArrow
-            ),
-            BottomNavigationScreens(
-                TabRootScreen.ExercisesTab.route,
-                stringResource(id = R.string.exercises),
-                Icons.Outlined.FitnessCenter, Icons.Filled.FitnessCenter
-            ),
-            BottomNavigationScreens(
-                TabRootScreen.MoreTab.route,
-                stringResource(id = R.string.more),
-                Icons.Outlined.Menu,
-                Icons.Filled.Menu
-            )
+        BottomNavigationScreens(
+            TabRootScreen.HomeTab.route,
+            stringResource(id = R.string.home),
+            Icons.Outlined.Home,
+            Icons.Filled.Home
+        ),
+        BottomNavigationScreens(
+            TabRootScreen.HistoryTab.route,
+            stringResource(id = R.string.history),
+            Icons.Outlined.WatchLater,
+            Icons.Filled.WatchLater
+        ),
+        BottomNavigationScreens(
+            TabRootScreen.WorkoutTab.route,
+            stringResource(id = R.string.workout),
+            Icons.Outlined.PlayArrow,
+            Icons.Filled.PlayArrow
+        ),
+        BottomNavigationScreens(
+            TabRootScreen.ExercisesTab.route,
+            stringResource(id = R.string.exercises),
+            Icons.Outlined.FitnessCenter, Icons.Filled.FitnessCenter
+        ),
+        BottomNavigationScreens(
+            TabRootScreen.MoreTab.route,
+            stringResource(id = R.string.more),
+            Icons.Outlined.Menu,
+            Icons.Filled.Menu
+        )
     )
 
     val theme = LocalThemeState.current

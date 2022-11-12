@@ -15,7 +15,7 @@
 package com.ankitsuda.rebound.ui.calendar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -28,24 +28,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.ankitsuda.rebound.ui.components.TopBar
-import com.ankitsuda.rebound.ui.components.TopBarIconButton
-import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toLocalDate
 import com.ankitsuda.navigation.DATE_KEY
 import com.ankitsuda.navigation.SELECTED_DATE_KEY
 import com.ankitsuda.rebound.ui.calendar.components.CalendarMonthItem
+import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import kotlinx.coroutines.launch
+import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
-import timber.log.Timber
-import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.time.Instant
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import java.time.LocalDate
-import java.time.ZoneId
-import java.util.*
 
 @Composable
 fun CalendarScreen(
@@ -60,74 +54,81 @@ fun CalendarScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberLazyListState()
 
-    val calendar = viewModel.calendar
+    val mCalendar by viewModel.calendar.collectAsState()
     val countsWithDate by viewModel.workoutsCountOnDates.collectAsState()
     val today = LocalDate.now()
 
     val coroutine = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = Unit) {
-        if (calendar.isEmpty()) {
-            viewModel.getCalendar()
-            try {
-                scrollState.scrollToItem(calendar.indexOf((calendar.filter {
-                    try {
-                        it.month == selectedDate.month.value && it.year == selectedDate.year
-                    } catch (e1: Exception) {
-                        it.month == today.month.value && today.year == today.year
-                    }
-                }[0])))
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    CollapsingToolbarScaffold(
-        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
-        state = collapsingState,
-        toolbar = {
-            TopBar(title = stringResource(id = R.string.calendar), strictLeftIconAlignToStart = true, leftIconBtn = {
-                TopBarIconButton(icon = Icons.Outlined.Close, title = stringResource(id = R.string.close_calendar)) {
-                    navController.popBackStack()
-                }
-            }, rightIconBtn = {
-                TopBarIconButton(
-                    icon = Icons.Outlined.Today,
-                    title = stringResource(id = R.string.jump_to_today),
-                    onClick = {
-                        coroutine.launch {
-                            scrollState.animateScrollToItem(calendar.indexOf((calendar.filter {
-                                it.month == today.month.value && it.year == today.year
-                            }[0])))
+    mCalendar?.let { calendar ->
+        LaunchedEffect(key1 = Unit) {
+            if (calendar.isNotEmpty()) {
+                try {
+                    scrollState.scrollToItem(calendar.indexOf((calendar.filter {
+                        try {
+                            it.month == selectedDate.month.value && it.year == selectedDate.year
+                        } catch (e1: Exception) {
+                            it.month == today.month.value && today.year == today.year
                         }
-                    })
-            })
-        },
-        modifier = Modifier.background(MaterialTheme.colors.background)
-    ) {
-        LazyColumn(
-            state = scrollState, modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background)
-        ) {
-            items(calendar, key = { "${it.month}_${it.year}" }) {
-                val month = it
-                CalendarMonthItem(
-                    month = month,
-                    selectedDate = selectedDate,
-                    countsWithDate = countsWithDate ?: emptyList(),
-                    onClickOnDay = { dateItem ->
-                        navController.previousBackStackEntry?.savedStateHandle?.set(
-                            DATE_KEY,
-//                            dateItem.date.date.time
-                            dateItem.date.toEpochMillis()
-
-                        )
-                        navController.popBackStack()
-                    })
+                    }[0])))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
 
+        CollapsingToolbarScaffold(
+            scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+            state = collapsingState,
+            toolbar = {
+                TopBar(
+                    title = stringResource(id = R.string.calendar),
+                    strictLeftIconAlignToStart = true,
+                    leftIconBtn = {
+                        TopBarIconButton(
+                            icon = Icons.Outlined.Close,
+                            title = stringResource(id = R.string.close_calendar)
+                        ) {
+                            navController.popBackStack()
+                        }
+                    },
+                    rightIconBtn = {
+                        TopBarIconButton(
+                            icon = Icons.Outlined.Today,
+                            title = stringResource(id = R.string.jump_to_today),
+                            onClick = {
+                                coroutine.launch {
+                                    scrollState.animateScrollToItem(calendar.indexOf((calendar.filter {
+                                        it.month == today.month.value && it.year == today.year
+                                    }[0])))
+                                }
+                            })
+                    })
+            },
+            modifier = Modifier.background(MaterialTheme.colors.background)
+        ) {
+            LazyColumn(
+                state = scrollState, modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background)
+            ) {
+                items(calendar, key = { "${it.month}_${it.year}" }) {
+                    val month = it
+                    CalendarMonthItem(
+                        month = month,
+                        selectedDate = selectedDate,
+                        countsWithDate = countsWithDate ?: emptyList(),
+                        onClickOnDay = { dateItem ->
+                            navController.previousBackStackEntry?.savedStateHandle?.set(
+                                DATE_KEY,
+                                dateItem.date.toEpochMillis()
+
+                            )
+                            navController.popBackStack()
+                        })
+                }
+            }
+
+        }
     }
 }

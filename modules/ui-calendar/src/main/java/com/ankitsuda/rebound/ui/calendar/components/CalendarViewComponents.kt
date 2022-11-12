@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.calendar.components
 
+import android.icu.util.Calendar.WeekData
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,6 +25,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +34,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.*
+import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.base.utils.toLocalDate
+import com.ankitsuda.common.compose.LocalAppSettings
 import com.ankitsuda.rebound.domain.entities.CountWithDate
 import com.ankitsuda.rebound.ui.calendar.models.CalendarDay
 import com.ankitsuda.rebound.ui.calendar.models.CalendarMonth
@@ -43,6 +47,10 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import com.ankitsuda.common.compose.R
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import java.time.DayOfWeek
+import java.time.format.TextStyle
+import java.time.temporal.WeekFields
 
 const val WEIGHT_7DAY_WEEK = 1f / 7f
 
@@ -53,15 +61,24 @@ fun CalendarMonthItem(
     selectedDate: LocalDate,
     onClickOnDay: (CalendarDay) -> Unit
 ) {
-    val dayNames = listOf(
-        stringResource(id = R.string.mon),
-        stringResource(id = R.string.tue),
-        stringResource(id = R.string.wed),
-        stringResource(id = R.string.thu),
-        stringResource(id = R.string.fri),
-        stringResource(id = R.string.sat),
-        stringResource(id = R.string.sun)
-    )
+    val firstDayOfWeek = LocalAppSettings.current.firstDayOfWeek
+
+    val dayNames = remember(firstDayOfWeek) {
+        val days = (7 - firstDayOfWeek.ordinal)
+        var allDays = DayOfWeek.values().toList()
+        allDays = allDays.takeLast(days) + allDays.dropLast(days)
+        allDays.map { it.getDisplayName(TextStyle.SHORT, Locale.getDefault()) }
+    }
+
+//    val dayNames = listOf(
+//        stringResource(id = R.string.mon),
+//        stringResource(id = R.string.tue),
+//        stringResource(id = R.string.wed),
+//        stringResource(id = R.string.thu),
+//        stringResource(id = R.string.fri),
+//        stringResource(id = R.string.sat),
+//        stringResource(id = R.string.sun)
+//    )
 
     val monthFormatter = DateTimeFormatter.ofPattern("LLLL yyyy")
     val dayFormatter = DateTimeFormatter.ofPattern("d")
@@ -71,7 +88,6 @@ fun CalendarMonthItem(
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp)
     ) {
-
         CalendarMonthHeader(month.yearMonth.format(monthFormatter))
 
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -141,7 +157,7 @@ fun ColumnScope.CalendarMonthHeader(text: String) {
 fun RowScope.CalendarDayNameItem(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.body2,
+        style = ReboundTheme.typography.body2.copy(color = ReboundTheme.colors.onBackground),
         textAlign = TextAlign.Center,
         modifier = Modifier
             .padding(start = 8.dp, end = 8.dp, top = 16.dp)

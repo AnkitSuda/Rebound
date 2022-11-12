@@ -32,6 +32,8 @@ android {
 
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -84,6 +86,8 @@ dependencies {
     api Deps.Android.Accompanist.navigationMaterial
     api Deps.Android.Accompanist.navigationFlowlayout
     api Deps.Android.Accompanist.navigationAnimation
+
+    coreLibraryDesugaring Deps.Android.desugaring
 
     // 3rd party
 //    api Deps.Android.Compose.coil

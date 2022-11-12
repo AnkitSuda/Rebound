@@ -19,6 +19,8 @@ import androidx.core.os.HandlerCompat.postDelayed
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
+import com.ankitsuda.common.compose.AppSettings
 import com.ankitsuda.rebound.R
 import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.data.stopwatch.*
@@ -28,7 +30,9 @@ import com.ankitsuda.rebound.resttimer.TimerState
 import com.ankitsuda.rebound.resttimer.getFormattedStopWatchTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.DayOfWeek
 import java.util.*
 import java.util.logging.Handler
 import javax.inject.Inject
@@ -37,8 +41,8 @@ import kotlin.math.max
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    prefStorage: PrefStorage,
-    private val restTimerRepository: RestTimerRepository
+    restTimerRepository: RestTimerRepository,
+    private val prefStorage: PrefStorage
 ) : ViewModel() {
     val currentWorkoutId = prefStorage.currentWorkoutId
 
@@ -60,6 +64,23 @@ class MainScreenViewModel @Inject constructor(
             getFormattedStopWatchTime(ms = it, spaces = false)
         else
             null
+    }
+
+    private var _appSettings = MutableStateFlow<AppSettings>(AppSettings.defValues())
+    val appSettings = _appSettings.asStateFlow()
+
+    init {
+        observeSettings()
+    }
+
+    private fun observeSettings() {
+        viewModelScope.launch {
+            prefStorage.firstDayOfWeek.collect {
+                _appSettings.value = AppSettings(
+                    firstDayOfWeek = DayOfWeek.of(it)
+                )
+            }
+        }
     }
 
 }

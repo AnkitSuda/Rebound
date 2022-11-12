@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.CountWithDate
 import com.ankitsuda.rebound.ui.calendar.models.CalendarMonth
@@ -26,9 +27,7 @@ import com.ankitsuda.rebound.ui.calendar.models.MonthConfig
 import com.ankitsuda.rebound.ui.calendar.models.OutDateStyle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.DayOfWeek
@@ -39,16 +38,31 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CalendarScreenViewModel @Inject constructor(
-    private val workoutsRepository: WorkoutsRepository
+    private val workoutsRepository: WorkoutsRepository,
+    private val prefs: PrefStorage
 ) : ViewModel() {
-    private var _calendar: SnapshotStateList<CalendarMonth> = mutableStateListOf()
-    val calendar = _calendar
+//    private var _calendar: SnapshotStateList<CalendarMonth> = mutableStateListOf()
+//    val calendar = _calendar
+
+    private var _calendar = MutableStateFlow<List<CalendarMonth>?>(null)
+    val calendar = _calendar.asStateFlow()
 
     private var _workoutsCountOnDates = MutableStateFlow<List<CountWithDate>?>(null)
     val workoutsCountOnDates = _workoutsCountOnDates.asStateFlow()
 
     private var calendarJob: Job? = null
     private var countJob: Job? = null
+
+    private var firstDayOfWeek = DayOfWeek.MONDAY
+
+    init {
+        viewModelScope.launch {
+            prefs.firstDayOfWeek.collect {
+                firstDayOfWeek = DayOfWeek.of(it)
+                getCalendar()
+            }
+        }
+    }
 
     fun getCalendar(
     ) {
@@ -61,12 +75,12 @@ class CalendarScreenViewModel @Inject constructor(
                 endMonth = YearMonth.of(Year.now().value, Month.DECEMBER),
                 hasBoundaries = true,
                 maxRowCount = Int.MAX_VALUE,
-                firstDayOfWeek = DayOfWeek.MONDAY,
+                firstDayOfWeek = firstDayOfWeek,
                 job = Job()
             )
 
             refreshCounts()
-            _calendar.addAll(monthConfig.months)
+            _calendar.value = monthConfig.months
         }
     }
 
@@ -80,8 +94,6 @@ class CalendarScreenViewModel @Inject constructor(
                 ).atDay(1),
                 dateEnd = YearMonth.of(Year.now().value, Month.DECEMBER).atEndOfMonth()
             ).firstOrNull()
-
-            Timber.d("Newcounts $counts")
 
             _workoutsCountOnDates.value = counts
         }
