@@ -22,10 +22,22 @@ import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.WeightUnit
 
 @Composable
-fun Double?.kgToUserPrefStr(): String = when (LocalAppSettings.current.weightUnit) {
-    WeightUnit.KG -> (this ?: 0.0).kgToReadable()
-    WeightUnit.LBS -> (this ?: 0.0).fromKgToLbsReadable()
-}
+fun Double?.kgToUserPrefStr(
+    addUnitSuffix: Boolean = false,
+    spaceBeforeSuffix: Boolean = false
+): String =
+    when (LocalAppSettings.current.weightUnit) {
+        WeightUnit.KG -> (this ?: 0.0).kgToReadable()
+        WeightUnit.LBS -> (this ?: 0.0).fromKgToLbsReadable()
+    } + if (addUnitSuffix) {
+        if (spaceBeforeSuffix) {
+            " "
+        } else {
+            ""
+        } + userPrefWeightUnitStr()
+    } else {
+        ""
+    }
 
 @Composable
 fun userPrefWeightUnitStr(): String = when (LocalAppSettings.current.weightUnit) {

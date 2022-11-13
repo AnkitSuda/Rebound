@@ -56,7 +56,7 @@ fun SessionCompleteQuickInfo(
         Spacer(modifier = Modifier.width(8.dp))
         SessionQuickInfoRowItem(
             icon = Icons.Filled.Weight,
-            text = "${volume.kgToUserPrefStr()} ${userPrefWeightUnitStr()}", // TODO: Move to strings.xml
+            text = volume.kgToUserPrefStr(addUnitSuffix = true, spaceBeforeSuffix = true),
             contentDescription = stringResource(R.string.total_volume)
         )
         Spacer(modifier = Modifier.width(8.dp))

@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.base.util.kgToReadable
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.RSpacer
@@ -32,6 +33,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 import com.ankitsuda.common.compose.R
+import com.ankitsuda.common.compose.kgToUserPrefStr
 
 @Composable
 fun OverallCardComponent(modifier: Modifier = Modifier, overallInfo: OverallInfo) {
@@ -52,12 +54,12 @@ fun OverallCardComponent(modifier: Modifier = Modifier, overallInfo: OverallInfo
                         constrains = it
                     )
                     InfoComponent(
-                        value = (totalVolumeLifted ?: 0.0).toReadableString(),
+                        value = totalVolumeLifted.kgToUserPrefStr(addUnitSuffix = true),
                         title = stringResource(id = R.string.volume_lifted),
                         constrains = it
                     )
                     InfoComponent(
-                        value = (maxWeight ?: 0.0).toReadableString(),
+                        value = maxWeight.kgToUserPrefStr(addUnitSuffix = true),
                         title = stringResource(id = R.string.max_weight),
                         constrains = it
                     )
