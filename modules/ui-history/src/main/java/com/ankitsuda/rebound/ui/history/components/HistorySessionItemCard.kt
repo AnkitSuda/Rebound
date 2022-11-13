@@ -17,22 +17,17 @@ package com.ankitsuda.rebound.ui.history.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.base.utils.toDurationStr
+import com.ankitsuda.common.compose.R
 import com.ankitsuda.rebound.ui.components.AppCard
 import com.ankitsuda.rebound.ui.components.SessionCompleteQuickInfo
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import com.ankitsuda.common.compose.R
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -43,13 +38,9 @@ fun HistorySessionItemCard(
     date: LocalDateTime?,
     totalExercises: Int,
     duration: Long?,
-    volume: String,
+    volume: Double?,
     prs: Int,
 ) {
-    val durationStr: String by rememberSaveable(inputs = arrayOf(duration)) {
-        mutableStateOf(duration?.toDurationStr() ?: "NA")
-    }
-
     val isSameYear = LocalDate.now().year == date?.year
     val dateFormatter = DateTimeFormatter.ofPattern(if (isSameYear) "EEE, MMM d" else "MMM d, yyyy")
 
@@ -76,7 +67,7 @@ fun HistorySessionItemCard(
                     color = ReboundTheme.colors.onBackground.copy(0.75f)
                 )
             )
-            SessionCompleteQuickInfo(time = durationStr, volume = volume, prs = prs)
+            SessionCompleteQuickInfo(duration = duration, volume = volume, prs = prs)
         }
     }
 }

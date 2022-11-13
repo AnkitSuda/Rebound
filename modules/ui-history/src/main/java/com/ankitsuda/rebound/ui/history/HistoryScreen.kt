@@ -164,7 +164,7 @@ fun HistoryScreen(
                         title = it.workout?.name.toString(),
                         totalExercises = it.totalExercises ?: 0,
                         duration = it.workout?.getDuration(),
-                        volume = "${it.totalVolume?.toReadableString()} kg", // TODO: Move to strings.xml
+                        volume = it.totalVolume,
                         prs = it.totalPRs ?: 0,
                         date = it.workout?.startAt ?: it.workout?.completedAt
                         ?: it.workout?.createdAt,

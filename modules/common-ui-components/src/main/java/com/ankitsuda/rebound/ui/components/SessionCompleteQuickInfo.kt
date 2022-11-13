@@ -33,6 +33,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.base.utils.toDurationStr
+import com.ankitsuda.common.compose.kgToUserPrefStr
+import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.rebound.ui.icons.Weight
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
@@ -40,20 +43,20 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 @Composable
 fun SessionCompleteQuickInfo(
     modifier: Modifier = Modifier,
-    time: String,
-    volume: String,
+    duration: Long?,
+    volume: Double?,
     prs: Int
 ) {
     Row(modifier = modifier) {
         SessionQuickInfoRowItem(
             icon = Icons.Outlined.Timer,
-            text = time,
+            text = duration?.toDurationStr() ?: "NA",
             contentDescription = stringResource(R.string.duration)
         )
         Spacer(modifier = Modifier.width(8.dp))
         SessionQuickInfoRowItem(
             icon = Icons.Filled.Weight,
-            text = volume,
+            text = "${volume.kgToUserPrefStr()} ${userPrefWeightUnitStr()}", // TODO: Move to strings.xml
             contentDescription = stringResource(R.string.total_volume)
         )
         Spacer(modifier = Modifier.width(8.dp))

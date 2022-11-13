@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.ui.exercise_details.history
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,8 +33,7 @@ fun ExerciseDetailHistoryTab(list: List<LogEntriesWithWorkout>) {
         contentPadding = PaddingValues(16.dp)
     ) {
 
-        items(list.size) {
-            val item = list[it]
+        items(list, key = { it.junction.id }) { item ->
             val workout = item.workout
             val entries = item.logEntries
 

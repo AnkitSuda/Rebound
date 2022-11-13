@@ -14,29 +14,23 @@
 
 package com.ankitsuda.rebound.ui.main
 
-import android.os.Looper
-import androidx.core.os.HandlerCompat.postDelayed
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.common.compose.AppSettings
-import com.ankitsuda.rebound.R
 import com.ankitsuda.rebound.data.datastore.PrefStorage
-import com.ankitsuda.rebound.data.stopwatch.*
-import com.ankitsuda.rebound.resttimer.Constants
 import com.ankitsuda.rebound.resttimer.RestTimerRepository
 import com.ankitsuda.rebound.resttimer.TimerState
 import com.ankitsuda.rebound.resttimer.getFormattedStopWatchTime
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.time.DayOfWeek
-import java.util.*
-import java.util.logging.Handler
 import javax.inject.Inject
-import kotlin.math.max
 
 
 @HiltViewModel
@@ -75,11 +69,17 @@ class MainScreenViewModel @Inject constructor(
 
     private fun observeSettings() {
         viewModelScope.launch {
-            prefStorage.firstDayOfWeek.collect {
+            combine(
+                prefStorage.firstDayOfWeek.shareWhileObserved(viewModelScope),
+                prefStorage.weightUnit.shareWhileObserved(viewModelScope),
+                prefStorage.distanceUnit.shareWhileObserved(viewModelScope),
+            ) { firstDayOfWeek, weightUnit, distanceUnit ->
                 _appSettings.value = AppSettings(
-                    firstDayOfWeek = DayOfWeek.of(it)
+                    firstDayOfWeek = DayOfWeek.of(firstDayOfWeek),
+                    weightUnit = weightUnit,
+                    distanceUnit = distanceUnit,
                 )
-            }
+            }.collect()
         }
     }
 

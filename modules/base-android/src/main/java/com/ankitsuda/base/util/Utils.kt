@@ -16,13 +16,21 @@ package com.ankitsuda.base.util
 
 import java.text.DecimalFormat
 
+const val NONE_WORKOUT_ID = "none"
+const val LBS_IN_KG = 2.20462262185
+
 fun Float.cmprs(min: Float, max: Float) = min + (max - min) * this
 fun Float.cmprs(min: Int, max: Int) = this.cmprs(min.toFloat(), max.toFloat())
 fun Int.cmprs(min: Int, max: Int) = this.toFloat().cmprs(min.toFloat(), max.toFloat())
-fun Int.cmprs(min: Float, max: Float) = this.toFloat().cmprs(min, max)
 
-const val NONE_WORKOUT_ID = "none"
+fun Int.cmprs(min: Float, max: Float) = this.toFloat().cmprs(min, max)
 
 fun Float.toReadableString() = DecimalFormat("#.###").format(this)
 fun Double.toReadableString() = DecimalFormat("#.###").format(this)
 fun Float.toStringP15() = DecimalFormat("#.###############").format(this)
+
+fun Double.fromLbsToKg() = this / LBS_IN_KG
+fun Double.fromKgToLbs() = this * LBS_IN_KG
+
+fun Double.fromKgToLbsReadable() = DecimalFormat("#.##").format(fromKgToLbs())
+fun Double.kgToReadable() = DecimalFormat("#.##").format(this)

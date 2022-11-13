@@ -34,6 +34,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.base.utils.toDurationStr
+import com.ankitsuda.common.compose.kgToUserPrefStr
+import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
@@ -168,8 +170,8 @@ fun SessionScreen(
                         )
                         RSpacer(space = 4.dp)
                         SessionCompleteQuickInfo(
-                            time = workout?.getDuration()?.toDurationStr() ?: "NA",
-                            volume = "${totalVolume.toReadableString()} kg", // TODO: Move to strings.xml
+                            duration = workout?.getDuration(),
+                            volume = totalVolume,
                             prs = totalPRs
                         )
                     }

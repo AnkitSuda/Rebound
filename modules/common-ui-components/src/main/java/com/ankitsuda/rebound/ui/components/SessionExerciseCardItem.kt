@@ -45,6 +45,8 @@ import com.ankitsuda.base.util.colorFromSupersetId
 import com.ankitsuda.base.util.isDark
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.common.compose.kgToUserPrefStr
+import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.rebound.domain.*
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
@@ -173,10 +175,10 @@ fun SessionExerciseSetItem(
             // TODO: Move to strings.xml
             Text(text = buildAnnotatedString {
                 withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
-                    append((entry.weight ?: 0.0).toReadableString())
+                    append(entry.weight.kgToUserPrefStr())
                 }
                 withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
-                    append(" kg")
+                    append(" ${userPrefWeightUnitStr()}")
                 }
             })
             RSpacer(20.dp)

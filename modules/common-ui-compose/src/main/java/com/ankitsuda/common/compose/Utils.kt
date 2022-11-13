@@ -14,26 +14,21 @@
 
 package com.ankitsuda.common.compose
 
-import androidx.compose.runtime.staticCompositionLocalOf
-import com.ankitsuda.rebound.domain.DistanceUnit
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.ankitsuda.base.util.fromKgToLbsReadable
+import com.ankitsuda.base.util.kgToReadable
+import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.domain.WeightUnit
-import java.time.DayOfWeek
 
-data class AppSettings(
-    val firstDayOfWeek: DayOfWeek,
-    val weightUnit: WeightUnit,
-    val distanceUnit: DistanceUnit
-) {
-    companion object {
-        fun defValues(): AppSettings = AppSettings(
-            firstDayOfWeek = DayOfWeek.SUNDAY,
-            weightUnit = WeightUnit.KG,
-            distanceUnit = DistanceUnit.KM
-        )
-
-    }
+@Composable
+fun Double?.kgToUserPrefStr(): String = when (LocalAppSettings.current.weightUnit) {
+    WeightUnit.KG -> (this ?: 0.0).kgToReadable()
+    WeightUnit.LBS -> (this ?: 0.0).fromKgToLbsReadable()
 }
 
-val LocalAppSettings = staticCompositionLocalOf<AppSettings> {
-    error("No AppSettings given")
+@Composable
+fun userPrefWeightUnitStr(): String = when (LocalAppSettings.current.weightUnit) {
+    WeightUnit.KG -> stringResource(id = R.string.kg)
+    WeightUnit.LBS -> stringResource(id = R.string.lbs)
 }

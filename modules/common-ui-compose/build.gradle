@@ -58,6 +58,7 @@ repositories {
 dependencies {
     api project(":modules:base-android")
     api project(":modules:common-ui-resources")
+    api project(':modules:domain')
 
     // Android
     api Deps.Android.navigationCompose

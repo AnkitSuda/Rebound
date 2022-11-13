@@ -14,6 +14,7 @@
 <resources>
     <string name="measurement">Measurement</string>
     <string name="kg">kg</string>
+    <string name="lbs">lbs</string>
     <string name="kcal">kcal</string>
     <string name="inch_short">in</string>
     <string name="delete">Delete</string>
