@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.components.workouteditor
 
+import android.view.inputmethod.InputConnection
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -40,8 +41,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.*
+import com.ankitsuda.common.compose.LocalAppSettings
+import com.ankitsuda.common.compose.kgToUserPrefStr
+import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
+import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.domain.entities.Exercise
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
@@ -52,7 +57,10 @@ import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUp
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpSet
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
+import com.ankitsuda.rebound.ui.keyboard.getText
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import timber.log.Timber
+import java.util.*
 
 private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, right ->
     left.setNumber?.compareTo(right.setNumber ?: 0) ?: 0
@@ -222,7 +230,9 @@ fun LazyListScope.workoutExerciseItemAlt(
                 || exercise.category == ExerciseCategory.DISTANCE_AND_TIME
             ) {
                 Text(
-                    text = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) "KG" else "KM",
+                    text = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) userPrefWeightUnitStr().toUpperCase(
+                        Locale.getDefault()
+                    ) else "KM",
                     style = ReboundTheme.typography.caption,
                     color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
                     textAlign = TextAlign.Center,
@@ -296,21 +306,24 @@ fun LazyListScope.workoutExerciseItemAlt(
     items(items = sortedEntries, key = {
 //        "${it.entryId}_${it.rpe}"
 //        "${it.entryId}_${it.setNumber}"
+//        "${it.entryId}_${weightUnit}"
         it.entryId
     }) { entry ->
-        SetItem(
-            useReboundKeyboard = useReboundKeyboard,
-            revisedSetText = revisedSetsTexts[sortedEntries.indexOf(entry)],
-            exercise = exercise,
-            exerciseLogEntry = entry,
-            onChange = {
-                onValuesUpdated(it)
-            },
-            onSwipeDelete = {
-                onSwipeDelete(it)
-            },
-            onRequestRpeSelector = onRequestRpeSelector
-        )
+        key(LocalAppSettings.current.weightUnit) {
+            SetItem(
+                useReboundKeyboard = useReboundKeyboard,
+                revisedSetText = revisedSetsTexts[sortedEntries.indexOf(entry)],
+                exercise = exercise,
+                exerciseLogEntry = entry,
+                onChange = {
+                    onValuesUpdated(it)
+                },
+                onSwipeDelete = {
+                    onSwipeDelete(it)
+                },
+                onRequestRpeSelector = onRequestRpeSelector
+            )
+        }
     }
 
     // Add set button
@@ -543,21 +556,29 @@ private fun SetItemLayout(
 //        )
 
         if (exercise.category == ExerciseCategory.DISTANCE_AND_TIME || exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
+            val currentWeightUnit = LocalAppSettings.current.weightUnit
+
             val fieldValue = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
-                exerciseLogEntry.weight?.toReadableString() ?: ""
+                exerciseLogEntry.weight?.kgToUserPrefStr() ?: ""
             } else {
                 exerciseLogEntry.distance?.toReadableString() ?: ""
             }
 
-            val mOnValueChange: (String) -> Unit = {
+            fun mOnValueChange(value: String) {
+
                 if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
-                    val newValue =
-                        (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
+                    var newValue =
+                        (if (value.isBlank()) null else value.trim()/*.filter { it.isDigit() }*/
                             .toDoubleOrNull())
+
+                    if (currentWeightUnit == WeightUnit.LBS) {
+                        newValue = newValue?.fromLbsToKg()
+                    }
+
                     onWeightChange(exerciseLogEntry, newValue)
                 } else {
                     val newValue =
-                        (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
+                        (if (value.isBlank()) null else value.trim()/*.filter { it.isDigit() }*/
                             .toDoubleOrNull())
                     onDistanceChange(exerciseLogEntry, newValue)
                 }
@@ -566,18 +587,18 @@ private fun SetItemLayout(
             if (useReboundKeyboard) {
                 ReboundSetTextField(
                     value = fieldValue,
-                    onValueChange = mOnValueChange,
+                    onValueChange = ::mOnValueChange,
                     contentColor = contentColor,
                     bgColor = bgColor,
                     reboundKeyboardType = getReboundKeyboardType(
                         category = exercise.category,
                         isLeft = true
-                    )
+                    ),
                 )
             } else {
                 SetTextField(
                     value = fieldValue,
-                    onValueChange = mOnValueChange,
+                    onValueChange = ::mOnValueChange,
                     contentColor = contentColor,
                     bgColor = bgColor,
                 )

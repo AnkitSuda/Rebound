@@ -18,6 +18,7 @@ import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputConnection
 import android.widget.TextView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -41,7 +42,8 @@ fun RowScope.ReboundSetTextField(
     contentColor: Color,
     bgColor: Color,
     reboundKeyboardType: ReboundKeyboardType,
-    onValueChange: (String) -> Unit
+    onChangeInputConnection: ((ic: InputConnection) -> Unit)? = null,
+    onValueChange: ((String) -> Unit)? = null
 ) {
     val keyboard = LocalReboundSetKeyboard.current
 
@@ -70,13 +72,15 @@ fun RowScope.ReboundSetTextField(
                     addTextChangedListener { e ->
                         val newValue = e.toString()
                         if (newValue != value) {
-                            onValueChange(newValue)
+                            onValueChange?.invoke(newValue)
                         }
                     }
 
                     setRawInputType(InputType.TYPE_CLASS_TEXT)
                     setTextIsSelectable(true)
                     val ic = onCreateInputConnection(EditorInfo())
+
+                    onChangeInputConnection?.invoke(ic)
 
                     setOnClickListener {
                         keyboard.setKeyboardType(reboundKeyboardType)
