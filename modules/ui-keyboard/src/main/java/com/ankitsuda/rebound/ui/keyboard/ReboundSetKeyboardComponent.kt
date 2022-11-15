@@ -18,8 +18,7 @@ import android.text.TextUtils
 import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputConnection
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -73,7 +72,20 @@ fun ReboundSetKeyboardComponent(
     }
 
     Box {
-        AnimatedContent(targetState = currentMode) { mCurrentMode ->
+        AnimatedContent(
+            targetState = currentMode,
+            transitionSpec = {
+                if (targetState == KeyboardModeType.NUMBERS) {
+                    slideInVertically { height -> -height } + fadeIn() with
+                            slideOutVertically { height -> height } + fadeOut()
+                } else {
+                    slideInVertically { height -> height } + fadeIn() with
+                            slideOutVertically { height -> -height } + fadeOut()
+                }.using(
+                    SizeTransform(clip = false)
+                )
+            }
+        ) { mCurrentMode ->
             when (mCurrentMode) {
                 KeyboardModeType.NUMBERS -> {
                     NumKeysContainerComponent(

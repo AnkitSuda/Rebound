@@ -14,6 +14,8 @@
 
 package com.ankitsuda.rebound.ui.keyboard
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -30,6 +32,7 @@ import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardModeType
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun RightLayoutComponent(
     modifier: Modifier,
@@ -60,19 +63,23 @@ internal fun RightLayoutComponent(
                     }
                 )
             }) {
-                Icon(
-                    imageVector = if (currentLayoutMode == KeyboardModeType.NUMBERS) {
-                        Icons.Filled.Plates
-                    } else {
-                        Icons.Outlined.Dialpad
-                    }, contentDescription = if (currentLayoutMode == KeyboardModeType.NUMBERS) {
-                        stringResource(R.string.plate_calculator)
-                    } else {
-                        stringResource(R.string.keyboard)
-                    },
-                    tint = theme.keyboardContentColor
-                )
+
+                AnimatedContent(targetState = currentLayoutMode) {
+                    Icon(
+                        imageVector = if (it == KeyboardModeType.NUMBERS) {
+                            Icons.Filled.Plates
+                        } else {
+                            Icons.Outlined.Dialpad
+                        }, contentDescription = if (it == KeyboardModeType.NUMBERS) {
+                            stringResource(R.string.plate_calculator)
+                        } else {
+                            stringResource(R.string.keyboard)
+                        },
+                        tint = theme.keyboardContentColor
+                    )
+                }
             }
         }
     }
+
 }
