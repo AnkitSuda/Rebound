@@ -136,12 +136,12 @@ private fun MainLayout(
 
     ReboundThemeWrapper(themeState = themeState) {
         NavigatorHost {
-            ReboundKeyboardHost {
-                CompositionLocalProvider(
-                    LocalDialog provides dialog,
-                    LocalPanel provides mainPanel,
-                    LocalAppSettings provides appSettings
-                ) {
+            CompositionLocalProvider(
+                LocalDialog provides dialog,
+                LocalPanel provides mainPanel,
+                LocalAppSettings provides appSettings
+            ) {
+                ReboundKeyboardHost {
                     Box() {
                         /**
                          * Temporary using ModalBottomSheetLayout

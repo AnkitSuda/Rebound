@@ -28,11 +28,10 @@ data class Plate(
     @ColumnInfo(name = "id")
     val id: String,
 
-    // weight column is stored in kg
+    // weight column should be stored according to the weight unit
     @ColumnInfo(name = "weight")
     var weight: Double? = null,
 
-    // forWeightUnit does not represent weight unit of weight column
     @ColumnInfo(name = "for_weight_unit")
     var forWeightUnit: WeightUnit? = null,
 

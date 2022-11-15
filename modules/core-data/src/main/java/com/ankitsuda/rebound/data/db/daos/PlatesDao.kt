@@ -18,6 +18,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.domain.entities.Muscle
 import com.ankitsuda.rebound.domain.entities.Plate
 import kotlinx.coroutines.flow.Flow
@@ -31,8 +32,8 @@ interface PlatesDao {
     @Query("SELECT * FROM plates ORDER BY weight")
     fun getPlates(): Flow<List<Plate>>
 
-    @Query("SELECT * FROM plates WHERE is_active = 1")
-    fun getActivePlates(): Flow<List<Plate>>
+    @Query("SELECT * FROM plates WHERE for_weight_unit = :forWeightUnit AND is_active = 1")
+    fun getActivePlates(forWeightUnit: WeightUnit): Flow<List<Plate>>
 
     @Query("UPDATE plates SET is_active = :isActive WHERE id = :plateId")
     suspend fun updateIsActive(plateId: String, isActive: Boolean)

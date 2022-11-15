@@ -26,6 +26,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.common.compose.LocalAppSettings
 import com.ankitsuda.rebound.ui.keyboard.enums.KeyboardModeType
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
@@ -90,14 +91,16 @@ fun ReboundSetKeyboardComponent(
                     )
                 }
                 KeyboardModeType.PLATE_CALCULATOR -> {
-                    PlateCalculatorComponent(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                height = 250.dp,
-                            ),
-                        weight = inputConnection?.getText()?.toDoubleOrNull() ?: 0.0
-                    )
+                    key(LocalAppSettings.current.weightUnit) {
+                        PlateCalculatorComponent(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(
+                                    height = 250.dp,
+                                ),
+                            weight = inputConnection?.getText()?.toDoubleOrNull() ?: 0.0
+                        )
+                    }
                 }
                 KeyboardModeType.WARMUP_PICKER -> {
                     WarmUpListPickerComponent(

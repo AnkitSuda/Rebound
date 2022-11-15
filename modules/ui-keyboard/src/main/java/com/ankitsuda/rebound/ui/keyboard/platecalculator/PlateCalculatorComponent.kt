@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
@@ -58,13 +59,13 @@ fun PlateCalculatorComponent(
             Column(modifier = Modifier.height(comHeight * 0.35F)) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-                    text = "${weight.toReadableString()} kg", // TODO: Move to strings.xml
+                    text = "${weight.toReadableString()} ${userPrefWeightUnitStr()}",
                     color = theme.keyboardContentColor
                 )
                 if (remainingWeight > 0.0) {
                     Text(
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp),
-                        text = "Remaining weight: ${remainingWeight.toReadableString()} kg", // TODO: Move to strings.xml
+                        text = "Remaining weight: ${remainingWeight.toReadableString()} ${userPrefWeightUnitStr()}", // TODO: Move to strings.xml
                         style = ReboundTheme.typography.caption,
                         color = theme.keyboardContentColor.copy(alpha = 0.75f)
                     )
@@ -111,7 +112,7 @@ private fun BarbellComponent(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "${barbellWeight.toReadableString()} kg",
+                text = "${barbellWeight.toReadableString()} ${userPrefWeightUnitStr()}",
                 fontSize = 12.sp,
                 color = onBarbellColor
             )

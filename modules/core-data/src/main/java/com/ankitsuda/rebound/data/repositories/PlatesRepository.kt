@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.data.repositories
 
 import com.ankitsuda.rebound.data.db.daos.MusclesDao
 import com.ankitsuda.rebound.data.db.daos.PlatesDao
+import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.domain.entities.Plate
 import javax.inject.Inject
 
@@ -23,7 +24,7 @@ class PlatesRepository @Inject constructor(private val platesDao: PlatesDao) {
 
     fun getPlates() = platesDao.getPlates()
 
-    fun getActivePlates() = platesDao.getActivePlates()
+    fun getActivePlates(forWeightUnit: WeightUnit) = platesDao.getActivePlates(forWeightUnit)
 
     fun getPlate(plateId: String) = platesDao.getPlate(plateId)
 

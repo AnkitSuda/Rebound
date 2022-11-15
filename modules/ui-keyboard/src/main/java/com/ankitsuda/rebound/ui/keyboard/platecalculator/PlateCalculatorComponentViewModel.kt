@@ -16,6 +16,7 @@ package com.ankitsuda.rebound.ui.keyboard.platecalculator
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.rebound.data.datastore.AppPreferences
 import com.ankitsuda.rebound.data.repositories.PlatesRepository
 import com.ankitsuda.rebound.domain.entities.Plate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +30,7 @@ import kotlin.math.roundToInt
 
 @HiltViewModel
 class PlateCalculatorComponentViewModel @Inject constructor(
+    private val prefs: AppPreferences,
     private val platesRepository: PlatesRepository
 ) : ViewModel() {
 
@@ -45,11 +47,13 @@ class PlateCalculatorComponentViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            platesRepository.getActivePlates().collectLatest {
-                _allPlates.clear()
-                _allPlates.addAll(it)
-                if (lastWeight != null) {
-                    refreshPlates(lastWeight!!)
+            prefs.weightUnit.collectLatest { unit ->
+                platesRepository.getActivePlates(forWeightUnit = unit).collectLatest {
+                    _allPlates.clear()
+                    _allPlates.addAll(it)
+                    if (lastWeight != null) {
+                        refreshPlates(lastWeight!!)
+                    }
                 }
             }
         }
@@ -58,12 +62,8 @@ class PlateCalculatorComponentViewModel @Inject constructor(
     fun refreshPlates(newWeight: Double) {
         platesJob?.cancel()
         platesJob = viewModelScope.launch {
-            if (_allPlates.isEmpty()) {
-                val availablePlates = platesRepository.getActivePlates().first()
-                _allPlates.clear()
-                _allPlates.addAll(availablePlates)
-            }
-            val platesNeeded = calculatePlates(newWeight, _allPlates.sortedByDescending { it.weight })
+            val platesNeeded =
+                calculatePlates(newWeight, _allPlates.sortedByDescending { it.weight })
             val sumOfPlates = platesNeeded.sumOf { it.weight ?: 0.0 }
             _plates.value = platesNeeded
             _remainingWeight.value = try {
