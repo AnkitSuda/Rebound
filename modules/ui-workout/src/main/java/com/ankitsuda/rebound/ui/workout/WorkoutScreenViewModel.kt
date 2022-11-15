@@ -226,11 +226,52 @@ class WorkoutScreenViewModel @Inject constructor(
         }
     }
 
+    fun isIndexDraggable(from: Int, to: Int): Boolean {
+        val mItems = _items.value
+        val fromItem = mItems[from]
+
+        return when (val toItem = mItems[to]) {
+            is WorkoutScreenListItemFolderHeaderModel -> {
+                when (fromItem) {
+                    is WorkoutScreenListItemFolderHeaderModel -> {
+//                            viewModel.collapseAllFolders()
+                        val draggable = toItem.folder.id != UNORGANIZED_FOLDER_ID
+                        if (draggable) {
+                            makeEverythingInvisibleExceptFolders(fromItem.folder.id)
+                        }
+                        draggable
+                    }
+                    is WorkoutScreenListItemTemplateModel -> {
+                        val itemBeforeTo = mItems.getOrNull(to - 1)
+
+                        itemBeforeTo is WorkoutScreenListItemTemplateModel || itemBeforeTo is WorkoutScreenListItemFolderHeaderModel || itemBeforeTo is WorkoutScreenListItemAddTemplateModel
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
+            is WorkoutScreenListItemTemplateModel -> {
+                fromItem is WorkoutScreenListItemTemplateModel
+            }
+            is WorkoutScreenListItemAddTemplateModel -> {
+                val mTemplates = _unarchivedTemplates.value
+                fromItem is WorkoutScreenListItemTemplateModel && !mTemplates.any { it.template.id == _currentDraggedTemplateId && it.template.folderId == toItem.folderId }
+            }
+            else -> {
+                false
+            }
+
+        }
+    }
+
     fun moveTemplate(from: Int, to: Int) {
         viewModelScope.launch {
+            Timber.d("ASDSAD from $from to $to")
             val mItems = _items.value
             val template =
                 (mItems[from] as WorkoutScreenListItemTemplateModel).templateWithWorkout.template
+            _currentDraggedTemplateId = template.id
             when (val toItem = mItems[to]) {
                 is WorkoutScreenListItemAddTemplateModel -> {
                     val fromFolderId = template.folderId
@@ -272,8 +313,11 @@ class WorkoutScreenViewModel @Inject constructor(
                     _unarchivedTemplates.value = newList
                 }
                 is WorkoutScreenListItemFolderHeaderModel -> {
+                    Timber.d("ASDSAD start")
+
                     val fromFolderId = template.folderId
                     val toFolderId = toItem.folder.id
+                    var mToFolderId: String? = toFolderId
 
                     var newList: ArrayList<TemplateWithWorkout>? = null
 
@@ -288,24 +332,72 @@ class WorkoutScreenViewModel @Inject constructor(
                     ).toArrayList()
 
                     val fromTemplateIndex =
-                        mTemplates.indexOfFirst { it.template.id == template.id }
-                    val toTemplateIndex = mTemplates.size - 1
+                        newList.indexOfFirst { it.template.id == template.id }
+                    var toTemplateIndex = newList.size - 1
 
-                    newList[fromTemplateIndex].template.folderId = toFolderId
-                    newList[fromTemplateIndex].template.listOrder = 0
+
+                    if (from < to) {
+                        // Dragging down
+                        Timber.d("ASDSAD draggin down")
+                        toTemplateIndex =
+                            newList.indexOfFirst { it.template.folderId == toFolderId }
+                                .takeIf { it != -1 } ?: toTemplateIndex
+                    } else {
+                        // Dragging up
+                        Timber.d("ASDSAD draggin up")
+                        if (
+                            fromFolderId == toFolderId
+                        ) {
+                            Timber.d("ASDSAD draggin up fromFolderId == toFolderId")
+                            when (val itemBeforeTo = mItems.getOrNull(to - 1)) {
+                                is WorkoutScreenListItemFolderHeaderModel -> {
+                                    toTemplateIndex =
+                                        newList.indexOfFirst { it.template.folderId == toFolderId }
+
+                                    if (toTemplateIndex == -1) {
+                                        toTemplateIndex = newList.size - 1
+                                    }
+
+                                    mToFolderId = itemBeforeTo.folder.id
+                                }
+                                is WorkoutScreenListItemTemplateModel -> {
+                                    toTemplateIndex =
+                                        newList.indexOfLast { it.template.folderId == itemBeforeTo.templateWithWorkout.template.folderId }
+
+                                    mToFolderId =
+                                        itemBeforeTo.templateWithWorkout.template.folderId
+                                }
+                                is WorkoutScreenListItemAddTemplateModel -> {
+                                    toTemplateIndex = newList.size - 1
+                                    
+                                    mToFolderId = itemBeforeTo.folderId
+                                }
+                                else -> {
+                                }
+                            }
+                        }
+                    }
+
+                    newList[fromTemplateIndex].template.folderId =
+                        mToFolderId.takeIf { it != UNORGANIZED_FOLDER_ID }
 
                     newList.move(fromTemplateIndex, toTemplateIndex)
 
-                    var newListOrderFolder1 = 0
-                    var newListOrderFolder2 = 0
+                    val orderMap: MutableMap<String, Int> = mutableMapOf()
+
                     newList.toList().forEachIndexed { index, templateWithWorkout ->
-                        if (templateWithWorkout.template.folderId == fromFolderId) {
-                            newList!![index].template.listOrder = newListOrderFolder1
-                            newListOrderFolder1++
-                        } else if (templateWithWorkout.template.folderId == toFolderId) {
-                            newList!![index].template.listOrder = newListOrderFolder2
-                            newListOrderFolder2++
-                        }
+                        newList!![index].template.listOrder =
+                            orderMap.getOrDefault(templateWithWorkout.template.id, 0)
+
+                        orderMap[templateWithWorkout.template.id] =
+                            orderMap.getOrDefault(templateWithWorkout.template.id, 0) + 1
+//                        if (templateWithWorkout.template.folderId == fromFolderId) {
+//                            newList!![index].template.listOrder = newListOrderFolder1
+//                            newListOrderFolder1++
+//                        } else if (templateWithWorkout.template.folderId == toFolderId) {
+//                            newList!![index].template.listOrder = newListOrderFolder2
+//                            newListOrderFolder2++
+//                        }
                     }
 
                     _unarchivedTemplates.value = newList
@@ -405,6 +497,7 @@ class WorkoutScreenViewModel @Inject constructor(
     ) {
         Timber.d("refreshItems")
 
+        val lastItems = _items.value
         val newItems = arrayListOf<WorkoutScreenListItemModel>()
 
         if (mCurrentWorkout != null) {
@@ -437,29 +530,64 @@ class WorkoutScreenViewModel @Inject constructor(
         fun addTemplates(mFolder: WorkoutTemplatesFolder) {
             if (mFolder.id == UNORGANIZED_FOLDER_ID) return
 
-            val temps =
-                mTemplates.filter { t -> t.template.folderId == mFolder.id }.toArrayList()
+            val allFolderTemps = mTemplates.filter { t -> t.template.folderId == mFolder.id }
+            val filteredTemps = allFolderTemps.toArrayList()
 
-            if (!mFoldersExpandedStatus.getOrDefault(mFolder.id, true)) {
-                val templateToKeep = temps.find { it.template.id == _currentDraggedTemplateId }
+            val isExpanded = !mFoldersExpandedStatus.getOrDefault(mFolder.id, true)
+
+            if (!isExpanded) {
+//                filteredTemps.clear()
+                val templateToKeep =
+                    filteredTemps.find { it.template.id == _currentDraggedTemplateId }
 
                 if (templateToKeep != null) {
-                    temps.clear()
-                    temps.add(templateToKeep)
+                    filteredTemps.clear()
+                    filteredTemps.add(templateToKeep)
                 } else {
                     return
                 }
             }
 
 
-            if (temps.isEmpty()) {
+            if (allFolderTemps.any { it.template.id == _currentDraggedTemplateId && it.template.folderId == mFolder.id }) {
+                if (allFolderTemps.size == 1) {
+                    newItems.add(
+                        WorkoutScreenListItemTemplateModel(
+                            templateWithWorkout = allFolderTemps[0]
+                        )
+                    )
+                    if (isExpanded) {
+                        newItems.add(
+                            WorkoutScreenListItemAddTemplateModel(
+                                folderId = mFolder.id
+                            )
+                        )
+                    }
+                } else {
+                    for (template in filteredTemps) {
+                        newItems.add(
+                            WorkoutScreenListItemTemplateModel(
+                                templateWithWorkout = template
+                            )
+                        )
+                    }
+                }
+            } else if (filteredTemps.isEmpty()) {
+//                var shouldKeep = true
+//
+//                if (_currentDraggedTemplateId != null) {
+//                    shouldKeep = lastItems.indexOfFirst { it is WorkoutScreenListItemAddTemplateModel } != -1
+//                }
+//
+//                if (shouldKeep) {
                 newItems.add(
                     WorkoutScreenListItemAddTemplateModel(
                         folderId = mFolder.id
                     )
                 )
+//                }
             } else {
-                for (template in temps) {
+                for (template in filteredTemps) {
                     newItems.add(
                         WorkoutScreenListItemTemplateModel(
                             templateWithWorkout = template

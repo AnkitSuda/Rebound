@@ -98,9 +98,9 @@ fun WorkoutScreen(
                             }
                         }
                         is WorkoutScreenListItemTemplateModel -> {
-                            if (fromItem.templateWithWorkout.template.folderId != toItem.folder.id) {
+//                            if (fromItem.templateWithWorkout.template.folderId != toItem.folder.id) {
                                 viewModel.moveTemplate(from, to)
-                            }
+//                            }
                         }
                         else -> {}
                     }
@@ -119,38 +119,7 @@ fun WorkoutScreen(
             }
         },
         isIndexDraggable = { from, to ->
-            val fromItem = items[from]
-
-            when (val toItem = items[to]) {
-                is WorkoutScreenListItemFolderHeaderModel -> {
-                    when (fromItem) {
-                        is WorkoutScreenListItemFolderHeaderModel -> {
-//                            viewModel.collapseAllFolders()
-                            val draggable = toItem.folder.id != UNORGANIZED_FOLDER_ID
-                            if (draggable) {
-                                viewModel.makeEverythingInvisibleExceptFolders(fromItem.folder.id)
-                            }
-                            draggable
-                        }
-                        is WorkoutScreenListItemTemplateModel -> {
-                            fromItem.templateWithWorkout.template.folderId != toItem.folder.id
-                        }
-                        else -> {
-                            false
-                        }
-                    }
-                }
-                is WorkoutScreenListItemTemplateModel -> {
-                    fromItem is WorkoutScreenListItemTemplateModel
-                }
-                is WorkoutScreenListItemAddTemplateModel -> {
-                    fromItem is WorkoutScreenListItemTemplateModel
-                }
-                else -> {
-                    false
-                }
-
-            }
+            viewModel.isIndexDraggable(from, to)
         },
         onDragEnd = {
             viewModel.makeEverythingVisible()
