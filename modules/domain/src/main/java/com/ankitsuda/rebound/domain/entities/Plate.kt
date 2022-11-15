@@ -18,6 +18,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ankitsuda.rebound.domain.ExerciseCategory
+import com.ankitsuda.rebound.domain.WeightUnit
 import java.time.LocalDateTime
 import java.util.*
 
@@ -27,10 +28,13 @@ data class Plate(
     @ColumnInfo(name = "id")
     val id: String,
 
+    // weight column is stored in kg
     @ColumnInfo(name = "weight")
     var weight: Double? = null,
-    @ColumnInfo(name = "weight_unit")
-    var weightUnit: String? = null,
+
+    // forWeightUnit does not represent weight unit of weight column
+    @ColumnInfo(name = "for_weight_unit")
+    var forWeightUnit: WeightUnit? = null,
 
     @ColumnInfo(name = "is_active")
     var isActive: Boolean? = null,

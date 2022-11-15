@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "350de1bf4b2380512549238269600f10",
+    "identityHash": "78f1033c7025b8448214463c96e35563",
     "entities": [
       {
         "tableName": "body_parts",
@@ -632,7 +632,7 @@
       },
       {
         "tableName": "plates",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `weight` REAL, `weight_unit` TEXT, `is_active` INTEGER, `color` TEXT, `color_value_type` TEXT, `height` REAL, `width` REAL, `created_at` INTEGER, `update_at` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `weight` REAL, `for_weight_unit` TEXT, `is_active` INTEGER, `color` TEXT, `color_value_type` TEXT, `height` REAL, `width` REAL, `created_at` INTEGER, `update_at` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -647,8 +647,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "weightUnit",
-            "columnName": "weight_unit",
+            "fieldPath": "forWeightUnit",
+            "columnName": "for_weight_unit",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -846,7 +846,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '350de1bf4b2380512549238269600f10')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '78f1033c7025b8448214463c96e35563')"
     ]
   }
 }

@@ -15,6 +15,7 @@
 package com.ankitsuda.rebound.data.db
 
 import com.ankitsuda.base.utils.generateId
+import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.domain.entities.*
 
 object DataGenerator {
@@ -191,9 +192,11 @@ object DataGenerator {
 
 
     fun getPlates(): List<Plate> = listOf(
+        // KG
         Plate(
             id = generateId(),
             weight = 25.0,
+            forWeightUnit = WeightUnit.KG,
             isActive = true,
             height = 1F,
             width = 1F,
@@ -203,6 +206,7 @@ object DataGenerator {
         Plate(
             id = generateId(),
             weight = 20.0,
+            forWeightUnit = WeightUnit.KG,
             isActive = true,
             height = 1F,
             width = 0.8500000238418579F,
@@ -212,6 +216,7 @@ object DataGenerator {
         Plate(
             id = generateId(),
             weight = 15.0,
+            forWeightUnit = WeightUnit.KG,
             isActive = true,
             height = 1F,
             width = 0.699999988079071F,
@@ -221,6 +226,7 @@ object DataGenerator {
         Plate(
             id = generateId(),
             weight = 10.0,
+            forWeightUnit = WeightUnit.KG,
             isActive = true,
             height = 1F,
             width = 0.550000011920929F,
@@ -230,6 +236,7 @@ object DataGenerator {
         Plate(
             id = generateId(),
             weight = 5.0,
+            forWeightUnit = WeightUnit.KG,
             isActive = true,
             height = 0.6000000238418579F,
             width = 0.6000000238418579F,
@@ -239,6 +246,7 @@ object DataGenerator {
         Plate(
             id = generateId(),
             weight = 2.5,
+            forWeightUnit = WeightUnit.KG,
             isActive = true,
             height = 0.550000011920929F,
             width = 0.5F,
@@ -248,6 +256,7 @@ object DataGenerator {
         Plate(
             id = generateId(),
             weight = 2.0,
+            forWeightUnit = WeightUnit.KG,
             isActive = true,
             height = 0.5F,
             width = 0.5F,
@@ -257,6 +266,7 @@ object DataGenerator {
         Plate(
             id = generateId(),
             weight = 1.25,
+            forWeightUnit = WeightUnit.KG,
             isActive = true,
             height = 0.4000000059604645F,
             width = 0.5F,
@@ -266,6 +276,7 @@ object DataGenerator {
         Plate(
             id = generateId(),
             weight = 1.0,
+            forWeightUnit = WeightUnit.KG,
             isActive = true,
             height = 0.30000001192092896F,
             width = 0.5F,
@@ -275,6 +286,118 @@ object DataGenerator {
         Plate(
             id = generateId(),
             weight = 0.5,
+            forWeightUnit = WeightUnit.KG,
+            isActive = true,
+            height = 0.20000000298023224F,
+            width = 0.5F,
+            color = "#ffffff",
+            colorValueType = "hex"
+        ),
+        // LBS
+        Plate(
+            id = generateId(),
+            weight = 45.0,
+            forWeightUnit = WeightUnit.LBS,
+            isActive = true,
+            height = 1F,
+            width = 1F,
+            color = "#db3236",
+            colorValueType = "hex"
+        ),
+        Plate(
+            id = generateId(),
+            weight = 35.0,
+            forWeightUnit = WeightUnit.LBS,
+            isActive = true,
+            height = 1F,
+            width = 1F,
+            color = "#db3236",
+            colorValueType = "hex"
+        ),
+        Plate(
+            id = generateId(),
+            weight = 25.0,
+            forWeightUnit = WeightUnit.LBS,
+            isActive = true,
+            height = 1F,
+            width = 0.8500000238418579F,
+            color = "#4885ed",
+            colorValueType = "hex"
+        ),
+        Plate(
+            id = generateId(),
+            weight = 15.0,
+            forWeightUnit = WeightUnit.LBS,
+            isActive = true,
+            height = 1F,
+            width = 0.699999988079071F,
+            color = "#f4c20d",
+            colorValueType = "hex"
+        ),
+        Plate(
+            id = generateId(),
+            weight = 10.0,
+            forWeightUnit = WeightUnit.LBS,
+            isActive = true,
+            height = 1F,
+            width = 0.550000011920929F,
+            color = "#3cba54",
+            colorValueType = "hex"
+        ),
+        Plate(
+            id = generateId(),
+            weight = 5.0,
+            forWeightUnit = WeightUnit.LBS,
+            isActive = true,
+            height = 0.6000000238418579F,
+            width = 0.6000000238418579F,
+            color = "#ffffff",
+            colorValueType = "hex"
+        ),
+        Plate(
+            id = generateId(),
+            weight = 3.3,
+            forWeightUnit = WeightUnit.LBS,
+            isActive = true,
+            height = 0.550000011920929F,
+            width = 0.5F,
+            color = "#db3236",
+            colorValueType = "hex"
+        ),
+        Plate(
+            id = generateId(),
+            weight = 2.5,
+            forWeightUnit = WeightUnit.LBS,
+            isActive = true,
+            height = 0.5F,
+            width = 0.5F,
+            color = "#4885ed",
+            colorValueType = "hex"
+        ),
+        Plate(
+            id = generateId(),
+            weight = 1.25,
+            forWeightUnit = WeightUnit.LBS,
+            isActive = true,
+            height = 0.4000000059604645F,
+            width = 0.5F,
+            color = "#f4c20d",
+            colorValueType = "hex"
+        ),
+        Plate(
+            id = generateId(),
+            weight = 1.0,
+            forWeightUnit = WeightUnit.LBS,
+            isActive = true,
+            height = 0.30000001192092896F,
+            width = 0.5F,
+            color = "#3cba54",
+            colorValueType = "hex"
+        ),
+        Plate(
+            id = generateId(),
+            weight = 0.5,
+            forWeightUnit = WeightUnit.LBS,
             isActive = true,
             height = 0.20000000298023224F,
             width = 0.5F,
@@ -282,6 +405,4 @@ object DataGenerator {
             colorValueType = "hex"
         ),
     )
-    
-
 }

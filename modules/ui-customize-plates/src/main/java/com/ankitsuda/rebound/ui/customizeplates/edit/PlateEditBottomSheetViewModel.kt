@@ -23,6 +23,7 @@ import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.navigation.LOG_ID_KEY
 import com.ankitsuda.navigation.PLATE_ID_KEY
 import com.ankitsuda.rebound.data.repositories.PlatesRepository
+import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.domain.entities.Plate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,6 +56,9 @@ class PlateEditBottomSheetViewModel @Inject constructor(
 
     private var _widthFieldValue = MutableStateFlow("")
     val widthFieldValue = _widthFieldValue.asStateFlow()
+
+    private var _weightUnitValue = MutableStateFlow(WeightUnit.KG)
+    val weightUnitValue = _weightUnitValue.asStateFlow()
 
     val isUpdate = plateId != null
 
@@ -93,6 +97,10 @@ class PlateEditBottomSheetViewModel @Inject constructor(
         }
     }
 
+    fun updateWeightUnitValue(value: WeightUnit) {
+        _weightUnitValue.value = value
+    }
+
     fun deletePlate(onDeleted: () -> Unit) {
         viewModelScope.launch {
             _plate.value?.id?.let {
@@ -117,6 +125,7 @@ class PlateEditBottomSheetViewModel @Inject constructor(
                 height = _heightFieldValue.value.toFloatOrNull() ?: lastPlate.height,
                 width = _widthFieldValue.value.toFloatOrNull() ?: lastPlate.width,
                 color = _colorFieldValue.value,
+                forWeightUnit = _weightUnitValue.value,
                 updatedAt = time
             )
 

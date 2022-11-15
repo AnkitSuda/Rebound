@@ -18,24 +18,36 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.common.compose.LocalAppSettings
+import com.ankitsuda.common.compose.localizedStr
+import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
+import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import com.ankitsuda.rebound.ui.customizeplates.components.PlateListItemComponent
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
@@ -45,28 +57,40 @@ fun CustomizePlatesScreen(
     navigator: Navigator = LocalNavigator.current,
     viewModel: CustomizePlatesScreenViewModel = hiltViewModel()
 ) {
-    val plates by viewModel.plates.collectAsState(initial = emptyList())
+    val groupedPlates by viewModel.groupedPlates.collectAsState(initial = null)
 
-    CustomizePlatesScreenLayout(
-        navigator = navigator,
-        plates = plates,
-        onUpdateIsActive = { id, isActive ->
-            viewModel.updateIsActive(id, isActive)
-        },
-        onDeletePlate = {
-            viewModel.deletePlate(it)
-        }
-    )
+    groupedPlates?.let {
+        CustomizePlatesScreenLayout(
+            navigator = navigator,
+            groupedPlates = it,
+            onUpdateIsActive = { id, isActive ->
+                viewModel.updateIsActive(id, isActive)
+            },
+            onDeletePlate = { id ->
+                viewModel.deletePlate(id)
+            }
+        )
+    }
 }
 
 @Composable
 private fun CustomizePlatesScreenLayout(
     navigator: Navigator,
-    plates: List<Plate>,
+    groupedPlates: Map<WeightUnit?, List<Plate>>,
     onUpdateIsActive: (id: String, isActive: Boolean) -> Unit,
     onDeletePlate: (id: String) -> Unit,
 ) {
+    val tabData = groupedPlates.keys.toList().map {
+        it?.localizedStr()
+    }
 
+    val pagerState = rememberPagerState(
+        initialPage = with(LocalAppSettings.current.weightUnit) {
+            if (this == WeightUnit.KG) 0 else 1
+        },
+    )
+    val tabIndex = pagerState.currentPage
+    val coroutineScope = rememberCoroutineScope()
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(
@@ -89,28 +113,72 @@ private fun CustomizePlatesScreenLayout(
                             navigator.navigate(LeafScreen.PlateEdit.createRoute())
                         }
                     )
-                })
+                },
+                bottomLayout = {
+
+                    TabRow(
+                        selectedTabIndex = tabIndex,
+                        backgroundColor = Color.Transparent,
+                        contentColor = contentColorFor(backgroundColor = ReboundTheme.colors.topBar),
+                        divider = { Divider(thickness = 0.dp) },
+                        indicator = { tabPositions ->
+                            TabRowDefaults.Indicator(
+                                modifier = Modifier.pagerTabIndicatorOffset(
+                                    pagerState,
+                                    tabPositions
+                                ),
+                                color = ReboundTheme.colors.primary
+                            )
+                        }
+                    ) {
+                        tabData.forEachIndexed { index, pair ->
+                            Tab(
+                                selectedContentColor = ReboundTheme.colors.primary,
+                                unselectedContentColor = ReboundTheme.colors.topBarTitle.copy(
+                                    0.5f
+                                ),
+                                selected = tabIndex == index,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                                text = {
+                                    Text(text = pair ?: "")
+
+                                }
+                            )
+                        }
+                    }
+                }
+            )
         },
         modifier = Modifier.background(ReboundTheme.colors.background)
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(ReboundTheme.colors.background),
-        ) {
-            items(items = plates, key = { it.id }) {
-                PlateListItemComponent(
-                    plate = it,
-                    onUpdateIsActive = { newIsActive ->
-                        onUpdateIsActive(it.id, newIsActive)
-                    },
-                    onEditPlate = {
-                        navigator.navigate(LeafScreen.PlateEdit.createRoute(it.id))
-                    },
-                    onDeletePlate = {
-                        onDeletePlate(it.id)
-                    }
-                )
+        HorizontalPager(
+            state = pagerState,
+            verticalAlignment = Alignment.Top,
+            count = tabData.size,
+        ) { index ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(ReboundTheme.colors.background),
+            ) {
+                items(items = groupedPlates.values.toList()[index], key = { it.id }) {
+                    PlateListItemComponent(
+                        plate = it,
+                        onUpdateIsActive = { newIsActive ->
+                            onUpdateIsActive(it.id, newIsActive)
+                        },
+                        onEditPlate = {
+                            navigator.navigate(LeafScreen.PlateEdit.createRoute(it.id))
+                        },
+                        onDeletePlate = {
+                            onDeletePlate(it.id)
+                        }
+                    )
+                }
             }
         }
     }

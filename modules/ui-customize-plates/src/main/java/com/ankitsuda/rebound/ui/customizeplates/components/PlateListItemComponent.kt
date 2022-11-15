@@ -26,7 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.base.util.kgToReadable
 import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.common.compose.localizedStr
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.customizeplates.R
@@ -62,7 +64,7 @@ internal fun PlateListItemComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "${plate.weight?.toReadableString()} kg", // TODO: Move to strings.xml
+                text = "${plate.weight?.kgToReadable()} ${plate.forWeightUnit?.localizedStr()}",
                 color = ReboundTheme.colors.onBackground
             )
             Spacer(modifier = Modifier.weight(1f))

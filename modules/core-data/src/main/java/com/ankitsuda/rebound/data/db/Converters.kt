@@ -115,4 +115,15 @@ object Converters {
     fun toListOfPersonalRecords(str: String?): List<PersonalRecord>? {
         return if (str != null) PersonalRecord.fromCommaSpString(str) else null
     }
+
+    @TypeConverter
+    fun toWeightUnit(value: String): WeightUnit {
+        return WeightUnit.fromValue(value)
+
+    }
+
+    @TypeConverter
+    fun fromWeightUnit(unit: WeightUnit?): String {
+        return (unit ?: WeightUnit.KG).value
+    }
 }

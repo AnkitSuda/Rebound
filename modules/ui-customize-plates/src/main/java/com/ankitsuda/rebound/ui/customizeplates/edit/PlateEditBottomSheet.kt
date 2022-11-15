@@ -14,22 +14,30 @@
 
 package com.ankitsuda.rebound.ui.customizeplates.edit
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.common.compose.localizedStr
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
+import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.customizeplates.R
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
+import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.insets.navigationBarsPadding
 
 @Composable
@@ -41,6 +49,7 @@ fun PlateEditBottomSheet(
     val colorFieldValue by viewModel.colorFieldValue.collectAsState()
     val heightFieldValue by viewModel.heightFieldValue.collectAsState()
     val widthFieldValue by viewModel.widthFieldValue.collectAsState()
+    val weightUnitValue by viewModel.weightUnitValue.collectAsState()
     val isUpdate = viewModel.isUpdate
 
     PlateEditBottomSheetLayout(
@@ -48,8 +57,12 @@ fun PlateEditBottomSheet(
         colorFieldValue = colorFieldValue,
         heightFieldValue = heightFieldValue,
         widthFieldValue = widthFieldValue,
+        weightUnitValue = weightUnitValue,
         isUpdate = isUpdate,
-        isSaveBtnEnabled = true,
+        isSaveBtnEnabled = weightFieldValue.isNotBlank() &&
+                colorFieldValue.isNotBlank() &&
+                heightFieldValue.isNotBlank() &&
+                widthFieldValue.isNotBlank(),
         onChangeWeightFieldValue = {
             viewModel.updateWeightFieldValue(it)
         },
@@ -61,6 +74,9 @@ fun PlateEditBottomSheet(
         },
         onChangeWidthFieldValue = {
             viewModel.updateWidthFieldValue(it)
+        },
+        onChangeWeightUnitValue = {
+            viewModel.updateWeightUnitValue(it)
         },
         onDelete = {
             viewModel.deletePlate {
@@ -81,12 +97,14 @@ private fun PlateEditBottomSheetLayout(
     colorFieldValue: String,
     heightFieldValue: String,
     widthFieldValue: String,
+    weightUnitValue: WeightUnit,
     isUpdate: Boolean,
     isSaveBtnEnabled: Boolean,
     onChangeWeightFieldValue: (String) -> Unit,
     onChangeColorFieldValue: (String) -> Unit,
     onChangeHeightFieldValue: (String) -> Unit,
     onChangeWidthFieldValue: (String) -> Unit,
+    onChangeWeightUnitValue: (WeightUnit) -> Unit,
     onDelete: () -> Unit,
     onSave: () -> Unit
 ) {
@@ -160,7 +178,30 @@ private fun PlateEditBottomSheetLayout(
                     ),
                     onValueChange = onChangeWidthFieldValue
                 )
-
+                FlowRow(
+                    crossAxisSpacing = 8.dp,
+                    mainAxisSpacing = 8.dp,
+                    modifier = Modifier.padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
+                ) {
+                    for (unit in WeightUnit.values()) {
+                        Row(
+                            modifier = Modifier.clickable(onClick = {
+                                onChangeWeightUnitValue(unit)
+                            }, indication = null,
+                                interactionSource = remember { MutableInteractionSource() }),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(selected = unit == weightUnitValue, onClick = {
+                                onChangeWeightUnitValue(unit)
+                            })
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                color = LocalThemeState.current.onBackgroundColor,
+                                text = unit.localizedStr()
+                            )
+                        }
+                    }
+                }
             }
 
             Row(

@@ -19,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.rebound.data.repositories.PlatesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,7 +27,10 @@ import javax.inject.Inject
 class CustomizePlatesScreenViewModel @Inject constructor(
     private val platesRepository: PlatesRepository
 ) : ViewModel() {
-    val plates = platesRepository.getPlates()
+    val groupedPlates = platesRepository.getPlates()
+        .map {
+            it.groupBy { p -> p.forWeightUnit }
+        }
         .shareWhileObserved(viewModelScope)
 
     fun updateIsActive(plateId: String, isActive: Boolean) {

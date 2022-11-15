@@ -23,10 +23,11 @@ import com.ankitsuda.rebound.domain.WeightUnit
 
 @Composable
 fun Double?.kgToUserPrefStr(
+    weightUnit: WeightUnit = LocalAppSettings.current.weightUnit,
     addUnitSuffix: Boolean = false,
     spaceBeforeSuffix: Boolean = false
 ): String =
-    when (LocalAppSettings.current.weightUnit) {
+    when (weightUnit) {
         WeightUnit.KG -> (this ?: 0.0).kgToReadable()
         WeightUnit.LBS -> (this ?: 0.0).fromKgToLbsReadable()
     } + if (addUnitSuffix) {
@@ -40,7 +41,10 @@ fun Double?.kgToUserPrefStr(
     }
 
 @Composable
-fun userPrefWeightUnitStr(): String = when (LocalAppSettings.current.weightUnit) {
+fun WeightUnit.localizedStr(): String = when (this) {
     WeightUnit.KG -> stringResource(id = R.string.kg)
     WeightUnit.LBS -> stringResource(id = R.string.lbs)
 }
+
+@Composable
+fun userPrefWeightUnitStr(): String = LocalAppSettings.current.weightUnit.localizedStr()
