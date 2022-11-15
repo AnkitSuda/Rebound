@@ -24,33 +24,32 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import com.ankitsuda.common.compose.collectEvent
 import com.ankitsuda.navigation.*
-import com.ankitsuda.rebound.ui.measure.MeasureScreen
-import com.ankitsuda.rebound.ui.exercise_details.ExerciseDetailScreen
-import com.ankitsuda.rebound.ui.exercises.ExercisesScreen
 import com.ankitsuda.rebound.ui.calendar.CalendarScreen
-import com.ankitsuda.rebound.ui.components.workouteditor.rpeselector.RpeSelectorBottomSheet
 import com.ankitsuda.rebound.ui.components.workouteditor.supersetselector.SupersetSelectorBottomSheet
 import com.ankitsuda.rebound.ui.create_exercise.CreateExerciseScreen
 import com.ankitsuda.rebound.ui.customizeplates.CustomizePlatesScreen
 import com.ankitsuda.rebound.ui.customizeplates.edit.PlateEditBottomSheet
+import com.ankitsuda.rebound.ui.exercise_details.ExerciseDetailScreen
+import com.ankitsuda.rebound.ui.exercises.ExercisesScreen
 import com.ankitsuda.rebound.ui.history.HistoryScreen
 import com.ankitsuda.rebound.ui.home.HomeScreen
 import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboardDemoScreen
+import com.ankitsuda.rebound.ui.measure.MeasureScreen
+import com.ankitsuda.rebound.ui.measure.part.add_sheet.AddPartMeasurementBottomSheet
+import com.ankitsuda.rebound.ui.measure.part.overview.PartMeasurementsScreen
 import com.ankitsuda.rebound.ui.more.MoreScreen
+import com.ankitsuda.rebound.ui.resttimer.RestTimerScreen
+import com.ankitsuda.rebound.ui.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.settings.personalization.ColorPickerDemoScreen
 import com.ankitsuda.rebound.ui.settings.personalization.PersonalizationScreen
 import com.ankitsuda.rebound.ui.settings.personalization.botom_bar.BottomBarPersonalizationScreen
 import com.ankitsuda.rebound.ui.settings.personalization.card.CardPersonalizationScreen
 import com.ankitsuda.rebound.ui.settings.personalization.charts.ChartsPersonalizationScreen
+import com.ankitsuda.rebound.ui.settings.personalization.keyboard.KeyboardPersonalizationScreen
 import com.ankitsuda.rebound.ui.settings.personalization.main_colors.MainColorsPersonalizationScreen
+import com.ankitsuda.rebound.ui.settings.personalization.presets.ThemePresetsPersonalizationScreen
 import com.ankitsuda.rebound.ui.settings.personalization.shapes.ShapesPersonalizationScreen
 import com.ankitsuda.rebound.ui.settings.personalization.top_bar.TopBarPersonalizationScreen
-import com.ankitsuda.rebound.ui.measure.part.add_sheet.AddPartMeasurementBottomSheet
-import com.ankitsuda.rebound.ui.measure.part.overview.PartMeasurementsScreen
-import com.ankitsuda.rebound.ui.resttimer.RestTimerScreen
-import com.ankitsuda.rebound.ui.settings.SettingsScreen
-import com.ankitsuda.rebound.ui.settings.personalization.keyboard.KeyboardPersonalizationScreen
-import com.ankitsuda.rebound.ui.settings.personalization.presets.ThemePresetsPersonalizationScreen
 import com.ankitsuda.rebound.ui.workout.WorkoutScreen
 import com.ankitsuda.rebound.ui.workout.addfolder.TemplatesFolderEditBottomSheet
 import com.ankitsuda.rebound.ui.workout_details.SessionScreen
@@ -128,7 +127,6 @@ internal fun AppNavigation(
         addExercisesBottomSheet(navController)
         addRestTimer(navController)
         addSupersetSelector(navController)
-        addRpeSelector(navController)
     }
 }
 
@@ -402,13 +400,6 @@ private fun NavGraphBuilder.addSupersetSelector(navController: NavController) {
         SupersetSelectorBottomSheet(navController)
     }
 }
-
-private fun NavGraphBuilder.addRpeSelector(navController: NavController) {
-    bottomSheetScreen(LeafScreen.RpeSelector()) {
-        RpeSelectorBottomSheet(navController)
-    }
-}
-
 
 /**
  * Adds an [NavController.OnDestinationChangedListener] to this [NavController] and updates the

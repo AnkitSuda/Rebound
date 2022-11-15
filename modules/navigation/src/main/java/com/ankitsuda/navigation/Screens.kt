@@ -41,11 +41,9 @@ const val FOLDER_ID_KEY = "folder_id"
 const val SUPERSET_ID_KEY = "superset_id"
 const val JUNCTION_ID_KEY = "junction_id"
 const val ENTRY_ID_KEY = "entry_id"
-const val RPE_KEY = "rpe"
 
 const val RESULT_EXERCISES_SCREEN_EXERCISE_ID = "result_exercises_screen_exercise_id"
 const val RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY = "result_superset_selector_superset_id"
-const val RESULT_RPE_SELECTOR_KEY = "result_rpe_selector"
 
 interface Screen {
     val route: String
@@ -441,32 +439,6 @@ sealed class LeafScreen(
                 "superset_selector?$WORKOUT_ID_KEY=$workoutId&$JUNCTION_ID_KEY=$junctionId"
         }
     }
-
-    data class RpeSelector(
-        override val route: String =
-            "rpe_selector?$ENTRY_ID_KEY={$ENTRY_ID_KEY}&$RPE_KEY={$RPE_KEY}"
-    ) :
-        LeafScreen(
-            route = route,
-            arguments = listOf(
-                navArgument(ENTRY_ID_KEY) {
-                    type = NavType.StringType
-                    nullable = false
-                },
-                navArgument(RPE_KEY) {
-                    type = NavType.FloatType
-                    nullable = false
-                }
-            )
-        ) {
-        companion object {
-            fun createRoute(
-                entryId: String,
-                initialRpe: Float?
-            ) = "rpe_selector?$ENTRY_ID_KEY=$entryId&$RPE_KEY=${initialRpe ?: -1f}"
-        }
-    }
-
 }
 
 @OptIn(ExperimentalAnimationApi::class)

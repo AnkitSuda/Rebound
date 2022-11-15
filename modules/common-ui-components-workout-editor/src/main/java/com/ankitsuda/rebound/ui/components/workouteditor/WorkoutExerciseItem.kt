@@ -14,7 +14,6 @@
 
 package com.ankitsuda.rebound.ui.components.workouteditor
 
-import android.view.inputmethod.InputConnection
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -25,7 +24,6 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -33,7 +31,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -57,9 +54,7 @@ import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUp
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpSet
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
-import com.ankitsuda.rebound.ui.keyboard.getText
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import timber.log.Timber
 import java.util.*
 
 private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, right ->
@@ -80,7 +75,6 @@ fun LazyListScope.workoutExerciseItemAlt(
     onChangeNote: (ExerciseSetGroupNote) -> Unit,
     onAddToSuperset: () -> Unit,
     onRemoveFromSuperset: () -> Unit,
-    onRequestRpeSelector: (ExerciseLogEntry) -> Unit,
 ) {
 
     val supersetId = logEntriesWithJunction.junction.supersetId
@@ -321,7 +315,6 @@ fun LazyListScope.workoutExerciseItemAlt(
                 onSwipeDelete = {
                     onSwipeDelete(it)
                 },
-                onRequestRpeSelector = onRequestRpeSelector
             )
         }
     }
@@ -361,7 +354,6 @@ private fun LazyItemScope.SetItem(
     exerciseLogEntry: ExerciseLogEntry,
     onChange: (ExerciseLogEntry) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
-    onRequestRpeSelector: (ExerciseLogEntry) -> Unit,
 ) {
     var mLogEntry by rememberSaveable {
         mutableStateOf(exerciseLogEntry)
@@ -491,7 +483,6 @@ private fun LazyItemScope.SetItem(
             onRpeChange = { _, value ->
                 handleOnChange(mLogEntry.copy(rpe = value))
             },
-            onRequestRpeSelector = onRequestRpeSelector
         )
     }
 }
@@ -511,7 +502,6 @@ private fun SetItemLayout(
     onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
     onSetTypeChange: (ExerciseLogEntry, LogSetType) -> Unit,
     onRpeChange: (ExerciseLogEntry, Float?) -> Unit,
-    onRequestRpeSelector: (ExerciseLogEntry) -> Unit,
 ) {
     val typeOfSet = exerciseLogEntry.setType ?: LogSetType.NORMAL
     var isSetTypeChangerExpanded by rememberSaveable {
@@ -662,27 +652,6 @@ private fun SetItemLayout(
                 bgColor = bgColor,
                 reboundKeyboardType = ReboundKeyboardType.RPE
             )
-//            Box(
-//                modifier = Modifier
-//                    .defaultMinSize(minHeight = 32.dp)
-//                    .padding(start = 8.dp, end = 8.dp)
-//                    .weight(0.75f)
-//                    .clip(RoundedCornerShape(12.dp))
-//                    .background(bgColor.lighterOrDarkerColor(0.10f))
-//                    .clickable {
-//                        onRequestRpeSelector(exerciseLogEntry)
-//                    },
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Text(
-//                    exerciseLogEntry.rpe?.toReadableString() ?: "",
-//                    style = LocalTextStyle.current.copy(
-//                        textAlign = TextAlign.Center,
-//                        fontSize = 14.sp,
-//                        color = contentColor
-//                    )
-//                )
-//            }
         }
 
         IconButton(
