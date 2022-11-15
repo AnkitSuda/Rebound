@@ -17,5 +17,6 @@ package com.ankitsuda.rebound.ui.keyboard.enums
 enum class KeyboardModeType {
     NUMBERS,
     PLATE_CALCULATOR,
-    WARMUP_PICKER;
+    WARMUP_PICKER,
+    RPE_PICKER;
 }

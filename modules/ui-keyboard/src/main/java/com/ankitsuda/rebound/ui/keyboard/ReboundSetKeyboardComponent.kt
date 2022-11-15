@@ -34,6 +34,7 @@ import com.ankitsuda.rebound.ui.keyboard.models.NumKey
 import com.ankitsuda.rebound.ui.keyboard.models.NumberNumKey
 import com.ankitsuda.rebound.ui.keyboard.picker.WarmUpListPickerComponent
 import com.ankitsuda.rebound.ui.keyboard.platecalculator.PlateCalculatorComponent
+import com.ankitsuda.rebound.ui.keyboard.rpe.RpePickerComponent
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -52,6 +53,7 @@ fun ReboundSetKeyboardComponent(
     val currentMode = when (reboundKeyboardType) {
         ReboundKeyboardType.WEIGHT -> mCurrentMode
         ReboundKeyboardType.WARMUP_SET -> KeyboardModeType.WARMUP_PICKER
+        ReboundKeyboardType.RPE -> KeyboardModeType.RPE_PICKER
         else -> KeyboardModeType.NUMBERS
     }
 
@@ -68,6 +70,22 @@ fun ReboundSetKeyboardComponent(
             reboundKeyboardType = reboundKeyboardType,
             numKey = numKey,
             inputConnection = inputConnection
+        )
+    }
+
+    fun setText(text: String) {
+        val currentText = inputConnection?.getText() ?: ""
+        val beforeCursorText =
+            inputConnection?.getTextBeforeCursor(currentText.length, 0) ?: ""
+        val afterCursorText =
+            inputConnection?.getTextAfterCursor(currentText.length, 0) ?: ""
+        inputConnection?.deleteSurroundingText(
+            beforeCursorText.length,
+            afterCursorText.length
+        )
+        inputConnection?.commitText(
+            text,
+            1
         )
     }
 
@@ -116,22 +134,20 @@ fun ReboundSetKeyboardComponent(
                 }
                 KeyboardModeType.WARMUP_PICKER -> {
                     WarmUpListPickerComponent(
-                        onSetText = {
-                            val currentText = inputConnection?.getText() ?: ""
-                            val beforeCursorText =
-                                inputConnection?.getTextBeforeCursor(currentText.length, 0) ?: ""
-                            val afterCursorText =
-                                inputConnection?.getTextAfterCursor(currentText.length, 0) ?: ""
-                            inputConnection?.deleteSurroundingText(
-                                beforeCursorText.length,
-                                afterCursorText.length
-                            )
-                            inputConnection?.commitText(
-                                it,
-                                1
-                            )
-                        },
+                        onSetText = ::setText,
                         startingText = inputConnection?.getText()
+                    )
+                }
+                KeyboardModeType.RPE_PICKER -> {
+                    RpePickerComponent(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(
+                                height = 250.dp,
+                            ),
+                        onSetText = ::setText,
+                        text = inputConnection?.getText(),
+                        refreshKey = inputConnection
                     )
                 }
             }

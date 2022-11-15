@@ -367,13 +367,13 @@ private fun LazyItemScope.SetItem(
         mutableStateOf(exerciseLogEntry)
     }
 
-    LaunchedEffect(key1 = exerciseLogEntry) {
-        // We have to change saved rpe manually because
-        // main rpe change is not handled by SetItem function
-        if (exerciseLogEntry.rpe != mLogEntry.rpe) {
-            mLogEntry = mLogEntry.copy(rpe = exerciseLogEntry.rpe)
-        }
-    }
+//    LaunchedEffect(key1 = exerciseLogEntry) {
+//        // We have to change saved rpe manually because
+//        // main rpe change is not handled by SetItem function
+//        if (exerciseLogEntry.rpe != mLogEntry.rpe) {
+//            mLogEntry = mLogEntry.copy(rpe = exerciseLogEntry.rpe)
+//        }
+//    }
 
     val completionAnimDuration = 200
     val completionAnimSpecFloat =
@@ -488,6 +488,9 @@ private fun LazyItemScope.SetItem(
             onSetTypeChange = { _, value ->
                 handleOnChange(mLogEntry.copy(setType = value))
             },
+            onRpeChange = { _, value ->
+                handleOnChange(mLogEntry.copy(rpe = value))
+            },
             onRequestRpeSelector = onRequestRpeSelector
         )
     }
@@ -507,6 +510,7 @@ private fun SetItemLayout(
     onTimeChange: (ExerciseLogEntry, Long?) -> Unit,
     onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
     onSetTypeChange: (ExerciseLogEntry, LogSetType) -> Unit,
+    onRpeChange: (ExerciseLogEntry, Float?) -> Unit,
     onRequestRpeSelector: (ExerciseLogEntry) -> Unit,
 ) {
     val typeOfSet = exerciseLogEntry.setType ?: LogSetType.NORMAL
@@ -649,27 +653,36 @@ private fun SetItemLayout(
         if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
             || exercise.category == ExerciseCategory.REPS
         ) {
-            Box(
-                modifier = Modifier
-                    .defaultMinSize(minHeight = 32.dp)
-                    .padding(start = 8.dp, end = 8.dp)
-                    .weight(0.75f)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(bgColor.lighterOrDarkerColor(0.10f))
-                    .clickable {
-                        onRequestRpeSelector(exerciseLogEntry)
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    exerciseLogEntry.rpe?.toReadableString() ?: "",
-                    style = LocalTextStyle.current.copy(
-                        textAlign = TextAlign.Center,
-                        fontSize = 14.sp,
-                        color = contentColor
-                    )
-                )
-            }
+            ReboundSetTextField(
+                value = exerciseLogEntry.rpe?.toReadableString() ?: "",
+                onValueChange = {
+                    onRpeChange(exerciseLogEntry, it.toFloatOrNull())
+                },
+                contentColor = contentColor,
+                bgColor = bgColor,
+                reboundKeyboardType = ReboundKeyboardType.RPE
+            )
+//            Box(
+//                modifier = Modifier
+//                    .defaultMinSize(minHeight = 32.dp)
+//                    .padding(start = 8.dp, end = 8.dp)
+//                    .weight(0.75f)
+//                    .clip(RoundedCornerShape(12.dp))
+//                    .background(bgColor.lighterOrDarkerColor(0.10f))
+//                    .clickable {
+//                        onRequestRpeSelector(exerciseLogEntry)
+//                    },
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Text(
+//                    exerciseLogEntry.rpe?.toReadableString() ?: "",
+//                    style = LocalTextStyle.current.copy(
+//                        textAlign = TextAlign.Center,
+//                        fontSize = 14.sp,
+//                        color = contentColor
+//                    )
+//                )
+//            }
         }
 
         IconButton(
