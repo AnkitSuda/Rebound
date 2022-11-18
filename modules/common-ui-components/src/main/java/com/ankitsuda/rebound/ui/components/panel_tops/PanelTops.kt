@@ -133,7 +133,10 @@ fun PanelTopExpanded(
                 onClick = onFinishBtnClicked,
                 elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp)
             ) {
-                Text(text = stringResource(id = R.string.finish), style = MaterialTheme.typography.button)
+                Text(
+                    text = stringResource(id = R.string.finish),
+                    style = MaterialTheme.typography.button
+                )
             }
         }
     }
@@ -183,12 +186,16 @@ private fun RestTimerButton(
                 targetOffsetX = { -it })/* + fadeOut()*/,
             visible = restTimerElapsedTime != null && restTimerTotalTime != null && isTimerRunning
         ) {
+//        if (restTimerElapsedTime != null && restTimerTotalTime != null && isTimerRunning
+//        ) {
             LinearProgressIndicator(
                 modifier = Modifier
                     .matchParentSize()
                     .width(100.dp),
-                progress = ((restTimerElapsedTime ?: 0f).toFloat() / (restTimerTotalTime
-                    ?: 0f).toFloat()),
+                progress = (
+                        (restTimerElapsedTime ?: 0L).toFloat() / (restTimerTotalTime
+                            ?: 1L).toFloat()).coerceIn(0f, 1f)
+                        .takeIf { !it.isNaN() } ?: 0f,
                 color = primaryColor,
                 backgroundColor = primaryColor.copy(alpha = 0.5f)
             )
