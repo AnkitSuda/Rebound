@@ -4,6 +4,10 @@ Feature Rich & Highly Customizable Workout Log App
 
 > Rebound app is currently under heavy development, many things may be
 > changed or completely removed in future.
+ 
+## Donate
+
+<a href="https://www.buymeacoffee.com/ankitsuda"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="ankitsuda" /></a>
 
 ## Screenshots (Dummy data)
 
