@@ -30,8 +30,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.base.util.fromKgToLbs
+import com.ankitsuda.base.util.fromLbsToKg
 import com.ankitsuda.base.util.lighterOrDarkerColor
-import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.common.compose.LocalAppSettings
+import com.ankitsuda.common.compose.kgToUserPrefStr
+import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.workouteditor.R
@@ -105,9 +109,13 @@ private fun WarmUpCalculatorDialogLayout(
     onClickInsert: (workSet: Double) -> Unit,
     onClickCancel: () -> Unit
 ) {
+    val fieldValue = startingWorkSetWeight?.kgToUserPrefStr() ?: ""
+
     var workSetStr by remember {
-        mutableStateOf(startingWorkSetWeight?.toReadableString() ?: "")
+        mutableStateOf(fieldValue)
     }
+
+    val weightUnit = LocalAppSettings.current.weightUnit
 
     Surface(
         modifier = Modifier
@@ -132,12 +140,14 @@ private fun WarmUpCalculatorDialogLayout(
                 RSpacer(space = 12.dp)
 
                 Text(
-                    text = stringResource(R.string.work_set_kg),
+                    text = when (weightUnit) {
+                        WeightUnit.KG -> stringResource(R.string.work_set_kg)
+                        WeightUnit.LBS -> stringResource(R.string.work_set_lbs)
+                    },
                     style = ReboundTheme.typography.caption,
                     color = ReboundTheme.colors.onBackground.copy(0.75f)
                 )
             }
-
 
             Row(
                 modifier = Modifier
@@ -154,7 +164,13 @@ private fun WarmUpCalculatorDialogLayout(
                     value = workSetStr,
                     onValueChange = {
                         workSetStr = it
-                        onUpdateWorkSet(20.0, it.toDoubleOrNull() ?: 0.0)
+                        onUpdateWorkSet(
+                            20.0,
+                            when (weightUnit) {
+                                WeightUnit.KG -> it.toDoubleOrNull()
+                                WeightUnit.LBS -> it.toDoubleOrNull()?.fromLbsToKg()
+                            } ?: 0.0
+                        )
                     },
                     reboundKeyboardType = ReboundKeyboardType.WEIGHT,
                 )
@@ -182,8 +198,11 @@ private fun WarmUpCalculatorDialogLayout(
                         modifier = Modifier
                             .fillMaxWidth()
                             .animateItemPlacement(),
-                        workSetWeight = workSetStr.toDoubleOrNull() ?: 0.0,
-                        barWeight = 20.0,
+                        workSetWeightKg = when (weightUnit) {
+                            WeightUnit.KG -> workSetStr.toDoubleOrNull()
+                            WeightUnit.LBS -> workSetStr.toDoubleOrNull()?.fromLbsToKg()
+                        } ?: 0.0,
+                        barWeightKg = 20.0,
                         startingSet = set,
                         onChangeValue = onUpdateSet,
                         onDeleteSet = {
@@ -243,10 +262,10 @@ private fun ColumnScope.DialogButtonsRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         TextButton(onClick = onClickCancel) {
-            Text("CANCEL")
+            Text(stringResource(id = R.string.cancel))
         }
         TextButton(onClick = onClickInsert) {
-            Text("INSERT")
+            Text(stringResource(id = R.string.insert))
         }
     }
 }

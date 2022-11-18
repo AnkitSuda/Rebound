@@ -114,16 +114,18 @@ fun LazyListScope.workoutExerciseItemAlt(
         }
 
         if (warmUpSetsDialogVisible) {
-            WarmUpCalculatorDialog(
-                startingWorkSetWeight = warmUpWorkSetWeight,
-                startingSets = dialogWarmUpSets,
-                onInsert = { newWarmUpWorkSetWeight, newWarmUpSets ->
-                    updateWarmUpSets(newWarmUpWorkSetWeight, newWarmUpSets)
-                },
-                onDismissRequest = {
-                    warmUpSetsDialogVisible = false
-                }
-            )
+            key(LocalAppSettings.current.weightUnit) {
+                WarmUpCalculatorDialog(
+                    startingWorkSetWeight = warmUpWorkSetWeight,
+                    startingSets = dialogWarmUpSets,
+                    onInsert = { newWarmUpWorkSetWeight, newWarmUpSets ->
+                        updateWarmUpSets(newWarmUpWorkSetWeight, newWarmUpSets)
+                    },
+                    onDismissRequest = {
+                        warmUpSetsDialogVisible = false
+                    }
+                )
+            }
         }
 
         Row(

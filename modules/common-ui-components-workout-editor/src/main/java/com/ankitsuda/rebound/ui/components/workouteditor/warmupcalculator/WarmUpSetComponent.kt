@@ -27,7 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.base.util.fromKgToLbs
+import com.ankitsuda.common.compose.LocalAppSettings
+import com.ankitsuda.common.compose.kgToUserPrefStr
+import com.ankitsuda.rebound.domain.WeightUnit
+import com.ankitsuda.rebound.domain.WeightUnit.*
 import com.ankitsuda.rebound.ui.components.workouteditor.SetSwipeWrapperComponent
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
@@ -37,20 +41,26 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 @Composable
 internal fun WarmUpSetComponent(
     modifier: Modifier = Modifier,
-    workSetWeight: Double,
-    barWeight: Double,
+    workSetWeightKg: Double,
+    barWeightKg: Double,
     startingSet: WarmUpSet,
     onDeleteSet: () -> Unit,
     onChangeValue: (WarmUpSet) -> Unit
 ) {
     val fieldContentColor = ReboundTheme.colors.onBackground
+    val weightUnit = LocalAppSettings.current.weightUnit
 
     val setWeight =
         if (startingSet.weightPercentage == -1 || startingSet.weightPercentage == null) {
-            barWeight
+            barWeightKg
         } else {
-            workSetWeight * startingSet.weightPercentage!! / 100
+            workSetWeightKg * startingSet.weightPercentage!! / 100
         }
+
+//    val setWeight = when (weightUnit) {
+//        KG -> setWeightKg
+//        LBS -> setWeightKg.fromKgToLbs()
+//    }
 
     val bgColor =
         LocalElevationOverlay.current?.apply(
@@ -94,9 +104,9 @@ internal fun WarmUpSetComponent(
                             ?: -1
 
                     val weight = if (weightInt == -1) {
-                        barWeight
+                        barWeightKg
                     } else {
-                        workSetWeight * weightInt / 100
+                        workSetWeightKg * weightInt / 100
                     }
 
                     val reps = arr.getOrNull(1)?.toIntOrNull() ?: 0
@@ -112,7 +122,7 @@ internal fun WarmUpSetComponent(
                 }
             )
             Text(
-                text = "${setWeight.toReadableString()}kg x ${startingSet.reps ?: 0}",
+                text = "${setWeight.kgToUserPrefStr(addUnitSuffix = true)} x ${startingSet.reps ?: 0}",
                 style = ReboundTheme.typography.caption,
                 color = ReboundTheme.colors.onBackground,
                 textAlign = TextAlign.Center,

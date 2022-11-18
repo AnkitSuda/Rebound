@@ -104,42 +104,42 @@ fun ReboundSetKeyboardComponent(
                 )
             }
         ) { mCurrentMode ->
-            when (mCurrentMode) {
-                KeyboardModeType.NUMBERS -> {
-                    NumKeysContainerComponent(
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .height(
-                                height = 250.dp,
-                            )
-                            .padding(end = rightButtonsWidth)
-                            .background(theme.keyboardBackgroundColor),
-                        reboundKeyboardType = reboundKeyboardType,
-                        onClickNumKey = { numKey ->
-                            onClickNumKey(numKey)
-                        }
-                    )
-                }
-                KeyboardModeType.PLATE_CALCULATOR -> {
-                    key(LocalAppSettings.current.weightUnit) {
-                        PlateCalculatorComponent(
+            key(inputConnection) {
+                when (mCurrentMode) {
+                    KeyboardModeType.NUMBERS -> {
+                        NumKeysContainerComponent(
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .fillMaxWidth(1f)
                                 .height(
                                     height = 250.dp,
-                                ),
-                            weight = inputConnection?.getText()?.toDoubleOrNull() ?: 0.0
+                                )
+                                .padding(end = rightButtonsWidth)
+                                .background(theme.keyboardBackgroundColor),
+                            reboundKeyboardType = reboundKeyboardType,
+                            onClickNumKey = { numKey ->
+                                onClickNumKey(numKey)
+                            }
                         )
                     }
-                }
-                KeyboardModeType.WARMUP_PICKER -> {
-                    WarmUpListPickerComponent(
-                        onSetText = ::setText,
-                        startingText = inputConnection?.getText()
-                    )
-                }
-                KeyboardModeType.RPE_PICKER -> {
-                    key(inputConnection) {
+                    KeyboardModeType.PLATE_CALCULATOR -> {
+                        key(LocalAppSettings.current.weightUnit) {
+                            PlateCalculatorComponent(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(
+                                        height = 250.dp,
+                                    ),
+                                weight = inputConnection?.getText()?.toDoubleOrNull() ?: 0.0
+                            )
+                        }
+                    }
+                    KeyboardModeType.WARMUP_PICKER -> {
+                        WarmUpListPickerComponent(
+                            onSetText = ::setText,
+                            startingText = inputConnection?.getText()
+                        )
+                    }
+                    KeyboardModeType.RPE_PICKER -> {
                         RpePickerComponent(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -150,6 +150,7 @@ fun ReboundSetKeyboardComponent(
                             text = inputConnection?.getText(),
                         )
                     }
+
                 }
             }
         }

@@ -171,6 +171,7 @@
     <string name="top_bar">Top Bar</string>
     <string name="title_alignment">Title alignment</string>
     <string name="work_set_kg">Work set (kg)</string>
+    <string name="work_set_lbs">Work set (lbs)</string>
     <string name="add_set">Add set</string>
     <string name="set">Set</string>
     <string name="formula">Formula</string>
@@ -231,4 +232,5 @@
     <string name="rpe_9_5_description">Could have maybe done 1 more rep</string>
     <string name="rpe_10_title">Max Effort</string>
     <string name="rpe_10_description">No more reps possible</string>
+    <string name="insert">Insert</string>
 </resources>
