@@ -234,4 +234,5 @@
     <string name="rpe_10_title">Max Effort</string>
     <string name="rpe_10_description">No more reps possible</string>
     <string name="insert">Insert</string>
+    <string name="personal_records">Personal records</string>
 </resources>

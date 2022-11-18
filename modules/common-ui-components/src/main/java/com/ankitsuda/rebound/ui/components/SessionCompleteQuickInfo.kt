@@ -60,15 +60,17 @@ fun SessionCompleteQuickInfo(
             contentDescription = stringResource(R.string.total_volume)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        SessionQuickInfoRowItem(
-            icon = Icons.Outlined.EmojiEvents,
-            text = pluralStringResource(
-                id = R.plurals.number_of_prs,
-                prs,
-                prs
-            ),
-            contentDescription = stringResource(R.string.total_volume)
-        )
+        if (prs > 0) {
+            SessionQuickInfoRowItem(
+                icon = Icons.Outlined.EmojiEvents,
+                text = pluralStringResource(
+                    id = R.plurals.number_of_prs,
+                    prs,
+                    prs
+                ),
+                contentDescription = stringResource(R.string.personal_records)
+            )
+        }
     }
 }
 
