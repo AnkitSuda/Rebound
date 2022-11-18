@@ -7,7 +7,7 @@ Feature Rich & Highly Customizable Workout Log App
  
 ## Donate
 
-<a href="https://www.buymeacoffee.com/ankitsuda"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="ankitsuda" /></a>
+<a href="https://www.buymeacoffee.com/ankitsuda" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ## Screenshots (Dummy data)
 
