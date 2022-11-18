@@ -63,7 +63,7 @@ fun PartMeasurementsScreen(
 
     val weightUnit = LocalAppSettings.current.weightUnit
 
-    val points by rememberSaveable(logs) {
+    val points by remember(logs) {
         mutableStateOf(
             if (logs?.isEmpty() == true) emptyList() else logs?.map {
                 LineChartData.Point(
