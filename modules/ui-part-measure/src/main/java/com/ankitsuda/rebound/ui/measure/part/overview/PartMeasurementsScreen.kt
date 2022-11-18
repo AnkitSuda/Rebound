@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.measure.part.overview
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,11 +24,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ankitsuda.base.util.fromKgToLbs
+import com.ankitsuda.common.compose.LocalAppSettings
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
@@ -40,8 +44,11 @@ import me.onebone.toolbar.*
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import com.ankitsuda.common.compose.R
+import com.ankitsuda.rebound.domain.WeightUnit
+import com.ankitsuda.rebound.ui.measure.part.overview.components.LogListItem
+import kotlin.math.log
 
-@OptIn(ExperimentalToolbarApi::class)
+@OptIn(ExperimentalToolbarApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun PartMeasurementsScreen(
     navController: NavController,
@@ -52,13 +59,24 @@ fun PartMeasurementsScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val bodyPart by viewModel.bodyPart.collectAsState(initial = null)
-    val logs by viewModel.logs.collectAsState(initial = emptyList())
+    val logs by viewModel.logs.collectAsState(initial = null)
 
-    val points = if (logs.isEmpty()) emptyList() else logs.map {
-        LineChartData.Point(it.measurement.toFloat(), it.createdAt.toString())
+    val weightUnit = LocalAppSettings.current.weightUnit
+
+    val points by rememberSaveable(logs) {
+        mutableStateOf(
+            if (logs?.isEmpty() == true) emptyList() else logs?.map {
+                LineChartData.Point(
+                    when (weightUnit) {
+                        WeightUnit.KG -> it.measurement
+                        WeightUnit.LBS -> it.measurement.fromKgToLbs()
+                    }.toFloat(), it.createdAt.toString()
+                )
+            }
+        )
     }
 
-    val showChart = points.size > 1
+    val showChart = (points?.size ?: 0) > 1
 
 
     ToolbarWithFabScaffold(
@@ -82,7 +100,10 @@ fun PartMeasurementsScreen(
                 }
 //
             }) {
-                Icon(imageVector = Icons.Outlined.Add, contentDescription = stringResource(id = R.string.add_measurement))
+                Icon(
+                    imageVector = Icons.Outlined.Add,
+                    contentDescription = stringResource(id = R.string.add_measurement)
+                )
             }
         },
         modifier = Modifier.background(MaterialTheme.colors.background)
@@ -95,37 +116,45 @@ fun PartMeasurementsScreen(
             contentPadding = PaddingValues(top = 16.dp, bottom = 72.dp)
         ) {
 
+            if (logs != null && points != null) {
 
-            if (showChart) {
-                item {
+                if (showChart) {
+                    item("chart") {
 
-                    AppCard(modifier = Modifier.padding(horizontal = 24.dp)) {
-                        ReboundChart(
-                            points = points,
+                        AppCard(
                             modifier = Modifier
-                                .height(250.dp)
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                        )
+                                .padding(horizontal = 24.dp)
+                                .animateItemPlacement()
+                        ) {
+                            ReboundChart(
+                                points = points!!,
+                                modifier = Modifier
+                                    .height(250.dp)
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                            )
 
+                        }
                     }
                 }
-            }
 
-            item {
-                Text(
-                    text = stringResource(id = R.string.history),
-                    style = ReboundTheme.typography.h6,
-                    color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-                    modifier = Modifier.padding(start = 24.dp, top = 20.dp, bottom = 10.dp)
-                )
-            }
+                item("title_history") {
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 24.dp, top = 20.dp, bottom = 10.dp)
+                            .animateItemPlacement(),
+                        text = stringResource(id = R.string.history),
+                        style = ReboundTheme.typography.h6,
+                        color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
+                    )
+                }
 
-            items(logs, key = { it.id }) { log ->
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .clickable {
+                items(logs!!, key = { it.id }) { log ->
+                    LogListItem(
+                        modifier = Modifier.animateItemPlacement(),
+                        log = log,
+                        bodyPart = bodyPart,
+                        onClick = {
                             navigator.navigate(
                                 LeafScreen.AddPartMeasurement.createRoute(
                                     partId = bodyPart?.id!!,
@@ -133,29 +162,9 @@ fun PartMeasurementsScreen(
                                 )
                             )
                         }
-                        .padding(horizontal = 24.dp, vertical = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = log.createdAt!!.format(
-                            DateTimeFormatter.ofLocalizedDateTime(
-                                FormatStyle.MEDIUM,
-                                FormatStyle.SHORT
-                            )
-                        ),
-                        style = ReboundTheme.typography.caption,
-                        color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-                        modifier = Modifier
-                    )
-                    Text(
-                        text = log.measurement.toString(),
-                        style = ReboundTheme.typography.body2,
-                        color = LocalThemeState.current.onBackgroundColor,
-                        modifier = Modifier
                     )
                 }
             }
-
         }
     }
 

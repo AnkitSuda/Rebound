@@ -25,6 +25,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ankitsuda.common.compose.collectEvent
+import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.domain.entities.BodyPart
@@ -32,7 +34,6 @@ import com.ankitsuda.rebound.domain.entities.BodyPartUnitType
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.measure.part.R
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
-import com.google.accompanist.insets.navigationBarsPadding
 
 @Composable
 fun AddPartMeasurementBottomSheet(
@@ -44,6 +45,10 @@ fun AddPartMeasurementBottomSheet(
     val fieldValue by viewModel.fieldValue.collectAsState("")
     val bodyPart by viewModel.bodyPart.collectAsState(initial = BodyPart(id = ""))
     val isCreateBtnEnabled = fieldValue.isNotBlank()
+
+    collectEvent(viewModel.eventsFlow) {
+        navigator.goBack()
+    }
 
     BottomSheetSurface {
         Column(
@@ -80,7 +85,7 @@ fun AddPartMeasurementBottomSheet(
                         .align(Alignment.CenterEnd)
                         .padding(16.dp),
                     text = when (bodyPart.unitType ?: BodyPartUnitType.LENGTH) {
-                        BodyPartUnitType.WEIGHT -> stringResource(id = R.string.kg)
+                        BodyPartUnitType.WEIGHT -> userPrefWeightUnitStr()
                         BodyPartUnitType.CALORIES -> stringResource(id = R.string.kcal)
                         BodyPartUnitType.PERCENTAGE -> "%"
                         BodyPartUnitType.LENGTH -> stringResource(id = R.string.inch_short)
@@ -111,7 +116,6 @@ fun AddPartMeasurementBottomSheet(
                     enabled = isCreateBtnEnabled,
                     onClick = {
                         viewModel.saveMeasurement()
-                        navigator.goBack()
                     },
                     modifier = Modifier.width(88.dp)
                 ) {
