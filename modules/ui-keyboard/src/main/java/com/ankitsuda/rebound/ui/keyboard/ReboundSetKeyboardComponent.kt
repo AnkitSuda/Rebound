@@ -139,16 +139,17 @@ fun ReboundSetKeyboardComponent(
                     )
                 }
                 KeyboardModeType.RPE_PICKER -> {
-                    RpePickerComponent(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                height = 250.dp,
-                            ),
-                        onSetText = ::setText,
-                        text = inputConnection?.getText(),
-                        refreshKey = inputConnection
-                    )
+                    key(inputConnection) {
+                        RpePickerComponent(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(
+                                    height = 250.dp,
+                                ),
+                            onSetText = ::setText,
+                            text = inputConnection?.getText(),
+                        )
+                    }
                 }
             }
         }

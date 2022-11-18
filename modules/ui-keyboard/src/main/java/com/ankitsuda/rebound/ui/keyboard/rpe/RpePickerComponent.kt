@@ -26,7 +26,7 @@ internal fun RpePickerComponent(
     modifier: Modifier,
     onSetText: (String) -> Unit,
     text: String?,
-    refreshKey: Any?,
+    refreshKey: Any? = null,
 ) {
     var rpe: Float? by remember(text) {
         mutableStateOf(text?.toFloatOrNull().takeIf { allRPEs.any { r -> r == it } })

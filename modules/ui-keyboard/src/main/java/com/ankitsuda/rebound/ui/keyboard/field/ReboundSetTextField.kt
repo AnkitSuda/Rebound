@@ -38,6 +38,7 @@ import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 
 @Composable
 fun RowScope.ReboundSetTextField(
+    layoutWeight: Float = 1.25f,
     value: String,
     contentColor: Color,
     bgColor: Color,
@@ -51,7 +52,7 @@ fun RowScope.ReboundSetTextField(
         modifier = Modifier
             .height(32.dp)
             .padding(start = 8.dp, end = 8.dp)
-            .weight(1.25f)
+            .weight(layoutWeight)
             .clip(RoundedCornerShape(12.dp))
             .background(bgColor.lighterOrDarkerColor(0.10f)),
     ) {

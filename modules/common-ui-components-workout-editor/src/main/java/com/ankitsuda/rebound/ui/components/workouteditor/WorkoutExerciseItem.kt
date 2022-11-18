@@ -644,6 +644,7 @@ private fun SetItemLayout(
             || exercise.category == ExerciseCategory.REPS
         ) {
             ReboundSetTextField(
+                layoutWeight = 0.75f,
                 value = exerciseLogEntry.rpe?.toReadableString() ?: "",
                 onValueChange = {
                     onRpeChange(exerciseLogEntry, it.toFloatOrNull())
