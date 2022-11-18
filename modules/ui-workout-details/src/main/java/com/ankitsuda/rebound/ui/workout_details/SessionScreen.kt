@@ -17,6 +17,7 @@ package com.ankitsuda.rebound.ui.workout_details
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
@@ -142,7 +143,7 @@ fun SessionScreen(
             contentPadding = PaddingValues(24.dp)
         ) {
             if (!workout?.personalRecords.isNullOrEmpty()) {
-                item {
+                item(key = "prs") {
                     PersonalRecordsRowComponent(
                         modifier = Modifier
                             .padding(bottom = 10.dp),
@@ -151,7 +152,7 @@ fun SessionScreen(
                 }
             }
 
-            item {
+            item("quick_info") {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -194,17 +195,15 @@ fun SessionScreen(
                 }
             }
 
-            for (log in logs) {
-                item() {
-                    SessionExerciseCardItem(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 20.dp),
-                        supersetId = log.junction.supersetId,
-                        title = log.exercise.name ?: "",
-                        entries = log.logEntries
-                    )
-                }
+            items(logs, key = { it.junction.id }) { log ->
+                SessionExerciseCardItem(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp),
+                    supersetId = log.junction.supersetId,
+                    title = log.exercise.name ?: "",
+                    entries = log.logEntries
+                )
             }
         }
 

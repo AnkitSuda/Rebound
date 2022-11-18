@@ -172,24 +172,22 @@ fun SessionExerciseSetItem(
             }
 
             RSpacer(16.dp)
-            // TODO: Move to strings.xml
-            Text(text = buildAnnotatedString {
-                withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
-                    append(entry.weight.kgToUserPrefStr())
-                }
-                withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
-                    append(" ${userPrefWeightUnitStr()}")
-                }
-            })
+            SetColumnItem(
+                value = entry.weight.kgToUserPrefStr(),
+                title = userPrefWeightUnitStr()
+            )
             RSpacer(20.dp)
-            Text(text = buildAnnotatedString {
-                withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
-                    append((entry.reps ?: 0).toString())
-                }
-                withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
-                    append(" reps")
-                }
-            })
+            SetColumnItem(
+                value = (entry.reps ?: 0).toString(),
+                title = stringResource(id = R.string.reps_lowercase)
+            )
+            entry.rpe?.let {
+                RSpacer(20.dp)
+                SetColumnItem(
+                    value = it.toReadableString() ?: "",
+                    title = stringResource(id = R.string.rpe)
+                )
+            }
         }
 
         if (!entry.personalRecords.isNullOrEmpty()) {
@@ -200,6 +198,18 @@ fun SessionExerciseSetItem(
             )
         }
     }
+}
+
+@Composable
+fun SetColumnItem(value: String, title: String) {
+    Text(text = buildAnnotatedString {
+        withStyle(style = SpanStyle(ReboundTheme.colors.onBackground)) {
+            append(value)
+        }
+        withStyle(style = SpanStyle(ReboundTheme.colors.onBackground.copy(alpha = 0.65f))) {
+            append(" $title")
+        }
+    })
 }
 
 @Composable

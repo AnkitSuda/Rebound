@@ -181,6 +181,7 @@
     <string name="add_exercise">Add Exercise</string>
     <string name="cancel_workout">Cancel Workout</string>
     <string name="reps">Reps</string>
+    <string name="reps_lowercase">reps</string>
     <string name="time">Time</string>
     <string name="volume">Volume</string>
     <string name="sets">Sets</string>
