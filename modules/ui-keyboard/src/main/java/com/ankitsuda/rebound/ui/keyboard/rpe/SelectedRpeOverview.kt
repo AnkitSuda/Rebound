@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.rebound.ui.keyboard.R
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -32,6 +33,10 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 internal fun SelectedRpeOverview(modifier: Modifier, rpe: Float?) {
     var lastRpe by remember { mutableStateOf(rpe) }
     var mRpe by remember { mutableStateOf(rpe) }
+
+    val theme = LocalThemeState.current
+
+    val contentColor = theme.keyboardContentColor
 
     SideEffect {
         if (mRpe != rpe) {
@@ -106,17 +111,17 @@ internal fun SelectedRpeOverview(modifier: Modifier, rpe: Float?) {
         ) {
             Text(
                 text = if (it != null) it.toReadableString() else "?",
-                style = ReboundTheme.typography.h3
+                style = ReboundTheme.typography.h3.copy(color = contentColor)
             )
             Text(
                 text = title,
-                style = ReboundTheme.typography.subtitle1.copy(color = ReboundTheme.colors.onBackground)
+                style = ReboundTheme.typography.subtitle1.copy(color = contentColor)
             )
 
             Text(
                 text = description ?: "",
                 style = ReboundTheme.typography.subtitle1.copy(
-                    color = ReboundTheme.colors.onBackground.copy(alpha = 0.75f)
+                    color = contentColor.copy(alpha = 0.75f)
                 )
             )
         }

@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.rebound.ui.components.numberpicker.ListItemPicker
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
+import com.ankitsuda.rebound.ui.theme.ReboundTheme
 
 @Composable
 internal fun WarmUpListPickerComponent(
@@ -38,6 +40,8 @@ internal fun WarmUpListPickerComponent(
     }
     var weightState by remember { mutableStateOf(allWeights[0]) }
     var repState by remember { mutableStateOf(allReps[0]) }
+
+    val contentColor = LocalThemeState.current.keyboardContentColor
 
     LaunchedEffect(startingText) {
         val arr = startingText?.split(" x ") ?: return@LaunchedEffect
@@ -63,13 +67,15 @@ internal fun WarmUpListPickerComponent(
                 weightState = it
                 setText()
             },
-            list = allWeights
+            list = allWeights,
+            textStyle = ReboundTheme.typography.body1.copy(color = contentColor)
         )
 
         Text(
             modifier = Modifier.weight(0.2f),
             text = "X",
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = contentColor
         )
 
         ListItemPicker(
@@ -80,7 +86,8 @@ internal fun WarmUpListPickerComponent(
                 repState = it
                 setText()
             },
-            list = allReps
+            list = allReps,
+            textStyle = ReboundTheme.typography.body1.copy(color = contentColor)
         )
     }
 

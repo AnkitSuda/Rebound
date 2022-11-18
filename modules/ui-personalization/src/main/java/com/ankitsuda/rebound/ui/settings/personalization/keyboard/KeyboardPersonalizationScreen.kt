@@ -132,9 +132,9 @@ private fun KeyboardPersonalizationScreen(
                 ColorPickerCardItem(
                     modifier = itemModifier,
                     text = stringResource(id = R.string.on_barbell_color),
-                    selectedColor = themeState.keyboardBarbellColor,
+                    selectedColor = themeState.keyboardOnBarbellColor,
                     onNewColorSelected = {
-                        setThemeState(themeState.copy(keyboardBarbellColor = it))
+                        setThemeState(themeState.copy(keyboardOnBarbellColor = it))
                     })
             }
         }

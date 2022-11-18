@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.ankitsuda.base.util.toLegacyInt
 import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import kotlin.math.roundToInt
 
@@ -55,10 +56,11 @@ internal fun RpeSlider(
     val lineHeightPx = with(LocalDensity.current) { lineHeightDp.toPx() }
     val canvasHeight = 50.dp
     val textPaint = android.graphics.Paint().apply {
-        color = ReboundTheme.colors.onBackground.toLegacyInt()
+        color = LocalThemeState.current.keyboardContentColor.toLegacyInt()
         textAlign = android.graphics.Paint.Align.CENTER
         this.textSize = textSize
     }
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
