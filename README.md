@@ -70,8 +70,7 @@ in use-
 
 ## Contribution
 
-App is under really heavy development, so I'll be not accepting any contributions right now.
-Contributions will be open once the app is stable enough.
+I'll be not accepting any contributions right now.
 
 ## License
 
