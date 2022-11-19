@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -108,7 +109,9 @@ private fun MainLayout(
         initial = AppSettings.defValues()
     )
 
-    val panelHidden = currentWorkoutId == NONE_WORKOUT_ID
+    val panelHidden by rememberSaveable(currentWorkoutId) {
+        mutableStateOf(currentWorkoutId == NONE_WORKOUT_ID)
+    }
 
     var dialogContent: @Composable () -> Unit by remember {
         mutableStateOf({})
@@ -133,6 +136,10 @@ private fun MainLayout(
     val mainPanel = MainPanel(
         swipeableState = swipeableState
     )
+
+    LaunchedEffect(key1 = panelHidden) {
+        swipeableState.animateTo(if (panelHidden) 0 else 1)
+    }
 
     ReboundThemeWrapper(themeState = themeState) {
         NavigatorHost {
@@ -160,7 +167,6 @@ private fun MainLayout(
                         ) {
                             val navigator = LocalNavigator.current
                             MainScreenScaffold(
-                                modifier = Modifier,
                                 panelHidden = panelHidden,
                                 swipeableState = swipeableState,
                                 bottomBar = {
