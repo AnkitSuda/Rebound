@@ -138,15 +138,18 @@ fun ExerciseDetailScreen(
             verticalAlignment = Alignment.Top,
             count = 3,
         ) { index ->
-            when (index) {
-                0 -> {
-                    ExerciseDetailChartsTab(charts)
-                }
-                1 -> {
-                    ExerciseDetailHistoryTab(logEntriesWithWorkoutList)
-                }
-                2 -> {
-                    exercise?.let {
+            exercise?.let {
+                when (index) {
+                    0 -> {
+                        ExerciseDetailChartsTab(charts)
+                    }
+                    1 -> {
+                        ExerciseDetailHistoryTab(
+                            exercise = it,
+                            list = logEntriesWithWorkoutList
+                        )
+                    }
+                    2 -> {
                         ExerciseDetailAboutTab(it)
                     }
                 }

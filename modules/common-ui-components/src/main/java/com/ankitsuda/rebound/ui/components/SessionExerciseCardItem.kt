@@ -16,10 +16,8 @@ package com.ankitsuda.rebound.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Chip
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -45,15 +43,16 @@ import com.ankitsuda.base.util.colorFromSupersetId
 import com.ankitsuda.base.util.isDark
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.base.utils.toDurationStr
 import com.ankitsuda.common.compose.kgToUserPrefStr
+import com.ankitsuda.common.compose.kmToUserPrefStr
+import com.ankitsuda.common.compose.userPrefDistanceUnitStr
 import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.rebound.domain.*
-import com.ankitsuda.rebound.domain.entities.Exercise
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 
 
@@ -68,6 +67,7 @@ fun SessionExerciseCardItem(
     title: String?,
     subtitle: String? = null,
     supersetId: Int? = null,
+    exerciseCategory: ExerciseCategory,
     entries: List<ExerciseLogEntry>
 ) {
     val sortedEntries by remember(key1 = entries) {
@@ -137,6 +137,7 @@ fun SessionExerciseCardItem(
                     val entry = sortedEntries[i]
                     SessionExerciseSetItem(
                         entry = entry,
+                        exerciseCategory = exerciseCategory,
                         revisedSetText = revisedSetsTexts[sortedEntries.indexOf(entry)],
                     )
                     if (i != sortedEntries.size - 1) {
@@ -151,6 +152,7 @@ fun SessionExerciseCardItem(
 @Composable
 fun SessionExerciseSetItem(
     entry: ExerciseLogEntry,
+    exerciseCategory: ExerciseCategory,
     revisedSetText: Pair<String, Color?>,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -177,14 +179,28 @@ fun SessionExerciseSetItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                SetColumnItem(
-                    value = entry.weight.kgToUserPrefStr(),
-                    title = userPrefWeightUnitStr()
-                )
-                SetColumnItem(
-                    value = (entry.reps ?: 0).toString(),
-                    title = stringResource(id = R.string.reps_lowercase)
-                )
+                when (exerciseCategory) {
+                    ExerciseCategory.WEIGHTS_AND_REPS -> SetColumnItem(
+                        value = entry.weight.kgToUserPrefStr(),
+                        title = userPrefWeightUnitStr()
+                    )
+                    ExerciseCategory.DISTANCE_AND_TIME -> SetColumnItem(
+                        value = entry.distance.kmToUserPrefStr(),
+                        title = userPrefDistanceUnitStr()
+                    )
+                    else -> {}
+                }
+                when (exerciseCategory) {
+                    ExerciseCategory.WEIGHTS_AND_REPS, ExerciseCategory.REPS -> SetColumnItem(
+                        value = (entry.reps ?: 0).toString(),
+                        title = stringResource(id = R.string.reps_lowercase)
+                    )
+                    ExerciseCategory.DISTANCE_AND_TIME, ExerciseCategory.TIME -> SetColumnItem(
+                        value = (entry.timeRecorded ?: 0).toString(),
+                        title = stringResource(id = R.string.time)
+                    )
+                    else -> {}
+                }
                 entry.rpe?.let {
                     SetColumnItem(
                         value = it.toReadableString() ?: "",

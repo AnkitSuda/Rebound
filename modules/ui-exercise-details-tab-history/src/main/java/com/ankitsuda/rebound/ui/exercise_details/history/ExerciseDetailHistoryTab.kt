@@ -20,13 +20,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.rebound.domain.entities.Exercise
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithWorkout
 import com.ankitsuda.rebound.ui.components.SessionExerciseCardItem
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 @Composable
-fun ExerciseDetailHistoryTab(list: List<LogEntriesWithWorkout>) {
+fun ExerciseDetailHistoryTab(
+    exercise: Exercise,
+    list: List<LogEntriesWithWorkout>
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
@@ -43,6 +47,7 @@ fun ExerciseDetailHistoryTab(list: List<LogEntriesWithWorkout>) {
                     .padding(bottom = 16.dp),
                 onClick = { },
                 title = workout.name,
+                exerciseCategory = exercise.category,
                 subtitle = (workout.startAt ?: workout.createdAt)?.format(
                     DateTimeFormatter.ofLocalizedDateTime(
                         FormatStyle.MEDIUM,

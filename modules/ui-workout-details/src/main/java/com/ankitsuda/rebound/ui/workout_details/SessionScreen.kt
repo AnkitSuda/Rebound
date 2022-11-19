@@ -202,6 +202,7 @@ fun SessionScreen(
                         .padding(bottom = 20.dp),
                     supersetId = log.junction.supersetId,
                     title = log.exercise.name ?: "",
+                    exerciseCategory = log.exercise.category,
                     entries = log.logEntries
                 )
             }
