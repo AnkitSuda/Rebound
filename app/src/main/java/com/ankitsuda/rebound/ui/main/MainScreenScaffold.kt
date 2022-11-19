@@ -157,7 +157,7 @@ fun MainScreenScaffold(
                         state = swipeableState,
                         anchors = anchors,
                         thresholds = { _, _ ->
-                            // Automaticly toggle the state when user lifts the finger
+                            // Automatically toggle the state when user lifts the finger
                             // when drag is reached 0.1f FractionalThreshold
                             FractionalThreshold(0.1f)
                         },
@@ -173,7 +173,7 @@ fun MainScreenScaffold(
                                 source: NestedScrollSource
                             ): Offset {
                                 val delta = available.y
-                                return if (delta < 0) {
+                                return if (delta < 0 && source == NestedScrollSource.Drag) {
                                     // User is moving the finger upwards. If the gesture goes in that direction,
                                     // we’re scrolling either the draggable composable or the scrollable inner content.
                                     Offset(0f, swipeableState.performDrag(delta))
@@ -189,15 +189,19 @@ fun MainScreenScaffold(
                                 available: Offset,
                                 source: NestedScrollSource
                             ): Offset {
-                                val delta = available.y
                                 // if the list has finished scrolling, we will pass all the leftover space
                                 // to performDrag that will drag if necessary.
-                                return Offset(0f, swipeableState.performDrag(delta))
+                                return if (source == NestedScrollSource.Drag) {
+                                    val delta = available.y
+                                    Offset(0f, swipeableState.performDrag(delta))
+                                } else {
+                                    Offset.Zero
+                                }
                             }
 
                             // Same as preScroll but this time we handle the fling
                             override suspend fun onPreFling(available: Velocity): Velocity {
-                                return if (available.y < 0 && swipeableState.currentValue == 0) {
+                                return if (available.y < 0 && swipeableState.currentValue == 0 && swipeableState.offset.value > Float.NEGATIVE_INFINITY) {
                                     swipeableState.performFling(available.y)
                                     available
                                 } else {
@@ -399,8 +403,4 @@ fun MainScreenScaffold(
 
         }
     }
-}
-
-private enum class MainScreenScaffoldContent {
-    Body, BottomBar, WorkoutPanel, StatusBar, PanelScrim
 }
