@@ -186,7 +186,11 @@ fun WorkoutEditorComponent(
                     onUpdateLogEntry(updatedEntry)
                 },
                 onSwipeDelete = { entryToDelete ->
-                    onDeleteLogEntry(entryToDelete)
+                    if (logEntriesWithJunctionItem.logEntries.size == 1) {
+                        onDeleteExerciseFromWorkout(logEntriesWithJunctionItem)
+                    } else {
+                        onDeleteLogEntry(entryToDelete)
+                    }
                 },
                 onAddSet = {
                     onAddEmptySetToExercise(
