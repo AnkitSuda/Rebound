@@ -4,12 +4,14 @@ Feature Rich & Highly Customizable Workout Log App
 
 > Rebound app is currently under heavy development, many things may be
 > changed or completely removed in future.
+> App will stay open source until first stable release, after that
+> further development will be closed sourced.
  
 ## Donate
 
 <a href="https://www.buymeacoffee.com/ankitsuda" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
-## Screenshots (Dummy data)
+## Screenshots (Outdated)
 
 | <img src="arts/workout_panel.png" width="200"/> | <img src="arts/workout_tab.png" width="200"/> | <img src="arts/history_tab.png" width="200"/> | 
 |:---:|:---:|:---:|
