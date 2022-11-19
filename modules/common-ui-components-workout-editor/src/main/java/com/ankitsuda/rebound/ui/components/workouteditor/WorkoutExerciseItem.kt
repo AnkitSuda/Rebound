@@ -38,9 +38,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.*
-import com.ankitsuda.common.compose.LocalAppSettings
-import com.ankitsuda.common.compose.kgToUserPrefStr
-import com.ankitsuda.common.compose.userPrefWeightUnitStr
+import com.ankitsuda.common.compose.*
+import com.ankitsuda.rebound.domain.DistanceUnit
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.WeightUnit
@@ -209,7 +208,7 @@ fun LazyListScope.workoutExerciseItemAlt(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "SET",
+                text = stringResource(id = R.string.set_uppercase),
                 style = ReboundTheme.typography.caption,
                 color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center,
@@ -226,22 +225,22 @@ fun LazyListScope.workoutExerciseItemAlt(
                 || exercise.category == ExerciseCategory.DISTANCE_AND_TIME
             ) {
                 Text(
-                    text = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) userPrefWeightUnitStr().toUpperCase(
-                        Locale.getDefault()
-                    ) else "KM",
+                    text = when (exercise.category) {
+                        ExerciseCategory.WEIGHTS_AND_REPS -> userPrefWeightUnitStr(case = 1)
+                        ExerciseCategory.DISTANCE_AND_TIME -> userPrefDistanceUnitStr(case = 1)
+                        else -> "?"
+                    },
                     style = ReboundTheme.typography.caption,
                     color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.weight(1.25f)
                 )
             }
-            val repsString = stringResource(id = R.string.reps)
-            val timeString = stringResource(id = R.string.time)
 
             Text(
                 text = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
                     || exercise.category == ExerciseCategory.REPS
-                ) repsString else timeString,
+                ) stringResource(id = R.string.reps_uppercase) else stringResource(id = R.string.time_uppercase),
                 style = ReboundTheme.typography.caption,
                 color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center,
@@ -300,12 +299,10 @@ fun LazyListScope.workoutExerciseItemAlt(
     val revisedSetsTexts = getRevisedSetNumbers()
 
     items(items = sortedEntries, key = {
-//        "${it.entryId}_${it.rpe}"
-//        "${it.entryId}_${it.setNumber}"
-//        "${it.entryId}_${weightUnit}"
         it.entryId
     }) { entry ->
-        key(LocalAppSettings.current.weightUnit) {
+        val appSettings = LocalAppSettings.current
+        key(appSettings.weightUnit, appSettings.distanceUnit) {
             SetItem(
                 useReboundKeyboard = useReboundKeyboard,
                 revisedSetText = revisedSetsTexts[sortedEntries.indexOf(entry)],
@@ -553,30 +550,43 @@ private fun SetItemLayout(
 
         if (exercise.category == ExerciseCategory.DISTANCE_AND_TIME || exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
             val currentWeightUnit = LocalAppSettings.current.weightUnit
+            val currentDistanceUnit = LocalAppSettings.current.distanceUnit
 
-            val fieldValue = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
-                exerciseLogEntry.weight?.kgToUserPrefStr() ?: ""
-            } else {
-                exerciseLogEntry.distance?.toReadableString() ?: ""
+            val fieldValue = when (exercise.category) {
+                ExerciseCategory.WEIGHTS_AND_REPS -> {
+                    exerciseLogEntry.weight?.kgToUserPrefStr() ?: ""
+                }
+                ExerciseCategory.DISTANCE_AND_TIME -> {
+                    exerciseLogEntry.distance?.kmToUserPrefStr() ?: ""
+                }
+                else -> ""
             }
 
             fun mOnValueChange(value: String) {
+                when (exercise.category) {
+                    ExerciseCategory.WEIGHTS_AND_REPS -> {
+                        var newValue =
+                            (if (value.isBlank()) null else value.trim()/*.filter { it.isDigit() }*/
+                                .toDoubleOrNull())
 
-                if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
-                    var newValue =
-                        (if (value.isBlank()) null else value.trim()/*.filter { it.isDigit() }*/
-                            .toDoubleOrNull())
+                        if (currentWeightUnit == WeightUnit.LBS) {
+                            newValue = newValue?.fromLbsToKg()
+                        }
 
-                    if (currentWeightUnit == WeightUnit.LBS) {
-                        newValue = newValue?.fromLbsToKg()
+                        onWeightChange(exerciseLogEntry, newValue)
                     }
+                    ExerciseCategory.DISTANCE_AND_TIME -> {
+                        var newValue =
+                            (if (value.isBlank()) null else value.trim()
+                                .toDoubleOrNull())
 
-                    onWeightChange(exerciseLogEntry, newValue)
-                } else {
-                    val newValue =
-                        (if (value.isBlank()) null else value.trim()/*.filter { it.isDigit() }*/
-                            .toDoubleOrNull())
-                    onDistanceChange(exerciseLogEntry, newValue)
+                        if (currentDistanceUnit == DistanceUnit.MILES) {
+                            newValue = newValue?.fromMilesToKm()
+                        }
+
+                        onDistanceChange(exerciseLogEntry, newValue)
+                    }
+                    else -> {}
                 }
             }
 

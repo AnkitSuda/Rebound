@@ -48,6 +48,7 @@ import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.common.compose.kgToUserPrefStr
 import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.rebound.domain.*
+import com.ankitsuda.rebound.domain.entities.Exercise
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -154,7 +155,8 @@ fun SessionExerciseSetItem(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -171,22 +173,24 @@ fun SessionExerciseSetItem(
                 )
             }
 
-            RSpacer(16.dp)
-            SetColumnItem(
-                value = entry.weight.kgToUserPrefStr(),
-                title = userPrefWeightUnitStr()
-            )
-            RSpacer(20.dp)
-            SetColumnItem(
-                value = (entry.reps ?: 0).toString(),
-                title = stringResource(id = R.string.reps_lowercase)
-            )
-            entry.rpe?.let {
-                RSpacer(20.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
                 SetColumnItem(
-                    value = it.toReadableString() ?: "",
-                    title = stringResource(id = R.string.rpe)
+                    value = entry.weight.kgToUserPrefStr(),
+                    title = userPrefWeightUnitStr()
                 )
+                SetColumnItem(
+                    value = (entry.reps ?: 0).toString(),
+                    title = stringResource(id = R.string.reps_lowercase)
+                )
+                entry.rpe?.let {
+                    SetColumnItem(
+                        value = it.toReadableString() ?: "",
+                        title = stringResource(id = R.string.rpe)
+                    )
+                }
             }
         }
 

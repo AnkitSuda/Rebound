@@ -18,6 +18,7 @@ import java.text.DecimalFormat
 
 const val NONE_WORKOUT_ID = "none"
 const val LBS_IN_KG = 2.20462262185
+const val MILES_IN_KM = 0.62137119224
 
 fun Float.cmprs(min: Float, max: Float) = min + (max - min) * this
 fun Float.cmprs(min: Int, max: Int) = this.cmprs(min.toFloat(), max.toFloat())
@@ -32,5 +33,11 @@ fun Float.toStringP15() = DecimalFormat("#.###############").format(this)
 fun Double.fromLbsToKg() = this / LBS_IN_KG
 fun Double.fromKgToLbs() = this * LBS_IN_KG
 
+fun Double.fromMilesToKm() = this / MILES_IN_KM
+fun Double.fromKmToMiles() = this * MILES_IN_KM
+
 fun Double.fromKgToLbsReadable() = DecimalFormat("#.##").format(fromKgToLbs())
 fun Double.kgToReadable() = DecimalFormat("#.##").format(this)
+
+fun Double.fromKmToMilesReadable(): String = DecimalFormat("#.###").format(fromKmToMiles())
+fun Double.kmToReadable(): String = DecimalFormat("#.###").format(this)

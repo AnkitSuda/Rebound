@@ -13,8 +13,18 @@
   -->
 <resources>
     <string name="measurement">Measurement</string>
-    <string name="kg">kg</string>
-    <string name="lbs">lbs</string>
+    <string name="kg">Kg</string>
+    <string name="kg_lowercase">kg</string>
+    <string name="kg_uppercase">KG</string>
+    <string name="lbs">Lbs</string>
+    <string name="lbs_lowercase">lbs</string>
+    <string name="lbs_uppercase">LBS</string>
+    <string name="km">Km</string>
+    <string name="km_lowercase">km</string>
+    <string name="km_uppercase">KM</string>
+    <string name="miles">Miles</string>
+    <string name="miles_lowercase">miles</string>
+    <string name="miles_uppercase">MILES</string>
     <string name="kcal">kcal</string>
     <string name="inch_short">in</string>
     <string name="delete">Delete</string>
@@ -182,9 +192,12 @@
     <string name="cancel_workout">Cancel Workout</string>
     <string name="reps">Reps</string>
     <string name="reps_lowercase">reps</string>
+    <string name="reps_uppercase">REPS</string>
     <string name="time">Time</string>
+    <string name="time_uppercase">TIME</string>
     <string name="volume">Volume</string>
     <string name="sets">Sets</string>
+    <string name="set_uppercase">SET</string>
     <string name="this_week">This Week</string>
     <string name="this_month">This Month</string>
     <string name="last_month">Last Month</string>
