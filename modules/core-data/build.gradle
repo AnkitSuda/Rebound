@@ -57,6 +57,7 @@ dependencies {
     api project(":modules:common-data")
     api project(":modules:common-ui-compose")
 
+    api Deps.Android.Room.paging
     api Deps.Kotlin.stdlib
 
     kapt Deps.Dagger.hiltCompiler

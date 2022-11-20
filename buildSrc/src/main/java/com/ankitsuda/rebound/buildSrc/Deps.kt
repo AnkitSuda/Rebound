@@ -68,7 +68,7 @@ object Deps {
             const val liveData = "androidx.compose.runtime:runtime-livedata:$version"
             const val activity = "androidx.activity:activity-compose:$activityVersion"
             const val viewModels = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
-            const val paging = "androidx.paging:paging-compose:1.0.0-alpha14"
+            const val paging = "androidx.paging:paging-compose:1.0.0-alpha17"
 
 //            private const val lottieVersion = "4.2.0"
 //            const val lottie = "com.airbnb.android:lottie-compose:$lottieVersion"
@@ -127,7 +127,7 @@ object Deps {
         }
 
         object Paging {
-            private const val version = "3.1.0-beta01"
+            private const val version = "3.1.1"
 
             const val common = "androidx.paging:paging-common-ktx:$version"
             const val runtime = "androidx.paging:paging-runtime-ktx:$version"

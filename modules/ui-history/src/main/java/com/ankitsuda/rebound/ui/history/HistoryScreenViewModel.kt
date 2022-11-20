@@ -16,11 +16,17 @@ package com.ankitsuda.rebound.ui.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.insertSeparators
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
+import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
+import com.ankitsuda.rebound.domain.entities.CountWithDate
+import com.ankitsuda.rebound.domain.entities.WorkoutWithExtraInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.map
-import java.time.LocalDate
+import kotlinx.coroutines.flow.*
+import timber.log.Timber
 import java.time.temporal.TemporalAdjusters
 import javax.inject.Inject
 
@@ -28,11 +34,37 @@ import javax.inject.Inject
 class HistoryScreenViewModel @Inject constructor(
     private val workoutsRepository: WorkoutsRepository,
 ) : ViewModel() {
-    val workouts = workoutsRepository.getWorkoutsWithExtraInfo()
+    val workouts = workoutsRepository.getWorkoutsWithExtraInfoPaged()
         .map {
-            it.groupBy { w ->
-                w.workout?.completedAt?.toLocalDate()?.with(TemporalAdjusters.firstDayOfMonth())
+            mapData(it)
+        }
+        .cachedIn(viewModelScope)
+        .shareWhileObserved(viewModelScope)
+
+    private fun mapData(pagingData: PagingData<WorkoutWithExtraInfo>) =
+        pagingData.insertSeparators { before, after ->
+            if (after != null) {
+                val afterDate = after.workout?.completedAt?.toLocalDate()
+                    ?.with(TemporalAdjusters.firstDayOfMonth())
+
+                val beforeDate = before?.workout?.completedAt?.toLocalDate()
+                    ?.with(TemporalAdjusters.firstDayOfMonth())
+
+                if (after.workout?.completedAt != null && afterDate != null && beforeDate != afterDate) {
+                    val mWorkoutsCounts = workoutsRepository.getWorkoutsCountOnMonth(
+                        date = after.workout!!.completedAt!!.toEpochMillis()
+                    ).firstOrNull()
+
+                    CountWithDate(
+                        date = afterDate.toEpochMillis(),
+                        count = mWorkoutsCounts ?: 0
+                    )
+                } else {
+                    null
+                }
+            } else {
+                null
             }
         }
-        .shareWhileObserved(viewModelScope);
+
 }

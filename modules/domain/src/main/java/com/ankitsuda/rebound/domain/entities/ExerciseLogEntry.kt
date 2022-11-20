@@ -82,3 +82,7 @@ fun List<ExerciseLogEntry>.calculateTotalVolume(): Double {
     }
     return volume
 }
+
+fun List<ExerciseLogEntry>.getTotalPRs(workoutPrs: Int? = null): Int {
+    return sumOf { it.personalRecords?.size ?: 0 } + (workoutPrs ?: 0)
+}

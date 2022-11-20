@@ -14,6 +14,9 @@
 
 package com.ankitsuda.rebound.data.repositories
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.map
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
@@ -226,6 +229,40 @@ class WorkoutsRepository @Inject constructor(
             it.calculateTotalVolume()
         }
 
+    private suspend fun getWorkoutExtraInfo(workout: Workout): WorkoutWithExtraInfo {
+        val totalVolume =
+            getTotalVolumeLiftedByWorkoutId(workoutId = workout.id).firstOrNull()
+
+        val totalExercises =
+            getExercisesCountByWorkoutId(workoutId = workout.id).firstOrNull()
+
+        var totalPRs = 0
+
+        val totalPRsOfEntries =
+            getPRsCountOfEntriesByWorkoutId(workoutId = workout.id).firstOrNull()
+
+        totalPRs += workout.personalRecords?.size ?: 0
+        totalPRs += totalPRsOfEntries ?: 0
+
+
+        return WorkoutWithExtraInfo(
+            workout = workout,
+            totalVolume = totalVolume,
+            totalExercises = totalExercises,
+            totalPRs = totalPRs
+        )
+    }
+
+    private suspend fun getWorkoutsExtraInfo(workouts: List<Workout>): List<WorkoutWithExtraInfo> {
+        val mWorkouts = arrayListOf<WorkoutWithExtraInfo>()
+        for (workout in workouts) {
+            mWorkouts.add(
+                getWorkoutExtraInfo(workout)
+            )
+        }
+
+        return mWorkouts.toList()
+    }
 
     fun getWorkoutsWithExtraInfo(date: LocalDate? = null) =
         workoutsDao.getAllWorkoutsRawQuery(
@@ -234,39 +271,36 @@ class WorkoutsRepository @Inject constructor(
                 if (date != null) arrayOf<Any>(date.toEpochMillis()) else arrayOf()
             )
         ).map {
-            val mWorkouts = arrayListOf<WorkoutWithExtraInfo>()
-            for (workout in it) {
-                val totalVolume =
-                    getTotalVolumeLiftedByWorkoutId(workoutId = workout.id).firstOrNull()
-
-                val totalExercises =
-                    getExercisesCountByWorkoutId(workoutId = workout.id).firstOrNull()
-
-                var totalPRs = 0
-
-                val totalPRsOfEntries =
-                    getPRsCountOfEntriesByWorkoutId(workoutId = workout.id).firstOrNull()
-
-                totalPRs += workout.personalRecords?.size ?: 0
-                totalPRs += totalPRsOfEntries ?: 0
-
-                mWorkouts.add(
-                    WorkoutWithExtraInfo(
-                        workout = workout,
-                        totalVolume = totalVolume,
-                        totalExercises = totalExercises,
-                        totalPRs = totalPRs
-                    )
-                )
-            }
-
-            mWorkouts.toList()
+            getWorkoutsExtraInfo(it)
         }
+
+//    fun getWorkoutsWithExtraInfoAlt() = workoutsDao.getWorkoutsWithExtraInfoAlt()
+
+    fun getWorkoutsWithExtraInfoPaged() =
+        Pager(PagingConfig(pageSize = 15)) {
+            workoutsDao.getWorkoutsWithExtraInfoAltPaged()
+        }
+            .flow.map {
+                it.map { item ->
+                    val logEntries = item.junctions?.flatMap { j -> j.logEntries }
+                    WorkoutWithExtraInfo(
+                        workout = item.workout,
+                        totalVolume = logEntries?.calculateTotalVolume(),
+                        totalExercises = item.junctions?.size,
+                        totalPRs = logEntries?.getTotalPRs(item.workout?.personalRecords?.size)
+                    )
+                }
+            }
 
     fun getWorkoutsCountOnDateRange(dateStart: LocalDate, dateEnd: LocalDate) =
         workoutsDao.getWorkoutsCountOnDateRange(
             dateStart = dateStart.toEpochMillis(),
             dateEnd = dateEnd.toEpochMillis()
+        )
+
+    fun getWorkoutsCountOnMonth(date: Long) =
+        workoutsDao.getWorkoutsCountOnMonth(
+            date = date
         )
 
     fun getExerciseLogByLogId(logId: String) = workoutsDao.getExerciseLogByLogId(logId)

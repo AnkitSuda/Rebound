@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.data.db.daos
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.ankitsuda.base.utils.generateId
@@ -143,8 +144,19 @@ interface WorkoutsDao {
     @RawQuery(observedEntities = [Workout::class, ExerciseLogEntry::class, ExerciseWorkoutJunction::class])
     fun getAllWorkoutsRawQuery(query: SupportSQLiteQuery): Flow<List<Workout>>
 
+    @RawQuery(observedEntities = [Workout::class, ExerciseLogEntry::class, ExerciseWorkoutJunction::class])
+    fun getAllWorkoutsRawQueryPaged(query: SupportSQLiteQuery): PagingSource<Int, Workout>
+
     @Query("SELECT COUNT(*) as count, start_at as date FROM workouts WHERE date(start_at / 1000,'unixepoch') >= date(:dateStart / 1000,'unixepoch') AND date(start_at / 1000,'unixepoch') <= date(:dateEnd / 1000,'unixepoch') AND is_hidden = 0 AND in_progress = 0 GROUP BY start_at")
     fun getWorkoutsCountOnDateRange(dateStart: Long, dateEnd: Long): Flow<List<CountWithDate>>
+
+    @Query("""
+        SELECT SUM(count) FROM (SELECT COUNT(*) as count FROM workouts WHERE 
+date(start_at / 10000,'unixepoch') >= date(:date / 10000,'unixepoch') AND
+ date(start_at / 10000,'unixepoch') <= date(:date / 10000,'unixepoch') 
+AND is_hidden = 0 AND in_progress = 0 GROUP BY start_at)
+    """)
+    fun getWorkoutsCountOnMonth(date: Long): Flow<Long>
 
     @Query("SELECT * FROM exercise_logs WHERE id = :logId")
     fun getExerciseLogByLogId(logId: String): Flow<ExerciseLog>
@@ -185,6 +197,22 @@ interface WorkoutsDao {
 
     @Query("UPDATE exercise_workout_junctions SET superset_id = :supersetId WHERE id = :junctionId")
     suspend fun updateExerciseWorkoutJunctionSupersetId(junctionId: String, supersetId: Int?)
+
+    @Query(
+//        """
+//        SELECT w.*, le.* FROM workouts w
+//        JOIN exercise_workout_junctions j ON j.workout_id = w.id
+//        JOIN exercise_log_entries le ON j.id = le.junction_id
+//        WHERE w.is_hidden = 0 AND w.in_progress = 0
+//        ORDER BY w.completed_at DESC
+//        """
+        """
+        SELECT * FROM workouts w
+        WHERE w.is_hidden = 0 AND w.in_progress = 0 
+        ORDER BY w.completed_at DESC
+        """
+    )
+    fun getWorkoutsWithExtraInfoAltPaged(): PagingSource<Int, WorkoutWithExtraInfoAlt>
 
     @Transaction
     suspend fun updateWarmUpSets(
