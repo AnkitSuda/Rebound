@@ -26,6 +26,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.Composable
@@ -50,6 +51,7 @@ import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import com.ankitsuda.rebound.ui.history.components.HistoryHeader
 import com.ankitsuda.rebound.ui.history.components.HistorySessionItemCard
+import com.ankitsuda.rebound.ui.history.enums.WorkoutsDateRangeType
 import com.ankitsuda.rebound.ui.history.models.CountWithLocalDate
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import kotlinx.coroutines.delay
@@ -61,6 +63,7 @@ import me.onebone.toolbar.ToolbarWithFabScaffold
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import timber.log.Timber
 import java.time.LocalDate
+import java.time.YearMonth
 
 @Composable
 fun HistoryScreen(
@@ -70,88 +73,107 @@ fun HistoryScreen(
 ) {
     val scrollState = rememberLazyListState()
 
-    val argumentsDate = navController.currentBackStackEntry
-        ?.savedStateHandle
-        ?.getLiveData<Long>(DATE_KEY)?.observeAsState()
-
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
     val workoutsPage = viewModel.workouts.collectAsLazyPagingItems()
 
-    LaunchedEffect(key1 = argumentsDate?.value) {
-        if (argumentsDate?.value == null) return@LaunchedEffect;
+    val dateRangeType = viewModel.dateRangeType
+    val argDay = viewModel.argDay
+    val argMonth = viewModel.argMonth
+    val argYear = viewModel.argYear
 
-        try {
-            val mDate = argumentsDate.value?.toLocalDate()
-            var index = -1
-
-//            var loopIndex = 0;
-//            for (map in workoutsMap) {
-//                if (map.key?.month == mDate?.month && map.key?.year == mDate?.year) {
-//                    index = loopIndex;
-//                    break;
-//                } else {
-//                    loopIndex += 1 + map.value.size
+//    LaunchedEffect(key1 = argumentsDate?.value) {
+//        if (argumentsDate?.value == null) return@LaunchedEffect;
+//
+//        try {
+//            val mDate = argumentsDate.value?.toLocalDate()
+//            var index = -1
+//
+////            var loopIndex = 0;
+////            for (map in workoutsMap) {
+////                if (map.key?.month == mDate?.month && map.key?.year == mDate?.year) {
+////                    index = loopIndex;
+////                    break;
+////                } else {
+////                    loopIndex += 1 + map.value.size
+////                }
+////            }
+////            workoutsPage?.forEachIndexed { i, item ->
+////                if (item is WorkoutWithExtraInfo && item.workout?.completedAt.toString() == mDate.toString()) {
+////                    index = i
+////                }
+////            }
+//
+//            val allWorkouts = viewModel.workouts2.firstOrNull()
+//
+//            if (allWorkouts != null) {
+//                for (i in allWorkouts.indices) {
+//                    val item = allWorkouts[i]
+//                    if (item is WorkoutWithExtraInfo) {
+//                        val a = item.workout?.completedAt?.toLocalDate().toString()
+//                        val b = mDate.toString()
+//                        if (a == b) {
+//                            index = i
+//                            break
+//                        }
+//                    }
 //                }
 //            }
-//            workoutsPage?.forEachIndexed { i, item ->
-//                if (item is WorkoutWithExtraInfo && item.workout?.completedAt.toString() == mDate.toString()) {
-//                    index = i
+//
+//            if (index > -1) {
+//                try {
+//                    workoutsPage[index]
+//                } catch (e: Exception) {
+//                    e.printStackTrace()
 //                }
+//                delay(100)
+//                scrollState.animateScrollToItem(
+//                    index
+//                )
 //            }
-
-            val allWorkouts = viewModel.workouts2.firstOrNull()
-
-            if (allWorkouts != null) {
-                for (i in allWorkouts.indices) {
-                    val item = allWorkouts[i]
-                    if (item is WorkoutWithExtraInfo) {
-                        val a = item.workout?.completedAt?.toLocalDate().toString()
-                        val b = mDate.toString()
-                        if (a == b) {
-                            index = i
-                            break
-                        }
-                    }
-                }
-            }
-
-            if (index > -1) {
-                try {
-                    workoutsPage[index]
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-                delay(100)
-                scrollState.animateScrollToItem(
-                    index
-                )
-            }
-
-            Timber.d("items count ${workoutsPage.itemCount}")
-
-            navController.currentBackStackEntry
-                ?.savedStateHandle?.remove(DATE_KEY)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+//
+//            Timber.d("items count ${workoutsPage.itemCount}")
+//
+//            navController.currentBackStackEntry
+//                ?.savedStateHandle?.remove(DATE_KEY)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//    }
 
     CollapsingToolbarScaffold(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
         toolbar = {
             TopBar2(
-                title = stringResource(id = R.string.history),
+                title = when (dateRangeType) {
+                    WorkoutsDateRangeType.ALL -> stringResource(
+                        id = R.string.history
+                    )
+                    WorkoutsDateRangeType.MONTH -> YearMonth.of(argYear!!, argMonth!!).toString()
+                    WorkoutsDateRangeType.YEAR -> "Year $argYear"
+                    WorkoutsDateRangeType.DAY -> LocalDate.of(argYear!!, argMonth!!, argDay!!)
+                        .toString()
+                },
                 toolbarState = collapsingState.toolbarState,
                 navigationIcon = {
-                    TopBarIconButton(
-                        icon = Icons.Outlined.DateRange,
-                        title = stringResource(id = R.string.show_calendar),
-                        onClick = {
-                            navigator.navigate(LeafScreen.Calendar.createRoute(selectedDate = LocalDate.now()))
-                        }
-                    )
+                    if (dateRangeType == WorkoutsDateRangeType.ALL) {
+                        TopBarIconButton(
+                            icon = Icons.Outlined.DateRange,
+                            title = stringResource(id = R.string.show_calendar),
+                            onClick = {
+                                navigator.navigate(LeafScreen.Calendar.createRoute(selectedDate = LocalDate.now()))
+                            }
+                        )
+                    } else {
+                        TopBarIconButton(
+                            icon = Icons.Outlined.ArrowBack,
+                            title = stringResource(id = R.string.back),
+                            onClick = {
+                                navigator.goBack()
+                            }
+                        )
+                    }
                 },
                 actions = {
                     TopBarIconButton(
@@ -176,46 +198,51 @@ fun HistoryScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp),
             contentPadding = PaddingValues(24.dp)
         ) {
-            if (workoutsPage != null) {
-                items(workoutsPage!!, key = {
-                    when (it) {
-                        is WorkoutWithExtraInfo -> {
-                            it.workout!!.id
-                        }
-                        is CountWithDate -> {
-                            it.date
-                        }
-                        else -> {
-                            generateId()
-                        }
+            items(workoutsPage, key = {
+                when (it) {
+                    is WorkoutWithExtraInfo -> {
+                        it.workout!!.id
                     }
-                }) {
-                    when (it) {
-                        is WorkoutWithExtraInfo ->
-                            HistorySessionItemCard(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                onClick = {
-                                    navigator.navigate(
-                                        LeafScreen.Session.createRoute(
-                                            workoutId = it.workout?.id!!
-                                        )
+                    is CountWithDate -> {
+                        it.date.toString()
+                    }
+                    is Long -> {
+                        it.toString()
+                    }
+                    else -> {
+                        generateId()
+                    }
+                }
+            }) {
+                when (it) {
+                    is WorkoutWithExtraInfo ->
+                        HistorySessionItemCard(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            onClick = {
+                                navigator.navigate(
+                                    LeafScreen.Session.createRoute(
+                                        workoutId = it.workout?.id!!
                                     )
-                                },
-                                title = it.workout?.name.toString(),
-                                totalExercises = it.totalExercises ?: 0,
-                                duration = it.workout?.getDuration(),
-                                volume = it.totalVolume,
-                                prs = it.totalPRs ?: 0,
-                                date = it.workout?.startAt ?: it.workout?.completedAt
-                                ?: it.workout?.createdAt,
-                            )
-                        is CountWithDate ->
-                            HistoryHeader(
-                                date = it.date.toLocalDate() ?: LocalDate.now(),
-                                totalWorkouts = it.count.toInt()
-                            )
-                    }
+                                )
+                            },
+                            title = it.workout?.name.toString(),
+                            totalExercises = it.totalExercises ?: 0,
+                            duration = it.workout?.getDuration(),
+                            volume = it.totalVolume,
+                            prs = it.totalPRs ?: 0,
+                            date = it.workout?.startAt ?: it.workout?.completedAt
+                            ?: it.workout?.createdAt,
+                        )
+                    is Long -> HistoryHeader(
+                        title = null,
+                        totalWorkouts = it.toInt()
+                    )
+                    is CountWithDate ->
+                        HistoryHeader(
+                            date = it.date.toLocalDate() ?: LocalDate.now(),
+                            totalWorkouts = it.count.toInt()
+                        )
                 }
             }
         }

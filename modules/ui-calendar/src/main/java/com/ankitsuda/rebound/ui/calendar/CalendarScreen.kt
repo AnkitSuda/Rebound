@@ -17,22 +17,22 @@ package com.ankitsuda.rebound.ui.calendar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.ankitsuda.base.utils.toEpochMillis
+import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toLocalDate
-import com.ankitsuda.navigation.DATE_KEY
-import com.ankitsuda.navigation.SELECTED_DATE_KEY
+import com.ankitsuda.navigation.*
 import com.ankitsuda.rebound.ui.calendar.components.CalendarMonthItem
+import com.ankitsuda.rebound.ui.calendar.components.CalendarYearHeader
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import kotlinx.coroutines.launch
@@ -40,10 +40,13 @@ import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import java.time.LocalDate
+import java.time.Month
+import java.time.Year
 
 @Composable
 fun CalendarScreen(
     navController: NavController,
+    navigator: Navigator = LocalNavigator.current,
     viewModel: CalendarScreenViewModel = hiltViewModel()
 ) {
     val selectedDate =
@@ -86,8 +89,8 @@ fun CalendarScreen(
                     strictLeftIconAlignToStart = true,
                     leftIconBtn = {
                         TopBarIconButton(
-                            icon = Icons.Outlined.Close,
-                            title = stringResource(id = R.string.close_calendar)
+                            icon = Icons.Outlined.ArrowBack,
+                            title = stringResource(id = R.string.back)
                         ) {
                             navController.popBackStack()
                         }
@@ -112,20 +115,45 @@ fun CalendarScreen(
                     .fillMaxSize()
                     .background(MaterialTheme.colors.background)
             ) {
-                items(calendar, key = { "${it.month}_${it.year}" }) {
-                    val month = it
-                    CalendarMonthItem(
-                        month = month,
-                        selectedDate = selectedDate,
-                        countsWithDate = countsWithDate ?: emptyList(),
-                        onClickOnDay = { dateItem ->
-                            navController.previousBackStackEntry?.savedStateHandle?.set(
-                                DATE_KEY,
-                                dateItem.date.toEpochMillis()
-
+                for (item in calendar) {
+                    if (item.month == Month.JANUARY.value) {
+                        item(key = "year_header_${item.year}") {
+                            CalendarYearHeader(
+                                year = Year.of(item.year),
+                                onClick = {
+                                    navigator.navigate(
+                                        LeafScreen.History.createRoute(
+                                            year = item.year,
+                                        )
+                                    )
+                                }
                             )
-                            navController.popBackStack()
-                        })
+                        }
+                    }
+                    item(key = "month_block_${item.month}_${item.year}") {
+                        CalendarMonthItem(
+                            month = item,
+                            selectedDate = selectedDate,
+                            countsWithDate = countsWithDate ?: emptyList(),
+                            onClickOnMonth = { monthItem ->
+                                navigator.navigate(
+                                    LeafScreen.History.createRoute(
+                                        month = monthItem.month,
+                                        year = monthItem.year,
+                                    )
+                                )
+                            },
+                            onClickOnDay = { dateItem ->
+                                navigator.navigate(
+                                    LeafScreen.History.createRoute(
+                                        day = dateItem.day,
+                                        month = dateItem.date.monthValue,
+                                        year = dateItem.date.year,
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
 

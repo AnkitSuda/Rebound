@@ -34,15 +34,23 @@ fun HistoryHeader(date: LocalDate, totalWorkouts: Int) {
     val isSameYear = LocalDate.now().year == date.year
     val dateFormatter = DateTimeFormatter.ofPattern(if (isSameYear) "MMMM" else "MMMM yyyy")
 
+    HistoryHeader(title = dateFormatter.format(date), totalWorkouts = totalWorkouts)
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun HistoryHeader(title: String?, totalWorkouts: Int) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = dateFormatter.format(date),
-            style = ReboundTheme.typography.subtitle1.copy(color = ReboundTheme.colors.onBackground)
-        )
+        title?.let {
+            Text(
+                text = it,
+                style = ReboundTheme.typography.subtitle1.copy(color = ReboundTheme.colors.onBackground)
+            )
+        }
         Text(
             text = pluralStringResource(
                 id = R.plurals.number_of_workouts,

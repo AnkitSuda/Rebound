@@ -276,9 +276,19 @@ class WorkoutsRepository @Inject constructor(
 
 //    fun getWorkoutsWithExtraInfoAlt() = workoutsDao.getWorkoutsWithExtraInfoAlt()
 
-    fun getWorkoutsWithExtraInfoPaged() =
+    fun getWorkoutsWithExtraInfoPaged(
+        dateStart: LocalDate? = null,
+        dateEnd: LocalDate? = null
+    ) =
         Pager(PagingConfig(pageSize = 15)) {
-            workoutsDao.getWorkoutsWithExtraInfoAltPaged()
+            if (dateStart != null && dateEnd != null) {
+                workoutsDao.getWorkoutsWithExtraInfoAltPaged(
+                    dateStart.toEpochMillis(),
+                    dateEnd.toEpochMillis()
+                )
+            } else {
+                workoutsDao.getWorkoutsWithExtraInfoAltPaged()
+            }
         }
             .flow.map {
                 it.map { item ->
@@ -293,7 +303,7 @@ class WorkoutsRepository @Inject constructor(
             }
 
     fun getWorkoutsWithExtraInfo() =
-            workoutsDao.getWorkoutsWithExtraInfoAlt()
+        workoutsDao.getWorkoutsWithExtraInfoAlt()
             .map {
                 it.map { item ->
                     val logEntries = item.junctions?.flatMap { j -> j.logEntries }
@@ -308,6 +318,12 @@ class WorkoutsRepository @Inject constructor(
 
     fun getWorkoutsCountOnDateRange(dateStart: LocalDate, dateEnd: LocalDate) =
         workoutsDao.getWorkoutsCountOnDateRange(
+            dateStart = dateStart.toEpochMillis(),
+            dateEnd = dateEnd.toEpochMillis()
+        )
+
+    fun getWorkoutsCountOnMonthOnDateRangeAlt(dateStart: LocalDate, dateEnd: LocalDate) =
+        workoutsDao.getWorkoutsCountOnMonthOnDateRangeAlt(
             dateStart = dateStart.toEpochMillis(),
             dateEnd = dateEnd.toEpochMillis()
         )

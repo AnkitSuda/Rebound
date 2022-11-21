@@ -26,9 +26,13 @@ import com.ankitsuda.base.utils.toEpochMillis
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
 import java.time.LocalDate
+import java.time.Year
 import java.util.*
 
 const val DATE_KEY = "date"
+const val DAY_KEY = "day"
+const val MONTH_KEY = "month"
+const val YEAR_KEY = "year"
 const val SELECTED_DATE_KEY = "selected_date"
 const val WORKOUT_ID_KEY = "workout_id"
 const val EXERCISE_ID_KEY = "exercise_id"
@@ -107,20 +111,44 @@ sealed class LeafScreen(
     ) : LeafScreen(route = route, root = root)
 
     data class History(
-        override val route: String = "history?$DATE_KEY={$DATE_KEY}",
+        override val route: String = "history?$DAY_KEY={$DAY_KEY}&$MONTH_KEY={$MONTH_KEY}&$YEAR_KEY={${YEAR_KEY}}",
         override val root: TabRootScreen = TabRootScreen.HistoryTab
     ) :
         LeafScreen(
             route = route,
             root = root,
             arguments = listOf(
-                navArgument(DATE_KEY) {
-                    nullable = true
-                    type = NavType.StringType
+                navArgument(DAY_KEY) {
+                    type = NavType.IntType
+                    nullable = false
+                    defaultValue = -1
+                },
+                navArgument(MONTH_KEY) {
+                    type = NavType.IntType
+                    nullable = false
+                    defaultValue = -1
+                },
+                navArgument(YEAR_KEY) {
+                    type = NavType.IntType
+                    nullable = false
+                    defaultValue = -1
                 }
             )) {
-        fun createRoute(date: Date, root: TabRootScreen = TabRootScreen.HistoryTab) =
-            "${root.route}/history?$DATE_KEY=${date.time}"
+        companion object {
+            fun createRoute(
+                day: Int,
+                month: Int,
+                year: Int,
+                root: TabRootScreen = TabRootScreen.HistoryTab
+            ) =
+                "${root.route}/history?$DAY_KEY=$day&$MONTH_KEY=$month&$YEAR_KEY=$year"
+
+            fun createRoute(month: Int, year: Int, root: TabRootScreen = TabRootScreen.HistoryTab) =
+                "${root.route}/history?$DAY_KEY=-1&$MONTH_KEY=$month&$YEAR_KEY=$year"
+
+            fun createRoute(year: Int, root: TabRootScreen = TabRootScreen.HistoryTab) =
+                "${root.route}/history?$DAY_KEY=-1&$MONTH_KEY=-1&$YEAR_KEY=$year"
+        }
     }
 
     data class Workout(

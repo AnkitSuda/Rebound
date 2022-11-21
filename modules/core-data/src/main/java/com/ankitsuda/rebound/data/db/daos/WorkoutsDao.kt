@@ -21,6 +21,7 @@ import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Dao
@@ -152,6 +153,14 @@ interface WorkoutsDao {
 
     @Query("""
         SELECT SUM(count) FROM (SELECT COUNT(*) as count FROM workouts WHERE 
+date(start_at / 1000,'unixepoch') >= date(:dateStart / 1000,'unixepoch') AND
+ date(start_at / 1000,'unixepoch') <= date(:dateEnd / 1000,'unixepoch') 
+AND is_hidden = 0 AND in_progress = 0 GROUP BY start_at)
+    """)
+    fun getWorkoutsCountOnMonthOnDateRangeAlt(dateStart: Long, dateEnd: Long): Flow<Long>
+
+    @Query("""
+        SELECT SUM(count) FROM (SELECT COUNT(*) as count FROM workouts WHERE 
 date(start_at / 10000,'unixepoch') >= date(:date / 10000,'unixepoch') AND
  date(start_at / 10000,'unixepoch') <= date(:date / 10000,'unixepoch') 
 AND is_hidden = 0 AND in_progress = 0 GROUP BY start_at)
@@ -197,6 +206,17 @@ AND is_hidden = 0 AND in_progress = 0 GROUP BY start_at)
 
     @Query("UPDATE exercise_workout_junctions SET superset_id = :supersetId WHERE id = :junctionId")
     suspend fun updateExerciseWorkoutJunctionSupersetId(junctionId: String, supersetId: Int?)
+
+    @Query(
+        """
+        SELECT * FROM workouts w
+        WHERE
+        date(start_at / 1000,'unixepoch') >= date(:dateStart / 1000,'unixepoch') AND date(start_at / 1000,'unixepoch') <= date(:dateEnd / 1000,'unixepoch') 
+        AND w.is_hidden = 0 AND w.in_progress = 0 
+        ORDER BY w.completed_at DESC
+        """
+    )
+    fun getWorkoutsWithExtraInfoAltPaged(dateStart: Long, dateEnd: Long): PagingSource<Int, WorkoutWithExtraInfoAlt>
 
     @Query(
         """

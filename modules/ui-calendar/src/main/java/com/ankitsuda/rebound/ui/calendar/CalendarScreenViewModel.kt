@@ -41,9 +41,6 @@ class CalendarScreenViewModel @Inject constructor(
     private val workoutsRepository: WorkoutsRepository,
     private val prefs: PrefStorage
 ) : ViewModel() {
-//    private var _calendar: SnapshotStateList<CalendarMonth> = mutableStateListOf()
-//    val calendar = _calendar
-
     private var _calendar = MutableStateFlow<List<CalendarMonth>?>(null)
     val calendar = _calendar.asStateFlow()
 

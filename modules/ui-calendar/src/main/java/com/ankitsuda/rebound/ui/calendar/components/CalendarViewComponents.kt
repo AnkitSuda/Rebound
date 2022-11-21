@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.*
 import com.ankitsuda.base.utils.extensions.toArrayList
+import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toLocalDate
 import com.ankitsuda.common.compose.LocalAppSettings
 import com.ankitsuda.rebound.domain.entities.CountWithDate
@@ -49,6 +50,7 @@ import java.util.*
 import com.ankitsuda.common.compose.R
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import java.time.DayOfWeek
+import java.time.Year
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 
@@ -59,7 +61,8 @@ fun CalendarMonthItem(
     month: CalendarMonth,
     countsWithDate: List<CountWithDate>,
     selectedDate: LocalDate,
-    onClickOnDay: (CalendarDay) -> Unit
+    onClickOnDay: (CalendarDay) -> Unit,
+    onClickOnMonth: (CalendarMonth) -> Unit
 ) {
     val firstDayOfWeek = LocalAppSettings.current.firstDayOfWeek
 
@@ -88,7 +91,12 @@ fun CalendarMonthItem(
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp)
     ) {
-        CalendarMonthHeader(month.yearMonth.format(monthFormatter))
+        CalendarMonthHeader(
+            text = month.yearMonth.format(monthFormatter),
+            onClick = {
+                onClickOnMonth(month)
+            }
+        )
 
         Row(modifier = Modifier.fillMaxWidth()) {
             for (name in dayNames) {
@@ -97,7 +105,7 @@ fun CalendarMonthItem(
         }
 
         for (week in month.weekDays) {
-            key(week) {
+            key("${month.yearMonth}_week_${month.weekDays.indexOf(week)}") {
                 Row(
                     modifier = Modifier
                         .defaultMinSize(256.dp)
@@ -112,7 +120,7 @@ fun CalendarMonthItem(
                             val formattedDay = day.date.format(dayFormatter)
 
 
-                            key("${day.date.dayOfMonth}_${day.date.month}_${day.date.year}") {
+                            key("${day.date.dayOfMonth}_${day.date.month.value}_${day.date.year}") {
                                 CalendarDayItem(
                                     text = formattedDay,
                                     modifier = Modifier.weight(
@@ -139,7 +147,7 @@ fun CalendarMonthItem(
 }
 
 @Composable
-fun ColumnScope.CalendarMonthHeader(text: String) {
+fun ColumnScope.CalendarMonthHeader(text: String, onClick: () -> Unit) {
     Text(
         text = text,
         style = MaterialTheme.typography.body1,
@@ -148,8 +156,24 @@ fun ColumnScope.CalendarMonthHeader(text: String) {
         color = LocalThemeState.current.onBackgroundColor,
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(20.dp)
             .align(Alignment.CenterHorizontally)
+    )
+}
+
+@Composable
+fun CalendarYearHeader(year: Year, onClick: () -> Unit) {
+    Text(
+        text = year.toString(),
+        style = MaterialTheme.typography.body1,
+        textAlign = TextAlign.Center,
+        fontSize = 20.sp,
+        color = LocalThemeState.current.onBackgroundColor,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(20.dp)
     )
 }
 
