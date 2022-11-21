@@ -290,7 +290,8 @@ class WorkoutsRepository @Inject constructor(
                 workoutsDao.getWorkoutsWithExtraInfoAltPaged()
             }
         }
-            .flow.map {
+            .flow
+            .map {
                 it.map { item ->
                     val logEntries = item.junctions?.flatMap { j -> j.logEntries }
                     WorkoutWithExtraInfo(
@@ -315,6 +316,9 @@ class WorkoutsRepository @Inject constructor(
                     )
                 }
             }
+
+    fun getWorkoutsCount() =
+        workoutsDao.getWorkoutsCount()
 
     fun getWorkoutsCountOnDateRange(dateStart: LocalDate, dateEnd: LocalDate) =
         workoutsDao.getWorkoutsCountOnDateRange(

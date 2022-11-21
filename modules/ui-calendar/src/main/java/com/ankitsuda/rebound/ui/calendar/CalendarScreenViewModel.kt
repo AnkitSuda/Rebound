@@ -14,25 +14,19 @@
 
 package com.ankitsuda.rebound.ui.calendar
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
-import com.ankitsuda.rebound.domain.entities.CountWithDate
 import com.ankitsuda.rebound.ui.calendar.models.CalendarMonth
-import com.ankitsuda.rebound.ui.calendar.models.InDateStyle
-import com.ankitsuda.rebound.ui.calendar.models.MonthConfig
-import com.ankitsuda.rebound.ui.calendar.models.OutDateStyle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
-import java.time.Month
 import java.time.Year
-import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,14 +34,14 @@ class CalendarScreenViewModel @Inject constructor(
     private val workoutsRepository: WorkoutsRepository,
     private val prefs: PrefStorage
 ) : ViewModel() {
-    private var _calendar = MutableStateFlow<List<CalendarMonth>?>(null)
-    val calendar = _calendar.asStateFlow().shareWhileObserved(viewModelScope)
+    // 💀 Hack
+    private var _calendar = flow<PagingData<Any>> {}
 
-    private var _workoutsCountOnDates = MutableStateFlow<List<CountWithDate>?>(null)
-    val workoutsCountOnDates = _workoutsCountOnDates.asStateFlow()
+    var calendar = _calendar
+        .shareWhileObserved(viewModelScope)
 
-    private var calendarJob: Job? = null
-    private var countJob: Job? = null
+    val workoutsCountOnDates =
+        workoutsRepository.getWorkoutsCount().shareWhileObserved(viewModelScope)
 
     private var firstDayOfWeek = DayOfWeek.MONDAY
 
@@ -55,44 +49,32 @@ class CalendarScreenViewModel @Inject constructor(
         viewModelScope.launch {
             prefs.firstDayOfWeek.collect {
                 firstDayOfWeek = DayOfWeek.of(it)
-                getCalendar()
+                calendar = Pager(
+                    config = PagingConfig(pageSize = 12, prefetchDistance = 2),
+                    initialKey = Year.now().value,
+                    pagingSourceFactory = {
+                        CalendarPagingDataSource(
+                            startYear = Year.now().value,
+                            firstDayOfWeek = firstDayOfWeek
+                        )
+                    }
+                ).flow
+                    .map {
+                        mapCalendar(it)
+                    }
+                    .cachedIn(viewModelScope)
+                    .shareWhileObserved(viewModelScope)
             }
         }
     }
 
-    fun getCalendar(
-    ) {
-        calendarJob?.cancel()
-        calendarJob = viewModelScope.launch {
-            val monthConfig = MonthConfig(
-                outDateStyle = OutDateStyle.NONE,
-                inDateStyle = InDateStyle.ALL_MONTHS,
-                startMonth = YearMonth.of(Year.now().value, Month.JANUARY),
-                endMonth = YearMonth.of(Year.now().value, Month.DECEMBER),
-                hasBoundaries = true,
-                maxRowCount = Int.MAX_VALUE,
-                firstDayOfWeek = firstDayOfWeek,
-                job = Job()
-            )
-
-            refreshCounts()
-            _calendar.emit(monthConfig.months)
+    private fun mapCalendar(pagingData: PagingData<CalendarMonth>): PagingData<Any> {
+        return pagingData.insertSeparators { before, after ->
+            if (after != null && before?.year != after.year) {
+                after.year
+            } else {
+                null
+            }
         }
     }
-
-    private fun refreshCounts() {
-        countJob?.cancel()
-        countJob = viewModelScope.launch {
-            val counts = workoutsRepository.getWorkoutsCountOnDateRange(
-                dateStart = YearMonth.of(
-                    Year.now().value,
-                    Month.JANUARY
-                ).atDay(1),
-                dateEnd = YearMonth.of(Year.now().value, Month.DECEMBER).atEndOfMonth()
-            ).firstOrNull()
-
-            _workoutsCountOnDates.value = counts
-        }
-    }
-
 }

@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Today
@@ -29,19 +28,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.ankitsuda.base.utils.generateId
-import com.ankitsuda.base.utils.toLocalDate
 import com.ankitsuda.navigation.*
 import com.ankitsuda.rebound.ui.calendar.components.CalendarMonthItem
 import com.ankitsuda.rebound.ui.calendar.components.CalendarYearHeader
+import com.ankitsuda.rebound.ui.calendar.models.CalendarMonth
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import java.time.LocalDate
-import java.time.Month
 import java.time.Year
 
 @Composable
@@ -56,79 +57,88 @@ fun CalendarScreen(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberLazyListState()
 
-    val mCalendar by viewModel.calendar.collectAsState(null)
-    val countsWithDate by viewModel.workoutsCountOnDates.collectAsState()
+    val calendar = viewModel.calendar.collectAsLazyPagingItems()
+    val countsWithDate by viewModel.workoutsCountOnDates.collectAsState(emptyList())
     val today = LocalDate.now()
 
-    val coroutine = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(mCalendar) {
-        mCalendar?.let { calendar ->
-            if (calendar.isNotEmpty() && !didFirstAutoScroll) {
-                try {
-                    scrollState.scrollToItem(calendar.indexOf((calendar.filter {
-                        it.month == today.month.value && today.year == today.year
-                    }[0])))
-                } catch (e: Exception) {
-                    e.printStackTrace()
+    suspend fun scrollToToday(smooth: Boolean = true) {
+        for (i in 0 until calendar.itemCount) {
+            val item = calendar.peek(i)
+            if (item is CalendarMonth && item.yearMonth.year == today.year && item.month == today.monthValue) {
+                if (smooth) {
+                    scrollState.animateScrollToItem(i)
+                } else {
+                    scrollState.scrollToItem(i)
                 }
+                break
+            }
+        }
+    }
+
+    LaunchedEffect(calendar.itemCount) {
+        calendar.let { calendar ->
+            if (calendar.itemCount > 0 && !didFirstAutoScroll) {
+                delay(100)
+                scrollToToday()
                 didFirstAutoScroll = true
             }
         }
     }
 
-    mCalendar?.let { calendar ->
-        CollapsingToolbarScaffold(
-            scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
-            state = collapsingState,
-            toolbar = {
-                TopBar(
-                    title = stringResource(id = R.string.calendar),
-                    strictLeftIconAlignToStart = true,
-                    leftIconBtn = {
-                        TopBarIconButton(
-                            icon = Icons.Outlined.ArrowBack,
-                            title = stringResource(id = R.string.back)
-                        ) {
-                            navController.popBackStack()
-                        }
-                    },
-                    rightIconBtn = {
-                        TopBarIconButton(
-                            icon = Icons.Outlined.Today,
-                            title = stringResource(id = R.string.jump_to_today),
-                            onClick = {
-                                coroutine.launch {
-                                    scrollState.animateScrollToItem(calendar.indexOf((calendar.filter {
-                                        it.month == today.month.value && it.year == today.year
-                                    }[0])))
-                                }
-                            })
-                    })
-            },
-            modifier = Modifier.background(MaterialTheme.colors.background)
+    CollapsingToolbarScaffold(
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+        state = collapsingState,
+        toolbar = {
+            TopBar(
+                title = stringResource(id = R.string.calendar),
+                strictLeftIconAlignToStart = true,
+                leftIconBtn = {
+                    TopBarIconButton(
+                        icon = Icons.Outlined.ArrowBack,
+                        title = stringResource(id = R.string.back)
+                    ) {
+                        navController.popBackStack()
+                    }
+                },
+                rightIconBtn = {
+                    TopBarIconButton(
+                        icon = Icons.Outlined.Today,
+                        title = stringResource(id = R.string.jump_to_today),
+                        onClick = {
+                            coroutineScope.launch {
+                                scrollToToday()
+                            }
+                        })
+                })
+        },
+        modifier = Modifier.background(MaterialTheme.colors.background)
+    ) {
+        LazyColumn(
+            state = scrollState, modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
         ) {
-            LazyColumn(
-                state = scrollState, modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
-            ) {
-                for (item in calendar) {
-                    if (item.month == Month.JANUARY.value) {
-                        item(key = "year_header_${item.year}") {
-                            CalendarYearHeader(
-                                year = Year.of(item.year),
-                                onClick = {
-                                    navigator.navigate(
-                                        LeafScreen.History.createRoute(
-                                            year = item.year,
-                                        )
-                                    )
-                                }
+            items(calendar, key = {
+                when (it) {
+                    is CalendarMonth -> "month_block_${it.month}_${it.year}"
+                    is Int -> "year_header_$it"
+                    else -> generateId()
+                }
+            }) { item ->
+                when (item) {
+                    is Int -> CalendarYearHeader(
+                        year = Year.of(item),
+                        onClick = {
+                            navigator.navigate(
+                                LeafScreen.History.createRoute(
+                                    year = item,
+                                )
                             )
                         }
-                    }
-                    item(key = "month_block_${item.month}_${item.year}") {
+                    )
+                    is CalendarMonth ->
                         CalendarMonthItem(
                             month = item,
                             selectedDate = today,
@@ -151,10 +161,10 @@ fun CalendarScreen(
                                 )
                             }
                         )
-                    }
                 }
-            }
 
+            }
         }
+
     }
 }

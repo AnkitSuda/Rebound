@@ -22,15 +22,16 @@ import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.base.utils.toEpochMillis
-import com.ankitsuda.navigation.*
+import com.ankitsuda.navigation.DAY_KEY
+import com.ankitsuda.navigation.MONTH_KEY
+import com.ankitsuda.navigation.YEAR_KEY
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.CountWithDate
 import com.ankitsuda.rebound.domain.entities.WorkoutWithExtraInfo
 import com.ankitsuda.rebound.ui.history.enums.WorkoutsDateRangeType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import timber.log.Timber
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.Month
 import java.time.Year
@@ -94,7 +95,8 @@ class HistoryScreenViewModel @Inject constructor(
                     if (
                         dateRangeType != WorkoutsDateRangeType.YEAR &&
                         dateRangeType != WorkoutsDateRangeType.ALL &&
-                        dateStart != null && dateEnd != null) {
+                        dateStart != null && dateEnd != null
+                    ) {
                         workoutsRepository.getWorkoutsCountOnMonthOnDateRangeAlt(
                             dateStart,
                             dateEnd
