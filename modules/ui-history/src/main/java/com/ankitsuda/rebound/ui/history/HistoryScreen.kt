@@ -53,6 +53,8 @@ import com.ankitsuda.rebound.ui.history.components.HistorySessionItemCard
 import com.ankitsuda.rebound.ui.history.models.CountWithLocalDate
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.firstOrNull
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.ToolbarWithFabScaffold
@@ -60,7 +62,6 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import timber.log.Timber
 import java.time.LocalDate
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun HistoryScreen(
     navController: NavController,
@@ -75,16 +76,15 @@ fun HistoryScreen(
 
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
-//    val workoutsMap by viewModel.workouts.collectAsState(initial = emptyMap())
     val workoutsPage = viewModel.workouts.collectAsLazyPagingItems()
 
-//    LaunchedEffect(key1 = argumentsDate?.value) {
-//        if (argumentsDate?.value == null) return@LaunchedEffect;
-//
-//        try {
-//            val mDate = argumentsDate.value?.toLocalDate();
-//            var index = -1;
-//
+    LaunchedEffect(key1 = argumentsDate?.value) {
+        if (argumentsDate?.value == null) return@LaunchedEffect;
+
+        try {
+            val mDate = argumentsDate.value?.toLocalDate()
+            var index = -1
+
 //            var loopIndex = 0;
 //            for (map in workoutsMap) {
 //                if (map.key?.month == mDate?.month && map.key?.year == mDate?.year) {
@@ -94,20 +94,48 @@ fun HistoryScreen(
 //                    loopIndex += 1 + map.value.size
 //                }
 //            }
-//
-//            if (index > -1) {
-//                delay(100)
-//                scrollState.animateScrollToItem(
-//                    index
-//                )
+//            workoutsPage?.forEachIndexed { i, item ->
+//                if (item is WorkoutWithExtraInfo && item.workout?.completedAt.toString() == mDate.toString()) {
+//                    index = i
+//                }
 //            }
-//
-//            navController.currentBackStackEntry
-//                ?.savedStateHandle?.remove(DATE_KEY)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//    }
+
+            val allWorkouts = viewModel.workouts2.firstOrNull()
+
+            if (allWorkouts != null) {
+                for (i in allWorkouts.indices) {
+                    val item = allWorkouts[i]
+                    if (item is WorkoutWithExtraInfo) {
+                        val a = item.workout?.completedAt?.toLocalDate().toString()
+                        val b = mDate.toString()
+                        if (a == b) {
+                            index = i
+                            break
+                        }
+                    }
+                }
+            }
+
+            if (index > -1) {
+                try {
+                    workoutsPage[index]
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                delay(100)
+                scrollState.animateScrollToItem(
+                    index
+                )
+            }
+
+            Timber.d("items count ${workoutsPage.itemCount}")
+
+            navController.currentBackStackEntry
+                ?.savedStateHandle?.remove(DATE_KEY)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     CollapsingToolbarScaffold(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
@@ -148,48 +176,49 @@ fun HistoryScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp),
             contentPadding = PaddingValues(24.dp)
         ) {
-            items(workoutsPage, key = {
-                when (it) {
-                    is WorkoutWithExtraInfo -> {
-                        it.workout!!.id
+            if (workoutsPage != null) {
+                items(workoutsPage!!, key = {
+                    when (it) {
+                        is WorkoutWithExtraInfo -> {
+                            it.workout!!.id
+                        }
+                        is CountWithDate -> {
+                            it.date
+                        }
+                        else -> {
+                            generateId()
+                        }
                     }
-                    is CountWithDate -> {
-                        it.date
-                    }
-                    else -> {
-                        it
-                    }
-                }
-            }) {
-                when (it) {
-                    is WorkoutWithExtraInfo ->
-                        HistorySessionItemCard(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            onClick = {
-                                navigator.navigate(
-                                    LeafScreen.Session.createRoute(
-                                        workoutId = it.workout?.id!!
+                }) {
+                    when (it) {
+                        is WorkoutWithExtraInfo ->
+                            HistorySessionItemCard(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                onClick = {
+                                    navigator.navigate(
+                                        LeafScreen.Session.createRoute(
+                                            workoutId = it.workout?.id!!
+                                        )
                                     )
-                                )
-                            },
-                            title = it?.workout?.name.toString(),
-                            totalExercises = it?.totalExercises ?: 0,
-                            duration = it?.workout?.getDuration(),
-                            volume = it?.totalVolume,
-                            prs = it?.totalPRs ?: 0,
-                            date = it?.workout?.startAt ?: it?.workout?.completedAt
-                            ?: it?.workout?.createdAt,
-                        )
-                    is CountWithDate ->
-                        HistoryHeader(
-                            date = it.date.toLocalDate() ?: LocalDate.now(),
-                            totalWorkouts = it.count.toInt()
-                        )
+                                },
+                                title = it.workout?.name.toString(),
+                                totalExercises = it.totalExercises ?: 0,
+                                duration = it.workout?.getDuration(),
+                                volume = it.totalVolume,
+                                prs = it.totalPRs ?: 0,
+                                date = it.workout?.startAt ?: it.workout?.completedAt
+                                ?: it.workout?.createdAt,
+                            )
+                        is CountWithDate ->
+                            HistoryHeader(
+                                date = it.date.toLocalDate() ?: LocalDate.now(),
+                                totalWorkouts = it.count.toInt()
+                            )
+                    }
                 }
             }
         }
-
     }
 
 }

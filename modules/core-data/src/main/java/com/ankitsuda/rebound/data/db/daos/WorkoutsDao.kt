@@ -199,13 +199,6 @@ AND is_hidden = 0 AND in_progress = 0 GROUP BY start_at)
     suspend fun updateExerciseWorkoutJunctionSupersetId(junctionId: String, supersetId: Int?)
 
     @Query(
-//        """
-//        SELECT w.*, le.* FROM workouts w
-//        JOIN exercise_workout_junctions j ON j.workout_id = w.id
-//        JOIN exercise_log_entries le ON j.id = le.junction_id
-//        WHERE w.is_hidden = 0 AND w.in_progress = 0
-//        ORDER BY w.completed_at DESC
-//        """
         """
         SELECT * FROM workouts w
         WHERE w.is_hidden = 0 AND w.in_progress = 0 
@@ -213,6 +206,15 @@ AND is_hidden = 0 AND in_progress = 0 GROUP BY start_at)
         """
     )
     fun getWorkoutsWithExtraInfoAltPaged(): PagingSource<Int, WorkoutWithExtraInfoAlt>
+
+    @Query(
+        """
+        SELECT * FROM workouts w
+        WHERE w.is_hidden = 0 AND w.in_progress = 0 
+        ORDER BY w.completed_at DESC
+        """
+    )
+    fun getWorkoutsWithExtraInfoAlt(): Flow<List<WorkoutWithExtraInfoAlt>>
 
     @Transaction
     suspend fun updateWarmUpSets(

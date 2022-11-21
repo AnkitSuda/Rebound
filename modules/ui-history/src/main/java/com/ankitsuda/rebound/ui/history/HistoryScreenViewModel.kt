@@ -26,6 +26,7 @@ import com.ankitsuda.rebound.domain.entities.CountWithDate
 import com.ankitsuda.rebound.domain.entities.WorkoutWithExtraInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.temporal.TemporalAdjusters
 import javax.inject.Inject
@@ -39,6 +40,36 @@ class HistoryScreenViewModel @Inject constructor(
             mapData(it)
         }
         .cachedIn(viewModelScope)
+        .shareWhileObserved(viewModelScope)
+
+    val workouts2 = workoutsRepository.getWorkoutsWithExtraInfo()
+        .map {
+            val newList = arrayListOf<Any>()
+            it.forEachIndexed { index, after ->
+                val before = it.getOrNull(index - 1)
+                val afterDate = after.workout?.completedAt?.toLocalDate()
+                    ?.with(TemporalAdjusters.firstDayOfMonth())
+
+                val beforeDate = before?.workout?.completedAt?.toLocalDate()
+                    ?.with(TemporalAdjusters.firstDayOfMonth())
+
+                if (after.workout?.completedAt != null && afterDate != null && beforeDate != afterDate) {
+                    val mWorkoutsCounts = workoutsRepository.getWorkoutsCountOnMonth(
+                        date = after.workout!!.completedAt!!.toEpochMillis()
+                    ).firstOrNull()
+
+                    newList.add(
+                        CountWithDate(
+                            date = afterDate.toEpochMillis(),
+                            count = mWorkoutsCounts ?: 0
+                        )
+                    )
+                }
+                newList.add(after)
+            }
+
+            newList.toList()
+        }
         .shareWhileObserved(viewModelScope)
 
     private fun mapData(pagingData: PagingData<WorkoutWithExtraInfo>) =
@@ -67,4 +98,9 @@ class HistoryScreenViewModel @Inject constructor(
             }
         }
 
+    init {
+        viewModelScope.launch {
+            workouts2.collect()
+        }
+    }
 }

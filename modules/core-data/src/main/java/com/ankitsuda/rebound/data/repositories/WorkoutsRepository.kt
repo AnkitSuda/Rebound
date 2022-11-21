@@ -292,6 +292,20 @@ class WorkoutsRepository @Inject constructor(
                 }
             }
 
+    fun getWorkoutsWithExtraInfo() =
+            workoutsDao.getWorkoutsWithExtraInfoAlt()
+            .map {
+                it.map { item ->
+                    val logEntries = item.junctions?.flatMap { j -> j.logEntries }
+                    WorkoutWithExtraInfo(
+                        workout = item.workout,
+                        totalVolume = logEntries?.calculateTotalVolume(),
+                        totalExercises = item.junctions?.size,
+                        totalPRs = logEntries?.getTotalPRs(item.workout?.personalRecords?.size)
+                    )
+                }
+            }
+
     fun getWorkoutsCountOnDateRange(dateStart: LocalDate, dateEnd: LocalDate) =
         workoutsDao.getWorkoutsCountOnDateRange(
             dateStart = dateStart.toEpochMillis(),
