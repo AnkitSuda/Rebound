@@ -14,10 +14,10 @@
 
 package com.ankitsuda.rebound.ui.calendar
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.rebound.data.datastore.PrefStorage
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.entities.CountWithDate
@@ -29,7 +29,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.time.DayOfWeek
 import java.time.Month
 import java.time.Year
@@ -42,7 +41,7 @@ class CalendarScreenViewModel @Inject constructor(
     private val prefs: PrefStorage
 ) : ViewModel() {
     private var _calendar = MutableStateFlow<List<CalendarMonth>?>(null)
-    val calendar = _calendar.asStateFlow()
+    val calendar = _calendar.asStateFlow().shareWhileObserved(viewModelScope)
 
     private var _workoutsCountOnDates = MutableStateFlow<List<CountWithDate>?>(null)
     val workoutsCountOnDates = _workoutsCountOnDates.asStateFlow()
@@ -77,7 +76,7 @@ class CalendarScreenViewModel @Inject constructor(
             )
 
             refreshCounts()
-            _calendar.value = monthConfig.months
+            _calendar.emit(monthConfig.months)
         }
     }
 

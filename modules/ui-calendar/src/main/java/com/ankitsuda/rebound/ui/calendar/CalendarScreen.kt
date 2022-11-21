@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,37 +50,34 @@ fun CalendarScreen(
     navigator: Navigator = LocalNavigator.current,
     viewModel: CalendarScreenViewModel = hiltViewModel()
 ) {
-    val selectedDate =
-        navController.currentBackStackEntry?.arguments?.getString(SELECTED_DATE_KEY)?.toLong()
-            ?.toLocalDate()
-            ?: LocalDate.now()
-
+    var didFirstAutoScroll by rememberSaveable {
+        mutableStateOf(false)
+    }
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberLazyListState()
 
-    val mCalendar by viewModel.calendar.collectAsState()
+    val mCalendar by viewModel.calendar.collectAsState(null)
     val countsWithDate by viewModel.workoutsCountOnDates.collectAsState()
     val today = LocalDate.now()
 
     val coroutine = rememberCoroutineScope()
 
-    mCalendar?.let { calendar ->
-        LaunchedEffect(key1 = Unit) {
-            if (calendar.isNotEmpty()) {
+    LaunchedEffect(mCalendar) {
+        mCalendar?.let { calendar ->
+            if (calendar.isNotEmpty() && !didFirstAutoScroll) {
                 try {
                     scrollState.scrollToItem(calendar.indexOf((calendar.filter {
-                        try {
-                            it.month == selectedDate.month.value && it.year == selectedDate.year
-                        } catch (e1: Exception) {
-                            it.month == today.month.value && today.year == today.year
-                        }
+                        it.month == today.month.value && today.year == today.year
                     }[0])))
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+                didFirstAutoScroll = true
             }
         }
+    }
 
+    mCalendar?.let { calendar ->
         CollapsingToolbarScaffold(
             scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
             state = collapsingState,
@@ -133,7 +131,7 @@ fun CalendarScreen(
                     item(key = "month_block_${item.month}_${item.year}") {
                         CalendarMonthItem(
                             month = item,
-                            selectedDate = selectedDate,
+                            selectedDate = today,
                             countsWithDate = countsWithDate ?: emptyList(),
                             onClickOnMonth = { monthItem ->
                                 navigator.navigate(

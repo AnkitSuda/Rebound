@@ -64,6 +64,7 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HistoryScreen(
@@ -150,9 +151,14 @@ fun HistoryScreen(
                     WorkoutsDateRangeType.ALL -> stringResource(
                         id = R.string.history
                     )
-                    WorkoutsDateRangeType.MONTH -> YearMonth.of(argYear!!, argMonth!!).toString()
-                    WorkoutsDateRangeType.YEAR -> "Year $argYear"
+                    WorkoutsDateRangeType.MONTH -> YearMonth.of(argYear!!, argMonth!!).format(
+                        DateTimeFormatter.ofPattern("MMMM yyyy")
+                    )
+                    WorkoutsDateRangeType.YEAR -> argYear.toString()
                     WorkoutsDateRangeType.DAY -> LocalDate.of(argYear!!, argMonth!!, argDay!!)
+                        .format(
+                            DateTimeFormatter.ofPattern("MMM d, yyyy")
+                        )
                         .toString()
                 },
                 toolbarState = collapsingState.toolbarState,

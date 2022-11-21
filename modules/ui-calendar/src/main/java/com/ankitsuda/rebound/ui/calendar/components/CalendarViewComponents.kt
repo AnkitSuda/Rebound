@@ -73,17 +73,7 @@ fun CalendarMonthItem(
         allDays.map { it.getDisplayName(TextStyle.SHORT, Locale.getDefault()) }
     }
 
-//    val dayNames = listOf(
-//        stringResource(id = R.string.mon),
-//        stringResource(id = R.string.tue),
-//        stringResource(id = R.string.wed),
-//        stringResource(id = R.string.thu),
-//        stringResource(id = R.string.fri),
-//        stringResource(id = R.string.sat),
-//        stringResource(id = R.string.sun)
-//    )
-
-    val monthFormatter = DateTimeFormatter.ofPattern("LLLL yyyy")
+    val monthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy")
     val dayFormatter = DateTimeFormatter.ofPattern("d")
 
     Column(
