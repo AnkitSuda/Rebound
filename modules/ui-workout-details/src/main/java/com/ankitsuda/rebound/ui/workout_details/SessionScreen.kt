@@ -32,15 +32,9 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.ankitsuda.base.util.toReadableString
-import com.ankitsuda.base.utils.toDurationStr
-import com.ankitsuda.common.compose.kgToUserPrefStr
-import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.navigation.Screen
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.components.dialogs.DiscardActiveWorkoutDialog
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
@@ -203,7 +197,8 @@ fun SessionScreen(
                     supersetId = log.junction.supersetId,
                     title = log.exercise.name ?: "",
                     exerciseCategory = log.exercise.category,
-                    entries = log.logEntries
+                    entries = log.logEntries,
+                    notes = log.notes
                 )
             }
         }

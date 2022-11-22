@@ -47,14 +47,15 @@ fun ExerciseDetailHistoryTab(
                     .padding(bottom = 16.dp),
                 onClick = { },
                 title = workout.name,
-                exerciseCategory = exercise.category,
                 subtitle = (workout.startAt ?: workout.createdAt)?.format(
                     DateTimeFormatter.ofLocalizedDateTime(
                         FormatStyle.MEDIUM,
                         FormatStyle.SHORT
                     )
                 ),
-                entries = entries
+                exerciseCategory = exercise.category,
+                entries = entries,
+                notes = item.notes,
             )
         }
 

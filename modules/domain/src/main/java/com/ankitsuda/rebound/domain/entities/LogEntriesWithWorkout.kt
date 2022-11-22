@@ -29,5 +29,10 @@ data class LogEntriesWithWorkout(
         parentColumn = "id",
         entityColumn = "junction_id",
     )
-    val logEntries: List<ExerciseLogEntry>
+    val logEntries: List<ExerciseLogEntry>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "exercise_workout_junction_id",
+    )
+    var notes: List<ExerciseSetGroupNote>? = null
 )

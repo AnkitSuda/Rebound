@@ -43,13 +43,13 @@ import com.ankitsuda.base.util.colorFromSupersetId
 import com.ankitsuda.base.util.isDark
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toReadableString
-import com.ankitsuda.base.utils.toDurationStr
 import com.ankitsuda.common.compose.kgToUserPrefStr
 import com.ankitsuda.common.compose.kmToUserPrefStr
 import com.ankitsuda.common.compose.userPrefDistanceUnitStr
 import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.rebound.domain.*
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
+import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.flowlayout.FlowRow
@@ -68,7 +68,8 @@ fun SessionExerciseCardItem(
     subtitle: String? = null,
     supersetId: Int? = null,
     exerciseCategory: ExerciseCategory,
-    entries: List<ExerciseLogEntry>
+    entries: List<ExerciseLogEntry>,
+    notes: List<ExerciseSetGroupNote>? = null
 ) {
     val sortedEntries by remember(key1 = entries) {
         mutableStateOf(entries.sortedWith(ExerciseLogEntryComparator))
@@ -102,12 +103,14 @@ fun SessionExerciseCardItem(
     }
 
     AppCard(modifier = modifier, onClick = onClick) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             supersetId?.let {
                 val supersetColor = colorFromSupersetId(it)
                 Box(
                     modifier = Modifier
-                        .padding(bottom = 8.dp)
                         .background(supersetColor, ReboundTheme.shapes.small)
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
@@ -123,14 +126,23 @@ fun SessionExerciseCardItem(
                     text = it, style = ReboundTheme.typography.body1,
                     color = LocalThemeState.current.onBackgroundColor
                 )
-                RSpacer(8.dp)
             }
             subtitle?.let {
                 Text(
                     text = it, style = ReboundTheme.typography.body2,
                     color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.75f)
                 )
-                RSpacer(8.dp)
+            }
+            notes?.let {
+                for (note in it) {
+                    note.note?.let { noteText ->
+                        Text(
+                            text = noteText,
+                            style = ReboundTheme.typography.body2,
+                            color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.75f)
+                        )
+                    }
+                }
             }
             if (sortedEntries.isNotEmpty()) {
                 for (i in sortedEntries.indices) {
@@ -140,9 +152,9 @@ fun SessionExerciseCardItem(
                         exerciseCategory = exerciseCategory,
                         revisedSetText = revisedSetsTexts[sortedEntries.indexOf(entry)],
                     )
-                    if (i != sortedEntries.size - 1) {
-                        RSpacer(8.dp)
-                    }
+//                    if (i != sortedEntries.size - 1) {
+//                        RSpacer(8.dp)
+//                    }
                 }
             }
         }
