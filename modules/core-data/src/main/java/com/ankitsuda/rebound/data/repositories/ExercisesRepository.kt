@@ -14,6 +14,8 @@
 
 package com.ankitsuda.rebound.data.repositories
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.rebound.data.db.daos.ExercisesDao
 import com.ankitsuda.rebound.data.db.daos.MusclesDao
@@ -61,6 +63,11 @@ class ExercisesRepository @Inject constructor(
 
         list
     }
+
+    fun getExercisesWithExtraInfoPaged(searchQuery: String? = null) = Pager(PagingConfig(pageSize = 15)) {
+        exercisesDao.getAllExercisesWithExtraInfoPaged(searchQuery = searchQuery)
+    }.flow
+
 
     suspend fun createExercise(
         name: String? = null,

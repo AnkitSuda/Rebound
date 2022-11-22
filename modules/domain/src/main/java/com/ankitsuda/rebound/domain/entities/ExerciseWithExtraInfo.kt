@@ -20,7 +20,13 @@ import java.time.LocalDateTime
 import java.util.*
 
 data class ExerciseWithExtraInfo(
+    @Embedded
     var exercise: Exercise,
+    @Relation(
+        parentColumn = "primary_muscle_tag",
+        entityColumn = "tag"
+    )
     var primaryMuscle: Muscle?,
+    @ColumnInfo(name = "logs_count")
     var logsCount: Long,
 )

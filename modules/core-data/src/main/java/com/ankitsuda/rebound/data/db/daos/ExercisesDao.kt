@@ -14,11 +14,13 @@
 
 package com.ankitsuda.rebound.data.db.daos
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.ankitsuda.rebound.domain.entities.Exercise
+import com.ankitsuda.rebound.domain.entities.ExerciseWithExtraInfo
 import com.ankitsuda.rebound.domain.entities.ExerciseWithMuscle
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithWorkout
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +33,12 @@ interface ExercisesDao {
 
     @Query("SELECT * FROM exercises ORDER BY name")
     fun getAllExercises(): Flow<List<Exercise>>
+
+    @Query(
+        """
+    """
+    )
+    fun getAllExercisesWithExtraInfoPaged(searchQuery: String?): PagingSource<Int, ExerciseWithExtraInfo>
 
     @Query("SELECT * FROM exercises ORDER BY name")
     fun getAllExercisesWithMuscles(): Flow<List<ExerciseWithMuscle>>

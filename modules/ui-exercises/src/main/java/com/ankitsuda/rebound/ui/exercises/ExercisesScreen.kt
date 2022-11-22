@@ -31,9 +31,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
+import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.navigation.LeafScreen
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
+import com.ankitsuda.navigation.RESULT_EXERCISES_SCREEN_EXERCISE_ID
 import com.ankitsuda.rebound.domain.entities.ExerciseWithExtraInfo
 import com.ankitsuda.rebound.ui.components.*
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
@@ -43,11 +48,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
-@OptIn(
-    ExperimentalPagerApi::class,
-    ExperimentalFoundationApi::class,
-    ExperimentalAnimationApi::class
-)
 @Composable
 fun ExercisesScreen(
     navController: NavController,
@@ -58,7 +58,7 @@ fun ExercisesScreen(
     val isSearchMode by viewModel.isSearchMode.observeAsState(false)
     val searchTerm by viewModel.searchTerm.observeAsState("")
 
-    val groupedExercises by viewModel.groupedExercises.collectAsState(initial = emptyMap())
+    val exercisesPaged = viewModel.exercisesPaged.collectAsLazyPagingItems()
 
     val layout: @Composable () -> Unit = {
         ExercisesScreenContent(
@@ -67,13 +67,14 @@ fun ExercisesScreen(
             isBottomSheet = isBottomSheet,
             isSearchMode = isSearchMode,
             searchTerm = searchTerm,
-            groupedExercises = groupedExercises,
+            exercisesPaged = exercisesPaged,
             onToggleSearchMode = {
                 viewModel.toggleSearchMode()
+            },
+            onChangeSearchTerm = {
+                viewModel.setSearchTerm(it)
             }
-        ) {
-            viewModel.setSearchTerm(it)
-        }
+        )
     }
 
     if (isBottomSheet) {
@@ -85,7 +86,6 @@ fun ExercisesScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ExercisesScreenContent(
     navController: NavController,
@@ -93,7 +93,7 @@ private fun ExercisesScreenContent(
     isBottomSheet: Boolean,
     isSearchMode: Boolean,
     searchTerm: String,
-    groupedExercises: Map<String, List<ExerciseWithExtraInfo>>,
+    exercisesPaged: LazyPagingItems<Any>,
     onToggleSearchMode: () -> Unit,
     onChangeSearchTerm: (String) -> Unit
 ) {
@@ -149,28 +149,32 @@ private fun ExercisesScreenContent(
                 modifier = Modifier
                     .fillMaxSize(),
             ) {
-                for (group in groupedExercises) {
-                    stickyHeader(key = group.key) {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(LocalThemeState.current.backgroundColor)
-                                .padding(horizontal = 24.dp, vertical = 8.dp),
-                            text = group.key,
-                            style = ReboundTheme.typography.caption,
-                            color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.75f)
-                        )
+                items(exercisesPaged, key = {
+                    when (it) {
+                        is ExerciseWithExtraInfo -> it.exercise.exerciseId
+                        is String -> "header_$it"
+                        else -> generateId()
                     }
-
-                    items(items = group.value, key = { it.exercise.exerciseId }) { item ->
-                        ExerciseItem(
+                }) { item ->
+                    when (item) {
+                        is String ->
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(LocalThemeState.current.backgroundColor)
+                                    .padding(horizontal = 24.dp, vertical = 8.dp),
+                                text = item,
+                                style = ReboundTheme.typography.caption,
+                                color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.75f)
+                            )
+                        is ExerciseWithExtraInfo -> ExerciseItem(
                             name = item.exercise.name.toString(),
                             muscle = item.primaryMuscle?.name.toString(),
                             totalLogs = item.logsCount,
                             onClick = {
                                 if (isBottomSheet) {
                                     navController.previousBackStackEntry?.savedStateHandle?.set(
-                                        "result_exercises_screen_exercise_id",
+                                        RESULT_EXERCISES_SCREEN_EXERCISE_ID,
                                         item.exercise.exerciseId
                                     )
                                     navController.popBackStack()
@@ -181,12 +185,11 @@ private fun ExercisesScreenContent(
                                         )
                                     )
                                 }
-                            })
+                            }
+                        )
                     }
                 }
             }
-
-
         }
     }
 }
