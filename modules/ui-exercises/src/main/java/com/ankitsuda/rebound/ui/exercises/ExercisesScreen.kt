@@ -87,6 +87,7 @@ fun ExercisesScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ExercisesScreenContent(
     navController: NavController,
@@ -167,12 +168,14 @@ private fun ExercisesScreenContent(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(LocalThemeState.current.backgroundColor)
-                                    .padding(horizontal = 24.dp, vertical = 8.dp),
+                                    .padding(horizontal = 24.dp, vertical = 8.dp)
+                                    .animateItemPlacement(),
                                 text = item,
                                 style = ReboundTheme.typography.caption,
                                 color = LocalThemeState.current.onBackgroundColor.copy(alpha = 0.75f)
                             )
                         is ExerciseWithExtraInfo -> ExerciseItem(
+                            modifier = Modifier.animateItemPlacement(),
                             name = item.exercise.name.toString(),
                             muscle = item.primaryMuscle?.name.toString(),
                             totalLogs = item.logsCount,
