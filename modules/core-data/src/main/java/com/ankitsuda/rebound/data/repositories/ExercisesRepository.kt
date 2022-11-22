@@ -64,9 +64,14 @@ class ExercisesRepository @Inject constructor(
         list
     }
 
-    fun getExercisesWithExtraInfoPaged(searchQuery: String? = null) = Pager(PagingConfig(pageSize = 15)) {
-        exercisesDao.getAllExercisesWithExtraInfoPaged(searchQuery = searchQuery)
-    }.flow
+    fun getExercisesWithExtraInfoPaged(searchQuery: String? = null) =
+        Pager(PagingConfig(pageSize = 15)) {
+//            if (searchQuery != null) {
+                exercisesDao.getAllExercisesWithExtraInfoPaged(searchQuery = searchQuery)
+//            } else {
+//                exercisesDao.getAllExercisesWithExtraInfoPaged()
+//            }
+        }.flow
 
 
     suspend fun createExercise(

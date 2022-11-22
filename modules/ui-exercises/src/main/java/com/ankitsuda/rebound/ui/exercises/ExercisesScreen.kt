@@ -14,6 +14,7 @@
 
 package com.ankitsuda.rebound.ui.exercises
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -55,8 +56,8 @@ fun ExercisesScreen(
     navigator: Navigator = LocalNavigator.current,
     viewModel: ExercisesScreenViewModel = hiltViewModel()
 ) {
-    val isSearchMode by viewModel.isSearchMode.observeAsState(false)
-    val searchTerm by viewModel.searchTerm.observeAsState("")
+    val isSearchMode by viewModel.isSearchMode.collectAsState(false)
+    val searchTerm by viewModel.searchTerm.collectAsState("")
 
     val exercisesPaged = viewModel.exercisesPaged.collectAsLazyPagingItems()
 
@@ -98,6 +99,10 @@ private fun ExercisesScreenContent(
     onChangeSearchTerm: (String) -> Unit
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
+
+    BackHandler(isSearchMode) {
+        onToggleSearchMode()
+    }
 
     Column {
         CollapsingToolbarScaffold(

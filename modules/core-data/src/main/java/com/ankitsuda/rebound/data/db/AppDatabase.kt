@@ -22,7 +22,6 @@ import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.concurrent.Executors
 
 @Database(
     entities = [

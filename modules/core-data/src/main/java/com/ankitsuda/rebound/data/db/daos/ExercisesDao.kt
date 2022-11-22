@@ -43,7 +43,10 @@ interface ExercisesDao {
             FROM exercise_workout_junctions ewj 
             JOIN workouts w ON ewj.workout_id = w.id AND e.exercise_id = ewj.exercise_id 
             WHERE w.id = ewj.workout_id AND w.is_hidden = 0 AND w.in_progress = 0) as logs_count 
-        FROM exercises e ORDER BY name COLLATE NOCASE ASC
+        FROM exercises e WHERE CASE WHEN :searchQuery IS NOT NULL
+         THEN e.name LIKE '%' || :searchQuery || '%'
+         ELSE 1
+    END ORDER BY e.name COLLATE NOCASE ASC
     """
     )
     fun getAllExercisesWithExtraInfoPaged(searchQuery: String?): PagingSource<Int, ExerciseWithExtraInfo>

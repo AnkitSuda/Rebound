@@ -219,7 +219,7 @@ fun TopSearchBar(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = stringResource(R.string.back),
-                    tint = /*if (backgroundColor.isDark()) Color.White else*/ Color.Black,
+                    tint = /*if (backgroundColor.isDark()) Color.White else*/ ReboundTheme.colors.onBackground,
                 )
             }
             // TextField
@@ -298,5 +298,9 @@ fun TopBarIconButton(
 
 @Composable
 fun TopBarBackIconButton(onClick: () -> Unit) {
-    TopBarIconButton(icon = Icons.Outlined.ArrowBack, title = stringResource(R.string.back), onClick = onClick)
+    TopBarIconButton(
+        icon = Icons.Outlined.ArrowBack,
+        title = stringResource(R.string.back),
+        onClick = onClick
+    )
 }

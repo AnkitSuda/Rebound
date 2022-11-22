@@ -14,8 +14,6 @@
 
 package com.ankitsuda.rebound.ui.exercises
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -23,13 +21,11 @@ import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
-import com.ankitsuda.rebound.data.repositories.MusclesRepository
 import com.ankitsuda.rebound.domain.entities.ExerciseWithExtraInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.util.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,26 +70,4 @@ class ExercisesScreenViewModel @Inject constructor(
     fun setSearchTerm(term: String) {
         _searchTerm.value = term
     }
-
-//    private fun filterExercises() {
-//        viewModelScope.launch {
-//            _filteredExercises.clear()
-//            if (_isSearchMode.value == true) {
-//                _filteredExercises.addAll(allExercises.filter {
-//                    it.exercise.name?.contains(
-//                        _searchTerm.value!!,
-//                        true
-//                    ) == true
-//                })
-//            } else {
-//                _filteredExercises.addAll(allExercises)
-//            }
-//
-//            _groupedExercises.emit(_filteredExercises.groupBy {
-//                (it.exercise.name?.firstOrNull() ?: "#").toString().uppercase(Locale.getDefault())
-//            })
-////            }
-//        }
-//    }
-
 }
