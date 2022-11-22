@@ -15,29 +15,27 @@
 package com.ankitsuda.rebound.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
-import com.ankitsuda.base.util.TopBarAlignment
+import androidx.compose.ui.unit.times
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.statusBarsHeight
-import com.google.accompanist.insets.statusBarsPadding
 import me.onebone.toolbar.CollapsingToolbarScope
 import me.onebone.toolbar.CollapsingToolbarState
 
@@ -70,7 +68,7 @@ fun CollapsingToolbarScope.TopBar2(
     val contentColor = theme.topBarContentColor
     val elevation = theme.topBarElevation
 
-    val titleSize = if (toolbarState != null) (20 + (30 - 20) * toolbarState.progress).sp else 20.sp
+    val titleScale = if (toolbarState != null) (1f + (1.5f - 1f) * toolbarState.progress) else 1f
 
     val toolbarHeight = 58.dp
 
@@ -174,13 +172,18 @@ fun CollapsingToolbarScope.TopBar2(
         ) {
             Text(
                 modifier = Modifier
-                    .padding(top = statusBarHeight),
+                    .padding(top = statusBarHeight)
+                    .graphicsLayer(
+                        scaleX = titleScale,
+                        scaleY = titleScale,
+                        transformOrigin = TransformOrigin(0f, 0.5f)
+                    ),
                 text = title,
                 style = ReboundTheme.typography.h6.copy(
                     fontStyle = if (italicTitle) FontStyle.Italic else FontStyle.Normal
                 ),
                 fontWeight = FontWeight.Bold,
-                fontSize = titleSize,
+                fontSize = 20.sp,
                 textAlign = TextAlign.Start,
                 color = contentColor,
                 maxLines = 1
