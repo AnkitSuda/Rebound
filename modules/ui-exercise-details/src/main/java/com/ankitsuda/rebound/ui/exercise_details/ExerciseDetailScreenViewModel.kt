@@ -17,6 +17,7 @@ package com.ankitsuda.rebound.ui.exercise_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.navigation.EXERCISE_ID_KEY
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
 import com.ankitsuda.rebound.domain.entities.LogEntriesWithWorkout
@@ -54,7 +55,8 @@ class ExerciseDetailScreenViewModel @Inject constructor(
             val maxWeights = arrayListOf<LineChartData.Point>()
             val totalVolumes = arrayListOf<LineChartData.Point>()
 
-            val entriesGroup = entriesWithWorkout.groupBy { it.workout.createdAt?.toLocalDate() }
+            val entriesGroup = entriesWithWorkout.sortedBy { it.workout.startAt?.toEpochMillis() }
+                .groupBy { it.workout.createdAt?.toLocalDate() }
 
             for (group in entriesGroup) {
                 val label = group.key?.format(DateTimeFormatter.ofPattern("MMM d")) ?: ""
