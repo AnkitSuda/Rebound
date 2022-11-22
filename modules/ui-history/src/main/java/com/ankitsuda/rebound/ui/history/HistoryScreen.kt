@@ -83,65 +83,6 @@ fun HistoryScreen(
     val argMonth = viewModel.argMonth
     val argYear = viewModel.argYear
 
-//    LaunchedEffect(key1 = argumentsDate?.value) {
-//        if (argumentsDate?.value == null) return@LaunchedEffect;
-//
-//        try {
-//            val mDate = argumentsDate.value?.toLocalDate()
-//            var index = -1
-//
-////            var loopIndex = 0;
-////            for (map in workoutsMap) {
-////                if (map.key?.month == mDate?.month && map.key?.year == mDate?.year) {
-////                    index = loopIndex;
-////                    break;
-////                } else {
-////                    loopIndex += 1 + map.value.size
-////                }
-////            }
-////            workoutsPage?.forEachIndexed { i, item ->
-////                if (item is WorkoutWithExtraInfo && item.workout?.completedAt.toString() == mDate.toString()) {
-////                    index = i
-////                }
-////            }
-//
-//            val allWorkouts = viewModel.workouts2.firstOrNull()
-//
-//            if (allWorkouts != null) {
-//                for (i in allWorkouts.indices) {
-//                    val item = allWorkouts[i]
-//                    if (item is WorkoutWithExtraInfo) {
-//                        val a = item.workout?.completedAt?.toLocalDate().toString()
-//                        val b = mDate.toString()
-//                        if (a == b) {
-//                            index = i
-//                            break
-//                        }
-//                    }
-//                }
-//            }
-//
-//            if (index > -1) {
-//                try {
-//                    workoutsPage[index]
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                }
-//                delay(100)
-//                scrollState.animateScrollToItem(
-//                    index
-//                )
-//            }
-//
-//            Timber.d("items count ${workoutsPage.itemCount}")
-//
-//            navController.currentBackStackEntry
-//                ?.savedStateHandle?.remove(DATE_KEY)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//    }
-
     CollapsingToolbarScaffold(
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = collapsingState,
@@ -162,16 +103,9 @@ fun HistoryScreen(
                         .toString()
                 },
                 toolbarState = collapsingState.toolbarState,
-                navigationIcon = {
-                    if (dateRangeType == WorkoutsDateRangeType.ALL) {
-                        TopBarIconButton(
-                            icon = Icons.Outlined.DateRange,
-                            title = stringResource(id = R.string.show_calendar),
-                            onClick = {
-                                navigator.navigate(LeafScreen.Calendar.createRoute(selectedDate = LocalDate.now()))
-                            }
-                        )
-                    } else {
+                navigationIcon =
+                if (dateRangeType != WorkoutsDateRangeType.ALL) {
+                    {
                         TopBarIconButton(
                             icon = Icons.Outlined.ArrowBack,
                             title = stringResource(id = R.string.back),
@@ -180,15 +114,19 @@ fun HistoryScreen(
                             }
                         )
                     }
+                } else {
+                    null
                 },
                 actions = {
-                    TopBarIconButton(
-                        icon = Icons.Outlined.MoreVert,
-                        title = stringResource(id = R.string.open_menu),
-                        onClick = {
-
-                        }
-                    )
+                    if (dateRangeType == WorkoutsDateRangeType.ALL) {
+                        TopBarIconButton(
+                            icon = Icons.Outlined.DateRange,
+                            title = stringResource(id = R.string.show_calendar),
+                            onClick = {
+                                navigator.navigate(LeafScreen.Calendar.createRoute(selectedDate = LocalDate.now()))
+                            }
+                        )
+                    }
                 }
             )
         },
