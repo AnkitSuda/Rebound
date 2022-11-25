@@ -28,6 +28,7 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -104,11 +105,18 @@ private fun ExercisesScreenContent(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val scrollState = rememberLazyListState()
 
+    var lastSearchTerm by rememberSaveable {
+        mutableStateOf(searchTerm)
+    }
+
     LaunchedEffect(key1 = searchTerm) {
-        delay(100)
-        if (scrollState.firstVisibleItemIndex != 0) {
-            scrollState.animateScrollToItem(0)
+        if (lastSearchTerm != searchTerm) {
+            delay(100)
+            if (scrollState.firstVisibleItemIndex != 0) {
+                scrollState.animateScrollToItem(0)
+            }
         }
+        lastSearchTerm = searchTerm
     }
 
     BackHandler(isSearchMode) {
