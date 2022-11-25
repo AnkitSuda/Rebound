@@ -55,7 +55,11 @@ dependencies {
     api project(":modules:common-ui-icons")
     api project(":modules:navigation")
     api project(":modules:domain")
+
     api Deps.Android.Compose.collapsingToolbar
+    api Deps.Android.ColorPicker.composeColorPicker
+    api Deps.Android.ColorPicker.composeColorPickerAndroid
+
     kapt Deps.Dagger.hiltCompiler
     coreLibraryDesugaring Deps.Android.desugaring
 

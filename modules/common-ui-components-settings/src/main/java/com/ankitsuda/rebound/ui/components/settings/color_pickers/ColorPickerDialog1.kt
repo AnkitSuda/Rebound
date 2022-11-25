@@ -14,6 +14,8 @@
 
 package com.ankitsuda.rebound.ui.components.settings.color_pickers
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -27,8 +29,10 @@ import com.ankitsuda.common.compose.LocalDialog
 import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker1
 import com.ankitsuda.rebound.ui.components.color_picker.ColorPickerPresets
 import com.ankitsuda.common.compose.R
+import com.ankitsuda.rebound.ui.components.color_picker.ColorPicker2
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ColorPickerDialog1(
     defaultColor: Color = Color.Red,
@@ -43,48 +47,52 @@ fun ColorPickerDialog1(
         mutableStateOf(defaultColor)
     }
 
-    val screenHeight = (LocalConfiguration.current.screenHeightDp / 1.0).dp
+//    val screenHeight = (LocalConfiguration.current.screenHeightDp / 1.0).dp
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(screenHeight)
+//            .height(screenHeight)
     ) {
-        if (isPresetLayout) {
-            ColorPickerPresets(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp),
-                onColorPicked = {
-                    selectedColor = it
-                },
-            )
+        AnimatedContent(targetState = isPresetLayout) {
+            if (it) {
+                ColorPickerPresets(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+//                    .height(300.dp),
+                    onColorPicked = { newColor ->
+                        selectedColor = newColor
+                    },
+                )
 
-        } else {
-            ColorPicker1(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(600.dp),
-                colorSelected = {
-                    selectedColor = it
-                },
-                defaultColor = defaultColor
-            )
+            } else {
+                    ColorPicker2(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        colorSelected = { newColor ->
+                            selectedColor = newColor
+                        },
+                        defaultColor = defaultColor
+                    )
 
+            }
         }
-
-
-        Spacer(Modifier.height(16.dp))
 
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
         ) {
             TextButton(onClick = {
                 isPresetLayout = !isPresetLayout
             }) {
                 Text(
-                    text = if (isPresetLayout) stringResource(id = R.string.custom) else stringResource(id = R.string.presets)
+                    text = if (isPresetLayout) stringResource(id = R.string.custom) else stringResource(
+                        id = R.string.presets
+                    )
                 )
             }
             TextButton(onClick = with(LocalDialog.current) {

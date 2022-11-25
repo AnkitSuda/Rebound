@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -31,6 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -88,7 +91,10 @@ fun MainScreen(
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
+@OptIn(
+    ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 private fun MainLayout(
     navController: NavHostController,
@@ -233,12 +239,22 @@ private fun MainLayout(
                         }
 
                         if (dialogVisible) {
-                            AlertDialog(onDismissRequest = {
-                                dialogVisible = false
-                            },
-                                buttons = {
-                                    dialogContent()
-                                })
+                            Dialog(
+                                properties = DialogProperties(usePlatformDefaultWidth = false),
+                                onDismissRequest = {
+                                    dialogVisible = false
+                                },
+                                content = {
+                                    Surface(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 32.dp),
+                                        color = ReboundTheme.colors.background,
+                                        shape = ReboundTheme.shapes.large,
+                                        content = dialogContent
+                                    )
+                                }
+                            )
                         }
                     }
                 }

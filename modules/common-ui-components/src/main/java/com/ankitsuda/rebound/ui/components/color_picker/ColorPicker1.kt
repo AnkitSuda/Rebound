@@ -112,33 +112,6 @@ fun ColorPicker1(
     }
 }
 
-
-@Composable
-private fun ColorHexInfo(
-    modifier: Modifier = Modifier,
-    selectedColor: Color,
-    onHexEdited: (Color) -> Unit
-) {
-    var mSelectedColor by remember {
-        mutableStateOf(selectedColor)
-    }
-    var text by remember {
-        mutableStateOf("#" + mSelectedColor.toHexString().uppercase().drop(2))
-    }
-    if (selectedColor != mSelectedColor) {
-        mSelectedColor = selectedColor
-        text = "#" + mSelectedColor.toHexString().uppercase().drop(2)
-    }
-    AppTextField(modifier = modifier, value = text, placeholderValue = stringResource(id = R.string.hex), onValueChange = {
-        text = it
-        try {
-            onHexEdited(Color(android.graphics.Color.parseColor(it)))
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    })
-}
-
 private fun Color.toHexString(): String {
     val alphaString = (alpha * 255).toInt().toString(16).let { if (it.length == 1) "0$it" else it }
     val redString = (red * 255).toInt().toString(16).let { if (it.length == 1) "0$it" else it }
