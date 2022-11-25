@@ -18,7 +18,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
 import androidx.sqlite.db.SimpleSQLiteQuery
-import androidx.sqlite.db.SupportSQLiteQuery
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toEpochMillis
@@ -32,10 +31,8 @@ import com.ankitsuda.rebound.domain.addIfNot
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
@@ -326,8 +323,8 @@ class WorkoutsRepository @Inject constructor(
             dateEnd = dateEnd.toEpochMillis()
         )
 
-    fun getWorkoutsCountOnMonthOnDateRangeAlt(dateStart: LocalDate, dateEnd: LocalDate) =
-        workoutsDao.getWorkoutsCountOnMonthOnDateRangeAlt(
+    fun getWorkoutsCountOnDateRangeAlt(dateStart: LocalDate, dateEnd: LocalDate) =
+        workoutsDao.getWorkoutsCountOnDateRangeAlt(
             dateStart = dateStart.toEpochMillis(),
             dateEnd = dateEnd.toEpochMillis()
         )

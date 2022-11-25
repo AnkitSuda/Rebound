@@ -84,28 +84,37 @@ class HistoryScreenViewModel @Inject constructor(
     private fun mapData(pagingData: PagingData<WorkoutWithExtraInfo>) =
         pagingData.insertSeparators { before, after ->
             if (after != null) {
-                val afterDate = after.workout?.completedAt?.toLocalDate()
+                val afterDate = after.workout?.startAt?.toLocalDate()
                     ?.with(TemporalAdjusters.firstDayOfMonth())
 
-                val beforeDate = before?.workout?.completedAt?.toLocalDate()
+                val beforeDate = before?.workout?.startAt?.toLocalDate()
                     ?.with(TemporalAdjusters.firstDayOfMonth())
 
-                if (after.workout?.completedAt != null && afterDate != null && beforeDate != afterDate) {
+                if (after.workout?.startAt != null && afterDate != null && beforeDate != afterDate) {
 
                     if (
                         dateRangeType != WorkoutsDateRangeType.YEAR &&
                         dateRangeType != WorkoutsDateRangeType.ALL &&
                         dateStart != null && dateEnd != null
                     ) {
-                        workoutsRepository.getWorkoutsCountOnMonthOnDateRangeAlt(
+                        workoutsRepository.getWorkoutsCountOnDateRangeAlt(
                             dateStart,
                             dateEnd
                         ).firstOrNull() ?: 0L
                     } else {
+                        val year = after.workout!!.startAt!!.year
+                        val month = after.workout!!.startAt!!.month
                         CountWithDate(
                             date = afterDate.toEpochMillis(),
-                            count = workoutsRepository.getWorkoutsCountOnMonth(
-                                date = after.workout!!.completedAt!!.toEpochMillis()
+                            count = workoutsRepository.getWorkoutsCountOnDateRangeAlt(
+                                dateStart = YearMonth.of(
+                                    year,
+                                    month
+                                ).atDay(1),
+                                dateEnd = YearMonth.of(
+                                    year,
+                                    month
+                                ).atEndOfMonth()
                             ).firstOrNull() ?: 0
                         )
                     }

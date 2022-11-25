@@ -21,7 +21,6 @@ import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.entities.*
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Dao
@@ -160,7 +159,7 @@ date(start_at / 1000,'unixepoch') >= date(:dateStart / 1000,'unixepoch') AND
  date(start_at / 1000,'unixepoch') <= date(:dateEnd / 1000,'unixepoch') 
 AND is_hidden = 0 AND in_progress = 0 GROUP BY start_at)
     """)
-    fun getWorkoutsCountOnMonthOnDateRangeAlt(dateStart: Long, dateEnd: Long): Flow<Long>
+    fun getWorkoutsCountOnDateRangeAlt(dateStart: Long, dateEnd: Long): Flow<Long>
 
     @Query("""
         SELECT SUM(count) FROM (SELECT COUNT(*) as count FROM workouts WHERE 
