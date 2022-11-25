@@ -195,6 +195,7 @@ fun TopSearchBar(
     leftBackBtnEnabled: Boolean = true,
     rightClearBtnEnabled: Boolean = true,
 ) {
+    val contentColor = LocalThemeState.current.topBarContentColor
 
     var clearBtnWidth by remember {
         mutableStateOf(0)
@@ -219,13 +220,13 @@ fun TopSearchBar(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = stringResource(R.string.back),
-                    tint = /*if (backgroundColor.isDark()) Color.White else*/ ReboundTheme.colors.onBackground,
+                    tint = contentColor,
                 )
             }
             // TextField
             TextField(
                 colors = TextFieldDefaults.textFieldColors(
-                    textColor = /*if (backgroundColor.isDark()) Color.White else*/ Color.Black,
+                    textColor = contentColor,
                     disabledTextColor = Color.Transparent,
                     backgroundColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
@@ -259,7 +260,7 @@ fun TopSearchBar(
                         clearBtnWidth = it.parentCoordinates!!.size.width
                     }) {
                     Icon(
-                        tint = /*if (backgroundColor.isDark()) Color.White else*/ Color.Black,
+                        tint = contentColor,
                         imageVector = Icons.Outlined.Close,
                         contentDescription = stringResource(R.string.clear)
                     )
@@ -279,8 +280,7 @@ fun TopBarIconButton(
     onClick: () -> Unit
 ) {
     val alpha by animateFloatAsState(targetValue = if (enabled) 1f else 0.5f)
-//    val contentColor by viewModel.contentColor.collectAsState(ReboundTheme.colors.onBackground)
-    val contentColor = ReboundTheme.colors.onBackground
+    val contentColor = LocalThemeState.current.topBarContentColor
 
     IconButton(
         onClick = onClick,

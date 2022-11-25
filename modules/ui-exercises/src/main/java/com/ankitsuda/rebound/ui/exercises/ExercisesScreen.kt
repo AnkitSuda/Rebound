@@ -157,7 +157,6 @@ private fun ExercisesScreenContent(
                             onChangeSearchTerm(it)
                         },
                     )
-
                 }
             },
         ) {
