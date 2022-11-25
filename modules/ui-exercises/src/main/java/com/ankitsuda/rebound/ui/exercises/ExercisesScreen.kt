@@ -21,6 +21,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -46,6 +47,7 @@ import com.ankitsuda.rebound.ui.theme.LocalThemeState
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
+import kotlinx.coroutines.delay
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
@@ -100,6 +102,14 @@ private fun ExercisesScreenContent(
     onChangeSearchTerm: (String) -> Unit
 ) {
     val collapsingState = rememberCollapsingToolbarScaffoldState()
+    val scrollState = rememberLazyListState()
+
+    LaunchedEffect(key1 = searchTerm) {
+        delay(100)
+        if (scrollState.firstVisibleItemIndex != 0) {
+            scrollState.animateScrollToItem(0)
+        }
+    }
 
     BackHandler(isSearchMode) {
         onToggleSearchMode()
@@ -154,6 +164,7 @@ private fun ExercisesScreenContent(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
+                state = scrollState
             ) {
                 items(exercisesPaged, key = {
                     when (it) {
