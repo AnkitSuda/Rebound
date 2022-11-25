@@ -21,11 +21,16 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.ankitsuda.base.utils.toString
+import androidx.compose.ui.window.DialogProperties
+import com.ankitsuda.base.utils.toDurationStr
+import com.ankitsuda.base.utils.toEpochMillis
+import com.ankitsuda.rebound.ui.components.BasicInfoCard
+import com.ankitsuda.rebound.ui.components.BasicInfoCardType
 import com.ankitsuda.rebound.ui.components.RButtonStyle2
 import com.ankitsuda.rebound.ui.components.datetimepicker.DateTimePicker
 import com.ankitsuda.rebound.ui.components.workouteditor.R
@@ -34,6 +39,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WorkoutDurationEditorDialog(
     initialStartDateTime: LocalDateTime,
@@ -77,8 +83,20 @@ fun WorkoutDurationEditorDialog(
         getFormattedDateString(endDateTime)
     }
 
+    val durationStr = remember(startDateTime, endDateTime) {
+        (endDateTime.toEpochMillis() - startDateTime.toEpochMillis()).toDurationStr()
+    }
+
+    val errorMessage = if (startDateTime > endDateTime) {
+        stringResource(id = R.string.duration_error_start_longer_than_end)
+    } else {
+        null
+    }
+
+
     Dialog(
         onDismissRequest = onDismissRequest,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Surface(
             modifier = Modifier
@@ -90,53 +108,79 @@ fun WorkoutDurationEditorDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+//                    .verticalScroll(state = rememberScrollState())
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 16.dp,
+                        bottom = 8.dp
+                    ),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Column(
-                    modifier =
-                    Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+                Text(
+                    text = stringResource(R.string.adjust_duration),
+                    style = ReboundTheme.typography.h6,
+                    color = ReboundTheme.colors.onBackground
+                )
+
+                if (durationStr.isNotBlank()) {
                     Text(
-                        text = stringResource(R.string.adjust_duration),
-                        style = ReboundTheme.typography.h6,
+                        text = stringResource(R.string.duration),
+                        style = ReboundTheme.typography.caption,
+                        color = ReboundTheme.colors.onBackground.copy(0.75f)
+                    )
+
+                    Text(
+                        text = durationStr,
+                        style = ReboundTheme.typography.body1,
                         color = ReboundTheme.colors.onBackground
                     )
+                }
 
-                    Text(
-                        text = stringResource(R.string.start_time),
-                        style = ReboundTheme.typography.caption,
-                        color = ReboundTheme.colors.onBackground.copy(0.75f)
-                    )
+                Text(
+                    text = stringResource(R.string.start_time),
+                    style = ReboundTheme.typography.caption,
+                    color = ReboundTheme.colors.onBackground.copy(0.75f)
+                )
 
-                    RButtonStyle2(
+                RButtonStyle2(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = formattedStartDateTime,
+                    onClick = {
+                        currentPickerActiveFor = 1
+                    }
+                )
+
+                Text(
+                    text = stringResource(R.string.end_time),
+                    style = ReboundTheme.typography.caption,
+                    color = ReboundTheme.colors.onBackground.copy(0.75f)
+                )
+
+                RButtonStyle2(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = formattedEndDateTime,
+                    onClick = {
+                        currentPickerActiveFor = 2
+                    }
+                )
+
+                errorMessage?.let {
+                    BasicInfoCard(
                         modifier = Modifier.fillMaxWidth(),
-                        text = formattedStartDateTime,
-                        onClick = {
-                            currentPickerActiveFor = 1
-                        }
-                    )
-
-                    Text(
-                        text = stringResource(R.string.end_time),
-                        style = ReboundTheme.typography.caption,
-                        color = ReboundTheme.colors.onBackground.copy(0.75f)
-                    )
-
-                    RButtonStyle2(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = formattedEndDateTime,
-                        onClick = {
-                            currentPickerActiveFor = 2
-                        }
-                    )
-
-                    DialogButtonsRow(
-                        onClickSave = ::handleSaveClick,
-                        onClickCancel = onDismissRequest
+                        type = BasicInfoCardType.ERROR,
+                        message = it
                     )
                 }
+
+                DialogButtonsRow(
+                    isSaveEnabled = errorMessage == null,
+                    onClickSave = ::handleSaveClick,
+                    onClickCancel = onDismissRequest
+                )
             }
         }
+
     }
 
     if (currentPickerActiveFor == 1 || currentPickerActiveFor == 2) {
@@ -161,6 +205,7 @@ fun WorkoutDurationEditorDialog(
 
 @Composable
 private fun ColumnScope.DialogButtonsRow(
+    isSaveEnabled: Boolean = true,
     onClickSave: () -> Unit,
     onClickCancel: () -> Unit
 ) {
@@ -172,7 +217,7 @@ private fun ColumnScope.DialogButtonsRow(
         TextButton(onClick = onClickCancel) {
             Text(stringResource(id = R.string.cancel))
         }
-        TextButton(onClick = onClickSave) {
+        TextButton(enabled = isSaveEnabled, onClick = onClickSave) {
             Text(stringResource(id = R.string.save))
         }
     }

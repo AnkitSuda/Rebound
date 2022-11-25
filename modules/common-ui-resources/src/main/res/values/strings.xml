@@ -251,4 +251,5 @@
     <string name="adjust_duration">Adjust duration</string>
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>
+    <string name="duration_error_start_longer_than_end">Start time is longer than end time</string>
 </resources>
