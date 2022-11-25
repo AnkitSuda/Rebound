@@ -222,4 +222,17 @@ class WorkoutEditScreenViewModel @Inject constructor(
         }
     }
 
+    fun updateStartAndCompletedAt(startAt: LocalDateTime, completedAt: LocalDateTime) {
+        viewModelScope.launch {
+            mWorkout?.let {
+                workoutsRepository.updateWorkout(
+                    it.copy(
+                        startAt = startAt,
+                        completedAt = completedAt
+                    )
+                )
+            }
+        }
+    }
+
 }

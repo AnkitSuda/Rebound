@@ -30,6 +30,7 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -55,6 +56,8 @@ dependencies {
     implementation project(":modules:ui-keyboard")
     implementation project(":modules:navigation")
     implementation project(":modules:domain")
+
+    coreLibraryDesugaring Deps.Android.desugaring
 
     implementation Deps.Dagger.hilt
     kapt Deps.Dagger.hiltCompiler

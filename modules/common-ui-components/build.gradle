@@ -29,6 +29,8 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -55,4 +57,6 @@ dependencies {
     api project(":modules:domain")
     api Deps.Android.Compose.collapsingToolbar
     kapt Deps.Dagger.hiltCompiler
+    coreLibraryDesugaring Deps.Android.desugaring
+
 }

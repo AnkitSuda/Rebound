@@ -25,6 +25,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -36,14 +37,10 @@ import com.ankitsuda.navigation.Navigator
 import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
+import com.ankitsuda.rebound.ui.components.topbar.MenuActionItem
+import com.ankitsuda.rebound.ui.components.topbar.TopBarMenuAction
 import com.ankitsuda.rebound.ui.components.workouteditor.WorkoutEditorComponent
-import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
-import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboard
-import com.ankitsuda.rebound.ui.keyboard.ReboundSetKeyboardComponent
-import com.ankitsuda.rebound.ui.keyboard.models.ClearNumKey
-import com.ankitsuda.rebound.ui.keyboard.models.DecimalNumKey
-import com.ankitsuda.rebound.ui.keyboard.models.NumKey
-import com.ankitsuda.rebound.ui.keyboard.models.NumberNumKey
+import com.ankitsuda.rebound.ui.components.workouteditor.durationeditor.WorkoutDurationEditorDialog
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
@@ -59,11 +56,11 @@ fun WorkoutEditScreen(
     val isTemplate = viewModel.isTemplate
     val logEntriesWithJunction by viewModel.logEntriesWithExerciseJunction.collectAsState()
 
-    val workoutName = workout?.name
-    val workoutNote = workout?.note
-
     val collapsingState = rememberCollapsingToolbarScaffoldState()
 
+    var isDurationEditorDialogOpen by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     Column() {
         CollapsingToolbarScaffold(
@@ -85,12 +82,16 @@ fun WorkoutEditScreen(
                         }
                     },
                     actions = {
-                        TopBarIconButton(
-                            icon = Icons.Outlined.MoreVert,
-                            title = stringResource(R.string.open_menu)
-                        ) {
-
-                        }
+                        TopBarMenuAction(
+                            actions = listOf(
+                                MenuActionItem(
+                                    title = stringResource(id = R.string.adjust_duration),
+                                    onClick = {
+                                        isDurationEditorDialogOpen = true
+                                    }
+                                )
+                            )
+                        )
                     })
 
             })
@@ -98,8 +99,8 @@ fun WorkoutEditScreen(
             WorkoutEditorComponent(
                 navController = navController,
                 navigator = navigator,
-                workoutName = workoutName,
-                workoutNote = workoutNote,
+                workoutName = workout?.name,
+                workoutNote = workout?.note,
                 useReboundKeyboard = true,
                 cancelWorkoutButtonVisible = false,
                 logEntriesWithJunction = logEntriesWithJunction,
@@ -136,6 +137,19 @@ fun WorkoutEditScreen(
                 onDeleteNote = viewModel::deleteNote,
                 onAddToSuperset = viewModel::addToSuperset,
                 onRemoveFromSuperset = viewModel::removeFromSuperset,
+            )
+        }
+
+        if (isDurationEditorDialogOpen && workout?.startAt != null && workout?.completedAt != null) {
+            WorkoutDurationEditorDialog(
+                initialStartDateTime = workout?.startAt!!,
+                initialEndDateTime = workout?.completedAt!!,
+                onDismissRequest = {
+                    isDurationEditorDialogOpen = false
+                },
+                onSave = { startDateTime, endDateTime ->
+                    viewModel.updateStartAndCompletedAt(startDateTime, endDateTime)
+                },
             )
         }
     }

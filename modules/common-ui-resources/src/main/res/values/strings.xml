@@ -248,4 +248,7 @@
     <string name="rpe_10_description">No more reps possible</string>
     <string name="insert">Insert</string>
     <string name="personal_records">Personal records</string>
+    <string name="adjust_duration">Adjust duration</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">End time</string>
 </resources>
