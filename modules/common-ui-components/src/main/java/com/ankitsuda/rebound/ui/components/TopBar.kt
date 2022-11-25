@@ -19,6 +19,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.ui.Alignment
@@ -29,11 +31,14 @@ import com.google.accompanist.insets.statusBarsHeight
 import androidx.compose.material.*
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -182,7 +187,7 @@ fun TopBar(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun TopSearchBar(
     modifier: Modifier = Modifier,
@@ -200,6 +205,8 @@ fun TopSearchBar(
     var clearBtnWidth by remember {
         mutableStateOf(0)
     }
+
+    val keyboard = LocalSoftwareKeyboardController.current
 
     Column(modifier = modifier.background(backgroundColor)) {
         if (statusBarEnabled) {
@@ -225,6 +232,7 @@ fun TopSearchBar(
             }
             // TextField
             TextField(
+                modifier = Modifier.weight(1f),
                 colors = TextFieldDefaults.textFieldColors(
                     textColor = contentColor,
                     disabledTextColor = Color.Transparent,
@@ -233,10 +241,17 @@ fun TopSearchBar(
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
                 ),
-                modifier = Modifier.weight(1f),
                 value = value,
                 singleLine = true,
                 maxLines = 1,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        keyboard?.hide()
+                    }
+                ),
                 onValueChange = {
                     onValueChange(it)
                 },
