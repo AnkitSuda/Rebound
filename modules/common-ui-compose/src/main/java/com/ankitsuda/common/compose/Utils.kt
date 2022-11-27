@@ -34,7 +34,7 @@ fun Double?.kgToUserPrefStr(
             " "
         } else {
             ""
-        } + userPrefWeightUnitStr()
+        } + userPrefWeightUnitStr(weightUnit = weightUnit)
     } else {
         ""
     }
@@ -64,7 +64,10 @@ fun WeightUnit.localizedStr(case: Int = 2): String = when (this) {
  * @param case 0=Pascal Case, 1=Upper Case, 2=Lower Case
  */
 @Composable
-fun userPrefWeightUnitStr(case: Int = 2): String = LocalAppSettings.current.weightUnit.localizedStr(case = case)
+fun userPrefWeightUnitStr(
+    case: Int = 2,
+    weightUnit: WeightUnit = LocalAppSettings.current.weightUnit
+): String = weightUnit.localizedStr(case = case)
 
 @Composable
 fun Double?.kmToUserPrefStr(

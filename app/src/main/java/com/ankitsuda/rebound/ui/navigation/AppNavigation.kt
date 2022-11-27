@@ -27,6 +27,8 @@ import com.ankitsuda.navigation.*
 import com.ankitsuda.rebound.ui.calendar.CalendarScreen
 import com.ankitsuda.rebound.ui.components.workouteditor.supersetselector.SupersetSelectorBottomSheet
 import com.ankitsuda.rebound.ui.create_exercise.CreateExerciseScreen
+import com.ankitsuda.rebound.ui.customizebarbells.CustomizeBarbellsScreen
+import com.ankitsuda.rebound.ui.customizebarbells.edit.BarbellEditBottomSheet
 import com.ankitsuda.rebound.ui.customizeplates.CustomizePlatesScreen
 import com.ankitsuda.rebound.ui.customizeplates.edit.PlateEditBottomSheet
 import com.ankitsuda.rebound.ui.exercise_details.ExerciseDetailScreen
@@ -61,9 +63,7 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @OptIn(
-    InternalCoroutinesApi::class,
-    ExperimentalMaterialNavigationApi::class,
-    androidx.compose.animation.ExperimentalAnimationApi::class
+    ExperimentalAnimationApi::class
 )
 @Composable
 internal fun AppNavigation(
@@ -190,6 +190,7 @@ private fun NavGraphBuilder.addMoreRoot(navController: NavController) {
         addPartMeasurementsScreen(navController)
         addSettingsScreen(navController)
         addCustomizePlatesScreen(navController)
+        addCustomizeBarbellsScreen(navController)
         addPersonalizationScreen(navController)
         addMainColorsPersonalizationScreen(navController)
         addShapesPersonalizationScreen(navController)
@@ -204,6 +205,7 @@ private fun NavGraphBuilder.addMoreRoot(navController: NavController) {
 
         addAddPartMeasurementBottomSheet(navController)
         addPlateEditBottomSheet(navController)
+        addBarbellEditBottomSheet(navController)
     }
 }
 
@@ -290,6 +292,12 @@ private fun NavGraphBuilder.addSettingsScreen(navController: NavController) {
 private fun NavGraphBuilder.addCustomizePlatesScreen(navController: NavController) {
     composableScreen(LeafScreen.Plates()) {
         CustomizePlatesScreen()
+    }
+}
+
+private fun NavGraphBuilder.addCustomizeBarbellsScreen(navController: NavController) {
+    composableScreen(LeafScreen.Barbells()) {
+        CustomizeBarbellsScreen()
     }
 }
 
@@ -380,6 +388,12 @@ private fun NavGraphBuilder.addAddPartMeasurementBottomSheet(navController: NavC
 private fun NavGraphBuilder.addPlateEditBottomSheet(navController: NavController) {
     bottomSheetScreen(LeafScreen.PlateEdit()) {
         PlateEditBottomSheet()
+    }
+}
+
+private fun NavGraphBuilder.addBarbellEditBottomSheet(navController: NavController) {
+    bottomSheetScreen(LeafScreen.BarbellEdit()) {
+        BarbellEditBottomSheet()
     }
 }
 

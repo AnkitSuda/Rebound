@@ -62,4 +62,7 @@ class DatabaseModule {
     @Provides
     fun provideWorkoutFoldersFoldersDao(db: AppDatabase) = db.workoutFoldersFoldersDao()
 
+    @Provides
+    fun provideBarbellsDao(db: AppDatabase) = db.barbellsDao()
+
 }

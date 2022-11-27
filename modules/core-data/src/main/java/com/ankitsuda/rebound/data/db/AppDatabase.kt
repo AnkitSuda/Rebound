@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
         ThemePreset::class,
         ExerciseSetGroupNote::class,
         WorkoutTemplatesFolder::class,
+        Barbell::class
     ],
     version = 1,
     exportSchema = true
@@ -54,6 +55,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun platesDao(): PlatesDao
     abstract fun themePresetsDao(): ThemePresetsDao
     abstract fun workoutFoldersFoldersDao(): WorkoutFoldersFoldersDao
+    abstract fun barbellsDao(): BarbellsDao
 
     companion object {
         @Volatile

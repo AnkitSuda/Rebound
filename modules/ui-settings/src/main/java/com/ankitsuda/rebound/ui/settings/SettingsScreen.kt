@@ -38,6 +38,7 @@ import com.ankitsuda.rebound.ui.components.MoreSectionHeader
 import com.ankitsuda.rebound.ui.components.TopBar2
 import com.ankitsuda.rebound.ui.components.TopBarBackIconButton
 import com.ankitsuda.rebound.ui.components.settings.PopupItemsSettingsItem
+import com.ankitsuda.rebound.ui.icons.Barbell
 import com.ankitsuda.rebound.ui.icons.Plates
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
@@ -100,6 +101,17 @@ fun SettingsScreen(
                     description = stringResource(R.string.customize_barbell_plates),
                     onClick = {
                         navigator.navigate(LeafScreen.Plates().createRoute())
+                    })
+            }
+            item {
+                MoreItemCard(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    icon = Icons.Filled.Barbell,
+                    text = stringResource(R.string.barbells),
+                    description = stringResource(R.string.customize_barbells),
+                    onClick = {
+                        navigator.navigate(LeafScreen.Barbells().createRoute())
                     })
             }
             item {

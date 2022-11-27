@@ -146,6 +146,7 @@
     <string name="perform_again">Perform Again</string>
     <string name="edit_session">Edit session</string>
     <string name="customize_barbell_plates">Customize barbell plates</string>
+    <string name="customize_barbells">Customize barbells</string>
     <string name="defaults">Defaults</string>
     <string name="weight_unit">Weight Unit</string>
     <string name="metric_kg">Metric (kg)</string>
@@ -212,6 +213,8 @@
     <string name="set_keyboard_demo">Set Keyboard Demo</string>
     <string name="plate">Plate</string>
     <string name="weight">Weight</string>
+    <string name="weight_kg">Weight (kg)</string>
+    <string name="weight_lbs">Weight (lbs)</string>
     <string name="color">Color</string>
     <string name="height_multiplier">Height multiplier</string>
     <string name="width_multiplier">Width multiplier</string>
@@ -252,4 +255,7 @@
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>
     <string name="duration_error_start_longer_than_end">Start time is longer than end time</string>
+    <string name="barbells">Barbells</string>
+    <string name="barbell">Barbell</string>
+    <string name="add_barbell">Add barbell</string>
 </resources>

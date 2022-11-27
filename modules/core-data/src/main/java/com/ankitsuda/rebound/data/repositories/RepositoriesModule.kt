@@ -68,4 +68,11 @@ class RepositoriesModule {
         presetsDao: ThemePresetsDao
     ) =
         ThemePresetsRepository(presetsDao)
+
+    @Singleton
+    @Provides
+    fun provideBarbellsRepository(
+        barbellsDao: BarbellsDao
+    ) =
+        BarbellsRepository(barbellsDao)
 }

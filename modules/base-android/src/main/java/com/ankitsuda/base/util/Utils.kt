@@ -38,6 +38,7 @@ fun Double.fromKmToMiles() = this * MILES_IN_KM
 
 fun Double.fromKgToLbsReadable() = DecimalFormat("#.##").format(fromKgToLbs())
 fun Double.kgToReadable() = DecimalFormat("#.##").format(this)
+fun Double.lbsToReadable() = kgToReadable()
 
 fun Double.fromKmToMilesReadable(): String = DecimalFormat("#.###").format(fromKmToMiles())
 fun Double.kmToReadable(): String = DecimalFormat("#.###").format(this)
