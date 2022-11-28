@@ -14,17 +14,20 @@
 
 package com.ankitsuda.rebound.ui.keyboard.field
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -37,6 +40,9 @@ import com.ankitsuda.base.util.toLegacyInt
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
 import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 
+
+@SuppressLint("ClickableViewAccessibility")
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RowScope.ReboundSetTextField(
     layoutWeight: Float = 1.25f,
@@ -77,7 +83,7 @@ fun RowScope.ReboundSetTextField(
                             onValueChange?.invoke(newValue)
                         }
                     }
-                    setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
+                    setRawInputType(inputType or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
                     setTextIsSelectable(true)
                     val ic = onCreateInputConnection(EditorInfo())
 
@@ -86,6 +92,21 @@ fun RowScope.ReboundSetTextField(
                     setOnClickListener {
                         keyboard.setKeyboardType(reboundKeyboardType)
                         keyboard.show()
+                    }
+
+                    setOnTouchListener { view, motionEvent ->
+                        val imm: InputMethodManager =
+                            context.getSystemService(
+                                Context.INPUT_METHOD_SERVICE
+                            ) as InputMethodManager
+                        imm.hideSoftInputFromWindow(
+                            view.windowToken,
+                            InputMethodManager.HIDE_NOT_ALWAYS
+                        )
+
+                        view.onTouchEvent(motionEvent) // Call native handler
+
+                        true
                     }
 
                     onFocusChangeListener = View.OnFocusChangeListener { _, p1 ->
