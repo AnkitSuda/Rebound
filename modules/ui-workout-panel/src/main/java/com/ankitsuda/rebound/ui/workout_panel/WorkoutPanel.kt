@@ -60,7 +60,7 @@ fun WorkoutPanel(
     WorkoutPanel1(navController, navigator)
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WorkoutPanel1(
     navController: NavHostController,
@@ -73,9 +73,8 @@ fun WorkoutPanel1(
     val currentVolumeStr by viewModel.currentVolumeStr.collectAsState("")
     val currentSetsStr by viewModel.currentSetsStr.collectAsState("")
     val logEntriesWithJunction by viewModel.logEntriesWithExerciseJunction.collectAsState()
+    val barbells by viewModel.barbells.collectAsState(emptyList())
 
-//    val workoutName by viewModel.workoutName.collectAsState("")
-//    val workoutNote by viewModel.workoutNote.collectAsState("")
     val workoutName = workout?.name
     val workoutNote = workout?.note
 
@@ -89,6 +88,7 @@ fun WorkoutPanel1(
             addNavigationBarPadding = true,
             cancelWorkoutButtonVisible = true,
             logEntriesWithJunction = logEntriesWithJunction,
+            barbells = barbells,
             layoutAtTop = {
                 Column(
                     modifier = Modifier.animateItemPlacement()
@@ -136,6 +136,7 @@ fun WorkoutPanel1(
             onDeleteNote = viewModel::deleteNote,
             onAddToSuperset = viewModel::addToSuperset,
             onRemoveFromSuperset = viewModel::removeFromSuperset,
+            onUpdateBarbell = viewModel::updateExerciseBarbellType
         )
     }
 }

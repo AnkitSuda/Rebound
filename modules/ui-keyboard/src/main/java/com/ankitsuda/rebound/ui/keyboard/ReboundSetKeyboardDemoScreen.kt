@@ -38,7 +38,7 @@ fun ReboundSetKeyboardDemoScreen() {
             ReboundSetTextField(
                 contentColor = Color.Black,
                 bgColor = Color.Gray,
-                reboundKeyboardType = ReboundKeyboardType.WEIGHT,
+                reboundKeyboardType = ReboundKeyboardType.Weight(),
                 value = weight.toString(), onValueChange = {
                     weight = it.toDoubleOrNull() ?: weight
                 }
@@ -49,7 +49,8 @@ fun ReboundSetKeyboardDemoScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(),
-            weight = weight
+            weight = weight,
+            barbell = null,
         )
 
     }

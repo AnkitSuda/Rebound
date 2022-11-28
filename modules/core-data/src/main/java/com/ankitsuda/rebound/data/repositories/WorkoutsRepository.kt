@@ -517,4 +517,9 @@ class WorkoutsRepository @Inject constructor(
     suspend fun updateExerciseWorkoutJunctionSupersetId(junctionId: String, supersetId: Int?) {
         workoutsDao.updateExerciseWorkoutJunctionSupersetId(junctionId, supersetId)
     }
+
+    suspend fun updateExerciseWorkoutJunctionBarbellId(junctionId: String, barbellId: String) {
+        workoutsDao.updateExerciseWorkoutJunctionBarbellId(junctionId, barbellId)
+    }
+
 }

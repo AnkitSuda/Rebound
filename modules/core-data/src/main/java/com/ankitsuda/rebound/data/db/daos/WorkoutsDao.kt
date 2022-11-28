@@ -209,6 +209,9 @@ AND is_hidden = 0 AND in_progress = 0 GROUP BY start_at)
     @Query("UPDATE exercise_workout_junctions SET superset_id = :supersetId WHERE id = :junctionId")
     suspend fun updateExerciseWorkoutJunctionSupersetId(junctionId: String, supersetId: Int?)
 
+    @Query("UPDATE exercise_workout_junctions SET barbell_id = :barbellId WHERE id = :junctionId")
+    suspend fun updateExerciseWorkoutJunctionBarbellId(junctionId: String, barbellId: String?)
+
     @Query(
         """
         SELECT * FROM workouts w

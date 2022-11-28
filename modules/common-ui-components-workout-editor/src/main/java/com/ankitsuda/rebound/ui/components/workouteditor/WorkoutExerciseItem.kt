@@ -43,10 +43,7 @@ import com.ankitsuda.rebound.domain.DistanceUnit
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.WeightUnit
-import com.ankitsuda.rebound.domain.entities.Exercise
-import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
-import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
-import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
+import com.ankitsuda.rebound.domain.entities.*
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpCalculatorDialog
@@ -64,6 +61,7 @@ private val ExerciseLogEntryComparator = Comparator<ExerciseLogEntry> { left, ri
 fun LazyListScope.workoutExerciseItemAlt(
     useReboundKeyboard: Boolean = false,
     logEntriesWithJunction: LogEntriesWithExerciseJunction,
+    barbells: List<Barbell>,
     onUpdateWarmUpSets: (List<WarmUpSet>) -> Unit,
     onValuesUpdated: (updatedEntry: ExerciseLogEntry) -> Unit,
     onSwipeDelete: (ExerciseLogEntry) -> Unit,
@@ -74,6 +72,7 @@ fun LazyListScope.workoutExerciseItemAlt(
     onChangeNote: (ExerciseSetGroupNote) -> Unit,
     onAddToSuperset: () -> Unit,
     onRemoveFromSuperset: () -> Unit,
+    onRequestBarbellChanger: () -> Unit,
 ) {
 
     val supersetId = logEntriesWithJunction.junction.supersetId
@@ -81,6 +80,8 @@ fun LazyListScope.workoutExerciseItemAlt(
     val logEntries = logEntriesWithJunction.logEntries
     val notes = logEntriesWithJunction.notes ?: emptyList()
     val sortedEntries = logEntries.sortedWith(ExerciseLogEntryComparator)
+    val barbell = barbells.find { b -> b.id == logEntriesWithJunction.junction.barbellId }
+
 
     // Exercise info
     item(key = "${logEntriesWithJunction.junction.id}_exercise_info") {
@@ -177,7 +178,8 @@ fun LazyListScope.workoutExerciseItemAlt(
                     },
                     onAddNote = onAddEmptyNote,
                     onAddToSuperset = onAddToSuperset,
-                    onRemoveFromSuperset = onRemoveFromSuperset
+                    onRemoveFromSuperset = onRemoveFromSuperset,
+                    onChangeBarbell = onRequestBarbellChanger,
                 )
             }
 
@@ -302,12 +304,14 @@ fun LazyListScope.workoutExerciseItemAlt(
         it.entryId
     }) { entry ->
         val appSettings = LocalAppSettings.current
-        key(appSettings.weightUnit, appSettings.distanceUnit) {
+
+        key(barbell, appSettings.weightUnit, appSettings.distanceUnit) {
             SetItem(
                 useReboundKeyboard = useReboundKeyboard,
                 revisedSetText = revisedSetsTexts[sortedEntries.indexOf(entry)],
                 exercise = exercise,
                 exerciseLogEntry = entry,
+                barbell = barbell,
                 onChange = {
                     onValuesUpdated(it)
                 },
@@ -349,6 +353,7 @@ fun LazyListScope.workoutExerciseItemAlt(
 private fun LazyItemScope.SetItem(
     exercise: Exercise,
     useReboundKeyboard: Boolean,
+    barbell: Barbell?,
     revisedSetText: Pair<String, Color?>,
     exerciseLogEntry: ExerciseLogEntry,
     onChange: (ExerciseLogEntry) -> Unit,
@@ -357,14 +362,6 @@ private fun LazyItemScope.SetItem(
     var mLogEntry by rememberSaveable {
         mutableStateOf(exerciseLogEntry)
     }
-
-//    LaunchedEffect(key1 = exerciseLogEntry) {
-//        // We have to change saved rpe manually because
-//        // main rpe change is not handled by SetItem function
-//        if (exerciseLogEntry.rpe != mLogEntry.rpe) {
-//            mLogEntry = mLogEntry.copy(rpe = exerciseLogEntry.rpe)
-//        }
-//    }
 
     val completionAnimDuration = 200
     val completionAnimSpecFloat =
@@ -461,6 +458,7 @@ private fun LazyItemScope.SetItem(
             exercise = exercise,
             exerciseLogEntry = mLogEntry,
             revisedSetText = revisedSetText,
+            barbell = barbell,
             onWeightChange = { _, value ->
                 handleOnChange(mLogEntry.copy(weight = value))
             },
@@ -494,6 +492,7 @@ private fun SetItemLayout(
     exercise: Exercise,
     exerciseLogEntry: ExerciseLogEntry,
     revisedSetText: Pair<String, Color?>,
+    barbell: Barbell?,
     onWeightChange: (ExerciseLogEntry, Double?) -> Unit,
     onRepsChange: (ExerciseLogEntry, Int?) -> Unit,
     onDistanceChange: (ExerciseLogEntry, Double?) -> Unit,
@@ -598,7 +597,8 @@ private fun SetItemLayout(
                     bgColor = bgColor,
                     reboundKeyboardType = getReboundKeyboardType(
                         category = exercise.category,
-                        isLeft = true
+                        isLeft = true,
+                        barbell = barbell,
                     ),
                 )
             } else {
@@ -663,7 +663,7 @@ private fun SetItemLayout(
                 },
                 contentColor = contentColor,
                 bgColor = bgColor,
-                reboundKeyboardType = ReboundKeyboardType.RPE
+                reboundKeyboardType = ReboundKeyboardType.Rpe
             )
         }
 
@@ -696,11 +696,17 @@ private fun SetItemLayout(
     }
 }
 
-private fun getReboundKeyboardType(category: ExerciseCategory, isLeft: Boolean) =
+private fun getReboundKeyboardType(
+    category: ExerciseCategory,
+    isLeft: Boolean,
+    barbell: Barbell? = null
+) =
     when (category) {
-        ExerciseCategory.WEIGHTS_AND_REPS -> if (isLeft) ReboundKeyboardType.WEIGHT else ReboundKeyboardType.REPS
-        ExerciseCategory.REPS -> ReboundKeyboardType.REPS
-        ExerciseCategory.DISTANCE_AND_TIME -> if (isLeft) ReboundKeyboardType.DISTANCE else ReboundKeyboardType.TIME
-        ExerciseCategory.TIME -> ReboundKeyboardType.TIME
-        ExerciseCategory.UNKNOWN -> ReboundKeyboardType.REPS
+        ExerciseCategory.WEIGHTS_AND_REPS -> if (isLeft) ReboundKeyboardType.Weight(
+            barbell = barbell
+        ) else ReboundKeyboardType.Reps
+        ExerciseCategory.REPS -> ReboundKeyboardType.Reps
+        ExerciseCategory.DISTANCE_AND_TIME -> if (isLeft) ReboundKeyboardType.Distance else ReboundKeyboardType.Time
+        ExerciseCategory.TIME -> ReboundKeyboardType.Time
+        ExerciseCategory.UNKNOWN -> ReboundKeyboardType.Reps
     }

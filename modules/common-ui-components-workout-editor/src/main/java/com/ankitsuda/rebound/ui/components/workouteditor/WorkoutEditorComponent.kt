@@ -36,11 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ankitsuda.common.compose.SAFE_RS_KEYBOARD_HEIGHT
 import com.ankitsuda.navigation.*
-import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
-import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
-import com.ankitsuda.rebound.domain.entities.ExerciseWorkoutJunction
-import com.ankitsuda.rebound.domain.entities.LogEntriesWithExerciseJunction
+import com.ankitsuda.rebound.domain.entities.*
 import com.ankitsuda.rebound.ui.components.AppTextField
+import com.ankitsuda.rebound.ui.components.workouteditor.barbellselector.models.BarbellSelectorResult
 import com.ankitsuda.rebound.ui.components.workouteditor.supersetselector.models.SupersetSelectorResult
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.toExerciseLogEntries
 import com.ankitsuda.rebound.ui.keyboard.LocalReboundSetKeyboard
@@ -58,6 +56,7 @@ fun WorkoutEditorComponent(
     workoutNote: String?,
     cancelWorkoutButtonVisible: Boolean,
     logEntriesWithJunction: List<LogEntriesWithExerciseJunction>,
+    barbells: List<Barbell>,
     onChangeWorkoutName: (String) -> Unit,
     onChangeWorkoutNote: (String) -> Unit,
     onAddExerciseToWorkout: (exerciseId: String) -> Unit,
@@ -72,6 +71,7 @@ fun WorkoutEditorComponent(
     onChangeNote: (ExerciseSetGroupNote) -> Unit,
     onAddToSuperset: (junctionId: String, supersetId: Int) -> Unit,
     onRemoveFromSuperset: (LogEntriesWithExerciseJunction) -> Unit,
+    onUpdateBarbell: (junctionId: String, barbellId: String) -> Unit,
     layoutAtTop: @Composable LazyItemScope.() -> Unit = {}
 ) {
     // Observes results when ExercisesScreen changes value of arg
@@ -83,6 +83,12 @@ fun WorkoutEditorComponent(
     val supersetSelectorResult = navController.currentBackStackEntry
         ?.savedStateHandle
         ?.getStateFlow<SupersetSelectorResult?>(RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY, null)
+        ?.collectAsState()
+
+    // Observes results when Barbell Selector changes value of arg
+    val barbellSelectorResult = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<BarbellSelectorResult?>(RESULT_BARBELL_SELECTOR_KEY, null)
         ?.collectAsState()
 
     val navigationBarHeight =
@@ -110,6 +116,17 @@ fun WorkoutEditorComponent(
 
             navController.currentBackStackEntry?.savedStateHandle?.set(
                 RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY,
+                null
+            )
+        }
+    }
+
+    LaunchedEffect(key1 = barbellSelectorResult?.value) {
+        barbellSelectorResult?.value?.let { result ->
+            onUpdateBarbell(result.junctionId, result.barbellId)
+
+            navController.currentBackStackEntry?.savedStateHandle?.set(
+                RESULT_BARBELL_SELECTOR_KEY,
                 null
             )
         }
@@ -182,6 +199,7 @@ fun WorkoutEditorComponent(
             workoutExerciseItemAlt(
                 useReboundKeyboard = useReboundKeyboard,
                 logEntriesWithJunction = logEntriesWithJunctionItem,
+                barbells = barbells,
                 onValuesUpdated = { updatedEntry ->
                     onUpdateLogEntry(updatedEntry)
                 },
@@ -221,6 +239,14 @@ fun WorkoutEditorComponent(
                         LeafScreen.SupersetSelector.createRoute(
                             workoutId = logEntriesWithJunctionItem.junction.workoutId!!,
                             junctionId = logEntriesWithJunctionItem.junction.id,
+                        )
+                    )
+                },
+                onRequestBarbellChanger = {
+                    navigator.navigate(
+                        LeafScreen.BarbellSelector.createRoute(
+                            junctionId = logEntriesWithJunctionItem.junction.id,
+                            selectedBarbellId = logEntriesWithJunctionItem.junction.barbellId
                         )
                     )
                 }

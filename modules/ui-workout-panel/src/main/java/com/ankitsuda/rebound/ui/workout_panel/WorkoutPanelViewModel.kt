@@ -18,9 +18,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.NONE_WORKOUT_ID
 import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.base.utils.extensions.toArrayList
 import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toReadableDurationStyle2
+import com.ankitsuda.rebound.data.repositories.BarbellsRepository
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
@@ -35,7 +37,10 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: WorkoutsRepository) :
+class WorkoutPanelViewModel @Inject constructor(
+    barbellsRepository: BarbellsRepository,
+    private val workoutsRepository: WorkoutsRepository,
+) :
     ViewModel() {
     val currentWorkoutId: Flow<String> = workoutsRepository.getCurrentWorkoutId()
     var mWorkoutId: Long = -1
@@ -75,9 +80,10 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
     private var _logEntriesWithExerciseJunction: MutableStateFlow<List<LogEntriesWithExerciseJunction>> =
         MutableStateFlow(emptyList())
     val logEntriesWithExerciseJunction = _logEntriesWithExerciseJunction.asStateFlow()
-//    private var _logEntriesWithExerciseJunction: SnapshotStateList<LogEntriesWithExerciseJunction> =
-//        SnapshotStateList()
-//    val logEntriesWithExerciseJunction = _logEntriesWithExerciseJunction
+
+    val barbells = barbellsRepository.getActiveBarbells()
+        .distinctUntilChanged()
+        .shareWhileObserved(viewModelScope)
 
     init {
         viewModelScope.launch {
@@ -303,6 +309,14 @@ class WorkoutPanelViewModel @Inject constructor(private val workoutsRepository: 
         viewModelScope.launch {
             workoutsRepository.updateExerciseWorkoutJunctionSupersetId(
                 junctionId, supersetId
+            )
+        }
+    }
+
+    fun updateExerciseBarbellType(junctionId: String, barbellId: String) {
+        viewModelScope.launch {
+            workoutsRepository.updateExerciseWorkoutJunctionBarbellId(
+                junctionId, barbellId
             )
         }
     }

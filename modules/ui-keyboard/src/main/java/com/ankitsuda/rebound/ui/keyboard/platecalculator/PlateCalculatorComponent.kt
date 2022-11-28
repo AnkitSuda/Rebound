@@ -23,14 +23,19 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ankitsuda.base.util.fromKgToLbs
+import com.ankitsuda.base.util.fromLbsToKg
 import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.common.compose.LocalAppSettings
+import com.ankitsuda.common.compose.kgToUserPrefStr
 import com.ankitsuda.common.compose.userPrefWeightUnitStr
+import com.ankitsuda.rebound.domain.WeightUnit
+import com.ankitsuda.rebound.domain.entities.Barbell
 import com.ankitsuda.rebound.domain.entities.Plate
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.theme.LocalThemeState
@@ -41,12 +46,17 @@ import timber.log.Timber
 fun PlateCalculatorComponent(
     modifier: Modifier,
     weight: Double,
+    barbell: Barbell?,
     viewModel: PlateCalculatorComponentViewModel = hiltViewModel()
 ) {
     val plates by viewModel.plates.collectAsState(emptyList())
     val remainingWeight by viewModel.remainingWeight.collectAsState()
 
     val theme = LocalThemeState.current
+
+    LaunchedEffect(key1 = barbell) {
+        viewModel.updateBarbell(barbell)
+    }
 
     LaunchedEffect(key1 = weight) {
         viewModel.refreshPlates(weight)
@@ -76,6 +86,7 @@ fun PlateCalculatorComponent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
+                barbell = barbell,
                 plates = plates
             )
 
@@ -87,6 +98,7 @@ fun PlateCalculatorComponent(
 @Composable
 private fun BarbellComponent(
     modifier: Modifier,
+    barbell: Barbell?,
     plates: List<Plate>
 ) {
     val theme = LocalThemeState.current
@@ -95,7 +107,10 @@ private fun BarbellComponent(
     val barbellColor = theme.keyboardBarbellColor
     val onBarbellColor = theme.keyboardOnBarbellColor
 
-    val barbellWeight = 0F
+    val barbellWeight = when (LocalAppSettings.current.weightUnit) {
+        WeightUnit.LBS -> barbell?.weightLbs ?: barbell?.weightKg?.fromKgToLbs() ?: 0.0
+        else -> barbell?.weightKg ?: barbell?.weightLbs?.fromLbsToKg() ?: 0.0
+    }
 
     val scrollState = rememberScrollState()
 

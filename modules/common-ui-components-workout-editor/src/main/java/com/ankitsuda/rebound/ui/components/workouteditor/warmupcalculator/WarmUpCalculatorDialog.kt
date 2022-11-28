@@ -172,7 +172,7 @@ private fun WarmUpCalculatorDialogLayout(
                             } ?: 0.0
                         )
                     },
-                    reboundKeyboardType = ReboundKeyboardType.WEIGHT,
+                    reboundKeyboardType = ReboundKeyboardType.Weight(),
                 )
             }
 

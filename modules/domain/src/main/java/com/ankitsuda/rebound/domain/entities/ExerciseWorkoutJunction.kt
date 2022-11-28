@@ -27,6 +27,9 @@ data class ExerciseWorkoutJunction(
     @ColumnInfo(name = "superset_id")
     var supersetId: Int? = null,
 
+    @ColumnInfo(name = "barbell_id")
+    var barbellId: String? = null,
+
     @ColumnInfo(name = "exercise_id")
     var exerciseId: String? = null,
     @ColumnInfo(name = "workout_id")

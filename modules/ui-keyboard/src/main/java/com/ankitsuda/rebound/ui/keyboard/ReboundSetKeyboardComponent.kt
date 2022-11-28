@@ -51,9 +51,9 @@ fun ReboundSetKeyboardComponent(
     }
 
     val currentMode = when (reboundKeyboardType) {
-        ReboundKeyboardType.WEIGHT -> mCurrentMode
-        ReboundKeyboardType.WARMUP_SET -> KeyboardModeType.WARMUP_PICKER
-        ReboundKeyboardType.RPE -> KeyboardModeType.RPE_PICKER
+        is ReboundKeyboardType.Weight -> mCurrentMode
+        is ReboundKeyboardType.WarmupSet -> KeyboardModeType.WARMUP_PICKER
+        is ReboundKeyboardType.Rpe -> KeyboardModeType.RPE_PICKER
         else -> KeyboardModeType.NUMBERS
     }
 
@@ -122,13 +122,18 @@ fun ReboundSetKeyboardComponent(
                         )
                     }
                     KeyboardModeType.PLATE_CALCULATOR -> {
-                        key(LocalAppSettings.current.weightUnit) {
+                        key(LocalAppSettings.current.weightUnit, reboundKeyboardType) {
                             PlateCalculatorComponent(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(
                                         height = 250.dp,
                                     ),
+                                barbell = if (reboundKeyboardType is ReboundKeyboardType.Weight) {
+                                    reboundKeyboardType.barbell
+                                } else {
+                                    null
+                                },
                                 weight = inputConnection?.getText()?.toDoubleOrNull() ?: 0.0
                             )
                         }
@@ -186,7 +191,7 @@ private fun handleOnClickNumKey(
 
     when (numKey) {
         is NumberNumKey -> commitText()
-        is DecimalNumKey -> if ((reboundKeyboardType == ReboundKeyboardType.WEIGHT || reboundKeyboardType == ReboundKeyboardType.DISTANCE) && !currentText.contains(
+        is DecimalNumKey -> if ((reboundKeyboardType is ReboundKeyboardType.Weight || reboundKeyboardType is ReboundKeyboardType.Distance) && !currentText.contains(
                 "."
             )
         ) {

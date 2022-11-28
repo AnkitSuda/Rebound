@@ -16,8 +16,12 @@ package com.ankitsuda.rebound.ui.keyboard.platecalculator
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.util.fromKgToLbs
+import com.ankitsuda.base.util.fromLbsToKg
 import com.ankitsuda.rebound.data.datastore.AppPreferences
 import com.ankitsuda.rebound.data.repositories.PlatesRepository
+import com.ankitsuda.rebound.domain.WeightUnit
+import com.ankitsuda.rebound.domain.entities.Barbell
 import com.ankitsuda.rebound.domain.entities.Plate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -42,12 +46,15 @@ class PlateCalculatorComponentViewModel @Inject constructor(
 
     private var platesJob: Job? = null
     private var lastWeight: Double? = null
+    private var weightUnit: WeightUnit? = null
 
     private val _allPlates = arrayListOf<Plate>()
+    private var barbell: Barbell? = null
 
     init {
         viewModelScope.launch {
             prefs.weightUnit.collectLatest { unit ->
+                weightUnit = unit
                 platesRepository.getActivePlates(forWeightUnit = unit).collectLatest {
                     _allPlates.clear()
                     _allPlates.addAll(it)
@@ -59,15 +66,29 @@ class PlateCalculatorComponentViewModel @Inject constructor(
         }
     }
 
+    fun updateBarbell(newBarbell: Barbell?) {
+        barbell = newBarbell
+        if (lastWeight != null) {
+            refreshPlates(lastWeight!!)
+        }
+    }
+
     fun refreshPlates(newWeight: Double) {
         platesJob?.cancel()
         platesJob = viewModelScope.launch {
+            val barbellWeight = when (weightUnit) {
+                WeightUnit.LBS -> barbell?.weightLbs ?: barbell?.weightKg?.fromKgToLbs() ?: 0.0
+                else -> barbell?.weightKg ?: barbell?.weightLbs?.fromLbsToKg() ?: 0.0
+            }
+
+            val weightForPlates = newWeight - barbellWeight
+
             val platesNeeded =
-                calculatePlates(newWeight, _allPlates.sortedByDescending { it.weight })
+                calculatePlates(weightForPlates, _allPlates.sortedByDescending { it.weight })
             val sumOfPlates = platesNeeded.sumOf { it.weight ?: 0.0 }
             _plates.value = platesNeeded
             _remainingWeight.value = try {
-                newWeight - sumOfPlates * 2
+                weightForPlates - sumOfPlates * 2
             } catch (e: Exception) {
                 e.printStackTrace()
                 0.0

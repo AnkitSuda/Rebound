@@ -20,6 +20,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.ankitsuda.rebound.domain.entities.Barbell
 
 
 @Composable
@@ -32,6 +33,7 @@ fun ExercisePopupMenu(
     onAddWarmUpSets: () -> Unit,
     onAddNote: () -> Unit,
     onAddToSuperset: () -> Unit,
+    onChangeBarbell: () -> Unit,
     onRemoveFromSuperset: () -> Unit,
 ) {
     DropdownMenu(
@@ -60,6 +62,12 @@ fun ExercisePopupMenu(
             }
         }) {
             Text(stringResource(id = if (isInSuperset) R.string.remove_from_superset else R.string.add_to_superset))
+        }
+        DropdownMenuItem(onClick = {
+            onDismissRequest()
+            onChangeBarbell()
+        }) {
+            Text(stringResource(id = R.string.barbell))
         }
         DropdownMenuItem(onClick = {
             onDismissRequest()

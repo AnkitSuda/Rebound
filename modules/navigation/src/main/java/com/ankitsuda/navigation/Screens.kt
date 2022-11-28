@@ -49,6 +49,7 @@ const val BARBELL_ID_KEY = "barbell_id"
 
 const val RESULT_EXERCISES_SCREEN_EXERCISE_ID = "result_exercises_screen_exercise_id"
 const val RESULT_SUPERSET_SELECTOR_SUPERSET_ID_KEY = "result_superset_selector_superset_id"
+const val RESULT_BARBELL_SELECTOR_KEY = "result_barbell_selector"
 
 interface Screen {
     val route: String
@@ -498,6 +499,26 @@ sealed class LeafScreen(
         companion object {
             fun createRoute(workoutId: String, junctionId: String) =
                 "superset_selector?$WORKOUT_ID_KEY=$workoutId&$JUNCTION_ID_KEY=$junctionId"
+        }
+    }
+
+    data class BarbellSelector(override val route: String = "barbell_selector?$JUNCTION_ID_KEY={$JUNCTION_ID_KEY}&$BARBELL_ID_KEY={$BARBELL_ID_KEY}") :
+        LeafScreen(
+            route = route,
+            arguments = listOf(
+                navArgument(BARBELL_ID_KEY) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument(JUNCTION_ID_KEY) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            )
+        ) {
+        companion object {
+            fun createRoute(junctionId: String, selectedBarbellId: String? = null) =
+                "barbell_selector?$JUNCTION_ID_KEY=$junctionId&$BARBELL_ID_KEY=$selectedBarbellId"
         }
     }
 }

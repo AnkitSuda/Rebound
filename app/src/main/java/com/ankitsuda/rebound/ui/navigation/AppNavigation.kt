@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.ankitsuda.common.compose.collectEvent
 import com.ankitsuda.navigation.*
 import com.ankitsuda.rebound.ui.calendar.CalendarScreen
+import com.ankitsuda.rebound.ui.components.workouteditor.barbellselector.BarbellSelectorBottomSheet
 import com.ankitsuda.rebound.ui.components.workouteditor.supersetselector.SupersetSelectorBottomSheet
 import com.ankitsuda.rebound.ui.create_exercise.CreateExerciseScreen
 import com.ankitsuda.rebound.ui.customizebarbells.CustomizeBarbellsScreen
@@ -127,6 +128,7 @@ internal fun AppNavigation(
         addExercisesBottomSheet(navController)
         addRestTimer(navController)
         addSupersetSelector(navController)
+        addBarbellSelector(navController)
     }
 }
 
@@ -412,6 +414,12 @@ private fun NavGraphBuilder.addRestTimer(navController: NavController) {
 private fun NavGraphBuilder.addSupersetSelector(navController: NavController) {
     bottomSheetScreen(LeafScreen.SupersetSelector()) {
         SupersetSelectorBottomSheet(navController)
+    }
+}
+
+private fun NavGraphBuilder.addBarbellSelector(navController: NavController) {
+    bottomSheetScreen(LeafScreen.BarbellSelector()) {
+        BarbellSelectorBottomSheet(navController)
     }
 }
 

@@ -12,18 +12,13 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.rebound.ui.keyboard.enums
+package com.ankitsuda.rebound.ui.components.workouteditor.barbellselector.models
 
-import com.ankitsuda.rebound.domain.entities.Barbell
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-sealed class ReboundKeyboardType {
-    data class Weight(
-        val barbell: Barbell? = null
-    ) : ReboundKeyboardType()
-
-    object Reps : ReboundKeyboardType()
-    object Distance : ReboundKeyboardType()
-    object Time : ReboundKeyboardType()
-    object WarmupSet : ReboundKeyboardType()
-    object Rpe : ReboundKeyboardType()
-}
+@Parcelize
+data class BarbellSelectorResult(
+    val junctionId: String,
+    val barbellId: String
+) : Parcelable

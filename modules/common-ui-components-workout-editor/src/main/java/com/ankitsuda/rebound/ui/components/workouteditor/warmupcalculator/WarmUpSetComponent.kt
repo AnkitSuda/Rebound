@@ -96,7 +96,7 @@ internal fun WarmUpSetComponent(
                 value = startingSet.findFormula(),
                 contentColor = fieldContentColor,
                 bgColor = bgColor,
-                reboundKeyboardType = ReboundKeyboardType.WARMUP_SET,
+                reboundKeyboardType = ReboundKeyboardType.WarmupSet,
                 onValueChange = {
                     val arr = it.split(" x ")
                     val weightInt =

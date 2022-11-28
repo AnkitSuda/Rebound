@@ -104,6 +104,7 @@ fun WorkoutEditScreen(
                 useReboundKeyboard = true,
                 cancelWorkoutButtonVisible = false,
                 logEntriesWithJunction = logEntriesWithJunction,
+                barbells = emptyList(), // TODO: Fix it
                 onChangeWorkoutName = {
                     viewModel.updateWorkoutName(it)
                 },
@@ -137,6 +138,7 @@ fun WorkoutEditScreen(
                 onDeleteNote = viewModel::deleteNote,
                 onAddToSuperset = viewModel::addToSuperset,
                 onRemoveFromSuperset = viewModel::removeFromSuperset,
+                onUpdateBarbell = { _, _ -> } // TODO: Fix it
             )
         }
 

@@ -42,8 +42,8 @@ import com.google.accompanist.insets.navigationBarsPadding
 fun ReboundKeyboardHost(content: @Composable () -> Unit) {
     val theme = LocalThemeState.current
 
-    var reboundSetKeyboardType by remember {
-        mutableStateOf(ReboundKeyboardType.WEIGHT)
+    var reboundSetKeyboardType: ReboundKeyboardType by remember {
+        mutableStateOf(ReboundKeyboardType.Weight())
     }
     var reboundSetKeyboardVisible by remember {
         mutableStateOf(false)
@@ -52,20 +52,18 @@ fun ReboundKeyboardHost(content: @Composable () -> Unit) {
         mutableStateOf(null)
     }
 
-    val reboundSetKeyboard by remember {
-        mutableStateOf(
-            ReboundSetKeyboard(
-                onChangeKeyboardType = {
-                    reboundSetKeyboardType = it
-                },
+    val reboundSetKeyboard = remember {
+        ReboundSetKeyboard(
+            onChangeKeyboardType = {
+                reboundSetKeyboardType = it
+            },
 
-                onChangeVisibility = {
-                    reboundSetKeyboardVisible = it
-                },
-                onChangeInputConnection = {
-                    reboundSetKeyboardInputConnection = it
-                }
-            )
+            onChangeVisibility = {
+                reboundSetKeyboardVisible = it
+            },
+            onChangeInputConnection = {
+                reboundSetKeyboardInputConnection = it
+            }
         )
     }
 

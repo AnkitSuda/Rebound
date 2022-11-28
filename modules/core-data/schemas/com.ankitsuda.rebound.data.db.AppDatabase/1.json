@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "68617553ff75764b3f0264b855b8cd96",
+    "identityHash": "0df17bb8a8b397dd92836c9e2bad51c5",
     "entities": [
       {
         "tableName": "body_parts",
@@ -408,7 +408,7 @@
       },
       {
         "tableName": "exercise_workout_junctions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `superset_id` INTEGER, `exercise_id` TEXT, `workout_id` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `superset_id` INTEGER, `barbell_id` TEXT, `exercise_id` TEXT, `workout_id` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -420,6 +420,12 @@
             "fieldPath": "supersetId",
             "columnName": "superset_id",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "barbellId",
+            "columnName": "barbell_id",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -902,7 +908,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '68617553ff75764b3f0264b855b8cd96')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0df17bb8a8b397dd92836c9e2bad51c5')"
     ]
   }
 }

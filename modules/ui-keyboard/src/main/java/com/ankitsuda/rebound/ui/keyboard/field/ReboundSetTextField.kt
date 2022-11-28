@@ -24,6 +24,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -76,8 +77,7 @@ fun RowScope.ReboundSetTextField(
                             onValueChange?.invoke(newValue)
                         }
                     }
-
-                    setRawInputType(InputType.TYPE_CLASS_TEXT)
+                    setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
                     setTextIsSelectable(true)
                     val ic = onCreateInputConnection(EditorInfo())
 

@@ -83,7 +83,7 @@ private fun getAllKeys(
         keys.add(NumberNumKey(value = i))
     }
 
-    if (reboundKeyboardType == ReboundKeyboardType.WEIGHT || reboundKeyboardType == ReboundKeyboardType.DISTANCE) {
+    if (reboundKeyboardType is ReboundKeyboardType.Weight || reboundKeyboardType is ReboundKeyboardType.Distance) {
         keys.add(DecimalNumKey)
     } else {
         keys.add(null)

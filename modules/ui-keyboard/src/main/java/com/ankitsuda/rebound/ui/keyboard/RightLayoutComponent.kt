@@ -53,7 +53,7 @@ internal fun RightLayoutComponent(
                 }
             }
     ) {
-        if (keyboardType == ReboundKeyboardType.WEIGHT) {
+        if (keyboardType is ReboundKeyboardType.Weight) {
             IconButton(onClick = {
                 onChangeLayoutMode(
                     if (currentLayoutMode == KeyboardModeType.NUMBERS) {
