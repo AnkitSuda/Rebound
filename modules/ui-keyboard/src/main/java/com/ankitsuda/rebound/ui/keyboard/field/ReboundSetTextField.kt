@@ -42,7 +42,6 @@ import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
 
 
 @SuppressLint("ClickableViewAccessibility")
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RowScope.ReboundSetTextField(
     layoutWeight: Float = 1.25f,

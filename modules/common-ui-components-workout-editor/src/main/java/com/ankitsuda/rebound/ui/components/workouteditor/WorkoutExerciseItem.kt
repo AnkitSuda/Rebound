@@ -39,17 +39,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.*
 import com.ankitsuda.common.compose.*
-import com.ankitsuda.rebound.domain.DistanceUnit
-import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
-import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.domain.entities.*
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
+import com.ankitsuda.rebound.ui.components.workouteditor.components.SetFieldColumns
+import com.ankitsuda.rebound.ui.components.workouteditor.components.SetFieldTitleColumns
+import com.ankitsuda.rebound.ui.components.workouteditor.utils.WorkoutEditorUtils
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpCalculatorDialog
 import com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator.WarmUpSet
-import com.ankitsuda.rebound.ui.keyboard.enums.ReboundKeyboardType
-import com.ankitsuda.rebound.ui.keyboard.field.ReboundSetTextField
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
 import java.util.*
 
@@ -209,57 +207,7 @@ fun LazyListScope.workoutExerciseItemAlt(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(
-                text = stringResource(id = R.string.set_uppercase),
-                style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(0.5f)
-            )
-//            Text(
-//                text = "PREVIOUS",
-//                style = ReboundTheme.typography.caption,
-//                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier.weight(1.5f)
-//            )
-            if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
-                || exercise.category == ExerciseCategory.DISTANCE_AND_TIME
-            ) {
-                Text(
-                    text = when (exercise.category) {
-                        ExerciseCategory.WEIGHTS_AND_REPS -> userPrefWeightUnitStr(case = 1)
-                        ExerciseCategory.DISTANCE_AND_TIME -> userPrefDistanceUnitStr(case = 1)
-                        else -> "?"
-                    },
-                    style = ReboundTheme.typography.caption,
-                    color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(1.25f)
-                )
-            }
-
-            Text(
-                text = if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
-                    || exercise.category == ExerciseCategory.REPS
-                ) stringResource(id = R.string.reps_uppercase) else stringResource(id = R.string.time_uppercase),
-                style = ReboundTheme.typography.caption,
-                color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1.25f)
-            )
-
-            if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
-                || exercise.category == ExerciseCategory.REPS
-            ) {
-                Text(
-                    text = stringResource(id = R.string.rpe),
-                    style = ReboundTheme.typography.caption,
-                    color = ReboundTheme.colors.onBackground.copy(alpha = 0.5f),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(.75f)
-                )
-            }
+            SetFieldTitleColumns(exercise = exercise)
 
             Box(
                 modifier = Modifier.weight(0.5f),
@@ -406,23 +354,10 @@ private fun LazyItemScope.SetItem(
     }
 
     fun handleOnCompleteChange(isComplete: Boolean) {
-        val isCompletable = when (exercise.category) {
-            ExerciseCategory.DISTANCE_AND_TIME -> {
-                mLogEntry.distance != null && mLogEntry.timeRecorded != null
-            }
-            ExerciseCategory.WEIGHTS_AND_REPS -> {
-                mLogEntry.weight != null && mLogEntry.reps != null
-            }
-            ExerciseCategory.REPS -> {
-                mLogEntry.reps != null
-            }
-            ExerciseCategory.TIME -> {
-                mLogEntry.timeRecorded != null
-            }
-            ExerciseCategory.UNKNOWN -> {
-                true
-            }
-        }
+        val isCompletable = WorkoutEditorUtils.isValidSet(
+            logEntry = exerciseLogEntry,
+            exerciseCategory = exercise.category
+        )
 
         if (isComplete && isCompletable) {
             isScaleAnimRunning = true
@@ -468,7 +403,7 @@ private fun LazyItemScope.SetItem(
             onDistanceChange = { _, value ->
                 handleOnChange(mLogEntry.copy(distance = value))
             },
-            onTimeChange = { _, value ->
+            onDurationChange = { _, value ->
                 handleOnChange(mLogEntry.copy(timeRecorded = value))
             },
             onCompleteChange = { _, value ->
@@ -496,7 +431,7 @@ private fun SetItemLayout(
     onWeightChange: (ExerciseLogEntry, Double?) -> Unit,
     onRepsChange: (ExerciseLogEntry, Int?) -> Unit,
     onDistanceChange: (ExerciseLogEntry, Double?) -> Unit,
-    onTimeChange: (ExerciseLogEntry, Long?) -> Unit,
+    onDurationChange: (ExerciseLogEntry, Long?) -> Unit,
     onCompleteChange: (ExerciseLogEntry, Boolean) -> Unit,
     onSetTypeChange: (ExerciseLogEntry, LogSetType) -> Unit,
     onRpeChange: (ExerciseLogEntry, Float?) -> Unit,
@@ -547,125 +482,18 @@ private fun SetItemLayout(
 //            modifier = Modifier.weight(1.5f)
 //        )
 
-        if (exercise.category == ExerciseCategory.DISTANCE_AND_TIME || exercise.category == ExerciseCategory.WEIGHTS_AND_REPS) {
-            val currentWeightUnit = LocalAppSettings.current.weightUnit
-            val currentDistanceUnit = LocalAppSettings.current.distanceUnit
-
-            val fieldValue = when (exercise.category) {
-                ExerciseCategory.WEIGHTS_AND_REPS -> {
-                    exerciseLogEntry.weight?.kgToUserPrefStr() ?: ""
-                }
-                ExerciseCategory.DISTANCE_AND_TIME -> {
-                    exerciseLogEntry.distance?.kmToUserPrefStr() ?: ""
-                }
-                else -> ""
-            }
-
-            fun mOnValueChange(value: String) {
-                when (exercise.category) {
-                    ExerciseCategory.WEIGHTS_AND_REPS -> {
-                        var newValue =
-                            (if (value.isBlank()) null else value.trim()/*.filter { it.isDigit() }*/
-                                .toDoubleOrNull())
-
-                        if (currentWeightUnit == WeightUnit.LBS) {
-                            newValue = newValue?.fromLbsToKg()
-                        }
-
-                        onWeightChange(exerciseLogEntry, newValue)
-                    }
-                    ExerciseCategory.DISTANCE_AND_TIME -> {
-                        var newValue =
-                            (if (value.isBlank()) null else value.trim()
-                                .toDoubleOrNull())
-
-                        if (currentDistanceUnit == DistanceUnit.MILES) {
-                            newValue = newValue?.fromMilesToKm()
-                        }
-
-                        onDistanceChange(exerciseLogEntry, newValue)
-                    }
-                    else -> {}
-                }
-            }
-
-            if (useReboundKeyboard) {
-                ReboundSetTextField(
-                    value = fieldValue,
-                    onValueChange = ::mOnValueChange,
-                    contentColor = contentColor,
-                    bgColor = bgColor,
-                    reboundKeyboardType = getReboundKeyboardType(
-                        category = exercise.category,
-                        isLeft = true,
-                        barbell = barbell,
-                    ),
-                )
-            } else {
-                SetTextField(
-                    value = fieldValue,
-                    onValueChange = ::mOnValueChange,
-                    contentColor = contentColor,
-                    bgColor = bgColor,
-                )
-            }
-        }
-
-        val rightFieldValue =
-            if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS || exercise.category == ExerciseCategory.REPS) {
-                (exerciseLogEntry.reps ?: "").toString()
-            } else {
-                (exerciseLogEntry.timeRecorded ?: "").toString()
-            }
-
-        val mOnValueChange: (String) -> Unit = {
-            if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS || exercise.category == ExerciseCategory.REPS) {
-                val newValue =
-                    (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
-                        .toIntOrNull())
-                onRepsChange(exerciseLogEntry, newValue)
-            } else {
-                val newValue =
-                    (if (it.isBlank()) null else it.trim()/*.filter { it.isDigit() }*/
-                        .toLongOrNull())
-                onTimeChange(exerciseLogEntry, newValue)
-            }
-        }
-
-        if (useReboundKeyboard) {
-            ReboundSetTextField(
-                value = rightFieldValue,
-                onValueChange = mOnValueChange,
-                contentColor = contentColor,
-                bgColor = bgColor,
-                reboundKeyboardType = getReboundKeyboardType(
-                    category = exercise.category,
-                    isLeft = false
-                )
-            )
-        } else {
-            SetTextField(
-                value = rightFieldValue,
-                onValueChange = mOnValueChange,
-                contentColor = contentColor,
-                bgColor = bgColor,
-            )
-        }
-
-        if (exercise.category == ExerciseCategory.WEIGHTS_AND_REPS
-            || exercise.category == ExerciseCategory.REPS
-        ) {
-            ReboundSetTextField(
-                layoutWeight = 0.75f,
-                value = exerciseLogEntry.rpe?.toReadableString() ?: "",
-                onValueChange = {
-                    onRpeChange(exerciseLogEntry, it.toFloatOrNull())
-                },
-                contentColor = contentColor,
-                bgColor = bgColor,
-                reboundKeyboardType = ReboundKeyboardType.Rpe
-            )
-        }
+        SetFieldColumns(
+            contentColor = contentColor,
+            bgColor = bgColor,
+            exercise = exercise,
+            barbell = barbell,
+            exerciseLogEntry = exerciseLogEntry,
+            onWeightChange = onWeightChange,
+            onDistanceChange = onDistanceChange,
+            onRepsChange = onRepsChange,
+            onDurationChange = onDurationChange,
+            onRpeChange = onRpeChange,
+        )
 
         IconButton(
             onClick = {
@@ -695,18 +523,3 @@ private fun SetItemLayout(
         }
     }
 }
-
-private fun getReboundKeyboardType(
-    category: ExerciseCategory,
-    isLeft: Boolean,
-    barbell: Barbell? = null
-) =
-    when (category) {
-        ExerciseCategory.WEIGHTS_AND_REPS -> if (isLeft) ReboundKeyboardType.Weight(
-            barbell = barbell
-        ) else ReboundKeyboardType.Reps
-        ExerciseCategory.REPS -> ReboundKeyboardType.Reps
-        ExerciseCategory.DISTANCE_AND_TIME -> if (isLeft) ReboundKeyboardType.Distance else ReboundKeyboardType.Time
-        ExerciseCategory.TIME -> ReboundKeyboardType.Time
-        ExerciseCategory.UNKNOWN -> ReboundKeyboardType.Reps
-    }

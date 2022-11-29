@@ -42,3 +42,5 @@ fun Double.lbsToReadable() = kgToReadable()
 
 fun Double.fromKmToMilesReadable(): String = DecimalFormat("#.###").format(fromKmToMiles())
 fun Double.kmToReadable(): String = DecimalFormat("#.###").format(this)
+
+fun <T> T.isAny(vararg values: T) = values.any { it == this }

@@ -47,7 +47,8 @@ fun ExerciseDetailAboutTab(exercise: Exercise) {
 
         }
 
-        Section(title = stringResource(id = R.string.category), text = exercise.category.cName)
+        // TODO fix category name
+        Section(title = stringResource(id = R.string.category), text = exercise.category.tag)
     }
 }
 

@@ -196,21 +196,24 @@ fun SessionExerciseSetItem(
                         value = entry.weight.kgToUserPrefStr(),
                         title = userPrefWeightUnitStr()
                     )
-                    ExerciseCategory.DISTANCE_AND_TIME -> SetColumnItem(
-                        value = entry.distance.kmToUserPrefStr(),
-                        title = userPrefDistanceUnitStr()
-                    )
+                    // TODO fix this
+//                    ExerciseCategory.DISTANCE_AND_TIME -> SetColumnItem(
+//                        value = entry.distance.kmToUserPrefStr(),
+//                        title = userPrefDistanceUnitStr()
+//                    )
                     else -> {}
                 }
                 when (exerciseCategory) {
-                    ExerciseCategory.WEIGHTS_AND_REPS, ExerciseCategory.REPS -> SetColumnItem(
-                        value = (entry.reps ?: 0).toString(),
-                        title = stringResource(id = R.string.reps_lowercase)
-                    )
-                    ExerciseCategory.DISTANCE_AND_TIME, ExerciseCategory.TIME -> SetColumnItem(
-                        value = (entry.timeRecorded ?: 0).toString(),
-                        title = stringResource(id = R.string.time)
-                    )
+                    // TODO fix this
+//                    ExerciseCategory.WEIGHTS_AND_REPS, ExerciseCategory.REPS -> SetColumnItem(
+//                        value = (entry.reps ?: 0).toString(),
+//                        title = stringResource(id = R.string.reps_lowercase)
+//                    )
+                    // TODO fix this
+//                    ExerciseCategory.DISTANCE_AND_TIME, ExerciseCategory.TIME -> SetColumnItem(
+//                        value = (entry.timeRecorded ?: 0).toString(),
+//                        title = stringResource(id = R.string.time)
+//                    )
                     else -> {}
                 }
                 entry.rpe?.let {

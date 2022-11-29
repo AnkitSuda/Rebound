@@ -42,7 +42,6 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 import timber.log.Timber
 import kotlin.random.Random
 
-@OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun CreateExerciseScreen(
     navigator: Navigator = LocalNavigator.current,
@@ -61,7 +60,6 @@ fun CreateExerciseScreen(
     val selectedMuscle by viewModel.selectedMuscle.observeAsState("abductors")
 
     val isCreateBtnEnabled = nameValue.trim().isNotEmpty()
-
 
     Timber.d("TESTING RECOMPOSITION ${Random.nextInt()}")
 
@@ -163,7 +161,7 @@ fun CreateExerciseScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
 
                                 Text(
-                                    text = category.cName
+                                    text = category.tag
                                 )
                             }
                         }

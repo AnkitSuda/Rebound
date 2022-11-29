@@ -27,6 +27,7 @@ import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.entities.*
+import com.ankitsuda.rebound.ui.components.workouteditor.utils.WorkoutEditorUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -239,23 +240,7 @@ class WorkoutPanelViewModel @Inject constructor(
 
         for (junction in junctions) {
             val isIncomplete = junction.logEntries.any {
-                when (junction.exercise.category) {
-                    ExerciseCategory.DISTANCE_AND_TIME -> {
-                        it.distance == null || it.timeRecorded == null
-                    }
-                    ExerciseCategory.WEIGHTS_AND_REPS -> {
-                        it.weight == null || it.reps == null
-                    }
-                    ExerciseCategory.REPS -> {
-                        it.reps == null
-                    }
-                    ExerciseCategory.TIME -> {
-                        it.timeRecorded == null
-                    }
-                    ExerciseCategory.UNKNOWN -> {
-                        false
-                    }
-                }
+                WorkoutEditorUtils.isValidSet(it, junction.exercise.category)
             }
 
             if (isIncomplete) {

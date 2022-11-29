@@ -14,21 +14,20 @@
 
 package com.ankitsuda.rebound.domain
 
-enum class ExerciseCategory(val tag: String, val cName: String) {
-    WEIGHTS_AND_REPS("weights_and_reps", "Weights & Reps"),
-    REPS("reps", "Reps"),
-    DISTANCE_AND_TIME("distance_and_time", "Distance & Time"),
-    TIME("time", "Time"),
-    UNKNOWN("unknown", "Unknown")
+import android.content.res.TypedArray
+
+enum class ExerciseCategory(val tag: String) {
+    WEIGHTS_AND_REPS("weights_and_reps"),
+    BODYWEIGHT_REPS("bodyweight_reps"),
+    WEIGHTED_BODYWEIGHT("weighted_bodyweight"),
+    ASSISTED_BODYWEIGHT("assisted_bodyweight"),
+    DURATION("duration"),
+    DISTANCE_AND_DURATION("distance_and_duration"),
+    WEIGHT_AND_DISTANCE("weight_and_distance"),
+    WEIGHT_AND_DURATION("weight_and_duration"),
+    UNKNOWN("unknown");
 }
 
-
 fun String?.parseToExerciseCategory(): ExerciseCategory {
-    return when (this.toString()) {
-        ExerciseCategory.WEIGHTS_AND_REPS.tag -> ExerciseCategory.WEIGHTS_AND_REPS
-        ExerciseCategory.REPS.tag -> ExerciseCategory.REPS
-        ExerciseCategory.DISTANCE_AND_TIME.tag -> ExerciseCategory.DISTANCE_AND_TIME
-        ExerciseCategory.TIME.tag -> ExerciseCategory.TIME
-        else -> ExerciseCategory.UNKNOWN
-    }
+    return ExerciseCategory.values().find { it.tag == this } ?: ExerciseCategory.UNKNOWN
 }
