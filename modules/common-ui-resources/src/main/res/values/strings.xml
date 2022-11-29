@@ -261,4 +261,5 @@
     <string name="add_barbell">Add barbell</string>
     <string name="select_barbell">Select barbell</string>
     <string name="select_muscle">Select muscle</string>
+    <string name="select_category">Select category</string>
 </resources>

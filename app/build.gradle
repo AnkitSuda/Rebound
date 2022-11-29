@@ -113,6 +113,7 @@ dependencies {
     implementation project(":modules:stopwatch")
     implementation project(":modules:ui-customize-barbells")
     implementation project(":modules:ui-muscle-selector")
+    implementation project(":modules:ui-exercise-category-selector")
 
     implementation Deps.Kotlin.coroutinesAndroid
     kapt Deps.Android.Lifecycle.compiler

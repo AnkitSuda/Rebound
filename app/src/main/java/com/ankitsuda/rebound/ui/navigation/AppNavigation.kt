@@ -33,6 +33,7 @@ import com.ankitsuda.rebound.ui.customizebarbells.edit.BarbellEditBottomSheet
 import com.ankitsuda.rebound.ui.customizeplates.CustomizePlatesScreen
 import com.ankitsuda.rebound.ui.customizeplates.edit.PlateEditBottomSheet
 import com.ankitsuda.rebound.ui.exercise_details.ExerciseDetailScreen
+import com.ankitsuda.rebound.ui.exercisecategoryselector.ExerciseCategorySelectorBottomSheet
 import com.ankitsuda.rebound.ui.exercises.ExercisesScreen
 import com.ankitsuda.rebound.ui.history.HistoryScreen
 import com.ankitsuda.rebound.ui.home.HomeScreen
@@ -131,6 +132,7 @@ internal fun AppNavigation(
         addSupersetSelector(navController)
         addBarbellSelector(navController)
         addMuscleSelector(navController)
+        addExerciseCategorySelector(navController)
     }
 }
 
@@ -428,6 +430,12 @@ private fun NavGraphBuilder.addBarbellSelector(navController: NavController) {
 private fun NavGraphBuilder.addMuscleSelector(navController: NavController) {
     bottomSheetScreen(LeafScreen.MuscleSelector()) {
         MuscleSelectorBottomSheet(navController)
+    }
+}
+
+private fun NavGraphBuilder.addExerciseCategorySelector(navController: NavController) {
+    bottomSheetScreen(LeafScreen.ExerciseCategorySelector()) {
+        ExerciseCategorySelectorBottomSheet(navController)
     }
 }
 

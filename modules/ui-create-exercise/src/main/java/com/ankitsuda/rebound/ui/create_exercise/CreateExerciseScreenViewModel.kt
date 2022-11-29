@@ -14,27 +14,21 @@
 
 package com.ankitsuda.rebound.ui.create_exercise
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.base.utils.extensions.getStateFlow
-import com.ankitsuda.navigation.RESULT_MUSCLE_SELECTOR_KEY
+import com.ankitsuda.base.utils.extensions.shareWhileObserved
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
 import com.ankitsuda.rebound.data.repositories.MusclesRepository
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.allExerciseCategories
-import com.ankitsuda.rebound.ui.muscleselector.models.MuscleSelectorResult
+import com.ankitsuda.rebound.domain.parseToExerciseCategory1
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateExerciseScreenViewModel @Inject constructor(
-    private val handle: SavedStateHandle,
     private val musclesRepository: MusclesRepository,
     private val exercisesRepository: ExercisesRepository
 ) :
@@ -52,11 +46,18 @@ class CreateExerciseScreenViewModel @Inject constructor(
         MutableStateFlow<ExerciseCategory>(ExerciseCategory.WeightAndReps)
     val selectedCategory = _selectedCategory.asStateFlow()
 
-    private var _selectedMuscle = MutableStateFlow<String?>("abductors")
-    val selectedMuscle = _selectedMuscle.asStateFlow()
+    private var _selectedMuscleTag = MutableStateFlow<String?>(null)
+    val selectedMuscleTag = _selectedMuscleTag.asStateFlow()
 
-    // Dummy
-//    val allCategories = ExerciseCategory.values()
+    val selectedMuscle = _selectedMuscleTag.flatMapLatest {
+        if (it != null) {
+            musclesRepository.getMuscle(it)
+        } else {
+            emptyFlow()
+        }
+    }.distinctUntilChanged()
+        .shareWhileObserved(viewModelScope)
+
     val allCategories = allExerciseCategories
     val allPrimaryMuscles = musclesRepository.getMuscles()
 
@@ -72,8 +73,12 @@ class CreateExerciseScreenViewModel @Inject constructor(
         _selectedCategory.value = value
     }
 
+    fun setCategory(tag: String) {
+        setCategory(tag.parseToExerciseCategory1())
+    }
+
     fun setPrimaryMuscle(value: String) {
-        _selectedMuscle.value = value
+        _selectedMuscleTag.value = value
     }
 
     fun createExercise() {
@@ -81,7 +86,7 @@ class CreateExerciseScreenViewModel @Inject constructor(
             exercisesRepository.createExercise(
                 name = _name.value,
                 notes = _note.value,
-                primaryMuscleTag = _selectedMuscle.value,
+                primaryMuscleTag = _selectedMuscleTag.value,
                 category = _selectedCategory.value
             )
         }

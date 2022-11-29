@@ -12,12 +12,12 @@
  * See the GNU General Public License for more details.
  */
 
-package com.ankitsuda.rebound.data.repositories
+package com.ankitsuda.rebound.ui.exercisecategoryselector.models
 
-import com.ankitsuda.rebound.data.db.daos.MusclesDao
-import javax.inject.Inject
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-class MusclesRepository @Inject constructor(private val musclesDao: MusclesDao) {
-    fun getMuscles() = musclesDao.getMuscles()
-    fun getMuscle(tag: String) = musclesDao.getMuscle(tag)
-}
+@Parcelize
+data class ExerciseCategorySelectorResult(
+    val categoryTag: String
+) : Parcelable
