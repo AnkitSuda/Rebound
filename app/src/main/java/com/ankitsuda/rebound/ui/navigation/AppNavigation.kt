@@ -41,6 +41,7 @@ import com.ankitsuda.rebound.ui.measure.MeasureScreen
 import com.ankitsuda.rebound.ui.measure.part.add_sheet.AddPartMeasurementBottomSheet
 import com.ankitsuda.rebound.ui.measure.part.overview.PartMeasurementsScreen
 import com.ankitsuda.rebound.ui.more.MoreScreen
+import com.ankitsuda.rebound.ui.muscleselector.MuscleSelectorBottomSheet
 import com.ankitsuda.rebound.ui.resttimer.RestTimerScreen
 import com.ankitsuda.rebound.ui.settings.SettingsScreen
 import com.ankitsuda.rebound.ui.settings.personalization.ColorPickerDemoScreen
@@ -129,6 +130,7 @@ internal fun AppNavigation(
         addRestTimer(navController)
         addSupersetSelector(navController)
         addBarbellSelector(navController)
+        addMuscleSelector(navController)
     }
 }
 
@@ -371,7 +373,7 @@ private fun NavGraphBuilder.addReboundSetKeyboardDemo(navController: NavControll
 
 private fun NavGraphBuilder.addCreateExerciseBottomSheet(navController: NavController) {
     bottomSheetScreen(LeafScreen.CreateExercise()) {
-        CreateExerciseScreen()
+        CreateExerciseScreen(navController)
     }
 }
 
@@ -420,6 +422,12 @@ private fun NavGraphBuilder.addSupersetSelector(navController: NavController) {
 private fun NavGraphBuilder.addBarbellSelector(navController: NavController) {
     bottomSheetScreen(LeafScreen.BarbellSelector()) {
         BarbellSelectorBottomSheet(navController)
+    }
+}
+
+private fun NavGraphBuilder.addMuscleSelector(navController: NavController) {
+    bottomSheetScreen(LeafScreen.MuscleSelector()) {
+        MuscleSelectorBottomSheet(navController)
     }
 }
 

@@ -20,6 +20,7 @@ plugins {
     id "dagger.hilt.android.plugin"
     id "kotlin-android"
     id "kotlin-kapt"
+    id "kotlin-parcelize"
 }
 
 android {
@@ -41,7 +42,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion Deps.Android.Compose.compilerVersion
     }
-    namespace 'com.ankitsuda.rebound.ui.create_exercise'
+    namespace 'com.ankitsuda.rebound.ui.muscleselector'
 }
 
 repositories {
@@ -54,7 +55,6 @@ dependencies {
     implementation project(":modules:common-ui-components")
     implementation project(":modules:core-data")
     implementation project(":modules:navigation")
-    implementation project(":modules:ui-muscle-selector")
 
     implementation Deps.Dagger.hilt
     kapt Deps.Dagger.hiltCompiler

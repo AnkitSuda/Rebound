@@ -19,17 +19,15 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Done
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,18 +35,23 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ankitsuda.navigation.LocalNavigator
-import com.ankitsuda.navigation.Navigator
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import com.ankitsuda.base.utils.extensions.getStateFlow
+import com.ankitsuda.navigation.*
 import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.components.BottomSheetSurface
 import com.ankitsuda.rebound.ui.components.TopBar
 import com.ankitsuda.rebound.ui.components.TopBarIconButton
+import com.ankitsuda.rebound.ui.muscleselector.models.MuscleSelectorResult
 import com.google.accompanist.flowlayout.FlowRow
+import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import kotlin.random.Random
 
 @Composable
 fun CreateExerciseScreen(
+    navController: NavController,
     navigator: Navigator = LocalNavigator.current,
     viewModel: CreateExerciseScreenViewModel = hiltViewModel()
 ) {
@@ -58,15 +61,30 @@ fun CreateExerciseScreen(
     val categoriesList = viewModel.allCategories
     val musclesList by viewModel.allPrimaryMuscles.collectAsState(initial = emptyList())
 
-    val nameValue by viewModel.name.observeAsState("")
-    val noteValue by viewModel.note.observeAsState("")
+    val nameValue by viewModel.name.collectAsState("")
+    val noteValue by viewModel.note.collectAsState("")
 
-    val selectedCategory by viewModel.selectedCategory.observeAsState()
-    val selectedMuscle by viewModel.selectedMuscle.observeAsState("abductors")
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
+    val selectedMuscle by viewModel.selectedMuscle.collectAsState("abductors")
 
     val isCreateBtnEnabled = nameValue.trim().isNotEmpty()
 
-    Timber.d("TESTING RECOMPOSITION ${Random.nextInt()}")
+    // Observes results when Superset Selector changes value of arg
+    val muscleSelectorResult = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<MuscleSelectorResult?>(RESULT_MUSCLE_SELECTOR_KEY, null)
+        ?.collectAsState()
+
+    LaunchedEffect(key1 = muscleSelectorResult) {
+        muscleSelectorResult?.value?.muscleId?.let {
+            viewModel.setPrimaryMuscle(it)
+        }
+
+        navController.currentBackStackEntry?.savedStateHandle?.set(
+            RESULT_MUSCLE_SELECTOR_KEY,
+            null
+        )
+    }
 
     BottomSheetSurface {
         Column {
@@ -76,9 +94,12 @@ fun CreateExerciseScreen(
                 title = stringResource(id = R.string.new_exercise),
                 strictLeftIconAlignToStart = true,
                 leftIconBtn = {
-                    TopBarIconButton(icon = Icons.Outlined.Close, title = stringResource(id = R.string.back), onClick = {
-                        navigator.goBack()
-                    })
+                    TopBarIconButton(
+                        icon = Icons.Outlined.Close,
+                        title = stringResource(id = R.string.back),
+                        onClick = {
+                            navigator.goBack()
+                        })
                 },
                 rightIconBtn = {
                     TopBarIconButton(
@@ -149,28 +170,33 @@ fun CreateExerciseScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    FlowRow(crossAxisSpacing = 8.dp) {
-                        for (category in categoriesList) {
-                            Row(
-                                modifier = Modifier
-                                    .width((LocalConfiguration.current.screenWidthDp / 2.5).dp)
-                                    .clickable(onClick = {
-                                        viewModel.setCategory(category)
-                                    }, indication = null,
-                                        interactionSource = remember { MutableInteractionSource() }),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                RadioButton(selected = selectedCategory == category, onClick = {
-                                    viewModel.setCategory(category)
-                                })
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Text(
-                                    text = category.tag
-                                )
-                            }
-                        }
+                    Button(onClick = {
+                        navigator.navigate(LeafScreen.MuscleSelector.createRoute(selectedMuscleId = selectedMuscle))
+                    }) {
+                        Text(text = "Select category")
                     }
+//                    FlowRow(crossAxisSpacing = 8.dp) {
+//                        for (category in categoriesList) {
+//                            Row(
+//                                modifier = Modifier
+//                                    .width((LocalConfiguration.current.screenWidthDp / 2.5).dp)
+//                                    .clickable(onClick = {
+//                                        viewModel.setCategory(category)
+//                                    }, indication = null,
+//                                        interactionSource = remember { MutableInteractionSource() }),
+//                                verticalAlignment = Alignment.CenterVertically,
+//                            ) {
+//                                RadioButton(selected = selectedCategory == category, onClick = {
+//                                    viewModel.setCategory(category)
+//                                })
+//                                Spacer(modifier = Modifier.width(8.dp))
+//
+//                                Text(
+//                                    text = category.tag
+//                                )
+//                            }
+//                        }
+//                    }
                 }
                 Column(
                     Modifier
@@ -185,28 +211,33 @@ fun CreateExerciseScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    FlowRow(crossAxisSpacing = 8.dp) {
-                        for (muscle in musclesList) {
-                            Row(
-                                modifier = Modifier
-                                    .width((LocalConfiguration.current.screenWidthDp / 2.5).dp)
-                                    .clickable(onClick =
-                                    {
-                                        viewModel.setPrimaryMuscle(muscle.tag)
-                                    }, indication = null,
-                                        interactionSource = remember { MutableInteractionSource() }),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                RadioButton(selected = selectedMuscle == muscle.tag, onClick = {
-                                    viewModel.setPrimaryMuscle(muscle.tag)
-                                })
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = muscle.name,
-                                )
-                            }
-                        }
+                    Button(onClick = {
+                        navigator.navigate(LeafScreen.MuscleSelector.createRoute(selectedMuscleId = selectedMuscle))
+                    }) {
+                        Text(text = "Select muscle")
                     }
+//                    FlowRow(crossAxisSpacing = 8.dp) {
+//                        for (muscle in musclesList) {
+//                            Row(
+//                                modifier = Modifier
+//                                    .width((LocalConfiguration.current.screenWidthDp / 2.5).dp)
+//                                    .clickable(onClick =
+//                                    {
+//                                        viewModel.setPrimaryMuscle(muscle.tag)
+//                                    }, indication = null,
+//                                        interactionSource = remember { MutableInteractionSource() }),
+//                                verticalAlignment = Alignment.CenterVertically,
+//                            ) {
+//                                RadioButton(selected = selectedMuscle == muscle.tag, onClick = {
+//                                    viewModel.setPrimaryMuscle(muscle.tag)
+//                                })
+//                                Spacer(modifier = Modifier.width(8.dp))
+//                                Text(
+//                                    text = muscle.name,
+//                                )
+//                            }
+//                        }
+//                    }
                 }
             }
         }

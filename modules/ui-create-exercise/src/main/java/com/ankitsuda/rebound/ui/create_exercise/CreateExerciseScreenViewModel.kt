@@ -15,36 +15,45 @@
 package com.ankitsuda.rebound.ui.create_exercise
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ankitsuda.base.utils.extensions.getStateFlow
+import com.ankitsuda.navigation.RESULT_MUSCLE_SELECTOR_KEY
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
 import com.ankitsuda.rebound.data.repositories.MusclesRepository
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import com.ankitsuda.rebound.domain.allExerciseCategories
+import com.ankitsuda.rebound.ui.muscleselector.models.MuscleSelectorResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateExerciseScreenViewModel @Inject constructor(
+    private val handle: SavedStateHandle,
     private val musclesRepository: MusclesRepository,
     private val exercisesRepository: ExercisesRepository
 ) :
     ViewModel() {
-    private var _name = MutableLiveData("")
-    val name = _name
+    private var _name = MutableStateFlow("")
+    val name = _name.asStateFlow()
 
-    private var _note = MutableLiveData("")
-    val note = _note
+    private var _note = MutableStateFlow("")
+    val note = _note.asStateFlow()
 
-    private var _isCreateBtnEnabled = MutableLiveData(false)
-    val isCreateBtnEnabled = _isCreateBtnEnabled
+    private var _isCreateBtnEnabled = MutableStateFlow(false)
+    val isCreateBtnEnabled = _isCreateBtnEnabled.asStateFlow()
 
-    private var _selectedCategory = MutableLiveData<ExerciseCategory>(ExerciseCategory.WeightAndReps)
-    val selectedCategory = _selectedCategory
+    private var _selectedCategory =
+        MutableStateFlow<ExerciseCategory>(ExerciseCategory.WeightAndReps)
+    val selectedCategory = _selectedCategory.asStateFlow()
 
-    private var _selectedMuscle = MutableLiveData("abductors")
-    val selectedMuscle = _selectedMuscle
+    private var _selectedMuscle = MutableStateFlow<String?>("abductors")
+    val selectedMuscle = _selectedMuscle.asStateFlow()
 
     // Dummy
 //    val allCategories = ExerciseCategory.values()
