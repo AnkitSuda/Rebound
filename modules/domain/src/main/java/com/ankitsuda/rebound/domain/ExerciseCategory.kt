@@ -26,7 +26,7 @@ enum class SetFieldValueType {
 
 sealed class ExerciseCategory(open val tag: String, open val fields: List<SetFieldValueType>) {
     object WeightAndReps : ExerciseCategory(
-        tag = "weights_and_reps",
+        tag = "weight_and_reps",
         fields = listOf(SetFieldValueType.WEIGHT, SetFieldValueType.REPS, SetFieldValueType.RPE)
     )
 

@@ -262,4 +262,22 @@
     <string name="select_barbell">Select barbell</string>
     <string name="select_muscle">Select muscle</string>
     <string name="select_category">Select category</string>
+    <string name="unknown">Unknown</string>
+    <string name="exercise_category_weight_and_reps_title">Weight &amp; Reps</string>
+    <string name="exercise_category_bodyweight_reps_title">Bodyweight Reps</string>
+    <string name="exercise_category_weighted_bodyweight_title">Weighted Bodyweight</string>
+    <string name="exercise_category_assisted_bodyweight_title">Assisted Bodyweight</string>
+    <string name="exercise_category_duration_title">Duration</string>
+    <string name="exercise_category_distance_and_duration_title">Distance &amp; Duration</string>
+    <string name="exercise_category_weight_and_distance_title">Weight &amp; Distance</string>
+    <string name="exercise_category_weight_and_duration_title">Weight &amp; Duration</string>
+    <string name="exercise_category_weight_and_reps_examples">Example: Bench Press, Dumbbell Curls</string>
+    <string name="exercise_category_bodyweight_reps_examples">Example: Pull Ups, Sit Ups, Burpees</string>
+    <string name="exercise_category_weighted_bodyweight_examples">Example: Weighted Pull Ups, Weighted Dips</string>
+    <string name="exercise_category_assisted_bodyweight_examples">Example: Assisted Pull Ups, Assisted Dips</string>
+    <string name="exercise_category_duration_examples">Example: Planks, Yoga, Stretching</string>
+    <string name="exercise_category_distance_and_duration_examples">Example: Running, Cycling, Rowing</string>
+    <string name="exercise_category_weight_and_distance_examples">Example: Farmers Walk, Suitcase Carry</string>
+    <string name="exercise_category_weight_and_duration_examples">Example: Weighted Planks</string>
+    <string name="unknown_examples">Unknown examples</string>
 </resources>

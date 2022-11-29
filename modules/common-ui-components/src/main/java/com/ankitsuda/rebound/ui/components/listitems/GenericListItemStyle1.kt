@@ -34,6 +34,7 @@ fun GenericListItemStyle1(
     title: String?,
     description: String? = null,
     isSelected: Boolean = false,
+    layoutBelowDescription: (@Composable () -> Unit)? = null,
     onClick: (() -> Unit)? = null
 ) {
 
@@ -69,6 +70,9 @@ fun GenericListItemStyle1(
                         style = ReboundTheme.typography.body2,
                         color = ReboundTheme.colors.onBackground.copy(alpha = 0.75f)
                     )
+                }
+                layoutBelowDescription?.let {
+                    it()
                 }
             }
 

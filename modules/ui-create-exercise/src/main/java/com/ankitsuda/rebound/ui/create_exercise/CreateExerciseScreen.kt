@@ -25,10 +25,12 @@ import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ankitsuda.common.compose.toI18NString
 import com.ankitsuda.navigation.*
 import com.ankitsuda.rebound.ui.components.AppTextField
 import com.ankitsuda.rebound.ui.components.BottomSheetSurface
@@ -170,7 +172,7 @@ fun CreateExerciseScreen(
 
                 ValueSelectorCard(
                     name = stringResource(id = R.string.category),
-                    value = selectedCategoryTag,
+                    value = selectedCategory.toI18NString(),
                     onClick = {
                         navigator.navigate(
                             LeafScreen.ExerciseCategorySelector.createRoute(
