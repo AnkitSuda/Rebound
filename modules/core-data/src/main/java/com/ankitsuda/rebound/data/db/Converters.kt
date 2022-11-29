@@ -15,14 +15,11 @@
 package com.ankitsuda.rebound.data.db
 
 import androidx.room.TypeConverter
-import com.ankitsuda.base.util.C
 import com.ankitsuda.base.utils.toEpochMillis
 import com.ankitsuda.base.utils.toLocalDateTime
 import com.ankitsuda.rebound.domain.*
 import com.ankitsuda.rebound.domain.entities.BodyPartUnitType
-import java.text.DateFormat
 import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
 
@@ -31,14 +28,14 @@ object Converters {
     @TypeConverter
     @JvmStatic
     fun toExerciseCategory(value: String): ExerciseCategory {
-        return value.parseToExerciseCategory()
+        return value.parseToExerciseCategory1()
 
     }
 
     @TypeConverter
     @JvmStatic
-    fun fromExerciseCategory(category: ExerciseCategory?): String {
-        return category?.tag ?: ExerciseCategory.UNKNOWN.tag
+    fun fromExerciseCategory(category: ExerciseCategory?): String? {
+        return category?.tag
     }
 
     @TypeConverter

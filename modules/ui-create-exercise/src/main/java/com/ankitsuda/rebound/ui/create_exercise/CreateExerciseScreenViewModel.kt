@@ -17,10 +17,10 @@ package com.ankitsuda.rebound.ui.create_exercise
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankitsuda.rebound.domain.entities.Exercise
 import com.ankitsuda.rebound.data.repositories.ExercisesRepository
 import com.ankitsuda.rebound.data.repositories.MusclesRepository
 import com.ankitsuda.rebound.domain.ExerciseCategory
+import com.ankitsuda.rebound.domain.allExerciseCategories
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,14 +40,15 @@ class CreateExerciseScreenViewModel @Inject constructor(
     private var _isCreateBtnEnabled = MutableLiveData(false)
     val isCreateBtnEnabled = _isCreateBtnEnabled
 
-    private var _selectedCategory = MutableLiveData(ExerciseCategory.WEIGHTS_AND_REPS)
+    private var _selectedCategory = MutableLiveData<ExerciseCategory>(ExerciseCategory.WeightAndReps)
     val selectedCategory = _selectedCategory
 
     private var _selectedMuscle = MutableLiveData("abductors")
     val selectedMuscle = _selectedMuscle
 
     // Dummy
-    val allCategories = ExerciseCategory.values()
+//    val allCategories = ExerciseCategory.values()
+    val allCategories = allExerciseCategories
     val allPrimaryMuscles = musclesRepository.getMuscles()
 
     fun setName(value: String) {
@@ -72,7 +73,7 @@ class CreateExerciseScreenViewModel @Inject constructor(
                 name = _name.value,
                 notes = _note.value,
                 primaryMuscleTag = _selectedMuscle.value,
-                category = _selectedCategory.value ?: ExerciseCategory.UNKNOWN
+                category = _selectedCategory.value
             )
         }
     }

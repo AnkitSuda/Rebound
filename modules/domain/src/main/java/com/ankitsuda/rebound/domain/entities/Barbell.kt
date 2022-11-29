@@ -17,10 +17,7 @@ package com.ankitsuda.rebound.domain.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ankitsuda.rebound.domain.ExerciseCategory
-import com.ankitsuda.rebound.domain.WeightUnit
 import java.time.LocalDateTime
-import java.util.*
 
 @Entity(tableName = "barbells")
 data class Barbell(

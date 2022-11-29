@@ -24,8 +24,6 @@ import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.base.utils.toReadableDurationStyle2
 import com.ankitsuda.rebound.data.repositories.BarbellsRepository
 import com.ankitsuda.rebound.data.repositories.WorkoutsRepository
-import com.ankitsuda.rebound.domain.ExerciseCategory
-import com.ankitsuda.rebound.domain.LogSetType
 import com.ankitsuda.rebound.domain.entities.*
 import com.ankitsuda.rebound.ui.components.workouteditor.utils.WorkoutEditorUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -236,7 +234,7 @@ class WorkoutPanelViewModel @Inject constructor(
     private suspend fun checkIfAllSetsAreComplete(): Boolean {
         val junctions = _logEntriesWithExerciseJunction.value
 
-        if (junctions.isNullOrEmpty()) return false
+        if (junctions.isEmpty()) return false
 
         for (junction in junctions) {
             val isIncomplete = junction.logEntries.any {

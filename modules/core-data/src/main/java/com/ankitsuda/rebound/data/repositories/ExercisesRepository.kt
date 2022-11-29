@@ -79,7 +79,7 @@ class ExercisesRepository @Inject constructor(
         notes: String? = null,
         primaryMuscleTag: String? = null,
         secondaryMuscleTag: String? = null,
-        category: ExerciseCategory = ExerciseCategory.UNKNOWN,
+        category: ExerciseCategory? = null,
     ) {
         exercisesDao.insertExercise(
             Exercise(

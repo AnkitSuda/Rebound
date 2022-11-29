@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0df17bb8a8b397dd92836c9e2bad51c5",
+    "identityHash": "baa026f2e70b0fe57b0397861783db93",
     "entities": [
       {
         "tableName": "body_parts",
@@ -198,7 +198,7 @@
       },
       {
         "tableName": "exercises",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exercise_id` TEXT NOT NULL, `name` TEXT, `notes` TEXT, `primary_muscle_tag` TEXT, `secondary_muscle_tag` TEXT, `category` TEXT NOT NULL, `created_at` INTEGER, `update_at` INTEGER, PRIMARY KEY(`exercise_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exercise_id` TEXT NOT NULL, `name` TEXT, `notes` TEXT, `primary_muscle_tag` TEXT, `secondary_muscle_tag` TEXT, `category` TEXT, `created_at` INTEGER, `update_at` INTEGER, PRIMARY KEY(`exercise_id`))",
         "fields": [
           {
             "fieldPath": "exerciseId",
@@ -234,7 +234,7 @@
             "fieldPath": "category",
             "columnName": "category",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "createdAt",
@@ -908,7 +908,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0df17bb8a8b397dd92836c9e2bad51c5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'baa026f2e70b0fe57b0397861783db93')"
     ]
   }
 }

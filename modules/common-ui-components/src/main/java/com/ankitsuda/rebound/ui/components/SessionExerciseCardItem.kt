@@ -43,10 +43,6 @@ import com.ankitsuda.base.util.colorFromSupersetId
 import com.ankitsuda.base.util.isDark
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toReadableString
-import com.ankitsuda.common.compose.kgToUserPrefStr
-import com.ankitsuda.common.compose.kmToUserPrefStr
-import com.ankitsuda.common.compose.userPrefDistanceUnitStr
-import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.rebound.domain.*
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
@@ -67,7 +63,7 @@ fun SessionExerciseCardItem(
     title: String?,
     subtitle: String? = null,
     supersetId: Int? = null,
-    exerciseCategory: ExerciseCategory,
+    exerciseCategory: ExerciseCategory?,
     entries: List<ExerciseLogEntry>,
     notes: List<ExerciseSetGroupNote>? = null
 ) {
@@ -164,7 +160,7 @@ fun SessionExerciseCardItem(
 @Composable
 fun SessionExerciseSetItem(
     entry: ExerciseLogEntry,
-    exerciseCategory: ExerciseCategory,
+    exerciseCategory: ExerciseCategory?,
     revisedSetText: Pair<String, Color?>,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -192,10 +188,10 @@ fun SessionExerciseSetItem(
                 horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 when (exerciseCategory) {
-                    ExerciseCategory.WEIGHTS_AND_REPS -> SetColumnItem(
-                        value = entry.weight.kgToUserPrefStr(),
-                        title = userPrefWeightUnitStr()
-                    )
+//                    ExerciseCategory.WEIGHTS_AND_REPS -> SetColumnItem(
+//                        value = entry.weight.kgToUserPrefStr(),
+//                        title = userPrefWeightUnitStr()
+//                    )
                     // TODO fix this
 //                    ExerciseCategory.DISTANCE_AND_TIME -> SetColumnItem(
 //                        value = entry.distance.kmToUserPrefStr(),

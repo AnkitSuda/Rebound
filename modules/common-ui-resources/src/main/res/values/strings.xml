@@ -196,6 +196,7 @@
     <string name="reps_uppercase">REPS</string>
     <string name="time">Time</string>
     <string name="time_uppercase">TIME</string>
+    <string name="duration_uppercase">DURATION</string>
     <string name="volume">Volume</string>
     <string name="sets">Sets</string>
     <string name="set_uppercase">SET</string>

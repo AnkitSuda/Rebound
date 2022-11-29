@@ -25,8 +25,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Done
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,9 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankitsuda.navigation.LocalNavigator
 import com.ankitsuda.navigation.Navigator
-import com.ankitsuda.rebound.ui.components.*
+import com.ankitsuda.rebound.ui.components.AppTextField
+import com.ankitsuda.rebound.ui.components.BottomSheetSurface
+import com.ankitsuda.rebound.ui.components.TopBar
+import com.ankitsuda.rebound.ui.components.TopBarIconButton
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import timber.log.Timber
 import kotlin.random.Random
 
@@ -56,7 +61,7 @@ fun CreateExerciseScreen(
     val nameValue by viewModel.name.observeAsState("")
     val noteValue by viewModel.note.observeAsState("")
 
-    val selectedCategory by viewModel.selectedCategory.observeAsState("Weights & Reps")
+    val selectedCategory by viewModel.selectedCategory.observeAsState()
     val selectedMuscle by viewModel.selectedMuscle.observeAsState("abductors")
 
     val isCreateBtnEnabled = nameValue.trim().isNotEmpty()

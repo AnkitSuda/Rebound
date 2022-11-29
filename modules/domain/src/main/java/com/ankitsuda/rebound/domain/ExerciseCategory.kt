@@ -14,20 +14,88 @@
 
 package com.ankitsuda.rebound.domain
 
-import android.content.res.TypedArray
-
-enum class ExerciseCategory(val tag: String) {
-    WEIGHTS_AND_REPS("weights_and_reps"),
-    BODYWEIGHT_REPS("bodyweight_reps"),
-    WEIGHTED_BODYWEIGHT("weighted_bodyweight"),
-    ASSISTED_BODYWEIGHT("assisted_bodyweight"),
-    DURATION("duration"),
-    DISTANCE_AND_DURATION("distance_and_duration"),
-    WEIGHT_AND_DISTANCE("weight_and_distance"),
-    WEIGHT_AND_DURATION("weight_and_duration"),
-    UNKNOWN("unknown");
+enum class SetFieldValueType {
+    WEIGHT,
+    ADDITIONAL_WEIGHT,
+    ASSISTED_WEIGHT,
+    REPS,
+    RPE,
+    DISTANCE,
+    DURATION;
 }
 
-fun String?.parseToExerciseCategory(): ExerciseCategory {
-    return ExerciseCategory.values().find { it.tag == this } ?: ExerciseCategory.UNKNOWN
+sealed class ExerciseCategory(open val tag: String, open val fields: List<SetFieldValueType>) {
+    object WeightAndReps : ExerciseCategory(
+        tag = "weights_and_reps",
+        fields = listOf(SetFieldValueType.WEIGHT, SetFieldValueType.REPS, SetFieldValueType.RPE)
+    )
+
+    object BodyweightReps : ExerciseCategory(
+        tag = "bodyweight_reps",
+        fields = listOf(SetFieldValueType.REPS, SetFieldValueType.RPE)
+    )
+
+    object WeightedBodyweight : ExerciseCategory(
+        tag = "weighted_bodyweight",
+        fields = listOf(
+            SetFieldValueType.ADDITIONAL_WEIGHT,
+            SetFieldValueType.REPS,
+            SetFieldValueType.RPE
+        )
+    )
+
+    object AssistedBodyweight : ExerciseCategory(
+        tag = "assisted_bodyweight",
+        fields = listOf(
+            SetFieldValueType.ASSISTED_WEIGHT,
+            SetFieldValueType.REPS,
+            SetFieldValueType.RPE
+        )
+    )
+
+    object Duration : ExerciseCategory(
+        tag = "duration",
+        fields = listOf(SetFieldValueType.DURATION)
+    )
+
+    object DistanceAndDuration : ExerciseCategory(
+        tag = "distance_and_duration",
+        fields = listOf(SetFieldValueType.DISTANCE, SetFieldValueType.DURATION)
+    )
+
+    object WeightAndDistance : ExerciseCategory(
+        tag = "weight_and_distance",
+        fields = listOf(SetFieldValueType.WEIGHT, SetFieldValueType.DISTANCE)
+    )
+
+    object WeightAndDuration : ExerciseCategory(
+        tag = "weight_and_duration",
+        fields = listOf(SetFieldValueType.WEIGHT, SetFieldValueType.DURATION)
+    )
+
+    data class Unknown(
+        override val tag: String,
+        override val fields: List<SetFieldValueType>
+    ) : ExerciseCategory(
+        tag = tag,
+        fields = fields
+    )
+}
+
+val allExerciseCategories = listOf(
+    ExerciseCategory.WeightAndReps,
+    ExerciseCategory.BodyweightReps,
+    ExerciseCategory.WeightedBodyweight,
+    ExerciseCategory.AssistedBodyweight,
+    ExerciseCategory.Duration,
+    ExerciseCategory.DistanceAndDuration,
+    ExerciseCategory.WeightAndDistance,
+    ExerciseCategory.WeightAndDuration,
+)
+
+fun String?.parseToExerciseCategory1(): ExerciseCategory {
+    return allExerciseCategories.find { it.tag == this } ?: ExerciseCategory.Unknown(
+        tag = this ?: "",
+        fields = emptyList()
+    )
 }

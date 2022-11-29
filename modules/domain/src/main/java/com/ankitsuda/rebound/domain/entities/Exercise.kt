@@ -19,7 +19,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ankitsuda.rebound.domain.ExerciseCategory
 import java.time.LocalDateTime
-import java.util.*
 
 @Entity(tableName = "exercises")
 data class Exercise(
@@ -38,7 +37,7 @@ data class Exercise(
     @ColumnInfo(name = "secondary_muscle_tag")
     var secondaryMuscleTag: String? = null,
     @ColumnInfo(name = "category")
-    var category: ExerciseCategory = ExerciseCategory.UNKNOWN,
+    var category: ExerciseCategory? = null,
 
     @ColumnInfo(name = "created_at")
     var createdAt: LocalDateTime? = null,

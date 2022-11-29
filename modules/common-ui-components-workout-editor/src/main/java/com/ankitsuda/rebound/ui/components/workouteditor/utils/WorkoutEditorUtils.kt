@@ -15,33 +15,54 @@
 package com.ankitsuda.rebound.ui.components.workouteditor.utils
 
 import com.ankitsuda.rebound.domain.ExerciseCategory
+import com.ankitsuda.rebound.domain.SetFieldValueType
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 
 object WorkoutEditorUtils {
-    fun isValidSet(logEntry: ExerciseLogEntry, exerciseCategory: ExerciseCategory): Boolean =
-        with(logEntry) {
-            when (exerciseCategory) {
-                ExerciseCategory.WEIGHTS_AND_REPS, ExerciseCategory.WEIGHTED_BODYWEIGHT, ExerciseCategory.ASSISTED_BODYWEIGHT -> {
-                    weight == null || reps == null
-                }
-                ExerciseCategory.BODYWEIGHT_REPS -> {
-                    reps == null
-                }
-                ExerciseCategory.DURATION -> {
-                    timeRecorded == null
-                }
-                ExerciseCategory.DISTANCE_AND_DURATION -> {
-                    distance == null || timeRecorded == null
-                }
-                ExerciseCategory.WEIGHT_AND_DISTANCE -> {
-                    weight == null || distance == null
-                }
-                ExerciseCategory.WEIGHT_AND_DURATION -> {
-                    weight == null || timeRecorded == null
-                }
-                ExerciseCategory.UNKNOWN -> {
-                    true
-                }
+//    fun isValidSet(logEntry: ExerciseLogEntry, exerciseCategory: ExerciseCategory): Boolean =
+//        with(logEntry) {
+//            when (exerciseCategory) {
+//                ExerciseCategory.WEIGHTS_AND_REPS, ExerciseCategory.WEIGHTED_BODYWEIGHT, ExerciseCategory.ASSISTED_BODYWEIGHT -> {
+//                    weight == null || reps == null
+//                }
+//                ExerciseCategory.BODYWEIGHT_REPS -> {
+//                    reps == null
+//                }
+//                ExerciseCategory.DURATION -> {
+//                    timeRecorded == null
+//                }
+//                ExerciseCategory.DISTANCE_AND_DURATION -> {
+//                    distance == null || timeRecorded == null
+//                }
+//                ExerciseCategory.WEIGHT_AND_DISTANCE -> {
+//                    weight == null || distance == null
+//                }
+//                ExerciseCategory.WEIGHT_AND_DURATION -> {
+//                    weight == null || timeRecorded == null
+//                }
+//                ExerciseCategory.UNKNOWN -> {
+//                    true
+//                }
+//            }
+//        }
+
+    fun isValidSet(logEntry: ExerciseLogEntry, exerciseCategory: ExerciseCategory?): Boolean {
+        if (exerciseCategory == null) return true
+
+        val fields: List<Any?> = exerciseCategory.fields.map {
+            when (it) {
+                SetFieldValueType.WEIGHT,
+                SetFieldValueType.ADDITIONAL_WEIGHT,
+                SetFieldValueType.ASSISTED_WEIGHT -> logEntry.weight
+                SetFieldValueType.REPS -> logEntry.reps
+                SetFieldValueType.DISTANCE -> logEntry.distance
+                SetFieldValueType.DURATION -> logEntry.timeRecorded
+                SetFieldValueType.RPE -> true // RPE is allowed to be null
             }
         }
+
+        return !fields.any {
+            it == null
+        }
+    }
 }
