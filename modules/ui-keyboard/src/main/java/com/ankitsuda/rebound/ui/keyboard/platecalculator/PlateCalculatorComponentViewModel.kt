@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankitsuda.base.util.fromKgToLbs
 import com.ankitsuda.base.util.fromLbsToKg
+import com.ankitsuda.common.compose.toWeightUnit
 import com.ankitsuda.rebound.data.datastore.AppPreferences
 import com.ankitsuda.rebound.data.repositories.PlatesRepository
 import com.ankitsuda.rebound.domain.WeightUnit
@@ -76,10 +77,7 @@ class PlateCalculatorComponentViewModel @Inject constructor(
     fun refreshPlates(newWeight: Double) {
         platesJob?.cancel()
         platesJob = viewModelScope.launch {
-            val barbellWeight = when (weightUnit) {
-                WeightUnit.LBS -> barbell?.weightLbs ?: barbell?.weightKg?.fromKgToLbs() ?: 0.0
-                else -> barbell?.weightKg ?: barbell?.weightLbs?.fromLbsToKg() ?: 0.0
-            }
+            val barbellWeight = barbell.toWeightUnit(weightUnit ?: WeightUnit.KG)
 
             val weightForPlates = newWeight - barbellWeight
 

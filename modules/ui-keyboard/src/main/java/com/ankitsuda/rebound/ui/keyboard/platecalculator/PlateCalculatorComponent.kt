@@ -33,6 +33,7 @@ import com.ankitsuda.base.util.fromLbsToKg
 import com.ankitsuda.base.util.toReadableString
 import com.ankitsuda.common.compose.LocalAppSettings
 import com.ankitsuda.common.compose.kgToUserPrefStr
+import com.ankitsuda.common.compose.toWeightUnit
 import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.domain.entities.Barbell
@@ -107,10 +108,7 @@ private fun BarbellComponent(
     val barbellColor = theme.keyboardBarbellColor
     val onBarbellColor = theme.keyboardOnBarbellColor
 
-    val barbellWeight = when (LocalAppSettings.current.weightUnit) {
-        WeightUnit.LBS -> barbell?.weightLbs ?: barbell?.weightKg?.fromKgToLbs() ?: 0.0
-        else -> barbell?.weightKg ?: barbell?.weightLbs?.fromLbsToKg() ?: 0.0
-    }
+    val barbellWeight = barbell.toWeightUnit()
 
     val scrollState = rememberScrollState()
 

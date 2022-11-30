@@ -16,9 +16,7 @@ package com.ankitsuda.rebound.ui.components.workouteditor.warmupcalculator
 
 import com.ankitsuda.base.utils.generateId
 import com.ankitsuda.rebound.domain.LogSetType
-import com.ankitsuda.rebound.domain.entities.ExerciseLog
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
-import com.ankitsuda.rebound.ui.keyboard.picker.getAllWarmUpWeights
 
 data class WarmUpSet(
     var id: String,
@@ -31,14 +29,24 @@ data class WarmUpSet(
         return formula ?: "Bar x 1"
     }
 
-//    companion object {
-//        fun fromLogEntries(workSetWeight: Double?, entries: List<ExerciseLogEntry>): List<WarmUpSet> {
-//            val warmUpSets = arrayListOf<WarmUpSet>()
-//            val filteredList = entries.filter { it.setType == LogSetType.WARM_UP }
-//            for (entry in filteredList) {
-//            }
-//        }
-//    }
+    companion object {
+        fun refreshWarmupSetsWithNewWorkWeight(
+            workSetWeight: Double?,
+            lastWarmupSets: List<WarmUpSet>
+        ): List<WarmUpSet> {
+            return lastWarmupSets.map { set ->
+                if (set.findFormula()
+                        .contains("Bar") || set.weightPercentage == null || workSetWeight == null
+                ) {
+                    set
+                } else {
+                    set.copy(
+                        weight = workSetWeight * set.weightPercentage!! / 100
+                    )
+                }
+            }
+        }
+    }
 }
 
 fun WarmUpSet.toExerciseLogEntry() = ExerciseLogEntry(
@@ -49,5 +57,6 @@ fun WarmUpSet.toExerciseLogEntry() = ExerciseLogEntry(
 )
 
 fun List<WarmUpSet>.toExerciseLogEntries(): List<ExerciseLogEntry> =
-    this.map { it.toExerciseLogEntry()
+    this.map {
+        it.toExerciseLogEntry()
     }

@@ -30,12 +30,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ankitsuda.base.util.fromKgToLbs
 import com.ankitsuda.base.util.fromLbsToKg
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.common.compose.LocalAppSettings
 import com.ankitsuda.common.compose.kgToUserPrefStr
+import com.ankitsuda.common.compose.toWeightUnit
 import com.ankitsuda.rebound.domain.WeightUnit
+import com.ankitsuda.rebound.domain.entities.Barbell
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.components.workouteditor.R
@@ -48,12 +49,12 @@ import com.ankitsuda.rebound.ui.theme.ReboundTheme
 @Composable
 fun WarmUpCalculatorDialog(
     startingWorkSetWeight: Double?,
+    barbell: Barbell?,
     startingSets: List<WarmUpSet>,
     onInsert: (workSet: Double, sets: List<WarmUpSet>) -> Unit,
     onDismissRequest: () -> Unit,
     viewModel: WarmUpCalculatorDialogViewModel = hiltViewModel()
 ) {
-
     LaunchedEffect(startingSets) {
         viewModel.setSets(startingSets)
     }
@@ -71,6 +72,7 @@ fun WarmUpCalculatorDialog(
                     val sets by viewModel.sets.collectAsState()
                     WarmUpCalculatorDialogLayout(
                         sets = sets,
+                        barbell = barbell,
                         startingWorkSetWeight = startingWorkSetWeight,
                         onClickCancel = onDismissRequest,
                         onUpdateWorkSet = { barWeight, workSet ->
@@ -101,6 +103,7 @@ fun WarmUpCalculatorDialog(
 @Composable
 private fun WarmUpCalculatorDialogLayout(
     sets: List<WarmUpSet>,
+    barbell: Barbell?,
     startingWorkSetWeight: Double?,
     onUpdateWorkSet: (barWight: Double, workSet: Double) -> Unit,
     onUpdateSet: (WarmUpSet) -> Unit,
@@ -165,7 +168,7 @@ private fun WarmUpCalculatorDialogLayout(
                     onValueChange = {
                         workSetStr = it
                         onUpdateWorkSet(
-                            20.0,
+                            barbell.toWeightUnit(weightUnit),
                             when (weightUnit) {
                                 WeightUnit.KG -> it.toDoubleOrNull()
                                 WeightUnit.LBS -> it.toDoubleOrNull()?.fromLbsToKg()
@@ -202,7 +205,7 @@ private fun WarmUpCalculatorDialogLayout(
                             WeightUnit.KG -> workSetStr.toDoubleOrNull()
                             WeightUnit.LBS -> workSetStr.toDoubleOrNull()?.fromLbsToKg()
                         } ?: 0.0,
-                        barWeightKg = 20.0,
+                        barWeightKg = barbell.toWeightUnit(WeightUnit.KG),
                         startingSet = set,
                         onChangeValue = onUpdateSet,
                         onDeleteSet = {
@@ -226,7 +229,7 @@ private fun WarmUpCalculatorDialogLayout(
                             contentColor = ReboundTheme.colors.onBackground
                         ),
                         onClick = {
-                            onAddSet(20.0)
+                            onAddSet(barbell.toWeightUnit(WeightUnit.KG))
                         }
                     ) {
                         Icon(imageVector = Icons.Outlined.Add, contentDescription = null)

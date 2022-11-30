@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import com.ankitsuda.base.util.*
 import com.ankitsuda.rebound.domain.DistanceUnit
 import com.ankitsuda.rebound.domain.WeightUnit
+import com.ankitsuda.rebound.domain.entities.Barbell
 
 @Composable
 fun Double?.kgToUserPrefStr(
@@ -115,3 +116,14 @@ fun DistanceUnit.localizedStr(case: Int = 2): String = when (this) {
 @Composable
 fun userPrefDistanceUnitStr(case: Int = 2): String =
     LocalAppSettings.current.distanceUnit.localizedStr(case = case)
+
+
+@Composable
+fun Barbell?.toWeightUnit() = toWeightUnit(LocalAppSettings.current.weightUnit)
+
+fun Barbell?.toWeightUnit(weightUnit: WeightUnit): Double {
+    return when (weightUnit) {
+        WeightUnit.LBS -> this?.weightLbs ?: this?.weightKg?.fromKgToLbs() ?: 0.0
+        else -> this?.weightKg ?: this?.weightLbs?.fromLbsToKg() ?: 0.0
+    }
+}

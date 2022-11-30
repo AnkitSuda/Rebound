@@ -109,7 +109,7 @@ internal fun WarmUpSetComponent(
                         workSetWeightKg * weightInt / 100
                     }
 
-                    val reps = arr.getOrNull(1)?.toIntOrNull() ?: 0
+                    val reps = arr.getOrNull(1)?.toIntOrNull() ?: 1
 
                     onChangeValue(
                         startingSet.copy(

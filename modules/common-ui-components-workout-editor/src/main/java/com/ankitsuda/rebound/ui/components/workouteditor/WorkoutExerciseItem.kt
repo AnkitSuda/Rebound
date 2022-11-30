@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.ankitsuda.base.util.*
 import com.ankitsuda.common.compose.*
 import com.ankitsuda.rebound.domain.LogSetType
+import com.ankitsuda.rebound.domain.WeightUnit
 import com.ankitsuda.rebound.domain.entities.*
 import com.ankitsuda.rebound.ui.components.RButton
 import com.ankitsuda.rebound.ui.components.RSpacer
@@ -104,17 +105,42 @@ fun LazyListScope.workoutExerciseItemAlt(
             onUpdateWarmUpSets(newWarmUpSets)
         }
 
+        LaunchedEffect(key1 = barbell) {
+            if (dialogWarmUpSets.any { it.findFormula().contains("Bar") }) {
+                dialogWarmUpSets = dialogWarmUpSets.map {
+                    if (it.findFormula().contains("Bar")) {
+                        it.copy(
+                            weight = barbell.toWeightUnit(WeightUnit.KG)
+                        )
+                    } else {
+                        it
+                    }
+                }
+            }
+        }
+
+        // TODO: fix, sometimes does not get called
         LaunchedEffect(key1 = sortedEntries) {
-            warmUpWorkSetWeight = (sortedEntries.filter { it.setType != LogSetType.WARM_UP }
+            val newWorkWeight = (sortedEntries.filter { it.setType != LogSetType.WARM_UP }
                 .getOrNull(0)?.weight ?: warmUpWorkSetWeight)
-//            warmUpWorkSetWeight = newWarmUpWorkSetWeight
-//            warmUpSets = WarmUpSet.fromLogEntries(warmUpWorkSetWeight, sortedEntries)
+
+            val lastDialogWarmupSets = dialogWarmUpSets.toList()
+
+            if (warmUpWorkSetWeight != newWorkWeight) {
+                warmUpWorkSetWeight = newWorkWeight
+                dialogWarmUpSets =
+                    WarmUpSet.refreshWarmupSetsWithNewWorkWeight(
+                        newWorkWeight,
+                        lastDialogWarmupSets
+                    )
+            }
         }
 
         if (warmUpSetsDialogVisible) {
             key(LocalAppSettings.current.weightUnit) {
                 WarmUpCalculatorDialog(
                     startingWorkSetWeight = warmUpWorkSetWeight,
+                    barbell = barbell,
                     startingSets = dialogWarmUpSets,
                     onInsert = { newWarmUpWorkSetWeight, newWarmUpSets ->
                         updateWarmUpSets(newWarmUpWorkSetWeight, newWarmUpSets)
