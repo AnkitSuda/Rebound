@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ankitsuda.common.compose.toI18NString
 import com.ankitsuda.rebound.domain.entities.Exercise
 import com.ankitsuda.rebound.ui.components.RSpacer
 import com.ankitsuda.rebound.ui.theme.ReboundTheme
@@ -39,16 +40,24 @@ fun ExerciseDetailAboutTab(exercise: Exercise) {
             .padding(16.dp)
     ) {
         if (!exercise.notes.isNullOrBlank()) {
-            Section(title = stringResource(id = R.string.instructions), text = exercise.notes.toString())
+            Section(
+                title = stringResource(id = R.string.instructions),
+                text = exercise.notes.toString()
+            )
         }
 
         if (!exercise.primaryMuscleTag.isNullOrBlank()) {
-            Section(title = stringResource(id = R.string.primary_muscle), text = exercise.primaryMuscleTag.toString())
+            Section(
+                title = stringResource(id = R.string.primary_muscle),
+                text = exercise.primaryMuscleTag.toString()
+            )
 
         }
 
-        // TODO fix category name
-        Section(title = stringResource(id = R.string.category), text = exercise.category?.tag ?: "")
+        Section(
+            title = stringResource(id = R.string.category),
+            text = exercise.category?.toI18NString() ?: ""
+        )
     }
 }
 
