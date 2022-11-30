@@ -231,14 +231,14 @@ class WorkoutPanelViewModel @Inject constructor(
         }
     }
 
-    private suspend fun checkIfAllSetsAreComplete(): Boolean {
+    private fun checkIfAllSetsAreComplete(): Boolean {
         val junctions = _logEntriesWithExerciseJunction.value
 
         if (junctions.isEmpty()) return false
 
         for (junction in junctions) {
             val isIncomplete = junction.logEntries.any {
-                WorkoutEditorUtils.isValidSet(it, junction.exercise.category)
+                !WorkoutEditorUtils.isValidSet(it, junction.exercise.category)
             }
 
             if (isIncomplete) {
