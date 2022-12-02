@@ -43,6 +43,10 @@ import com.ankitsuda.base.util.colorFromSupersetId
 import com.ankitsuda.base.util.isDark
 import com.ankitsuda.base.util.lighterOrDarkerColor
 import com.ankitsuda.base.util.toReadableString
+import com.ankitsuda.common.compose.kgToUserPrefStr
+import com.ankitsuda.common.compose.kmToUserPrefStr
+import com.ankitsuda.common.compose.userPrefDistanceUnitStr
+import com.ankitsuda.common.compose.userPrefWeightUnitStr
 import com.ankitsuda.rebound.domain.*
 import com.ankitsuda.rebound.domain.entities.ExerciseLogEntry
 import com.ankitsuda.rebound.domain.entities.ExerciseSetGroupNote
@@ -148,9 +152,6 @@ fun SessionExerciseCardItem(
                         exerciseCategory = exerciseCategory,
                         revisedSetText = revisedSetsTexts[sortedEntries.indexOf(entry)],
                     )
-//                    if (i != sortedEntries.size - 1) {
-//                        RSpacer(8.dp)
-//                    }
                 }
             }
         }
@@ -187,35 +188,10 @@ fun SessionExerciseSetItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                when (exerciseCategory) {
-//                    ExerciseCategory.WEIGHTS_AND_REPS -> SetColumnItem(
-//                        value = entry.weight.kgToUserPrefStr(),
-//                        title = userPrefWeightUnitStr()
-//                    )
-                    // TODO fix this
-//                    ExerciseCategory.DISTANCE_AND_TIME -> SetColumnItem(
-//                        value = entry.distance.kmToUserPrefStr(),
-//                        title = userPrefDistanceUnitStr()
-//                    )
-                    else -> {}
-                }
-                when (exerciseCategory) {
-                    // TODO fix this
-//                    ExerciseCategory.WEIGHTS_AND_REPS, ExerciseCategory.REPS -> SetColumnItem(
-//                        value = (entry.reps ?: 0).toString(),
-//                        title = stringResource(id = R.string.reps_lowercase)
-//                    )
-                    // TODO fix this
-//                    ExerciseCategory.DISTANCE_AND_TIME, ExerciseCategory.TIME -> SetColumnItem(
-//                        value = (entry.timeRecorded ?: 0).toString(),
-//                        title = stringResource(id = R.string.time)
-//                    )
-                    else -> {}
-                }
-                entry.rpe?.let {
+                for (field in exerciseCategory?.fields ?: emptyList()) {
                     SetColumnItem(
-                        value = it.toReadableString() ?: "",
-                        title = stringResource(id = R.string.rpe)
+                        entry = entry,
+                        fieldType = field
                     )
                 }
             }
@@ -226,6 +202,39 @@ fun SessionExerciseSetItem(
                 modifier = Modifier
                     .padding(top = 8.dp, start = 32.dp, end = 16.dp),
                 prs = entry.personalRecords!!
+            )
+        }
+    }
+}
+
+@Composable
+fun SetColumnItem(
+    entry: ExerciseLogEntry,
+    fieldType: SetFieldValueType,
+) {
+    when (fieldType) {
+        SetFieldValueType.WEIGHT,
+        SetFieldValueType.ADDITIONAL_WEIGHT,
+        SetFieldValueType.ASSISTED_WEIGHT -> SetColumnItem(
+            value = entry.weight.kgToUserPrefStr(),
+            title = userPrefWeightUnitStr()
+        )
+        SetFieldValueType.REPS -> SetColumnItem(
+            value = (entry.reps ?: 0).toString(),
+            title = stringResource(id = R.string.reps_lowercase)
+        )
+        SetFieldValueType.DISTANCE -> SetColumnItem(
+            value = (entry.distance ?: 0.0).kmToUserPrefStr(),
+            title = userPrefDistanceUnitStr()
+        )
+        SetFieldValueType.DURATION -> SetColumnItem(
+            value = (entry.timeRecorded ?: 0).toString(),
+            title = stringResource(id = R.string.duration)
+        )
+        SetFieldValueType.RPE -> if ((entry.rpe ?: 0f) > 0f) {
+            SetColumnItem(
+                value = entry.rpe?.toReadableString() ?: "",
+                title = stringResource(id = R.string.rpe)
             )
         }
     }
@@ -263,8 +272,6 @@ fun PersonalRecordsRowComponent(
     )
 }
 
-
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PersonalRecordComponent(
     pr: PersonalRecord
