@@ -18,6 +18,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import com.ankitsuda.rebound.coreRestTimer.R
@@ -37,6 +38,13 @@ import dagger.hilt.android.scopes.ServiceScoped
 @InstallIn(ServiceComponent::class)
 object RestTimerModule {
 
+    private val flags =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
     @ClickPendingIntent
     @ServiceScoped
     @Provides
@@ -46,7 +54,7 @@ object RestTimerModule {
         app,
         0,
         app.packageManager.getLaunchIntentForPackage(app.packageName),
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        flags
     )
 
     @CancelActionPendingIntent
@@ -60,7 +68,7 @@ object RestTimerModule {
         Intent(app, RestTimerService::class.java).also {
             it.action = ACTION_CANCEL
         },
-        PendingIntent.FLAG_UPDATE_CURRENT
+        flags
     )
 
 
@@ -75,7 +83,7 @@ object RestTimerModule {
         Intent(app, RestTimerService::class.java).also {
             it.action = ACTION_RESUME
         },
-        PendingIntent.FLAG_UPDATE_CURRENT
+        flags
     )
 
 
@@ -90,7 +98,7 @@ object RestTimerModule {
         Intent(app, RestTimerService::class.java).also {
             it.action = ACTION_PAUSE
         },
-        PendingIntent.FLAG_UPDATE_CURRENT
+        flags
     )
 
 
