@@ -19,7 +19,7 @@ object Deps {
     }
 
     object Kotlin {
-        const val version = "1.7.20"
+        const val version = "1.7.21"
 
         const val gradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version"
@@ -39,12 +39,12 @@ object Deps {
 
         const val gradle = "com.android.tools.build:gradle:$gradleVersion"
 
-        const val desugaring = "com.android.tools:desugar_jdk_libs:1.1.5"
+        const val desugaring = "com.android.tools:desugar_jdk_libs:1.2.2"
 
         const val activityVersion = "1.6.0"
         const val activityCompose = "androidx.activity:activity-compose:$activityVersion"
 
-        private const val navigationVersion = "2.5.0-alpha04"
+        private const val navigationVersion = "2.6.0-alpha04"
 
         //        const val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-beta01"
         const val navigationCompose = "androidx.navigation:navigation-compose:$navigationVersion"
@@ -53,8 +53,8 @@ object Deps {
         const val dataStore = "androidx.datastore:datastore-preferences:1.0.0"
 
         object Compose {
-            const val version = "1.4.0-alpha01"
-            const val compilerVersion = "1.3.2"
+            const val version = "1.4.0-alpha04"
+            const val compilerVersion = "1.4.0-alpha02"
 
             const val ui = "androidx.compose.ui:ui:$version"
             const val uiUtil = "androidx.compose.ui:ui-util:$version"
@@ -65,7 +65,7 @@ object Deps {
             const val materialDesignIconsExtended =
                 "androidx.compose.material:material-icons-extended:$version"
             const val constraintLayout =
-                "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha04"
+                "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha05"
             const val liveData = "androidx.compose.runtime:runtime-livedata:$version"
             const val activity = "androidx.activity:activity-compose:$activityVersion"
             const val viewModels = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
@@ -81,7 +81,7 @@ object Deps {
         }
 
         object Accompanist {
-            private const val version = "0.27.0"
+            private const val version = "0.29.0-alpha"
 
             const val insets = "com.google.accompanist:accompanist-insets:$version"
             const val insetsUi = "com.google.accompanist:accompanist-insets-ui:$version"
@@ -157,7 +157,7 @@ object Deps {
 
 
     object Dagger {
-        private const val version = "2.44"
+        private const val version = "2.44.2"
 
         const val hilt = "com.google.dagger:hilt-android:$version"
         const val hiltCompiler = "com.google.dagger:hilt-compiler:$version"
